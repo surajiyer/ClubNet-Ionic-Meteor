@@ -3,14 +3,27 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
+
+    <style type="text/css">
+      .platform-ios .manual-ios-statusbar-padding {
+          padding-top: 20px;
+      }
+      .manual-remove-top-padding {
+          padding-top: 0px;
+      }
+      .manual-remove-top-padding .scroll {
+          padding-top: 0px !important;
+      }
+    </style>
 </head>
 
-<body>
-    <ion-nav-bar>
-        <ion-nav-back-button class="button-clear">
-            <i class="ion-arrow-left-c"></i> Back
-        </ion-nav-back-button>
-    </ion-nav-bar>
-    <ion-nav-view>
-    </ion-nav-view>
+<body ng-app="app" animation="slide-left-right-ios7">
+    <div>
+        <div>
+            <ion-nav-bar class="bar-stable">
+                <ion-nav-back-button class="button-icon icon ion-ios-arrow-back">Back</ion-nav-back-button>
+            </ion-nav-bar>
+            <ion-nav-view></ion-nav-view>
+        </div>
+    </div>
 </body>
