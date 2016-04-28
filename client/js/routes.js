@@ -26,10 +26,14 @@ angular.module('app.routes', [])
     }
   })
 
-  .state('sponsoring', {
+  .state('menu.sponsoring', {
     url: '/sponsoring',
-    templateUrl: 'client/views/sponsoring.ng.html',
-    controller: 'sponsoringCtrl'
+    views: {
+      'side-menu21': {
+        templateUrl: 'client/views/sponsoring.ng.html',
+        controller: 'sponsoringCtrl'
+      }
+    }
   })
 
   .state('menu', {
