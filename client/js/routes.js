@@ -26,6 +26,16 @@ angular.module('app.routes', [])
     }
   })
 
+  .state('menu.feed', {
+    url: '/feed',
+    views: {
+      'side-menu21': {
+        templateUrl: 'client/views/feed.ng.html',
+        controller: 'feedCtrl'
+      }
+    }
+  })
+
   .state('menu.sponsoring', {
     url: '/sponsoring',
     views: {
