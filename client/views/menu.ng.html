@@ -1,14 +1,5 @@
 <ion-side-menus enable-menu-with-back-views="false">
-    <ion-side-menu-content>
-        <ion-nav-bar class="bar-stable">
-            <ion-nav-back-button></ion-nav-back-button>
-            <ion-nav-buttons side="left">
-                <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
-            </ion-nav-buttons>
-        </ion-nav-bar>
-        <ion-nav-view name="side-menu21"></ion-nav-view>
-    </ion-side-menu-content>
-    <ion-side-menu side="left" id="side-menu21">
+    <ion-side-menu side="left" expose-aside-when="large" id="side-menu">
         <ion-header-bar class="bar-stable">
             <div class="title">Menu</div>
         </ion-header-bar>
@@ -18,14 +9,32 @@
                 <ion-checkbox>Practicalities</ion-checkbox>
                 <ion-checkbox>Sponsoring</ion-checkbox>
             </form>
-            <ion-list>
-                <ion-item ui-sref="menu.feed" menu-close="">Feed</ion-item>
-                <ion-item ui-sref="menu.polls" menu-close="">Polls</ion-item>
-                <ion-item ui-sref="menu.practicalities" menu-close="">Practicalities</ion-item>
-                <ion-item ui-sref="menu.sponsoring" menu-close="">Sponsoring</ion-item>
-                <ion-item class="item-divider"></ion-item>
-                <ion-item ui-sref="menu.settings" menu-close="">Personal settings</ion-item>
-            </ion-list>
+            <!--<ion-list>-->
+            <!--<ion-item ui-sref="menu.feed" menu-close="">Feed</ion-item>-->
+            <!--<ion-item ui-sref="menu.polls" menu-close="">Polls</ion-item>-->
+            <!--<ion-item ui-sref="menu.practicalities" menu-close="">Practicalities</ion-item>-->
+            <!--<ion-item ui-sref="menu.sponsoring" menu-close="">Sponsoring</ion-item>-->
+            <!--<ion-item class="item-divider"></ion-item>-->
+            <!--<ion-item ui-sref="menu.settings" menu-close="">Personal settings</ion-item>-->
+            <!--</ion-list>-->
         </ion-content>
     </ion-side-menu>
+    <ion-side-menu-content>
+        <!--<ion-nav-bar class="bar-stable">-->
+            <!--<ion-nav-back-button></ion-nav-back-button>-->
+            <!--<ion-nav-buttons side="left">-->
+                <!--<button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>-->
+            <!--</ion-nav-buttons>-->
+        <!--</ion-nav-bar>-->
+        <!--<ion-nav-view name="side-menu-content"></ion-nav-view>-->
+        <ion-tabs class="tabs-positive tabs-icon-top">
+            <ion-tab title="Home" icon-on="ion-ios-home" icon-off="ion-ios-home-outline" ui-sref="menu.home">
+                <ion-nav-view name="feed-tab"></ion-nav-view>
+            </ion-tab>
+
+            <ion-tab title="Settings" icon-on="ion-ios-gear" icon-off="ion-ios-gear-outline" ui-sref="menu.settings">
+                <ion-nav-view name="settings-tab"></ion-nav-view>
+            </ion-tab>
+        </ion-tabs>
+    </ion-side-menu-content>
 </ion-side-menus>

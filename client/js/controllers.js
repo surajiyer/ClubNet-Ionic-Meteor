@@ -1,30 +1,14 @@
 angular.module('app.controllers', [])
 
-    .controller('pollsCtrl', function ($scope) {
-
-    })
-
-    .controller('practicalitiesCtrl', function ($scope) {
-
-    })
-
-    .controller('sponsoringCtrl', function ($scope) {
-
-    })
-
-    .controller('settingsCtrl', function ($scope) {
-
-    })
-
     .controller('loginCtrl', function ($scope) {
-
+        
     })
 
     .controller('feedCtrl', function ($scope, $state, $stateParams, $ionicModal, $meteor, $ionicPopover) {
+        // Load posts database collection
         $scope.posts = $meteor.collection(Posts);
-
-        /* Post */
-
+        
+        /* POSTS */
         $scope.newPost = {};
 
         $scope.post = function () {
@@ -47,9 +31,8 @@ angular.module('app.controllers', [])
         $scope.openPost = function () {
             $scope.postmodal.show();
         };
-
-        /* Practicality*/
-
+        
+        /* PRACTICALITY */
         $scope.newPracticality = {};
 
         $scope.practicality = function () {
@@ -59,7 +42,7 @@ angular.module('app.controllers', [])
             $scope.closePracticality();
         };
 
-        $ionicModal.fromTemplateUrl('client/views/feeditems/practicality.ng.html', {
+        $ionicModal.fromTemplateUrl('client/views/feeditems/newPracticality.ng.html', {
             scope: $scope
         }).then(function (practicalityModal) {
             $scope.practicalityModal = practicalityModal;
@@ -72,8 +55,7 @@ angular.module('app.controllers', [])
         $scope.openPracticality = function () {
             $scope.practicalityModal.show();
         };
-
-
+        
         /* POPOVER */
         $ionicPopover.fromTemplateUrl('client/views/templates/popover.ng.html', {
             scope: $scope
@@ -90,5 +72,12 @@ angular.module('app.controllers', [])
         $scope.$on('$destroy', function () {
             $scope.popover.remove();
         });
+    })
+
+    .controller('settingsCtrl', function ($scope) {
 
     })
+
+    .controller('pollsCtrl', function ($scope) {
+        
+    });

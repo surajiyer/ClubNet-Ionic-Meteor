@@ -11,13 +11,13 @@ angular.module('app.routes', [])
                 controller: 'loginCtrl'
             })
 
-            .state('tabs', {
-                url: '/tabs',
-                templateUrl: 'client/views/templates/tabs.ng.html',
-                abstract: true,
+            .state('menu', {
+                url: '/side-menu',
+                templateUrl: 'client/views/menu.ng.html',
+                abstract: true
             })
 
-            .state('tabs.home', {
+            .state('menu.home', {
                 url: '/feed',
                 views: {
                     'feed-tab': {
@@ -27,28 +27,12 @@ angular.module('app.routes', [])
                 }
             })
 
-            .state('tabs.settings', {
+            .state('menu.settings', {
                 url: '/settings',
                 views: {
                     'settings-tab': {
                         templateUrl: 'client/views/settings.ng.html',
                         controller: 'settingsCtrl'
-                    }
-                }
-            })
-
-            .state('menu', {
-                url: '/side-menu21',
-                templateUrl: 'client/views/menu.ng.html',
-                abstract: true
-            })
-
-            .state('menu.polls', {
-                url: '/polls',
-                views: {
-                    'side-menu21': {
-                        templateUrl: 'client/views/polls.ng.html',
-                        controller: 'pollsCtrl'
                     }
                 }
             });
