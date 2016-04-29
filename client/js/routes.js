@@ -16,32 +16,12 @@ angular.module('app.routes', [])
     }
   })
 
-  .state('menu.practicalities', {
-    url: '/practicalities',
-    views: {
-      'side-menu21': {
-        templateUrl: 'client/views/practicalities.ng.html',
-        controller: 'practicalitiesCtrl'
-      }
-    }
-  })
-
   .state('menu.feed', {
     url: '/feed',
     views: {
       'side-menu21': {
         templateUrl: 'client/views/feed.ng.html',
         controller: 'feedCtrl'
-      }
-    }
-  })
-
-  .state('menu.sponsoring', {
-    url: '/sponsoring',
-    views: {
-      'side-menu21': {
-        templateUrl: 'client/views/sponsoring.ng.html',
-        controller: 'sponsoringCtrl'
       }
     }
   })

@@ -1,0 +1,15 @@
+<style>.popover { min-width: 240px; }</style>
+<ion-popover-view>
+    <ion-header-bar>
+        <h1 class="title">Select item to add</h1>
+        <button class="button button-icon icon ion-minus-round" ng-click="closePopover($event)"> </button>
+    </ion-header-bar>
+    <ion-content>
+        <span class="item" ng-click="openPost(); closePopover()">
+            Create new Post
+        </span>
+        <span class="item" ng-click="openPracticality(); closePopover()">
+            Create new practicality
+        </span>
+    </ion-content>
+</ion-popover-view>
