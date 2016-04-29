@@ -1,2 +1,1 @@
-Posts = new Mongo.Collection("posts");
-Practicalities = new Mongo.Collection("practicalities");
+Items = new Mongo.Collection("items");

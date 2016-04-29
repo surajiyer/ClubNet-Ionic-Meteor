@@ -5,11 +5,15 @@
         <button class="button button-icon icon ion-minus-round" ng-click="closePopover($event)"> </button>
     </ion-header-bar>
     <ion-content>
-        <span class="item" ng-click="openPost(); closePopover()">
-            Create new Post
-        </span>
-        <span class="item" ng-click="openPracticality(); closePopover()">
-            Create new practicality
-        </span>
+        <div ng-controller="postCtrl">
+            <span class="item" ng-click="openPost(); closePopover()">
+                Create new Post
+            </span>
+        </div>
+        <div ng-controller="practicalityCtrl">
+            <span class="item" ng-click="openPracticality(); closePopover()">
+                Create new practicality
+            </span>
+        </div>
     </ion-content>
 </ion-popover-view>

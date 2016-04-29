@@ -4,19 +4,26 @@
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <button class="button button-icon icon ion-plus-round" ng-click="openPopover($event)"> </button>
+            <div ng-controller="popoverCtrl">
+              <button class="button button-icon icon ion-plus-round" ng-click="openPopover($event)"> </button>
+            </div>
         </ion-nav-buttons>
     </ion-nav-bar>
 
     <ion-content>
         <div id="feeditems">
-            <div class="list card" ng-repeat="post in posts" ng-switch="post.type">
-                <div class="item item-body">
+            <div class="list card" ng-repeat="item in items" ng-switch="item.type">
+                <div class="item item-body" ng-switch-when="1">
                     <p>
-                        {{post.message}}
+                        {{item.message}}
                     </p>
-                    <p ng-switch-when="2">
-                        {{post.smth}}
+                </div>
+                <div class="item item-body" ng-switch-when="2">
+                    <p>
+                        {{item.message}}
+                    </p>
+                    <p>
+                        {{item.smth}}
                     </p>
                 </div>
             </div>
