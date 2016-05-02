@@ -1,142 +1,132 @@
 angular.module('app.controllers', [])
-  
-.controller('pollsCtrl', function($scope) {
+    .controller('pollsCtrl', function ($scope) {
 
-})
-   
-.controller('practicalitiesCtrl', function($scope) {
+    })
 
-})
-   
-.controller('sponsoringCtrl', function($scope) {
+    .controller('settingsCtrl', function ($scope) {
 
-})
-      
-.controller('settingsCtrl', function($scope) {
+    })
 
-})
-   
-.controller('loginCtrl', function($scope) {
+    .controller('loginCtrl', function ($scope) {
 
-})
+    })
 
-.controller('feedCtrl', function($scope,$state,$stateParams,$ionicModal,$meteor) {
+    .controller('feedCtrl', function ($scope, $state, $stateParams, $ionicModal, $meteor) {
 
-    /* Main controller for feed */
-    
-    $scope.items = $meteor.collection(Items); // gets all the items
+        /* Main controller for feed */
 
-    $scope.clicked = function (item) {
-        // To be made - taking current user ID / name
-        var user_id = 5;
-        item.subscribers.push(user_id);
-    }
-})
+        $scope.items = $meteor.collection(Items); // gets all the items
 
-.controller('practicalityCtrl', function($scope, $ionicModal) {
+        $scope.clicked = function (item) {
+            // To be made - taking current user ID / name
+            var user_id = 5;
+            item.subscribers.push(user_id);
+        }
+    })
 
-    /* Practicality*/
+    .controller('practicalityCtrl', function ($scope, $ionicModal) {
 
-    $scope.newPracticality={};
+        /* Practicality*/
 
-    $scope.practicality = function () {
-        $scope.newPracticality.subscribers = new Array();
-        $scope.newPracticality.type = 'Practicality';
-        $scope.newPracticality.timestamp = new Date().valueOf();
-        $scope.items.push( $scope.newPracticality );
-        $scope.newPracticality={};
-        $scope.closePracticality();
-    };
+        $scope.newPracticality = {};
 
-    $ionicModal.fromTemplateUrl('client/views/feeditems/newPracticality.ng.html', {
-        scope: $scope
-    }).then(function(practicalityModal) {
-        $scope.practicalityModal = practicalityModal;
-    });
+        $scope.practicality = function () {
+            $scope.newPracticality.subscribers = new Array();
+            $scope.newPracticality.type = 'Practicality';
+            $scope.newPracticality.timestamp = new Date().valueOf();
+            $scope.items.push($scope.newPracticality);
+            $scope.newPracticality = {};
+            $scope.closePracticality();
+        };
 
-    $scope.closePracticality = function() {
-        $scope.practicalityModal.hide();
-    };
+        $ionicModal.fromTemplateUrl('client/views/feeditems/newPracticality.ng.html', {
+            scope: $scope
+        }).then(function (practicalityModal) {
+            $scope.practicalityModal = practicalityModal;
+        });
 
-    $scope.openPracticality = function() {
-        $scope.practicalityModal.show();
-    };
-})
+        $scope.closePracticality = function () {
+            $scope.practicalityModal.hide();
+        };
 
-.controller('postCtrl', function($scope, $ionicModal) {
+        $scope.openPracticality = function () {
+            $scope.practicalityModal.show();
+        };
+    })
 
-    /* Post */
-    
-    $scope.newPost={};
+    .controller('postCtrl', function ($scope, $ionicModal) {
 
-    $scope.post = function () {
-        $scope.newPost.type = 'Post';
-        $scope.newPost.timestamp = new Date().valueOf();
-        $scope.items.push( $scope.newPost );
-        $scope.newPost={};
-        $scope.closePost();
-    };
+        /* Post */
 
-    $ionicModal.fromTemplateUrl('client/views/feeditems/newpost.ng.html', {
-        scope: $scope
-    }).then(function(postmodal) {
-        $scope.postmodal = postmodal;
-    });
+        $scope.newPost = {};
 
-    $scope.closePost = function() {
-        $scope.postmodal.hide();
-    };
+        $scope.post = function () {
+            $scope.newPost.type = 'Post';
+            $scope.newPost.timestamp = new Date().valueOf();
+            $scope.items.push($scope.newPost);
+            $scope.newPost = {};
+            $scope.closePost();
+        };
 
-    $scope.openPost = function() {
-        $scope.postmodal.show();
-    };
-})
+        $ionicModal.fromTemplateUrl('client/views/feeditems/newPost.ng.html', {
+            scope: $scope
+        }).then(function (postmodal) {
+            $scope.postmodal = postmodal;
+        });
 
-.controller('popoverCtrl', function($scope, $ionicPopover) {
+        $scope.closePost = function () {
+            $scope.postmodal.hide();
+        };
 
-    /* POPOVER */
-    $ionicPopover.fromTemplateUrl('client/views/popover.ng.html', {
-        scope: $scope
-    }).then(function(popover) {
-        $scope.popover = popover;
-    });
-    $scope.openPopover = function($event) {
-        $scope.popover.show($event);
-    };
-    $scope.closePopover = function() {
-        $scope.popover.hide();
-    };
-    //Cleanup the popover when we're done with it!
-    $scope.$on('$destroy', function() {
-        $scope.popover.remove();
-    });
-})
+        $scope.openPost = function () {
+            $scope.postmodal.show();
+        };
+    })
 
-.controller('votingCtrl', function($scope, $ionicModal) {
+    .controller('popoverCtrl', function ($scope, $ionicPopover) {
+        /* POPOVER */
+        $ionicPopover.fromTemplateUrl('client/views/popover.ng.html', {
+            scope: $scope
+        }).then(function (popover) {
+            $scope.popover = popover;
+        });
+        $scope.openPopover = function ($event) {
+            $scope.popover.show($event);
+        };
+        $scope.closePopover = function () {
+            $scope.popover.hide();
+        };
+        //Cleanup the popover when we're done with it!
+        $scope.$on('$destroy', function () {
+            $scope.popover.remove();
+        });
+    })
 
-    /* Practicality*/
+    .controller('votingCtrl', function ($scope, $ionicModal) {
 
-    $scope.newVoting={};
+        /* Practicality*/
 
-    $scope.voting = function () {
-        $scope.newVoting.type = 'Voting';
-        $scope.newVoting.timestamp = new Date().valueOf();
-        $scope.items.push( $scope.newVoting );
-        $scope.newVoting={};
-        $scope.closeVoting();
-    };
+        $scope.newVoting = {};
 
-    $ionicModal.fromTemplateUrl('client/views/feeditems/newVoting.ng.html', {
-        scope: $scope
-    }).then(function(votingModal) {
-        $scope.votingModal = votingModal;
-    });
+        $scope.voting = function () {
+            $scope.newVoting.type = 'Voting';
+            $scope.newVoting.timestamp = new Date().valueOf();
+            $scope.items.push($scope.newVoting);
+            $scope.newVoting = {};
+            $scope.closeVoting();
+        };
 
-    $scope.closeVoting = function() {
-        $scope.votingModal.hide();
-    };
+        $ionicModal.fromTemplateUrl('client/views/feeditems/newVoting.ng.html', {
+            scope: $scope
+        }).then(function (votingModal) {
+            $scope.votingModal = votingModal;
+        });
 
-    $scope.openVoting = function() {
-        $scope.votingModal.show();
-    };
-})
+        $scope.closeVoting = function () {
+            $scope.votingModal.hide();
+        };
+
+        $scope.openVoting = function () {
+            $scope.votingModal.show();
+        };
+    })

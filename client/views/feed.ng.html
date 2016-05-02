@@ -13,46 +13,10 @@
     <ion-content>
         <div id="feeditems">
             <div class="list card" ng-repeat="item in items | orderBy:'timestamp':true" ng-switch="item.type">
-                <div class="item item-body" ng-switch-when="Post">
-                    <h2>{{item.type}}</h2>
-                    <p>
-                        {{item.message}}
-                    </p>
-                    <p>
-                        Item ID: {{item._id}} <br/>
-                        Timestamp: {{item.timestamp}}
-                    </p>
-                </div>
-                <div class="item item-body" ng-switch-when="Practicality">
-                    <h2>{{item.type}}</h2>
-                    <p>
-                        {{item.name}}
-                    </p>
-                    <p>
-                        {{item.description}}
-                    </p>
-                    <p>
-                        We need {{item.amount}} more people! <br/>
-                        Already registered: {{item.subscribers}}
-                    </p>
-                    <p>
-                        Item ID: {{item._id}} <br/>
-                        Timestamp: {{item.timestamp}}
-                    </p>
-                    <div class="button-bar">
-                        <a class="button button-balanced" ng-click="clicked(item)">Sign up!</a>
-                        <a class="button button-assertive" ng-click="console.log('refuse')">Refuse</a>
-                    </div>
-                </div>
-                <div class="item item-body" ng-switch-when="Voting">
-                    <h2>{{item.type}}</h2>
-                    <p>
-                        {{item.message}}
-                    </p>
-                    <p>
-                        Item ID: {{item._id}} <br/>
-                        Timestamp: {{item.timestamp}}
-                    </p>
+                <div class="item item-body">
+                    <post ng-switch-when="Post"></post>
+                    <practicality ng-switch-when="Practicality"></practicality>
+                    <voting ng-switch-when="Voting"></voting>
                 </div>
             </div>
         </div>
