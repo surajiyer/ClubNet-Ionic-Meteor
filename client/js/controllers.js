@@ -25,17 +25,24 @@ angular.module('app.controllers', [])
     /* Main controller for feed */
     
     $scope.items = $meteor.collection(Items); // gets all the items
-    
+
+    $scope.clicked = function (item) {
+        // To be made - taking current user ID / name
+        var user_id = 5;
+        item.subscribers.push(user_id);
+    }
 })
 
 .controller('practicalityCtrl', function($scope, $ionicModal) {
 
     /* Practicality*/
-    
+
     $scope.newPracticality={};
 
     $scope.practicality = function () {
-        $scope.newPracticality.type = '2';
+        $scope.newPracticality.subscribers = new Array();
+        $scope.newPracticality.type = 'Practicality';
+        $scope.newPracticality.timestamp = new Date().valueOf();
         $scope.items.push( $scope.newPracticality );
         $scope.newPracticality={};
         $scope.closePracticality();
@@ -63,7 +70,8 @@ angular.module('app.controllers', [])
     $scope.newPost={};
 
     $scope.post = function () {
-        $scope.newPost.type = '1';
+        $scope.newPost.type = 'Post';
+        $scope.newPost.timestamp = new Date().valueOf();
         $scope.items.push( $scope.newPost );
         $scope.newPost={};
         $scope.closePost();
@@ -102,4 +110,33 @@ angular.module('app.controllers', [])
     $scope.$on('$destroy', function() {
         $scope.popover.remove();
     });
+})
+
+.controller('votingCtrl', function($scope, $ionicModal) {
+
+    /* Practicality*/
+
+    $scope.newVoting={};
+
+    $scope.voting = function () {
+        $scope.newVoting.type = 'Voting';
+        $scope.newVoting.timestamp = new Date().valueOf();
+        $scope.items.push( $scope.newVoting );
+        $scope.newVoting={};
+        $scope.closeVoting();
+    };
+
+    $ionicModal.fromTemplateUrl('client/views/feeditems/newVoting.ng.html', {
+        scope: $scope
+    }).then(function(votingModal) {
+        $scope.votingModal = votingModal;
+    });
+
+    $scope.closeVoting = function() {
+        $scope.votingModal.hide();
+    };
+
+    $scope.openVoting = function() {
+        $scope.votingModal.show();
+    };
 })

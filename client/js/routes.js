@@ -25,8 +25,7 @@ angular.module('app.routes', [])
       }
     }
   })
-
-
+      
   .state('menu', {
     url: '/side-menu21',
     templateUrl: 'client/views/menu.ng.html',

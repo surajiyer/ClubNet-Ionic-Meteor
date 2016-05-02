@@ -8,14 +8,18 @@
     <ion-content>
         <div class="list">
             <label class="item item-input item-floating-label">
-                <span class="input-label">Message</span>
-                <input ng-model="newPracticality.message" type="text" placeholder="Message">
+                <span class="input-label">Name</span>
+                <input ng-model="newPracticality.name" type="text" placeholder="Name">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">smth</span>
-                <input ng-model="newPracticality.smth" type="text" placeholder="smth">
+                <span class="input-label">Description</span>
+                <input ng-model="newPracticality.description" type="text" placeholder="Description">
             </label>
-            <button ng-disabled="!newPracticality.message" ng-click="practicality()" class="button button-block button-positive">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Required amount of people</span>
+                <input ng-model="newPracticality.amount" type="text" placeholder="Amount">
+            </label>
+            <button ng-disabled="!newPracticality.name && !newPracticality.amount" ng-click="practicality()" class="button button-block button-positive">
                 Post
             </button>
         </div>
