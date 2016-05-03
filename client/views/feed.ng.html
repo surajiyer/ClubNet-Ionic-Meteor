@@ -13,7 +13,7 @@
     <ion-content>
         <div id="feeditems">
             <div class="list card" ng-repeat="item in items | orderBy:'timestamp':true" ng-switch="item.type">
-                <div class="item item-body">
+                <div class="item item-body" ng-controller="ItemCtrl">
                     <post item="item" ng-switch-when="Post"></post>
                     <practicality item="item" ng-switch-when="Practicality"></practicality>
                     <voting item="item" ng-switch-when="Voting"></voting>
