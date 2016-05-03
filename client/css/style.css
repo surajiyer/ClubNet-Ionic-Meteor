@@ -1,0 +1,67 @@
+ion-view.pane {
+    background: #eee;
+}
+.menu .has-header {
+    top: 0;
+    background: #263238;
+}
+.item-content .icon {
+    color: #ff5415;
+    padding-right: 10px;
+    /*color: #1976D2;*/
+}
+.menu .item-complex .item-content {
+    background: #2c3a41;
+    color: #fff;
+}
+.menu .item {
+    border-color: #425661;
+}
+.profile-img-div {
+    width: 150px;
+    height: 150px;
+    background-size: cover;
+    background-position: center;
+    -webkit-border-radius: 75px;
+    -moz-border-radius: 75px;
+    border-radius: 75px;
+    border: 3px solid #ccc;
+    position: relative;
+    left: 50%;
+    margin-left: -75px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+    -webkit-box-shadow: 0px 0px 54px 0px rgba(66,86,97,1);
+    -moz-box-shadow: 0px 0px 54px 0px rgba(66,86,97,1);
+    box-shadow: 0px 0px 54px 0px rgba(66,86,97,1);
+}
+.card {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+    margin: 5px;
+}
+.item-body p {
+    margin: 0;
+}
+ion-header-bar.bar-stable {
+    background: #1976D2 !important;
+    color: #fff;
+}
+.bar-stable .button.button-icon, .bar.bar-stable .title {
+    color: #fff;
+    text-shadow: 1px 1px 0 #0546d2;
+}
+p.decision {
+    margin-top: 10px;
+}
+.button.button-outline {
+    min-height: auto;
+    line-height: 100%;
+    font-size: 13px;
+    padding: 6px;
+}
+.tab-item .icon {
+    color: #2C333A;
+}
+.bar-stable .button.button-clear {
+    color: #fff;
+}
