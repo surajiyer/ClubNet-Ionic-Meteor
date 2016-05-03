@@ -48,15 +48,8 @@ angular.module('app.directives', [])
     .directive('ionItemDivider', function(){
         return {
             restrict: 'E',
-            scope: false,
             replace: false,
             transclude: true,
             template: '<div class="item item-divider" ng-transclude=""></div>'
-            // scope: {
-            //     text: "@"
-            // },
-            // link: function(scope, element, attrs) {
-            //     scope.text = attrs.text;
-            // }
         }
     })

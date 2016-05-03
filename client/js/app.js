@@ -3,8 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-// 'starter.services' is found in services.js
-// 'starter.controllers' is found in controllers.js
+// 'app.services' is found in services.js
+// 'app.controllers' is found in controllers.js
 angular.module('app', ['angular-meteor',
   'ionic',
   'ngCordova',
@@ -26,7 +26,7 @@ angular.module('app', ['angular-meteor',
       StatusBar.styleDefault();
     }
   });
-})
+});
 
 function onReady() {
   angular.bootstrap(document, ['app']);
