@@ -1,4 +1,4 @@
-<h2>{{item.type | number}}</h2>
+<h2>{{item.type}}</h2>
 <p>{{item.name}}</p>
 <p>{{item.description}}</p>
 <p>
@@ -10,6 +10,6 @@
     Timestamp: {{item.timestamp | date}}
 </p>
 <div class="button-bar">
-    <a class="button button-balanced" ng-click="signUp(item)">Sign up!</a>
+    <a class="button button-balanced" ng-click="signUp()">Sign up!</a>
     <a class="button button-assertive" ng-click="refuse()">Refuse</a>
 </div>
