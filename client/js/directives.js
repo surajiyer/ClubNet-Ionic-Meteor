@@ -1,20 +1,18 @@
 angular.module('app.directives', [])
-    .directive('post', [function () {
+    .directive('post', function () {
         return {
             restrict: 'E',
             templateUrl: 'client/views/feeditems/post.ng.html',
-            require: '^item',
             scope: {
                 item: "="
             }
         }
-    }])
+    })
 
-    .directive('practicality', [function(){
+    .directive('practicality', function(){
         return {
             restrict: 'E',
             templateUrl: 'client/views/feeditems/practicality.ng.html',
-            require: '^item',
             scope: {
                 item: "="
             },
@@ -29,20 +27,19 @@ angular.module('app.directives', [])
                 };
             }
         }
-    }])
+    })
 
-    .directive('voting', [function(){
+    .directive('voting', function(){
         return {
             restrict: 'E',
             templateUrl: 'client/views/feeditems/voting.ng.html',
-            require: '^item',
             scope: {
                 item: "="
             }
         }
-    }])
+    })
 
-    .directive('ionItemDivider', [function(){
+    .directive('ionItemDivider', function(){
         return {
             restrict: 'E',
             scope: false,
@@ -56,4 +53,4 @@ angular.module('app.directives', [])
             //     scope.text = attrs.text;
             // }
         }
-    }])
+    })

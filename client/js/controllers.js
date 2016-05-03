@@ -47,7 +47,7 @@ angular.module('app.controllers', [])
             $scope.closePost();
         };
 
-        $ionicModal.fromTemplateUrl('client/views/feeditems/newPost.ng.html', {
+        $ionicModal.fromTemplateUrl('client/views/feeditems/newpost.ng.html', {
             scope: $scope
         }).then(function (postmodal) {
             $scope.postmodal = postmodal;
