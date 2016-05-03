@@ -1,20 +1,13 @@
 <ion-side-menus enable-menu-with-back-views="false">
     <ion-side-menu side="left" expose-aside-when="large" id="side-menu">
-        <ion-header-bar class="bar-stable">
-            <div class="title">Menu</div>
-        </ion-header-bar>
         <ion-content padding="false" class="side-menu-left has-header">
-            <ion-item-divider>Filter on</ion-item-divider>
+            <div class="profile-img-div" style="background-image: url(http://www.cooltimelinephotos.com/download.php?id=640)"></div>
             <ion-list>
-                <ion-checkbox>Polls</ion-checkbox>
-                <ion-checkbox>Practicalities</ion-checkbox>
-                <ion-checkbox>Sponsoring</ion-checkbox>
-            </ion-list>
-            <ion-item-divider>Pages</ion-item-divider>
-            <ion-list>
-                <ion-item ui-sref="menu.feed" menu-close="">Feed</ion-item>
-                <ion-item ui-sref="menu.polls" menu-close="">Polls</ion-item>
-                <ion-item ui-sref="menu.settings" menu-close="">Personal settings</ion-item>
+                <ion-item ui-sref="menu.feed" menu-close=""><i class="icon ion-ios-paper"></i> Feed</ion-item>
+                <ion-item ui-sref="menu.polls" menu-close=""><i class="icon ion-person"></i> Profile</ion-item>
+                <ion-item ui-sref="menu.feed" menu-close=""><i class="icon ion-chatbubbles"></i> Chat</ion-item>
+                <ion-item ui-sref="menu.settings" menu-close=""><i class="icon ion-gear-a"></i> Settings</ion-item>
+                <ion-item ui-sref="menu.feed" menu-close=""><i class="icon ion-log-out"></i> Log out</ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>
