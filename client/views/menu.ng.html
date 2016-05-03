@@ -4,16 +4,20 @@
             <div class="title">Menu</div>
         </ion-header-bar>
         <ion-content padding="false" class="side-menu-left has-header">
+            <div class="item item-divider">
+                Filter on
+            </div>
             <form class="list">
                 <ion-checkbox>Polls</ion-checkbox>
                 <ion-checkbox>Practicalities</ion-checkbox>
                 <ion-checkbox>Sponsoring</ion-checkbox>
             </form>
+            <ion-item class="item-divider"></ion-item>
+            <ion-label>Pages</ion-label>
             <ion-list>
                 <ion-item ui-sref="menu.feed" menu-close="">Feed</ion-item>
                 <ion-item ui-sref="menu.polls" menu-close="">Polls</ion-item>
                 <ion-item ui-sref="menu.practicalities" menu-close="">Practicalities</ion-item>
-                <ion-item ui-sref="menu.sponsoring" menu-close="">Sponsoring</ion-item>
                 <ion-item class="item-divider"></ion-item>
                 <ion-item ui-sref="menu.settings" menu-close="">Personal settings</ion-item>
             </ion-list>

@@ -14,9 +14,9 @@
         <div id="feeditems">
             <div class="list card" ng-repeat="item in items | orderBy:'timestamp':true" ng-switch="item.type">
                 <div class="item item-body">
-                    <post ng-switch-when="Post"></post>
-                    <practicality ng-switch-when="Practicality"></practicality>
-                    <voting ng-switch-when="Voting"></voting>
+                    <post info="item" ng-switch-when="Post"></post>
+                    <practicality info="item" ng-switch-when="Practicality"></practicality>
+                    <voting info="item" ng-switch-when="Voting"></voting>
                 </div>
             </div>
         </div>

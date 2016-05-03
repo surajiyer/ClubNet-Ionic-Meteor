@@ -12,16 +12,7 @@ angular.module('app.controllers', [])
     })
 
     .controller('feedCtrl', function ($scope, $state, $stateParams, $ionicModal, $meteor) {
-
-        /* Main controller for feed */
-
-        $scope.items = $meteor.collection(Items); // gets all the items
-
-        $scope.clicked = function (item) {
-            // To be made - taking current user ID / name
-            var user_id = 5;
-            item.subscribers.push(user_id);
-        }
+        
     })
 
     .controller('practicalityCtrl', function ($scope, $ionicModal) {
@@ -31,7 +22,7 @@ angular.module('app.controllers', [])
         $scope.newPracticality = {};
 
         $scope.practicality = function () {
-            $scope.newPracticality.subscribers = new Array();
+            $scope.newPracticality.subscribers = 0;
             $scope.newPracticality.type = 'Practicality';
             $scope.newPracticality.timestamp = new Date().valueOf();
             $scope.items.push($scope.newPracticality);

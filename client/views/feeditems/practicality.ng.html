@@ -1,15 +1,15 @@
-<h2>{{item.type}}</h2>
+<h2>{{item.type | number}}</h2>
 <p>{{item.name}}</p>
 <p>{{item.description}}</p>
 <p>
-    We need {{item.amount}} more people! <br/>
-    Already registered: {{item.subscribers}}
+    We need {{item.amount | currency}} more people! <br/>
+    Already registered: {{item.subscribers | number}}
 </p>
 <p>
     Item ID: {{item._id}} <br/>
-    Timestamp: {{item.timestamp}}
+    Timestamp: {{item.timestamp | date}}
 </p>
 <div class="button-bar">
-    <a class="button button-balanced" ng-click="clicked(item)">Sign up!</a>
-    <a class="button button-assertive" ng-click="console.log('refuse')">Refuse</a>
+    <a class="button button-balanced" ng-click="signUp(item)">Sign up!</a>
+    <a class="button button-assertive" ng-click="refuse()">Refuse</a>
 </div>
