@@ -6,12 +6,9 @@
         {{item.description}}
     </p>
 </div>
-<div class="item item-body">
-        We need {{item.amount | number}} more people! <br/>
+<div class="item item-body" ng-switch="item.formType">
+        We need {{(item.amount - item.subscribers) | number}} more people! <br/>
         Already registered: {{item.subscribers | number}}
-</div>
-<div class="item item-body">
-        {{item.formType}}
 </div>
 <label class="item item-input item-select">
     <div class="input-label">

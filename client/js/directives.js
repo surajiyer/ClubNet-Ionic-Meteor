@@ -25,12 +25,22 @@ angular.module('app.directives', [])
             link: function(scope, element, attrs) {
                 scope.signUp = function() {
                     scope.item.subscribers++;
-                    Items.update({_id: scope.item._id}, {$set: scope.item});
+                    //Items.update({_id: scope.item._id}, {$set: scope.item});
                 };
 
                 scope.refuse = function() {
                     console.log('Refuse');
                 };
+            }
+        }
+    })
+
+    .directive('hero', function(){
+        return {
+            restrict: 'E',
+            templateUrl: 'client/views/feeditems/hero.ng.html',
+            scope: {
+                item: "="
             }
         }
     })

@@ -102,7 +102,6 @@ angular.module('app.controllers', [])
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.timestamp = new Date().valueOf();
             Items.insert($scope.newVoting);
-            //$scope.items.push($scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
         };
@@ -119,5 +118,32 @@ angular.module('app.controllers', [])
 
         $scope.openVoting = function () {
             $scope.votingModal.show();
+        };
+    })
+
+    .controller('heroCtrl', function ($scope, $ionicModal) {
+        /* Post */
+        $scope.newHero = {};
+
+        $scope.hero = function () {
+            $scope.newHero.type = 'Hero';
+            $scope.newHero.timestamp = new Date().valueOf();
+            Items.insert($scope.newHero);
+            $scope.newHero = {};
+            $scope.closeHero();
+        };
+
+        $ionicModal.fromTemplateUrl('client/views/feeditems/newHero.ng.html', {
+            scope: $scope
+        }).then(function (heromodal) {
+            $scope.heromodal = heromodal;
+        });
+
+        $scope.closeHero = function () {
+            $scope.heromodal.hide();
+        };
+
+        $scope.openHero = function () {
+            $scope.heromodal.show();
         };
     })
