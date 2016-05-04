@@ -12,7 +12,12 @@ angular.module('app.controllers', [])
     })
 
     .controller('feedCtrl', function ($scope, $state, $stateParams, $ionicModal, $meteor) {
-        $scope.items = $meteor.collection(Items); // gets all the items
+       // $scope.items = $meteor.collection(Items); // gets all the items
+        $scope.helpers({
+            items() {
+                return Items.find({}, {sort: {timestamp: -1}});
+            }
+        });
     })
 
     .controller('popoverCtrl', function ($scope, $ionicPopover) {

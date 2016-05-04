@@ -1,15 +1,39 @@
-<h2>{{item.type}}</h2>
-<p>{{item.name}}</p>
-<p>{{item.description}}</p>
-<p>
-    We need {{item.amount | number}} more people! <br/>
-    Already registered: {{item.subscribers | number}}
-</p>
-<p>
-    Item ID: {{item._id}} <br/>
-    Timestamp: {{item.timestamp | date}}
-</p>
-<div class="button-bar">
-    <a class="button button-balanced" ng-click="signUp()">Sign up!</a>
-    <a class="button button-assertive" ng-click="refuse()">Refuse</a>
+
+<div class="item item-divider">
+    {{item.type}} / {{item.name}}
+</div>
+<div class="item item-body">
+    <p>
+        {{item.description}}
+    </p>
+</div>
+<div class="item item-body">
+    <p>
+        We need {{item.amount | number}} more people! <br/>
+        Already registered: {{item.subscribers | number}}
+    </p>
+</div>
+<label class="item item-input item-select">
+    <div class="input-label">
+        Number of seats:
+    </div>
+    <select>
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3" selected>3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+    </select>
+</label>
+<div class="item item-body">
+    <p>
+        <button class="button button-outline button-balanced" ng-click="signUp()">
+            Confirm
+        </button>
+        <button class="button button-outline button-assertive" ng-click="refuse()">
+            Decline
+        </button>
+    </p>
 </div>
