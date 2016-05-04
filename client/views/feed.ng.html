@@ -5,10 +5,22 @@
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
             <div>
-              <button class="button button-icon icon ion-android-funnel"> </button>
+              <button class="button button-icon icon ion-android-funnel" ng-click="openFilter()"> </button>
             </div>
         </ion-nav-buttons>
     </ion-nav-bar>
+    <div ng-show="showFilter" class="filter-box">
+        <div class="item item-divider">
+            Filter on:
+        </div>
+        <ion-list>
+            <ion-checkbox ng-repeat="type in itemTypes"
+                          ng-checked="type.checked">
+                {{type.name}}
+            </ion-checkbox>
+        </ion-list>
+    </div>
+    <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
     <ion-content>
         <div id="feeditems">
             <div class="list card" ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">

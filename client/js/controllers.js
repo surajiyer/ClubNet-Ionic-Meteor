@@ -11,9 +11,21 @@ angular.module('app.controllers', [])
 
     })
 
-    .controller('feedCtrl', function ($scope, $state, $stateParams, $ionicModal, $meteor) {
+    .controller('feedCtrl', function ($scope, $meteor) {
+        $scope.itemTypes = [
+            {name: "Exercise voting", checked: true},
+            {name: "Form", checked: true},
+            {name: "Sponsoring", checked: false},
+            {name: "Betting pool", checked: true},
+            {name: "Hero of the week", checked: false},
+            {name: "Suggest exercise", checked: true}
+        ];
+        $scope.showFilter = false;
+        $scope.openFilter = function () {
+            $scope.showFilter = !$scope.showFilter;
+        }
         $scope.helpers({
-            items() {
+            items: function() {
                 return Items.find({}, {sort: {timestamp: -1}});
             }
         });

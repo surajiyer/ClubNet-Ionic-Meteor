@@ -6,13 +6,12 @@
         </div>
     </ion-header-bar>
     <ion-content>
-        <div class="list">
-            <label class="item item-input item-floating-label">
-                <span class="input-label">Message</span>
-                <input ng-model="newPost.message" type="text" placeholder="Message">
+        <div class="list list-inset">
+            <label class="item item-input">
+                <textarea ng-model="newPost.message" type="text" placeholder="Message" rows="4"></textarea>
             </label>
             <button ng-disabled="!newPost.message" ng-click="post()" class="button button-block button-positive">
-                Post
+                Create
             </button>
         </div>
     </ion-content>

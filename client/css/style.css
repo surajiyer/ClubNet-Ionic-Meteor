@@ -54,7 +54,7 @@ p.decision {
     margin-top: 10px;
 }
 .button.button-outline {
-    min-height: auto;
+    min-height: initial;
     line-height: 100%;
     font-size: 13px;
     padding: 6px;
@@ -64,4 +64,29 @@ p.decision {
 }
 .bar-stable .button.button-clear {
     color: #fff;
+}
+.black-bg {
+    background: #000;
+    opacity: 0.2;
+    position: fixed;
+    top: 44px;
+    z-index: 3;
+    width: 100%;
+    height: 100%;
+    border-bottom: 1px solid #ddd;
+}
+.filter-box {
+    background: #fff;
+    position: fixed;
+    top: 44px;
+    z-index: 4;
+    width: 100%;
+}
+.modal-backdrop .button {
+    border-radius: 2px;
+}
+.full-image {
+    max-width: 500px;
+    display: block;
+    margin: 0 auto;
 }
