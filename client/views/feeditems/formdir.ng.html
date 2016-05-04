@@ -1,6 +1,5 @@
-
 <div class="item item-divider">
-    {{item.type}} / {{item.name}}
+    {{item.type}} / {{item.title}}
 </div>
 <div class="item item-body">
     <p>
@@ -8,10 +7,11 @@
     </p>
 </div>
 <div class="item item-body">
-    <p>
         We need {{item.amount | number}} more people! <br/>
         Already registered: {{item.subscribers | number}}
-    </p>
+</div>
+<div class="item item-body">
+        {{item.formType}}
 </div>
 <label class="item item-input item-select">
     <div class="input-label">

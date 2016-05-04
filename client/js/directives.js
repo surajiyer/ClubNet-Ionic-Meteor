@@ -15,10 +15,10 @@ angular.module('app.directives', [])
         }
     })
 
-    .directive('practicality', function(){
+    .directive('formdir', function(){
         return {
             restrict: 'E',
-            templateUrl: 'client/views/feeditems/practicality.ng.html',
+            templateUrl: 'client/views/feeditems/formdir.ng.html',
             scope: {
                 item: "="
             },

@@ -12,7 +12,6 @@ angular.module('app.controllers', [])
     })
 
     .controller('feedCtrl', function ($scope, $state, $stateParams, $ionicModal, $meteor) {
-       // $scope.items = $meteor.collection(Items); // gets all the items
         $scope.helpers({
             items() {
                 return Items.find({}, {sort: {timestamp: -1}});
@@ -67,32 +66,31 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('practicalityCtrl', function ($scope, $ionicModal) {
+    .controller('formCtrl', function ($scope, $ionicModal) {
         /* Practicality*/
-        $scope.newPracticality = {};
+        $scope.newForm = {};
 
-        $scope.practicality = function () {
-            $scope.newPracticality.subscribers = 0;
-            $scope.newPracticality.type = 'Practicality';
-            $scope.newPracticality.timestamp = new Date().valueOf();
-            Items.insert($scope.newPracticality);
-            //$scope.items.push($scope.newPracticality);
-            $scope.newPracticality = {};
-            $scope.closePracticality();
+        $scope.form = function () {
+            $scope.newForm.subscribers = 0;
+            $scope.newForm.type = 'Form';
+            $scope.newForm.timestamp = new Date().valueOf();
+            Items.insert($scope.newForm);
+            $scope.newForm = {};
+            $scope.closeForm();
         };
 
-        $ionicModal.fromTemplateUrl('client/views/feeditems/newPracticality.ng.html', {
+        $ionicModal.fromTemplateUrl('client/views/feeditems/newForm.ng.html', {
             scope: $scope
-        }).then(function (practicalityModal) {
-            $scope.practicalityModal = practicalityModal;
+        }).then(function (formModal) {
+            $scope.formModal = formModal;
         });
 
-        $scope.closePracticality = function () {
-            $scope.practicalityModal.hide();
+        $scope.closeForm = function () {
+            $scope.formModal.hide();
         };
 
-        $scope.openPracticality = function () {
-            $scope.practicalityModal.show();
+        $scope.openForm = function () {
+            $scope.formModal.show();
         };
     })
 

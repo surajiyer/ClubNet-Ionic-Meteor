@@ -1,0 +1,37 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">New Form</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeForm()">Close</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input item-select">
+                <span class="input-label">
+                    Form type:
+                </span>
+                <select ng-model="newForm.formType">
+                    <option value="laundry" selected>Laundry</option>
+                    <option value="driving">Driving</option>
+                    <option value="presence">Presence</option>
+                </select>
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Title</span>
+                <input ng-model="newForm.title" type="text" placeholder="Title">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Description</span>
+                <input ng-model="newForm.description" type="text" placeholder="Description">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Target number</span>
+                <input ng-model="newForm.amount" type="number" placeholder="Amount">
+            </label>
+            <button ng-disabled="!newForm.name && !newForm.amount" ng-click="form()" class="button button-block button-positive">
+                Post
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>
