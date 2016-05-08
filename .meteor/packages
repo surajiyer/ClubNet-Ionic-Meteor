@@ -22,3 +22,5 @@ angular
 dburles:collection-helpers
 tomi:upload-server
 tomi:upload-jquery
+sanjo:jasmine
+velocity:html-reporter

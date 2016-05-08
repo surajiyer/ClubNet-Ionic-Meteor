@@ -22,12 +22,14 @@
     </div>
     <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
     <ion-content>
-        <div id="feeditems">
-            <div class="list card" ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">
-                <post item="item" ng-switch-when="Post"></post>
-                <formdir item="item" ng-switch-when="Form"></formdir>
-                <voting item="item" ng-switch-when="Voting"></voting>
-                <hero item="item" ng-switch-when="Hero"></hero>
+        <div id="feeditems" class="main-content">
+            <div ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">
+                <div class="list card" style="margin-top: 10px; margin-bottom: 10px;">
+                    <post item="item" ng-switch-when="Post"></post>
+                    <formdir item="item" ng-switch-when="Form"></formdir>
+                    <voting item="item" ng-switch-when="Voting"></voting>
+                    <hero item="item" ng-switch-when="Hero"></hero>
+                </div>
             </div>
         </div>
     </ion-content>
