@@ -23,7 +23,7 @@ angular.module('app.controllers', [])
         $scope.showFilter = false;
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
-        }
+        };
         $scope.helpers({
             items: function() {
                 return Items.find({}, {sort: {timestamp: -1}});

@@ -24,3 +24,6 @@ tomi:upload-server
 tomi:upload-jquery
 sanjo:jasmine
 velocity:html-reporter
+practicalmeteor:mocha
+practicalmeteor:chai
+practicalmeteor:sinon
