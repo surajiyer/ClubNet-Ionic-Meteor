@@ -7,17 +7,6 @@ angular.module('app.controllers', [])
 
     })
 
-    .controller('mainCtrl', function ($rootScope, $state, $scope) {
-        console.log($rootScope.currentUser);
-        console.log($rootScope);
-        console.log($scope);
-        if ($rootScope.currentUser) {
-            $state.go('menu.feed');
-        } else {
-            $state.go('login');
-        }
-    })
-
     .controller('menuCtrl', function ($scope, $meteor, $state) {
         $scope.logout = function() {
             $meteor.logout();
@@ -26,9 +15,10 @@ angular.module('app.controllers', [])
     })
 
     .controller('loginCtrl', function ($scope, $meteor, $state) {
-        $scope.user = {};
-        $scope.user.email = '';
-        $scope.user.password = '';
+        $scope.user = {
+            email: '',
+            password: ''
+        };
         $scope.login = function () {
             $meteor.loginWithPassword($scope.user.email, $scope.user.password, function(error){
                 if (error) {
@@ -37,8 +27,7 @@ angular.module('app.controllers', [])
                     $state.go('menu.feed'); // Redirect user if login succeeds
                 }
             });
-        }
-
+        };
     })
 
     .controller('registerCtrl', function ($scope, $state) {
@@ -48,7 +37,6 @@ angular.module('app.controllers', [])
            console.log(email);
            console.log(password);
            if (email != '' && password != '') {
-
                Accounts.createUser({
                    email: email,
                    password: password
@@ -67,7 +55,10 @@ angular.module('app.controllers', [])
        }
     })
 
-    .controller('feedCtrl', function ($scope) {
+    .controller('feedCtrl', function ($scope, $ionicNavBarDelegate) {
+        // $scope.$on('$ionicView.enter', function(e) {
+        //     $ionicNavBarDelegate.showBar(true);
+        // });
         $scope.itemTypes = [
             {name: "Exercise voting", checked: true},
             {name: "Form", checked: true},

@@ -101,7 +101,8 @@ p.decision {
     background: #fff;
     position: fixed;
     top: 44px;
-    right: 0;
+    margin-left: calc(-50vw + 50%);
+    margin-right: calc(-50vw + 50%);
     z-index: 4;
     width: 100%;
     max-width: 500px;

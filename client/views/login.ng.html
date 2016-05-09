@@ -1,6 +1,5 @@
 <ion-view title="Login" style="background-color:#FFFFFF;">
     <ion-content padding="true" style="background: url(/img/football-bg.jpg) no-repeat center;background-size:cover;" class="has-header">
-        <div>Hello, {{currentUser || json}}</div>
         <form class="list main-content" ng-submit="login()">
             <ion-list>
                 <label class="item item-input">
@@ -14,7 +13,7 @@
             </ion-list>
             <div class="spacer" style="width: 300px; height: 22px;"></div>
             <a ng-click="login()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">Log in</a>
-            <a ui-sref="register" id="register-button" style="font-size:18px;" class="button button-positive  button-block">REGISTER</a>
+            <a ui-sref="register" id="register-button" style="font-size:18px;" class="button button-positive  button-block">Register</a>
         </form>
     </ion-content>
 </ion-view>
