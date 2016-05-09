@@ -56,9 +56,6 @@ angular.module('app.controllers', [])
     })
 
     .controller('feedCtrl', function ($scope, $ionicNavBarDelegate) {
-        // $scope.$on('$ionicView.enter', function(e) {
-        //     $ionicNavBarDelegate.showBar(true);
-        // });
         $scope.itemTypes = [
             {name: "Exercise voting", checked: true},
             {name: "Form", checked: true},
