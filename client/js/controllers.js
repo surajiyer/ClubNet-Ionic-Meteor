@@ -7,11 +7,67 @@ angular.module('app.controllers', [])
 
     })
 
-    .controller('loginCtrl', function ($scope) {
+    .controller('mainCtrl', function ($rootScope, $state, $scope) {
+        console.log($rootScope.currentUser);
+        console.log($rootScope);
+        console.log($scope);
+        if ($rootScope.currentUser) {
+            $state.go('menu.feed');
+        } else {
+            $state.go('login');
+        }
+    })
+
+    .controller('menuCtrl', function ($scope, $meteor, $state) {
+        $scope.logout = function() {
+            $meteor.logout();
+            $state.go('login');
+        }
+    })
+
+    .controller('loginCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {};
+        $scope.user.email = '';
+        $scope.user.password = '';
+        $scope.login = function () {
+            $meteor.loginWithPassword($scope.user.email, $scope.user.password, function(error){
+                if (error) {
+                    console.log(error.reason); // Output error if login fails
+                } else {
+                    $state.go('menu.feed'); // Redirect user if login succeeds
+                }
+            });
+        }
 
     })
 
-    .controller('feedCtrl', function ($scope, $meteor) {
+    .controller('registerCtrl', function ($scope, $state) {
+       $scope.register = function() {
+           var email = $('[name=regemail]').val();
+           var password = $('[name=regpassword]').val();
+           console.log(email);
+           console.log(password);
+           if (email != '' && password != '') {
+
+               Accounts.createUser({
+                   email: email,
+                   password: password
+               }, function(error){
+                   if(error){
+                       console.log(error.reason); // Output error if registration fails
+                   } else {
+                       $state.go('menu.feed'); // Redirect user if registration succeeds
+                   }
+               });
+
+           } else {
+               console.log('Please fill in email and password');
+           }
+
+       }
+    })
+
+    .controller('feedCtrl', function ($scope) {
         $scope.itemTypes = [
             {name: "Exercise voting", checked: true},
             {name: "Form", checked: true},
@@ -159,3 +215,4 @@ angular.module('app.controllers', [])
             $scope.heromodal.show();
         };
     })
+

@@ -21,7 +21,9 @@
         </ion-list>
     </div>
     <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
+
     <ion-content>
+        <div>Hello, {{currentUser.emails[0].address}}</div>
         <div id="feeditems" class="main-content">
             <div ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">
                 <div class="list card" style="margin-top: 10px; margin-bottom: 10px;">

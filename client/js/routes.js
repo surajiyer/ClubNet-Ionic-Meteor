@@ -5,17 +5,31 @@ angular.module('app.routes', [])
         // Learn more here: https://github.com/angular-ui/ui-router
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
+
+
         $stateProvider
+            .state('/', {
+                url: '/',
+                controller: 'mainCtrl'
+            })
+
             .state('login', {
                 url: '/login',
                 templateUrl: 'client/views/login.ng.html',
                 controller: 'loginCtrl'
             })
 
+            .state('register', {
+                url: '/register',
+                templateUrl: 'client/views/register.ng.html',
+                controller: 'registerCtrl'
+            })
+
             .state('menu', {
                 url: '/side-menu',
                 templateUrl: 'client/views/menu.ng.html',
-                abstract: true
+                abstract: true,
+                controller: 'menuCtrl'
             })
 
             .state('menu.feed', {

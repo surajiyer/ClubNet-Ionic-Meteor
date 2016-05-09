@@ -27,3 +27,4 @@ velocity:html-reporter
 practicalmeteor:mocha
 practicalmeteor:chai
 practicalmeteor:sinon
+accounts-password
