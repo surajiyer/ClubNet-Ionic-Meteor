@@ -1,6 +1,41 @@
 angular.module('app.controllers', [])
+    .controller('profileCtrl', function ($scope, $meteor, $state) {
+        $scope.temp_user = {
+            email: '',
+            fullName: ''
+        };
+
+        $scope.temp_pass = {
+            oldPass: '',
+            newPass: '',
+            newPassCheck: ''
+        };
+
+        $scope.changeGeneralProfileInfo = function () {
+            var email = $scope.temp_user.email;
+        };
+
+        $scope.changePassword = function () {
+            var oldPass = $scope.temp_pass.oldPass;
+            var newPass = $scope.temp_pass.newPass;
+            var newPassCheck = $scope.temp_pass.newPassCheck;
+
+            if (newPass == newPassCheck) {
+                console.log("De wachtwoorden komen overeen.")
+                $meteor.changePassword(oldPass, newPass).then(function () {
+                    console.log('Change password success');
+                }, function (err) {
+                    console.log('Error changing password - ', err);
+                });
+            }
+            else if (newPass != newPassCheck) {
+                console.log("De wachtwoorden komen niet overeen.")
+            }
+        }
+    })
+
     .controller('menuCtrl', function ($scope, $meteor, $state) {
-        $scope.logout = function() {
+        $scope.logout = function () {
             $meteor.logout();
             $state.go('login');
         }
@@ -12,7 +47,7 @@ angular.module('app.controllers', [])
             password: ''
         };
         $scope.login = function () {
-            $meteor.loginWithPassword($scope.user.email, $scope.user.password, function(error){
+            $meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                 if (error) {
                     console.log(error.reason); // Output error if login fails
                 } else {
@@ -23,28 +58,28 @@ angular.module('app.controllers', [])
     })
 
     .controller('registerCtrl', function ($scope, $state) {
-       $scope.register = function() {
-           var email = $('[name=regemail]').val();
-           var password = $('[name=regpassword]').val();
-           console.log(email);
-           console.log(password);
-           if (email != '' && password != '') {
-               Accounts.createUser({
-                   email: email,
-                   password: password
-               }, function(error){
-                   if(error){
-                       console.log(error.reason); // Output error if registration fails
-                   } else {
-                       $state.go('menu.feed'); // Redirect user if registration succeeds
-                   }
-               });
+        $scope.register = function () {
+            var email = $('[name=regemail]').val();
+            var password = $('[name=regpassword]').val();
+            console.log(email);
+            console.log(password);
+            if (email != '' && password != '') {
+                Accounts.createUser({
+                    email: email,
+                    password: password
+                }, function (error) {
+                    if (error) {
+                        console.log(error.reason); // Output error if registration fails
+                    } else {
+                        $state.go('menu.feed'); // Redirect user if registration succeeds
+                    }
+                });
 
-           } else {
-               console.log('Please fill in email and password');
-           }
+            } else {
+                console.log('Please fill in email and password');
+            }
 
-       }
+        }
     })
 
     .controller('feedCtrl', function ($scope) {
@@ -61,7 +96,7 @@ angular.module('app.controllers', [])
             $scope.showFilter = !$scope.showFilter;
         };
         $scope.helpers({
-            items: function() {
+            items: function () {
                 return Items.find({}, {sort: {timestamp: -1}});
             }
         });
