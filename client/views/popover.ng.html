@@ -1,28 +1,28 @@
 <style>.popover { min-width: 240px; }</style>
 <ion-popover-view>
     <ion-header-bar>
-        <h1 class="title">Select item to add</h1>
+        <h1 class="title">Selecteer een item om toe te voegen:</h1>
         <button class="button button-icon icon ion-minus-round" ng-click="closePopover($event)"> </button>
     </ion-header-bar>
     <ion-content>
         <div ng-controller="postCtrl">
             <span class="item" ng-click="openPost(); closePopover()">
-                Create new Post
+                Nieuwe Post
             </span>
         </div>
         <div ng-controller="formCtrl">
             <span class="item" ng-click="openForm(); closePopover()">
-                Create new Form
+                Nieuwe Lijst
             </span>
         </div>
         <div ng-controller="votingCtrl">
             <span class="item" ng-click="openVoting(); closePopover()">
-                Create new Voting
+                Nieuwe Poll
             </span>
         </div>
         <div ng-controller="heroCtrl">
             <span class="item" ng-click="openHero(); closePopover()">
-                Create new Hero
+                Nieuwe 'Hero Of The Week'
             </span>
         </div>
     </ion-content>

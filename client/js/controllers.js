@@ -25,7 +25,6 @@ angular.module('app.controllers', [])
 
         }
 
-
         $scope.changePassword = function () {
 
         var oldPass = $scope.temp_pass.oldPass;
