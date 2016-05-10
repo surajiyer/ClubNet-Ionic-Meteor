@@ -7,7 +7,48 @@ angular.module('app.controllers', [])
 
     })
 
-    .controller('profileCtrl', function ($scope) {
+    .controller('profileCtrl', function ($scope, $meteor, $state) {
+        $scope.temp_user = {
+            email: '',
+            fullName: ''
+        };
+
+        $scope.temp_pass = {
+            oldPass: '',
+            newPass: '',
+            newPassCheck: ''
+        };
+
+        $scope.changeGeneralProfileInfo = function () {
+
+        var email = $scope.temp_user.email;
+
+        }
+
+
+        $scope.changePassword = function () {
+
+        var oldPass = $scope.temp_pass.oldPass;
+        var newPass = $scope.temp_pass.newPass;
+        var newPassCheck = $scope.temp_pass.newPassCheck;
+
+        if(newPass == newPassCheck){
+            console.log("De wachtwoorden komen overeen.")
+          $meteor.changePassword(oldPass, newPass).then(function(){
+            console.log('Change password success');
+          }, function(err){
+            console.log('Error changing password - ', err);
+          });
+        }
+        else if(newPass != newPassCheck)
+        {
+            console.log("De wachtwoorden komen niet overeen.")
+        }
+
+
+        
+        }
+
 
     })
 

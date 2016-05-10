@@ -10,16 +10,16 @@
 
     <label class="item item-input">
   <span class="input-label">Email</span>
-  <input type="email">
+  <input type="email" ng-model="temp_user.email">
 </label>
 
 
 <label class="item item-input">
   <span class="input-label">Volledige Naam</span>
-  <input type="text">
+  <input type="text" ng-model="temp_user.fullName">
 </label>
 
-<button class="button button-stable" style="margin-top: 10px;">
+<button class="button button-stable" style="margin-top: 10px;" ng-click="changeGeneralProfileInfo()">
  Wijzigen
 </button>
 
@@ -35,22 +35,22 @@
 
    <label class="item item-input">
   <span class="input-label">Oud Wachtwoord</span>
-  <input type="password">
+  <input type="password" ng-model="temp_pass.oldPass">
 </label>
 
 
 <label class="item item-input">
   <span class="input-label">Nieuw Wachtwoord</span>
-  <input type="password">
+  <input type="password" ng-model="temp_pass.newPass">
 </label>
 
 <label class="item item-input">
   <span class="input-label">Nieuw Wachtwoord (Bevestiging)</span>
-  <input type="password">
+  <input type="password" ng-model="temp_pass.newPassCheck">
 </label>
 
 
-<button class="button button-stable" style="margin-top: 10px;">
+<button class="button button-stable" style="margin-top: 10px;" ng-click="changePassword()">
   Wachtwoord Wijzigen
 </button>
 
