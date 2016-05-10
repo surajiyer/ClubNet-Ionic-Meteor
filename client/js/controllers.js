@@ -1,12 +1,4 @@
 angular.module('app.controllers', [])
-    .controller('pollsCtrl', function ($scope) {
-
-    })
-
-    .controller('settingsCtrl', function ($scope) {
-
-    })
-
     .controller('menuCtrl', function ($scope, $meteor, $state) {
         $scope.logout = function() {
             $meteor.logout();
@@ -55,7 +47,7 @@ angular.module('app.controllers', [])
        }
     })
 
-    .controller('feedCtrl', function ($scope, $ionicNavBarDelegate) {
+    .controller('feedCtrl', function ($scope) {
         $scope.itemTypes = [
             {name: "Exercise voting", checked: true},
             {name: "Form", checked: true},
@@ -202,5 +194,13 @@ angular.module('app.controllers', [])
         $scope.openHero = function () {
             $scope.heromodal.show();
         };
+    })
+
+    .controller('pollsCtrl', function ($scope) {
+
+    })
+
+    .controller('settingsCtrl', function ($scope) {
+
     })
 
