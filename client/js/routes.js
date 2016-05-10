@@ -57,6 +57,16 @@ angular.module('app.routes', [])
                 }
             })
 
+            .state('menu.profile', {
+                url: '/profile',
+                views: {
+                    'side-menu-content': {
+                        templateUrl: 'client/views/profile.ng.html',
+                        controller: 'profileCtrl'
+                    }
+                }
+            })
+
             .state('menu.polls', {
                 url: '/polls',
                 views: {

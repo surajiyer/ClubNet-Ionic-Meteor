@@ -7,6 +7,10 @@ angular.module('app.controllers', [])
 
     })
 
+    .controller('profileCtrl', function ($scope) {
+
+    })
+
     .controller('menuCtrl', function ($scope, $meteor, $state) {
         $scope.logout = function() {
             $meteor.logout();
