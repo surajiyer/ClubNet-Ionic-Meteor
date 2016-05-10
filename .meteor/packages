@@ -28,3 +28,4 @@ practicalmeteor:mocha
 practicalmeteor:chai
 practicalmeteor:sinon
 accounts-password
+angular-meteor-auth

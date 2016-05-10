@@ -28,6 +28,7 @@ angular.module('app.controllers', [])
                 console.log("De wachtwoorden komen overeen.")
                 $meteor.changePassword(oldPass, newPass).then(function () {
                     console.log('Change password success');
+                    $state.go('menu.feed');
                 }, function (err) {
                     console.log('Error changing password - ', err);
                 });
@@ -58,6 +59,43 @@ angular.module('app.controllers', [])
                     $state.go('menu.feed'); // Redirect user if login succeeds
                 }
             });
+        };
+
+        $scope.goToRemindPassword = function() {
+            $state.go('forgotPassword');
+        }
+    })
+
+    .controller('forgotPasswordCtrl', function ($scope, $meteor, $state, $ionicHistory) {
+        $scope.forgotUser = {
+            email: '',
+            token: '',
+            newPassword: ''
+        };
+
+        $scope.resetPassword = function(){
+            $meteor.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword).then(function(){
+                console.log('Reset password success');
+            }, function(err){
+                console.log('Error resetting password - ', err);
+            });
+        }
+
+        $scope.forgotPassword = function() {
+            if ($scope.forgotUser.email != '') {
+                $meteor.forgotPassword({email: $scope.forgotUser.email}).then(function(){
+                    console.log('Success sending forgot password email');
+                }, function(err){
+                    console.log('Error sending forgot password email - ', err);
+                });
+            } else {
+                console.log('PLEASE ENTER EMAIL ADDRESS U BITCH');
+            }
+
+        }
+
+        $scope.goBack = function() {
+            $ionicHistory.goBack();
         };
     })
 

@@ -119,3 +119,19 @@ p.decision {
     display: block;
     margin: 0 auto;
 }
+
+.welcome-message {
+    color: #fff;
+    padding: 10px 0 20px 0;
+    width: 100%;
+    text-align: center;
+}
+
+.button {
+    font-size:18px;
+}
+
+.bg.white {
+    background: #fff;
+    padding: 10px;
+}
