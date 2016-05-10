@@ -12,15 +12,12 @@ angular.module('app.controllers', [])
         };
 
         $scope.changeGeneralProfileInfo = function () {
-<<<<<<< HEAD
+
 
         var email = $scope.temp_user.email;
 
-        }
-=======
-            var email = $scope.temp_user.email;
         };
->>>>>>> 450ebeba7509e812be9fb4676cd525e00519b702
+
 
         $scope.changePassword = function () {
             var oldPass = $scope.temp_pass.oldPass;
