@@ -19,12 +19,12 @@
 
 <body>
     <!--TODO: change condition in production-->
-    <div ng-if="Meteor.isCordova">
+    <div ng-if="!Meteor.isCordova">
         <ion-nav-bar class="bar-stable">
         </ion-nav-bar>
         <ion-nav-view animation="slide-left-right-ios7"></ion-nav-view>
     </div>
-    <div ng-if="!Meteor.isCordova">
+    <div ng-if="Meteor.isCordova">
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
         
