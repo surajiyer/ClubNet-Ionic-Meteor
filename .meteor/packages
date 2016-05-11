@@ -29,3 +29,4 @@ practicalmeteor:chai
 practicalmeteor:sinon
 accounts-password
 angular-meteor-auth
+angularui:angular-ui-bootstrap
