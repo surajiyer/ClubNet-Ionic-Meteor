@@ -146,7 +146,7 @@ angular.module('app.controllers', [])
 
     .controller('popoverCtrl', function ($scope, $ionicPopover) {
         /* POPOVER */
-        $ionicPopover.fromTemplateUrl('client/views/popover.ng.html', {
+        $ionicPopover.fromTemplateUrl('client/app/views/popover.ng.html', {
             scope: $scope
         }).then(function (popover) {
             $scope.popover = popover;
@@ -176,7 +176,7 @@ angular.module('app.controllers', [])
             $scope.closePost();
         };
 
-        $ionicModal.fromTemplateUrl('client/views/feeditems/newPost.ng.html', {
+        $ionicModal.fromTemplateUrl('client/app/views/feeditems/newPost.ng.html', {
             scope: $scope
         }).then(function (postmodal) {
             $scope.postmodal = postmodal;
@@ -204,7 +204,7 @@ angular.module('app.controllers', [])
             $scope.closeForm();
         };
 
-        $ionicModal.fromTemplateUrl('client/views/feeditems/newForm.ng.html', {
+        $ionicModal.fromTemplateUrl('client/app/views/feeditems/newForm.ng.html', {
             scope: $scope
         }).then(function (formModal) {
             $scope.formModal = formModal;
@@ -231,7 +231,7 @@ angular.module('app.controllers', [])
             $scope.closeVoting();
         };
 
-        $ionicModal.fromTemplateUrl('client/views/feeditems/newVoting.ng.html', {
+        $ionicModal.fromTemplateUrl('client/app/views/feeditems/newVoting.ng.html', {
             scope: $scope
         }).then(function (votingModal) {
             $scope.votingModal = votingModal;
@@ -258,7 +258,7 @@ angular.module('app.controllers', [])
             $scope.closeHero();
         };
 
-        $ionicModal.fromTemplateUrl('client/views/feeditems/newHero.ng.html', {
+        $ionicModal.fromTemplateUrl('client/app/views/feeditems/newHero.ng.html', {
             scope: $scope
         }).then(function (heromodal) {
             $scope.heromodal = heromodal;

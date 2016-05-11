@@ -31,7 +31,9 @@ function onReady() {
     angular.bootstrap(document, ['app']);
 }
 
-// TODO: Change condition in production
-if (true || Meteor.isCordova) {
+// TODO: Remove else condition in production
+if (Meteor.isCordova) {
     angular.element(document).on("deviceready", onReady);
+} else {
+    angular.element(document).ready(onReady);
 }
