@@ -13,7 +13,9 @@
         </div>
         <ion-list>
             <ion-checkbox ng-repeat="type in itemTypes"
-                          ng-checked="type.checked">
+                          ng-checked="type.checked"
+                          ng-model="type.checked"
+                          ng-change="type.checked">
                 {{type.name}}
             </ion-checkbox>
         </ion-list>

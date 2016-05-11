@@ -25,6 +25,9 @@
         <ion-nav-view animation="slide-left-right-ios7"></ion-nav-view>
     </div>
     <div ng-if="Meteor.isCordova">
-        Web interface.
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+        
+        <div id="main" ui-view></div>
     </div>
 </body>

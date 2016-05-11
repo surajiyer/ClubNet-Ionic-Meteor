@@ -9,8 +9,8 @@ angular-templates@1.0.2
 angular:angular@1.5.3_1
 angular:angular-animate@1.5.3_1
 angular:angular-sanitize@1.5.3_1
+angularui:angular-ui-bootstrap@0.13.0
 angularui:angular-ui-router@0.2.15
-autopublish@1.0.7
 autoupdate@1.2.9
 babel-compiler@6.6.4
 babel-runtime@0.1.8
