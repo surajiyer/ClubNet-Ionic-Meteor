@@ -1,18 +1,18 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">New Hero</h1>
+        <h1 class="title">Nieuwe Hero</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeHero()">Close</button>
+            <button class="button button-clear" ng-click="closeHero()">Afsluiten</button>
         </div>
     </ion-header-bar>
     <ion-content>
         <div class="list">
             <label class="item item-input item-floating-label">
-                <span class="input-label">Title</span>
+                <span class="input-label">Titel</span>
                 <input ng-model="newHero.title" type="text" placeholder="Title">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Description</span>
+                <span class="input-label">Beschrijving</span>
                 <input ng-model="newHero.description" type="text" placeholder="Description">
             </label>
             <button ng-disabled="!newHero.description && !newHero.title" ng-click="hero()" class="button button-block button-positive">

@@ -1,7 +1,7 @@
 // Ionic Starter App
 
 // angular.module is a global place for creating, registering and retrieving Angular modules
-// 'app' is the name of this angular module example (also set in a <body> attribute in index.html)
+// 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'app.services' is found in services.js
 // 'app.controllers' is found in controllers.js

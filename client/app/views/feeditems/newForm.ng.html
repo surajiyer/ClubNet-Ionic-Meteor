@@ -1,32 +1,32 @@
 <ion-modal-view>
-    <ion-nav-bar>
-        <h1 class="title">New Form</h1>
+    <ion-header-bar>
+        <h1 class="title">Nieuwe Lijst</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeForm()">Close</button>
+            <button class="button button-clear" ng-click="closeForm()">Afsluiten</button>
         </div>
-    </ion-nav-bar>
+    </ion-header-bar>
     <ion-content>
         <div class="list">
             <label class="item item-input item-select">
                 <span class="input-label">
-                    Form type:
+                    Lijst type:
                 </span>
                 <select ng-model="newForm.formType">
-                    <option value="laundry" selected>Laundry</option>
-                    <option value="driving">Driving</option>
-                    <option value="presence">Presence</option>
+                    <option value="laundry" selected>Wassen</option>
+                    <option value="driving">Rijden</option>
+                    <option value="presence">Aanwezigheid</option>
                 </select>
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Title</span>
+                <span class="input-label">Titel</span>
                 <input ng-model="newForm.title" type="text" placeholder="Title">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Description</span>
+                <span class="input-label">Beschrijving</span>
                 <input ng-model="newForm.description" type="text" placeholder="Description">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Target number</span>
+                <span class="input-label">Doelstelling:</span>
                 <input ng-model="newForm.amount" type="number" placeholder="Amount">
             </label>
             <button ng-disabled="!newForm.name && !newForm.amount" ng-click="form()" class="button button-block button-positive">

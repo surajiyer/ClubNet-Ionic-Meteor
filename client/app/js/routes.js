@@ -31,6 +31,12 @@ angular.module('app.routes', [])
                 controller: 'registerCtrl'
             })
 
+            .state('forgotPassword', {
+                url: '/forgotpassword',
+                templateUrl: 'client/views/forgotPassword.ng.html',
+                controller: 'forgotPasswordCtrl'
+            })
+
             .state('menu', {
                 url: '/side-menu',
                 templateUrl: 'client/app/views/menu.ng.html',
