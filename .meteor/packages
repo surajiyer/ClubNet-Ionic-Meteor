@@ -30,3 +30,4 @@ accounts-password
 angular-meteor-auth
 angularui:angular-ui-bootstrap
 angularui:angular-ui-router
+planettraining:angular-translate
