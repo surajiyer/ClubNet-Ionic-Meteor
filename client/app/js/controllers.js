@@ -17,8 +17,7 @@ angular.module('app.controllers', [])
         var email = $scope.temp_user.email;
 
         };
-
-
+        
         $scope.changePassword = function () {
             var oldPass = $scope.temp_pass.oldPass;
             var newPass = $scope.temp_pass.newPass;
@@ -126,17 +125,54 @@ angular.module('app.controllers', [])
 
     .controller('feedCtrl', function ($scope) {
         $scope.itemTypes = [
-            {name: "Exercise voting", checked: true},
-            {name: "Form", checked: true},
-            {name: "Sponsoring", checked: false},
-            {name: "Betting pool", checked: true},
-            {name: "Hero of the week", checked: false},
-            {name: "Suggest exercise", checked: true}
+            {type: 'Voting', name: "Exercise voting", checked: true},
+            {type: 'Form', name: "Form", checked: true},
+           // {type: 'Sponsoring', name: "Sponsoring", checked: true},
+           // {type: 'Betting', name: "Betting pool", checked: true},
+            {type: 'Hero', name: "Hero of the week", checked: true},
+           // {type: 'Suggest', name: "Suggest exercise", checked: true},
+            {type: 'Post', name: "Post", checked: true}
         ];
+
+        $scope.itemTypes2 = ['Voting', 'Form', 'Hero', 'Post'];
+
+        $scope.$watch('itemTypes', function(newValue, oldValue) {
+            $scope.itemTypes.forEach(function(item, index){
+                if (oldValue[index].checked != newValue[index].checked) {
+                    if (item.checked == true) {
+                        var i = includes(item.type);
+                        if (i == -1) {
+                            $scope.itemTypes2.push(item.type);
+                        }
+                    } else if (item.checked == false) {
+                        var i = includes(item.type);
+                        if (i != -1) {
+                            $scope.itemTypes2.splice(i, 1);
+                        }
+                    }
+                }
+            });
+        }, true);
+
+        function includes(k) {
+            for(var i=0; i < $scope.itemTypes2.length; i++){
+                if( $scope.itemTypes2[i] == k  ){
+                    return i;
+                }
+            }
+            return -1;
+        }
+        
         $scope.showFilter = false;
+        
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
         };
+
+        $scope.subscribe('allFeed', function () {
+            return [ this.getCollectionReactively('itemTypes2') ];
+        });
+
         $scope.helpers({
             items: function () {
                 return Items.find({}, {sort: {timestamp: -1}});
