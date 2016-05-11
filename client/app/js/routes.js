@@ -10,6 +10,7 @@ angular.module('app.routes', [])
             .state('/', {
                 url: '/',
                 controller: function ($scope, $state) {
+                    // If user is already logged in, go directly to feed
                     if (Meteor.userId()) {
                         $state.go('menu.feed');
                     } else {
@@ -20,19 +21,19 @@ angular.module('app.routes', [])
 
             .state('login', {
                 url: '/login',
-                templateUrl: 'client/views/login.ng.html',
+                templateUrl: 'client/app/views/login.ng.html',
                 controller: 'loginCtrl'
             })
 
             .state('register', {
                 url: '/register',
-                templateUrl: 'client/views/register.ng.html',
+                templateUrl: 'client/app/views/register.ng.html',
                 controller: 'registerCtrl'
             })
 
             .state('menu', {
                 url: '/side-menu',
-                templateUrl: 'client/views/menu.ng.html',
+                templateUrl: 'client/app/views/menu.ng.html',
                 abstract: true,
                 controller: 'menuCtrl'
             })
@@ -41,7 +42,7 @@ angular.module('app.routes', [])
                 url: '/feed',
                 views: {
                     'side-menu-content': {
-                        templateUrl: 'client/views/feed.ng.html',
+                        templateUrl: 'client/app/views/feed.ng.html',
                         controller: 'feedCtrl'
                     }
                 }
@@ -51,7 +52,7 @@ angular.module('app.routes', [])
                 url: '/settings',
                 views: {
                     'side-menu-content': {
-                        templateUrl: 'client/views/settings.ng.html',
+                        templateUrl: 'client/app/views/settings.ng.html',
                         controller: 'settingsCtrl'
                     }
                 }
@@ -61,7 +62,7 @@ angular.module('app.routes', [])
                 url: '/profile',
                 views: {
                     'side-menu-content': {
-                        templateUrl: 'client/views/profile.ng.html',
+                        templateUrl: 'client/app/views/profile.ng.html',
                         controller: 'profileCtrl'
                     }
                 }
@@ -71,7 +72,7 @@ angular.module('app.routes', [])
                 url: '/polls',
                 views: {
                     'side-menu-content': {
-                        templateUrl: 'client/views/polls.ng.html',
+                        templateUrl: 'client/app/views/polls.ng.html',
                         controller: 'pollsCtrl'
                     }
                 }

@@ -27,16 +27,11 @@ angular.module('app', ['angular-meteor',
         });
     });
 
-function onCordovaReady() {
+function onReady() {
     angular.bootstrap(document, ['app']);
 }
 
-function onWebInterfaceReady() {
-    angular.bootstrap(document, ['app']);
-}
-
-if (Meteor.isCordova) {
-    angular.element(document).on("deviceready", onCordovaReady);
-} else {
-    angular.element(document).ready(onWebInterfaceReady);
+// TODO: Change condition in production
+if (true || Meteor.isCordova) {
+    angular.element(document).on("deviceready", onReady);
 }
