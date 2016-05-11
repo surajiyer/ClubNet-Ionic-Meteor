@@ -12,12 +12,8 @@ angular.module('app.controllers', [])
         };
 
         $scope.changeGeneralProfileInfo = function () {
-
-
-        var email = $scope.temp_user.email;
-
+            var email = $scope.temp_user.email;
         };
-
 
         $scope.changePassword = function () {
             var oldPass = $scope.temp_pass.oldPass;
@@ -61,7 +57,7 @@ angular.module('app.controllers', [])
             });
         };
 
-        $scope.goToRemindPassword = function() {
+        $scope.goToRemindPassword = function () {
             $state.go('forgotPassword');
         }
     })
@@ -73,19 +69,19 @@ angular.module('app.controllers', [])
             newPassword: ''
         };
 
-        $scope.resetPassword = function(){
-            $meteor.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword).then(function(){
+        $scope.resetPassword = function () {
+            $meteor.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword).then(function () {
                 console.log('Reset password success');
-            }, function(err){
+            }, function (err) {
                 console.log('Error resetting password - ', err);
             });
         }
 
-        $scope.forgotPassword = function() {
+        $scope.forgotPassword = function () {
             if ($scope.forgotUser.email != '') {
-                $meteor.forgotPassword({email: $scope.forgotUser.email}).then(function(){
+                $meteor.forgotPassword({email: $scope.forgotUser.email}).then(function () {
                     console.log('Success sending forgot password email');
-                }, function(err){
+                }, function (err) {
                     console.log('Error sending forgot password email - ', err);
                 });
             } else {
@@ -94,7 +90,7 @@ angular.module('app.controllers', [])
 
         }
 
-        $scope.goBack = function() {
+        $scope.goBack = function () {
             $ionicHistory.goBack();
         };
     })
