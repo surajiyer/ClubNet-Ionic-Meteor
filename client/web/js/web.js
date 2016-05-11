@@ -14,6 +14,7 @@ function onReady() {
     angular.bootstrap(document, ['web']);
 }
 
-if (!Meteor.isCordova) {
+// TODO: Change condition in production
+if (Meteor.isCordova) {
     angular.element(document).ready(onReady);
 }

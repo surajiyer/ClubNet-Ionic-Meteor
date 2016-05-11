@@ -33,7 +33,7 @@ angular.module('app.routes', [])
 
             .state('forgotPassword', {
                 url: '/forgotpassword',
-                templateUrl: 'client/views/forgotPassword.ng.html',
+                templateUrl: 'client/app/views/forgotPassword.ng.html',
                 controller: 'forgotPasswordCtrl'
             })
 

@@ -8,7 +8,7 @@ angular.module('app.directives', [])
     .directive('post', function () {
         return {
             restrict: 'E',
-            templateUrl: 'client/views/feeditems/post.ng.html',
+            templateUrl: 'client/app/views/feeditems/post.ng.html',
             scope: {
                 item: "="
             }
@@ -18,7 +18,7 @@ angular.module('app.directives', [])
     .directive('formdir', function(){
         return {
             restrict: 'E',
-            templateUrl: 'client/views/feeditems/formdir.ng.html',
+            templateUrl: 'client/app/views/feeditems/formdir.ng.html',
             scope: {
                 item: "="
             },
@@ -38,7 +38,7 @@ angular.module('app.directives', [])
     .directive('hero', function(){
         return {
             restrict: 'E',
-            templateUrl: 'client/views/feeditems/hero.ng.html',
+            templateUrl: 'client/app/views/feeditems/hero.ng.html',
             scope: {
                 item: "="
             }
@@ -48,7 +48,7 @@ angular.module('app.directives', [])
     .directive('voting', function(){
         return {
             restrict: 'E',
-            templateUrl: 'client/views/feeditems/voting.ng.html',
+            templateUrl: 'client/app/views/feeditems/voting.ng.html',
             scope: {
                 item: "="
             }
