@@ -8,13 +8,14 @@ angular.module('web',
     ['angular-meteor',
     'ui.bootstrap',
     'web.controllers',
-    /*'web.routes'*/]);
+    'ui.router',
+    'web.routes']);
 
 function onReady() {
     angular.bootstrap(document, ['web']);
 }
 
 // TODO: Change condition in production
-if (Meteor.isCordova) {
+if (!Meteor.isCordova) {
     angular.element(document).ready(onReady);
 }

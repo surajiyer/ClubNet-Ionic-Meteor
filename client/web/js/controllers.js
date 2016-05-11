@@ -1,6 +1,9 @@
 angular.module('web.controllers', [])
-    .controller('mainController', function($scope) {
-      $scope.isTrue = false;
+    .controller('mainController', function ($scope, $meteor, $state) {
+        $scope.logout = function () {
+            $meteor.logout();
+            $state.go('login');
+        }
     })
 
     .controller('loginController', function ($scope, $meteor, $state) {
@@ -11,12 +14,15 @@ angular.module('web.controllers', [])
         $scope.login = function () {
             $meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                 if (error) {
-                    console.log(error.reason); // Output error if login fails
+                    $scope.error = error.reason;
+                    $scope.errorVisible = {'visibility': 'visible'};
                 } else {
-                    $state.go('menu.feed'); // Redirect user if login succeeds
+                    $state.go('main'); // Redirect user if login succeeds
                 }
             });
         };
+        $scope.error = '';
+        $scope.errorVisible = {'visibility': 'hidden'};
 
         $scope.goToRemindPassword = function() {
             $state.go('forgotPassword');

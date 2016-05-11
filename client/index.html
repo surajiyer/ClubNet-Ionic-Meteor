@@ -25,16 +25,9 @@
         <ion-nav-view animation="slide-left-right-ios7"></ion-nav-view>
     </div>
     <div ng-if="!Meteor.isCordova">
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
         
-        <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/css/bootstrap-combined.min.css">
-        
-        <h1>Web</h1>
-        
-        <div class="container" ng-app="app" ng-controller="mainController">
-            <a href="#" class="btn btn-primary" ng-click="isTrue = !isTrue">
-                Toggle: {{ isTrue }}
-            </a>
-        </div>
-        
+        <div id="main" ui-view></div>
     </div>
 </body>
