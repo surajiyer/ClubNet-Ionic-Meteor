@@ -95,19 +95,20 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('registerCtrl', function ($scope, $state) {
+    .controller('registerCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            email: '',
+            password: ''
+        };
         $scope.register = function () {
-            var email = $('[name=regemail]').val();
-            var password = $('[name=regpassword]').val();
-            console.log(email);
-            console.log(password);
-            if (email != '' && password != '') {
+            console.log($scope.user.email + ", " + $scope.user.password);
+            if ($scope.user.email != '' && $scope.user.password != '') {
                 Accounts.createUser({
-                    email: email,
-                    password: password
+                    email: $scope.user.email,
+                    password: $scope.user.password
                 }, function (error) {
                     if (error) {
-                        console.log(error.reason); // Output error if registration fails
+                        console.log('Register error: ' + error.reason); // Output error if registration fails
                     } else {
                         $state.go('menu.feed'); // Redirect user if registration succeeds
                     }
