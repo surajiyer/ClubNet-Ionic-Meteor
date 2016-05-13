@@ -4,18 +4,18 @@
 // 'web' is the name of this angular module example the 2nd parameter is an array of 'requires'
 // 'web.services' is found in services.js
 // 'web.controllers' is found in controllers.js
-angular.module('web', 
-    ['angular-meteor',
-    'ui.bootstrap',
+angular.module('web', ['angular-meteor',
+	'ui.bootstrap',
     'web.controllers',
     'ui.router',
-    'web.routes']);
+    'web.routes',
+    'web.translation'])
 
 function onReady() {
     angular.bootstrap(document, ['web']);
 }
 
 // TODO: Change condition in production
-if (Meteor.isCordova) {
+if (!Meteor.isCordova) {
     angular.element(document).ready(onReady);
 }
