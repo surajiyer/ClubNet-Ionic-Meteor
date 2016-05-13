@@ -6,14 +6,14 @@ angular.module('web.routes', [])
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
         
-        $urlRouterProvider.otherwise('/main')
+        $urlRouterProvider.otherwise('/accountManagement')
         
         $stateProvider
             .state('/', {
                 url: '/',
                 controller: function ($scope, $state) {
                     if (Meteor.userId()) {
-                        $state.go('main');
+                        $state.go('accountManagement');
                     } else {
                         $state.go('login');
                     }
@@ -30,6 +30,12 @@ angular.module('web.routes', [])
                 url: '/login',
                 templateUrl: 'client/web/views/login.ng.html',
                 controller: 'loginController'
-            });
+            })
             
+            .state('accountManagement', {
+                url: '/accountManagement',
+                templateUrl: 'client/web/views/accountManagement.ng.html',
+                controller: 'accountManagementCtrl'
+            });
+
     });
