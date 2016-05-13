@@ -166,7 +166,7 @@ angular.module('app.controllers', [])
             $scope.showFilter = !$scope.showFilter;
         };
 
-        $scope.subscribe('Feed', function () {
+        Meteor.subscribe('Feed', function () {
             return [ this.getCollectionReactively('itemTypes2') ];
         });
 

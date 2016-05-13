@@ -14,6 +14,12 @@ angular.module('app.services', [])
         subscriptionReady.set(AMxHandle.ready());
     });
 
+    /**
+     * Services which depend on this service must check the subReady condition to ensure subscription to Access
+     * Control collection is ready prior to requesting permissions. Utilise the subReady variable inside a reactive
+     * computation like Tracker.autorun or Template helpers.
+     * @type {ReactiveVar}
+     */
     this.subReady = subscriptionReady;
 
     /**
