@@ -5,3 +5,7 @@ Meteor.publish('allFeed', function publishFunction(itemTypes) {
 Meteor.publish('typesCollection', function publishFunction() {
     return TypesCollection.find({});
 });
+
+Meteor.publish('userManagement', function publishFunction() {
+    return Meteor.users.find({});
+});

@@ -28,3 +28,29 @@ angular.module('web.controllers', [])
             $state.go('forgotPassword');
         }
     })
+
+
+
+///***************************accountMangementCtrl**************************************//
+
+    .controller('accountManagementCtrl', function ($scope, $meteor, $state) {
+        // $scope.temp_user = {
+        //     email: '',
+        //     fullName: ''
+        // };
+
+        // $scope.temp_pass = {
+        //     oldPass: '',
+        //     newPass: '',
+        //     newPassCheck: ''
+        // };
+
+
+        $scope.subscribe('userManagement');
+
+        $scope.helpers({
+            accountje: function () {
+                return Meteor.users.find();
+            }
+        });
+    })
