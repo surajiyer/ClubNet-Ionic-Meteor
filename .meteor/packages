@@ -15,14 +15,11 @@ standard-minifier-css   # CSS minifier run for production mode
 standard-minifier-js    # JS minifier run for production mode
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 
-insecure                # Allow all DB writes from clients (for prototyping)
 driftyco:ionic
 angular
 dburles:collection-helpers
 tomi:upload-server
 tomi:upload-jquery
-sanjo:jasmine
-velocity:html-reporter
 practicalmeteor:mocha
 practicalmeteor:chai
 practicalmeteor:sinon

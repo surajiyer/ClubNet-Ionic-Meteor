@@ -13,8 +13,8 @@ angular.module('app.controllers', [])
 
         $scope.changeGeneralProfileInfo = function () {
             var email = $scope.temp_user.email;
-        }
-        
+        };
+
         $scope.changePassword = function () {
             var oldPass = $scope.temp_pass.oldPass;
             var newPass = $scope.temp_pass.newPass;
@@ -75,7 +75,7 @@ angular.module('app.controllers', [])
             }, function (err) {
                 console.log('Error resetting password - ', err);
             });
-        }
+        };
 
         $scope.forgotPassword = function () {
             if ($scope.forgotUser.email != '') {
@@ -88,7 +88,7 @@ angular.module('app.controllers', [])
                 console.log('PLEASE ENTER EMAIL ADDRESS U BITCH');
             }
 
-        }
+        };
 
         $scope.goBack = function () {
             $ionicHistory.goBack();
@@ -120,7 +120,7 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('feedCtrl', function ($scope) {
+    .controller('feedCtrl', function ($scope, CoachAccess) {
         $scope.itemTypes = [
             {type: 'Voting', name: "Exercise voting", checked: true},
             {type: 'Form', name: "Form", checked: true},
@@ -166,13 +166,16 @@ angular.module('app.controllers', [])
             $scope.showFilter = !$scope.showFilter;
         };
 
-        $scope.subscribe('allFeed', function () {
+        $scope.subscribe('Feed', function () {
             return [ this.getCollectionReactively('itemTypes2') ];
         });
 
         $scope.helpers({
             items: function () {
                 return Items.find({}, {sort: {timestamp: -1}});
+            },
+            showCoachBar: function() {
+                return CoachAccess.showCoachBar.get();
             }
         });
     })
