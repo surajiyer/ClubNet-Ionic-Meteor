@@ -53,4 +53,4 @@ angular.module('web.controllers', [])
                 return Meteor.users.find();
             }
         });
-    })
+    });

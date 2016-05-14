@@ -1,5 +1,5 @@
 import 'angular-mocks';
-import "./services.js";
+import './services.js';
 import '/model/AccessControl'
 
 describe('Access control', () => {
