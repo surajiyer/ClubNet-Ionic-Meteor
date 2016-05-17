@@ -29,7 +29,7 @@ angular.module('app.controllers', [])
                 $scope.error = 'De wachtwoorden komen niet overeen.'
             }
         }
-        
+
         $scope.error = '';
         $scope.errorVisible = {'visibility': 'hidden'};
     })
@@ -41,19 +41,17 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('loginCtrl', function ($scope, $meteor, $state) {
+    .controller('loginCtrl', function ($scope, $meteor, $state, LoginAccount) {
         $scope.user = {
             email: '',
             password: ''
         };
+        
         $scope.login = function () {
-            $meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-                if (error) {
-                    console.log(error.reason); // Output error if login fails
-                } else {
-                    $state.go('menu.feed'); // Redirect user if login succeeds
-                }
-            });
+            var login = LoginAccount.myFunc($scope.user.email, $scope.user.password);
+            if (login) {
+                $state.go('menu.feed'); // Redirect user if login succeeds
+            }
         };
 
         $scope.goToRemindPassword = function () {
@@ -103,10 +101,10 @@ angular.module('app.controllers', [])
             UserAccount.register(
                 $scope.user.email,
                 $scope.user.password,
-                function() {
+                function () {
                     $state.go('menu.feed'); // Redirect user if registration succeeds                    
                 },
-                function(error) {
+                function (error) {
                     console.log('Register error: ' + error); // Output error if registration fails
                 }
             )
@@ -116,47 +114,49 @@ angular.module('app.controllers', [])
     .controller('feedCtrl', function ($scope, CoachAccess) {
         // Subscribe to the feed
         Meteor.subscribe('Feed');
-        
+
         // Load the filter
-        Meteor.call('ItemTypes', function(err, result) {
-            if(err) throw new Meteor.Error(err.error);
+        Meteor.call('ItemTypes', function (err, result) {
+            if (err) throw new Meteor.Error(err.error);
             var oldItemTypes = [];
-            if($scope.itemTypes) {
+            if ($scope.itemTypes) {
                 oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
                     result[id] = {name: name, checked: checked};
                     return result;
                 }, {})
             }
             $scope.itemTypes = result;
-            _.each($scope.itemTypes, function(element) {
-                if(oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
+            _.each($scope.itemTypes, function (element) {
+                if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
                 else element.checked = true;
             }, this);
         });
-        
+
         // Set display filter model
         $scope.showFilter = false;
-        
+
         // Display/hide filter
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
         };
 
 
-      //  console.log(items);
-        
+        //  console.log(items);
+
         $scope.helpers({
             items: function () {
                 $scope.getReactively('itemTypes', true);
-                if(!$scope.itemTypes) return;
-                var itemTypesFilter =  _.pluck(_.filter($scope.itemTypes, (type) => {return type.checked}), '_id');
-                Meteor.call("DBHelper.getFeed",itemTypesFilter,function(result) {
+                if (!$scope.itemTypes) return;
+                var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
+                    return type.checked
+                }), '_id');
+                Meteor.call("DBHelper.getFeed", itemTypesFilter, function (result) {
                     console.log(result);
                 });
                 //return Items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
-                return Meteor.call("DBHelper.getFeed",itemTypesFilter);
+                return Meteor.call("DBHelper.getFeed", itemTypesFilter);
             },
-            showCoachBar: function() {
+            showCoachBar: function () {
                 return CoachAccess.showCoachBar.get();
             }
         });
