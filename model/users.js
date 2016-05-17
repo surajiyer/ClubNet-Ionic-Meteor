@@ -14,6 +14,7 @@ baseUserSchema = new SimpleSchema({
         points:{type:Number}
     }]},
 })
+
 //coach schema
 coachSchema = new SimpleSchema([baseUserSchema,{
     teamID : {type:String},
@@ -22,6 +23,7 @@ coachSchema = new SimpleSchema([baseUserSchema,{
         text:{type:String}
     }]}
 }])
+
 //player schema
 playerSchema = new SimpleSchema([baseUserSchema,{
     teamID : {type:String},

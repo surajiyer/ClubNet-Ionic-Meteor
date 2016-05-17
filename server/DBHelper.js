@@ -9,11 +9,11 @@ var feedItemSchemas = {
     'sponsor event': sponsorEventSchema,
     'voting poll': votingPollSchema,
     'exercise suggestion': exerciseSuggestionSchema,
-    'betting': bettingRoundSchema}
+    'betting': bettingRoundSchema};
 var userSchemas = {
     'general member': baseUserSchema,
     'coach': coachSchema,
-    'player': playerSchema,
+    'player': playerSchema
 };
 var responseSchemas = {
     'heroes': baseResponseSchema,

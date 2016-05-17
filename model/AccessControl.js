@@ -1,8 +1,5 @@
 if(Meteor.isServer) {
     AMx = new Mongo.Collection("accessControl");
-    // Meteor.publish('accessControl', function() {
-    //     return AMx.find({});
-    // });
 
     Meteor.methods({
         /**
