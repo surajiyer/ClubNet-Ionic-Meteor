@@ -113,11 +113,10 @@ angular.module('app.controllers', [])
                         $state.go('menu.feed'); // Redirect user if registration succeeds
                     }
                 });
-
+                console.log(Meteor.users.find().fetch());
             } else {
                 console.log('Please fill in email and password');
             }
-
         }
     })
 

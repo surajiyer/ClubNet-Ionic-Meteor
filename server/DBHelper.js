@@ -192,7 +192,7 @@ Meteor.methods({
         }
 
     },
-    "DBHelper.getResponsesOfOneItem()": function(itemID){
+    "DBHelper.getResponsesOfOneItem": function(itemID){
         try{
             return Responses.find({itemID: itemID});
         }catch(err){
@@ -268,9 +268,11 @@ Meteor.users.remove({});
 Items.remove({});
 Responses.remove({});
 TypesCollection.remove({});
-TypesCollection.insert({itemType: "heroes", label:"Heroes!", icon :"tue.nl/icon"});
-Meteor.call('attachSchemas');
-Meteor.call('DBHelper.addUser',user1);
+TypesCollection.insert({_id: "heroes", name:"Heroes!", icon :"tue.nl/icon"});
+TypesCollection.insert({_id: "form", name:"Form!", icon :"tue.nl/icon"});
+TypesCollection.insert({_id: "voting", name:"Vote for exercise@!", icon :"tue.nl/icon"});
+//Meteor.call('attachSchemas');
+//Meteor.call('DBHelper.addUser',user1);
 Meteor.call('DBHelper.addFeedItem',item1);
 Meteor.call('DBHelper.addFeedItem',item2);
 Meteor.call('DBHelper.addResponse',response1);
@@ -280,3 +282,5 @@ Meteor.call("DBHelper.updateUserInfo", "1",newUserInfo1);
 Meteor.call("DBHelper.updateFeedItemInfo", "1",newFeedItemInfo1);
 Meteor.call("DBHelper.getPredefinedItemTypes");
 Meteor.call("DBHelper.getFeed","1",["heroes","form"]);
+console.log(TypesCollection.find().fetch());
+console.log(Meteor.users.find().fetch());
