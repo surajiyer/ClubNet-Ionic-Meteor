@@ -1,6 +1,6 @@
 import 'angular-mocks';
-import './services.js';
-import '/model/AccessControl'
+import '/model/AccessControl';
+import './services';
 
 describe('Access control', () => {
     var ac;
@@ -11,14 +11,11 @@ describe('Access control', () => {
         ac = _AccessControl_;
     }));
 
-    it('should grant coach permission to view voting', function() {
-        Tracker.autorun(function() {
-            if(ac.subReady.get()) {
-                ac.getPermission("coach", "voting", "view", function(bool) {
-                    console.log("Hi");
-                    expect(bool).toBe(true);
-                });
-            }
+    it('should grant coach permission to view voting', function(done) {
+        this.timeout(2000);
+        ac.getPermission("coach", "coachbar", "view", function(result) {
+            expect(result).toBe(true);
+            done();
         });
     });
 });
