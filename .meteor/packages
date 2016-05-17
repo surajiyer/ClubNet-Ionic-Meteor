@@ -28,3 +28,5 @@ angular-meteor-auth
 angularui:angular-ui-bootstrap
 angularui:angular-ui-router
 planettraining:angular-translate
+aldeed:simple-schema
+aldeed:collection2
