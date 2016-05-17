@@ -16,23 +16,22 @@ angular.module('app.controllers', [])
         };
 
         $scope.changePassword = function () {
-            var oldPass = $scope.temp_pass.oldPass;
-            var newPass = $scope.temp_pass.newPass;
-            var newPassCheck = $scope.temp_pass.newPassCheck;
-
-            if (newPass == newPassCheck) {
-                console.log("De wachtwoorden komen overeen.")
-                $meteor.changePassword(oldPass, newPass).then(function () {
+            if ($scope.temp_pass.newPass == $scope.temp_pass.newPassCheck) {
+                $meteor.changePassword($scope.temp_pass.oldPass, $scope.temp_pass.newPass).then(function () {
                     console.log('Change password success');
                     $state.go('menu.feed');
-                }, function (err) {
-                    console.log('Error changing password - ', err);
+                }, function (error) {
+                    $scope.error = error.reason;
+                    $scope.errorVisible = {'visibility': 'visible'};
+                    console.log('Error changing password - ', error);
                 });
-            }
-            else if (newPass != newPassCheck) {
-                console.log("De wachtwoorden komen niet overeen.")
+            } else {
+                $scope.error = 'De wachtwoorden komen niet overeen.'
             }
         }
+        
+        $scope.error = '';
+        $scope.errorVisible = {'visibility': 'hidden'};
     })
 
     .controller('menuCtrl', function ($scope, $meteor, $state) {
@@ -95,29 +94,22 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('registerCtrl', function ($scope, $meteor, $state) {
+    .controller('registerCtrl', function ($scope, $meteor, $state, UserAccount) {
         $scope.user = {
             email: '',
             password: ''
         };
         $scope.register = function () {
-            console.log($scope.user.email + ", " + $scope.user.password);
-            if ($scope.user.email != '' && $scope.user.password != '') {
-                Accounts.createUser({
-                    email: $scope.user.email,
-                    password: $scope.user.password
-                }, function (error) {
-                    if (error) {
-                        console.log('Register error: ' + error.reason); // Output error if registration fails
-                    } else {
-                        $state.go('menu.feed'); // Redirect user if registration succeeds
-                    }
-                });
-
-            } else {
-                console.log('Please fill in email and password');
-            }
-
+            UserAccount.register(
+                $scope.user.email,
+                $scope.user.password,
+                function() {
+                    $state.go('menu.feed'); // Redirect user if registration succeeds                    
+                },
+                function(error) {
+                    console.log('Register error: ' + error); // Output error if registration fails
+                }
+            )
         }
     })
 

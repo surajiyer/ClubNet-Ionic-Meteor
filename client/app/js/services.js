@@ -32,6 +32,26 @@ angular.module('app.services', [])
         });
     });
 }])
+
+.service('UserAccount', function() {
+    self = this;
+    self.register = function(email, password, onSuccess, onError) { 
+        if (email != '' && password != '') {
+            Accounts.createUser({
+                email: email,
+                password: password
+            }, function (error) {
+                if (error) {
+                    onError(error.reason);
+                } else {
+                    onSuccess();
+                }
+            });
+        } else {
+            onError('Please fill in email and password');
+        }
+    }
+})
     
 // .service('AccessControl', function() {
 //     // Define subscriptions here
