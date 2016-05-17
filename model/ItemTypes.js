@@ -1,19 +1,12 @@
-TypesCollection = new Mongo.Collection("ItemTypes");
-
 if(Meteor.isServer) {
-    Meteor.publish('ItemTypes', function publishFunction() {
-        return TypesCollection.find({});
+    TypesCollection = new Mongo.Collection("ItemTypes");
+
+    /**
+     * Cannot return a cursor in Meteor.methods, only EJON-able values.
+     */
+    Meteor.methods({
+        ItemTypes: function() {
+            return TypesCollection.find({}).fetch();
+        }
     });
 }
-
-TypesCollection.deny({
-    update: function(userId, doc, fields, modifier) {
-        return false;
-    },
-    insert: function(userId, doc) {
-        return false;
-    },
-    remove: function(userId, doc) {
-        return false;
-    }
-});
