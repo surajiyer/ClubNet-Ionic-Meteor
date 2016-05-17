@@ -46,6 +46,7 @@ bettingRoundSchema = new SimpleSchema({
 //form schema
 formSchema = new SimpleSchema([baseFeedItemSchema,{
     title:{type: String},
+    description:{type:String},
     repeatInterval:{type: String},
     target:{type:String},
     targetValue:{type: Number},

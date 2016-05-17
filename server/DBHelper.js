@@ -52,16 +52,22 @@ Meteor.methods({
         }
     },
     'DBHelper.addUser': function(newUser){
-        try{
             if(teamMembers.indexOf(newUser.userType) != -1){
                 newUser.notes = [];
             }
             newUser.bettingResults = [];
-            Meteor.users.insert(newUser);
+            Accounts.createUser({
+                email: newUser.email,
+                password: newUser.password,
+                profile:{
+                    userType:"coach",
+                    club: "1",
+                    team:"1"
+                }
+            });
+            //Meteor.users.insert(newUser);
             console.log("added new user");
-        }catch(err){
-            console.log("addUser():"+err.message);
-        }
+            console.log(Meteor.users.find().fetch());
     },
     'DBHelper.addFeedItem': function(newItem){
         try{
@@ -170,14 +176,19 @@ Meteor.methods({
             console.log("getUserInFo():"+err.message);
         }
     },
-    "DBHelper.getFeed": function(userID, itemTypes){
+    "DBHelper.getFeed": function( itemTypes){
         try{
-            var clubid = Meteor.users.find({_id: userID}).fetch()[0].clubID;
-            var teamid = Meteor.users.find({_id: userID}).fetch()[0].teamID;
-            return Items.find({
-                itemType: {$in: itemTypes},
-                status: 'published',
-                clubID: clubid,
+            console.log("serverid:"+this.userId);
+            var id = this.userId;
+            //console.log(Meteor.users.find({_id: id}).fetch());
+            var clubid = Meteor.users.find({_id: id}).fetch()[0].profile.club;
+            var teamid = Meteor.users.find({_id: id}).fetch()[0].profile.team;
+            console.log(clubid+" "+teamid);
+            console.log(Items.find().fetch());
+            return Items.find(
+                //itemType: {$in: itemTypes},
+                //status: 'published',
+                /*clubID: clubid,
                 $or: [
                     {
                         teamID: {$exists: true, $eq: teamid },
@@ -185,8 +196,8 @@ Meteor.methods({
                     {
                         teamID: {$exists: false},
                     }
-                ]
-            }).fetch();
+                ]*/
+            ).fetch();
         }catch(err){
             console.log("getFeed(): "+err.message);
         }
@@ -230,6 +241,7 @@ var item2 = {
     clubID:"1",
     sticky: false,
     title:"my form",
+    description:"driving!!!",
     repeatInterval:"Month",
     target:"driving",
     targetValue: 8,
@@ -282,5 +294,46 @@ Meteor.call("DBHelper.updateUserInfo", "1",newUserInfo1);
 Meteor.call("DBHelper.updateFeedItemInfo", "1",newFeedItemInfo1);
 Meteor.call("DBHelper.getPredefinedItemTypes");
 Meteor.call("DBHelper.getFeed","1",["heroes","form"]);
-console.log(TypesCollection.find().fetch());
-console.log(Meteor.users.find().fetch());
+var newAccess = {
+    _id: "coach",
+    items:[
+        {
+            _id: "voting",
+            permissions: {
+                create: true,
+                edit: true,
+                delete: true,
+                view: true
+            }
+        },
+        {
+            _id: "form",
+            permissions: {
+                create: true,
+                edit: true,
+                delete: true,
+                view: true
+            }
+        },
+        {
+            _id: "betting",
+            permissions: {
+                create: false,
+                edit: false,
+                delete: false,
+                view: true
+            }
+        },
+        {
+            _id: "coachbar",
+            permissions: {
+                create: false,
+                edit: false,
+                delete: false,
+                view: true
+            }
+        }
+    ]
+};
+Meteor.call("AC.addAccess",newAccess);
+console.log(AMx.find().fetch());

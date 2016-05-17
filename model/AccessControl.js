@@ -26,6 +26,13 @@ if(Meteor.isServer) {
             );
 
             return doc.items[0].permissions[permission];
+        },
+        "AC.addAccess": function(newAccess){
+            try{
+                AMx.insert(newAccess);
+            }catch(err){
+                console.log("addAccess()"+err.message);
+            }
         }
     });
 }

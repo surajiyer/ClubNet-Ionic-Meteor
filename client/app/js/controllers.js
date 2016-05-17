@@ -103,16 +103,29 @@ angular.module('app.controllers', [])
         $scope.register = function () {
             console.log($scope.user.email + ", " + $scope.user.password);
             if ($scope.user.email != '' && $scope.user.password != '') {
-                Accounts.createUser({
-                    email: $scope.user.email,
-                    password: $scope.user.password
-                }, function (error) {
-                    if (error) {
-                        console.log('Register error: ' + error.reason); // Output error if registration fails
-                    } else {
-                        $state.go('menu.feed'); // Redirect user if registration succeeds
-                    }
-                });
+                /**/
+                    Accounts.createUser({
+                        email: $scope.user.email,
+                        password: $scope.user.password,
+                        profile:{
+                            userType:"coach",
+                            club: "1",
+                            team:"1"
+                        }
+                    }, function (error) {
+                        if (error) {
+                            console.log('Register error: ' + error.reason); // Output error if registration fails
+                        } else {
+                            $state.go('menu.feed'); // Redirect user if registration succeeds
+                        }
+                    });
+                    /*Meteor.call("DBHelper.addUser",{
+                        email: $scope.user.email,
+                        password: $scope.user.password,
+                    });
+                    $state.go('menu.feed');
+                    Meteor.loginWithPassword($scope.user);*/
+                
                 console.log(Meteor.users.find().fetch());
             } else {
                 console.log('Please fill in email and password');
@@ -148,13 +161,20 @@ angular.module('app.controllers', [])
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
         };
+
+
+      //  console.log(items);
         
         $scope.helpers({
             items: function () {
                 $scope.getReactively('itemTypes', true);
                 if(!$scope.itemTypes) return;
                 var itemTypesFilter =  _.pluck(_.filter($scope.itemTypes, (type) => {return type.checked}), '_id');
-                return Items.find({'type': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
+                Meteor.call("DBHelper.getFeed",itemTypesFilter,function(result) {
+                    console.log(result);
+                });
+                //return Items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
+                return Meteor.call("DBHelper.getFeed",itemTypesFilter);
             },
             showCoachBar: function() {
                 return CoachAccess.showCoachBar.get();
