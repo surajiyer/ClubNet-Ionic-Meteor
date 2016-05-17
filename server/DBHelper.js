@@ -268,7 +268,7 @@ Meteor.users.remove({});
 Items.remove({});
 Responses.remove({});
 TypesCollection.remove({});
-TypesCollection.insert({itemType: "heroes", label:"Heroes!", icon :"tue.nl/icon"});
+TypesCollection.insert({_id: "heroes", name:"Heroes!", icon :"tue.nl/icon"});
 Meteor.call('attachSchemas');
 Meteor.call('DBHelper.addUser',user1);
 Meteor.call('DBHelper.addFeedItem',item1);
