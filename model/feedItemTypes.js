@@ -4,5 +4,6 @@
 //feed item types schema
 feedItemTypesSchema = new SimpleSchema({
     itemType:{type: String},
+    label:{type: String},
     icon:{type: String}
 })

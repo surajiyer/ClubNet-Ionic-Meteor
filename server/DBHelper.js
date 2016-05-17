@@ -1,11 +1,7 @@
 /**
  * Created by Chen on 5/13/2016.
  */
-myusers = new Mongo.Collection("myusers");
-myitems = new Mongo.Collection("myitems");
-myresponses = new Mongo.Collection("myresponses");
-mynotes = new Mongo.Collection("mynotes");
-myitemtypes = new Mongo.Collection("myitemtypes");
+Responses = new Mongo.Collection("myresponses");
 var feedItemSchemas = {
     'base':baseFeedItemSchema,
     'heroes': heroesSchema,
@@ -32,27 +28,27 @@ var teamMembers = ["coach", "player"];
 Meteor.methods({
     'DBHelper.getTypeItem': function(itemID){
         try{
-            return myitems.find({_id: itemID}).fetch()[0].itemType;
+            return Items.find({_id: itemID}).fetch()[0].itemType;
         }catch(err){
             console.log(err.message);
         }
     },
     'DBHelper.getTeamID': function(userID){
         try{
-            return myusers.find({_id: userID}).fetch()[0].clubID;
+            return Meteor.users.find({_id: userID}).fetch()[0].clubID;
         }catch(err){
             console.log(err.message);
         }
     },
     'attachSchemas': function(){
         for(var key in userSchemas){
-            myusers.attachSchema(userSchemas[key], {selector:{userType: key}});
+            Meteor.users.attachSchema(userSchemas[key], {selector:{userType: key}});
         }
         for(var key in feedItemSchemas){
-            myitems.attachSchema(feedItemSchemas[key], {selector:{itemType: key}});
+            TypesCollection.attachSchema(feedItemSchemas[key], {selector:{itemType: key}});
         }
         for(var key in responseSchemas){
-            myresponses.attachSchema(responseSchemas[key], {selector:{itemType: key}});
+            Responses.attachSchema(responseSchemas[key], {selector:{itemType: key}});
         }
     },
     'DBHelper.addUser': function(newUser){
@@ -61,32 +57,32 @@ Meteor.methods({
                 newUser.notes = [];
             }
             newUser.bettingResults = [];
-            myusers.insert(newUser);
+            Meteor.users.insert(newUser);
             console.log("added new user");
         }catch(err){
-            console.log(err.message);
+            console.log("addUser():"+err.message);
         }
     },
     'DBHelper.addFeedItem': function(newItem){
         try{
-            myitems.insert(newItem);
+            Items.insert(newItem);
             console.log("added new item");
         }catch(err){
-            console.log(err.message);
+            console.log("addFeedItem()"+err.message);
         }
     },
     'DBHelper.addResponse': function(newResponse){
         try{
-            newResponse.itemType = Meteor.call('DBHelper.getTypeItem', newResponse._id);
-            myresponses.insert(newResponse);
+            newResponse['itemType'] = Meteor.call('DBHelper.getTypeItem', newResponse._id);
+            Responses.insert(newResponse);
             console.log("added new response");
         }catch(err){
-            console.log(err);
+            console.log("addResponse():"+err);
         }
     },
     'DBHelper.addNote': function(newNote){
         try{
-            myusers.update({
+            Meteor.users.update({
                 _id:newNote.creatorID
             },{$push:{'notes':{
                 itemID: newNote.itemID,
@@ -94,12 +90,12 @@ Meteor.methods({
             }}},{bypassCollection2: true});
             console.log("added new note");
         }catch(err){
-            console.log(err);
+            console.log("addNote():"+err);
         }
     },
     'DBHelper.updateNote': function(newNote){
         try{
-            myusers.update({
+            Meteor.users.update({
                 _id:newNote.creatorID,
                 notes:{$elemMatch:{itemID: newNote.itemID}}},
                 {$set:{
@@ -107,7 +103,7 @@ Meteor.methods({
                 }},{bypassCollection2: true});
             console.log("updated new note");
         }catch(err){
-            console.log(err);
+            console.log("updateNote():"+err);
         }
     },
     'DBHelper.updateUserInfo': function(userID, newInfo){
@@ -115,65 +111,70 @@ Meteor.methods({
             var setPar = {};
             for(var key in newInfo){
                 setPar[key] = newInfo[key];
-                myusers.update({_id:userID},{$set:setPar},{bypassCollection2: true});
+                Meteor.users.update({_id:userID},{$set:setPar},{bypassCollection2: true});
             }
             console.log("updated user info");
         }catch(err){
-            console.log(err);
+            console.log("updateUserInfo():"+err);
         }
     },
     "DBHelper.updateFeedItemInfo": function(itemID, newInfo){
-        var setPar = {};
-        for(var key in newInfo){
-            setPar[key] = newInfo[key];
-            myitems.update({_id:itemID},{$set:setPar},{bypassCollection2: true});
+        try{
+            var setPar = {};
+            for(var key in newInfo){
+                setPar[key] = newInfo[key];
+                Items.update({_id:itemID},{$set:setPar},{bypassCollection2: true});
+            }
+            console.log("updated feed item info");
+        }catch(err){
+            console.log("updateFeedItemInfo():"+err.message)
         }
-        console.log("updated feed item info");
+
     },
     "DBHelper.deleteUser": function(userID){
         try{
-            myusers.remove({_id:userID});
+            Meteor.users.remove({_id:userID});
         }catch(err){
-            console.log(err.message);
+            console.log("deleteUser():"+err.message);
         }
     },
     "DBHelper.deleteFeedItem": function(itemID){
         try{
-            myitems.remove({_id:itemID});
+            Items.remove({_id:itemID});
         }catch(err){
-            console.log(err.message);
+            console.log("deleteFeedItem(): "+err.message);
         }
     },
     "DBHelper.deleteResponse": function(response){
         try{
-            myresponses.remove({itemID: response.itemID, responsorID: response.responsorID})
+            Responses.remove({itemID: response.itemID, responsorID: response.responsorID})
         }catch(err){
-            console.log(err.message);
+            console.log("deleteResponse(): "+err.message);
         }
     },
     "DBHelper.getPredefinedItemTypes": function(){
         try{
             var types = {};
-            myitemtypes.find().forEach(function(type){
+            TypesCollection.find().forEach(function(type){
                 types[type.itemType] = type.icon;
             })
             return types;
         }catch(err){
-            console.log(err.message);
+            console.log("getPredefinedItemTypes(): "+err.message);
         }
     },
     "DBHelper.getUserInfo": function(userID){
         try{
-            return myusers.find({_id: userID});
+            return Meteor.users.find({_id: userID});
         }catch(err){
-            console.log(err.message);
+            console.log("getUserInFo():"+err.message);
         }
     },
     "DBHelper.getFeed": function(userID, itemTypes){
         try{
-            var clubid = myusers.find({_id: userID}).fetch()[0].clubID;
-            var teamid = myusers.find({_id: userID}).fetch()[0].teamID;
-            console.log(myitems.find({
+            var clubid = Meteor.users.find({_id: userID}).fetch()[0].clubID;
+            var teamid = Meteor.users.find({_id: userID}).fetch()[0].teamID;
+            return Items.find({
                 itemType: {$in: itemTypes},
                 status: 'published',
                 clubID: clubid,
@@ -185,17 +186,17 @@ Meteor.methods({
                         teamID: {$exists: false},
                     }
                 ]
-            }).count());
+            }).fetch();
         }catch(err){
-            console.log(err.message);
+            console.log("getFeed(): "+err.message);
         }
 
     },
     "DBHelper.getResponsesOfOneItem()": function(itemID){
         try{
-            return myresponses.find({itemID: itemID});
+            return Responses.find({itemID: itemID});
         }catch(err){
-            console.log(err.message);
+            console.log("getResponseOfOneItem():"+err.message);
         }
     }
 
@@ -208,16 +209,6 @@ var user1 = {
     firstName: "Simin",
     lastName: "Chen",
     password: "123456",
-    clubID: "1",
-    teamID:"1",
-}
-var user2 = {
-    _id: "2",
-    userType: "coach",
-    email: "siminchen@live.com",
-    firstName: "newSimin",
-    lastName: "newChen",
-    password: "new123456",
     clubID: "1",
     teamID:"1",
 }
@@ -273,11 +264,11 @@ var newFeedItemInfo1 = {
     text:"my new hero is you",
     sticky: true,
 }
-myusers.remove({});
-myitems.remove({});
-myresponses.remove({});
-myitemtypes.remove({});
-myitemtypes.insert({itemType: "heroes", icon :"tue.nl/icon"})
+Meteor.users.remove({});
+Items.remove({});
+Responses.remove({});
+TypesCollection.remove({});
+TypesCollection.insert({itemType: "heroes", label:"Heroes!", icon :"tue.nl/icon"});
 Meteor.call('attachSchemas');
 Meteor.call('DBHelper.addUser',user1);
 Meteor.call('DBHelper.addFeedItem',item1);
@@ -289,4 +280,3 @@ Meteor.call("DBHelper.updateUserInfo", "1",newUserInfo1);
 Meteor.call("DBHelper.updateFeedItemInfo", "1",newFeedItemInfo1);
 Meteor.call("DBHelper.getPredefinedItemTypes");
 Meteor.call("DBHelper.getFeed","1",["heroes","form"]);
-//console.log(toReturn.fetch());

@@ -122,7 +122,12 @@ angular.module('app.controllers', [])
     })
 
     .controller('feedCtrl', function ($scope, CoachAccess) {
-        Meteor.subscribe('ItemTypes', function() {
+        // Subscribe to the feed
+        Meteor.subscribe('Feed');
+        
+        // Load the filter
+        Meteor.call('ItemTypes', function(err, result) {
+            if(err) throw new Meteor.Error(err.error);
             var oldItemTypes = [];
             if($scope.itemTypes) {
                 oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
@@ -130,21 +135,21 @@ angular.module('app.controllers', [])
                     return result;
                 }, {})
             }
-            $scope.itemTypes = TypesCollection.find({}).fetch();
-            _.each($scope.itemTypes, function(element, index) {
+            $scope.itemTypes = result;
+            _.each($scope.itemTypes, function(element) {
                 if(oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
                 else element.checked = true;
             }, this);
         });
-
-        Meteor.subscribe('Feed');
         
+        // Set display filter model
         $scope.showFilter = false;
         
+        // Display/hide filter
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
         };
-
+        
         $scope.helpers({
             items: function () {
                 $scope.getReactively('itemTypes', true);
