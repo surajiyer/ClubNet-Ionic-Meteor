@@ -141,13 +141,20 @@ angular.module('app.controllers', [])
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
         };
+
+
+      //  console.log(items);
         
         $scope.helpers({
             items: function () {
                 $scope.getReactively('itemTypes', true);
                 if(!$scope.itemTypes) return;
                 var itemTypesFilter =  _.pluck(_.filter($scope.itemTypes, (type) => {return type.checked}), '_id');
-                return Items.find({'type': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
+                Meteor.call("DBHelper.getFeed",itemTypesFilter,function(result) {
+                    console.log(result);
+                });
+                //return Items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
+                return Meteor.call("DBHelper.getFeed",itemTypesFilter);
             },
             showCoachBar: function() {
                 return CoachAccess.showCoachBar.get();
