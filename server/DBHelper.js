@@ -278,7 +278,7 @@ Items.remove({});
 Responses.remove({});
 TypesCollection.remove({});
 TypesCollection.insert({_id: "heroes", name:"Heroes!", icon :"tue.nl/icon"});
-Meteor.call('attachSchemas');
+//Meteor.call('attachSchemas');
 Meteor.call('DBHelper.addUser',user1);
 TypesCollection.insert({_id: "form", name:"Form!", icon :"tue.nl/icon"});
 TypesCollection.insert({_id: "voting", name:"Vote for exercise@!", icon :"tue.nl/icon"});
