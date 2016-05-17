@@ -122,44 +122,22 @@ angular.module('app.controllers', [])
     })
 
     .controller('feedCtrl', function ($scope, CoachAccess) {
-        $scope.itemTypes = [
-            {type: 'Voting', name: "Exercise voting", checked: true},
-            {type: 'Form', name: "Form", checked: true},
-           // {type: 'Sponsoring', name: "Sponsoring", checked: true},
-           // {type: 'Betting', name: "Betting pool", checked: true},
-            {type: 'Hero', name: "Hero of the week", checked: true},
-           // {type: 'Suggest', name: "Suggest exercise", checked: true},
-            {type: 'Post', name: "Post", checked: true}
-        ];
-
-        $scope.itemTypes2 = ['Voting', 'Form', 'Hero', 'Post'];
-
-        $scope.$watch('itemTypes', function(newValue, oldValue) {
-            $scope.itemTypes.forEach(function(item, index){
-                if (oldValue[index].checked != newValue[index].checked) {
-                    if (item.checked == true) {
-                        var i = includes(item.type);
-                        if (i == -1) {
-                            $scope.itemTypes2.push(item.type);
-                        }
-                    } else if (item.checked == false) {
-                        var i = includes(item.type);
-                        if (i != -1) {
-                            $scope.itemTypes2.splice(i, 1);
-                        }
-                    }
-                }
-            });
-        }, true);
-
-        function includes(k) {
-            for(var i=0; i < $scope.itemTypes2.length; i++){
-                if( $scope.itemTypes2[i] == k  ){
-                    return i;
-                }
+        Meteor.subscribe('ItemTypes', function() {
+            var oldItemTypes = [];
+            if($scope.itemTypes) {
+                oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
+                    result[id] = {name: name, checked: checked};
+                    return result;
+                }, {})
             }
-            return -1;
-        }
+            $scope.itemTypes = TypesCollection.find({}).fetch();
+            _.each($scope.itemTypes, function(element, index) {
+                if(oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
+                else element.checked = true;
+            }, this);
+        });
+
+        Meteor.subscribe('Feed');
         
         $scope.showFilter = false;
         
@@ -167,13 +145,12 @@ angular.module('app.controllers', [])
             $scope.showFilter = !$scope.showFilter;
         };
 
-        $scope.subscribe('Feed', function () {
-            return [ this.getCollectionReactively('itemTypes2') ];
-        });
-
         $scope.helpers({
             items: function () {
-                return Items.find({}, {sort: {timestamp: -1}});
+                $scope.getReactively('itemTypes', true);
+                if(!$scope.itemTypes) return;
+                var itemTypesFilter =  _.pluck(_.filter($scope.itemTypes, (type) => {return type.checked}), '_id');
+                return Items.find({'type': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
             },
             showCoachBar: function() {
                 return CoachAccess.showCoachBar.get();
@@ -208,7 +185,6 @@ angular.module('app.controllers', [])
             $scope.newPost.type = 'Post';
             $scope.newPost.timestamp = new Date().valueOf();
             Items.insert($scope.newPost);
-            //$scope.items.push($scope.newPost);
             $scope.newPost = {};
             $scope.closePost();
         };

@@ -6,16 +6,16 @@
 // 'web.controllers' is found in controllers.js
 angular.module('web', ['angular-meteor',
 	'ui.bootstrap',
-    'web.controllers',
     'ui.router',
+    'web.controllers',
     'web.routes',
-    'web.translation'])
+    'web.translation']);
 
 function onReady() {
     angular.bootstrap(document, ['web']);
 }
 
 // TODO: Change condition in production
-if (!Meteor.isCordova) {
+if (Meteor.isCordova) {
     angular.element(document).ready(onReady);
 }

@@ -7,7 +7,7 @@ if(Meteor.isServer) {
 
     Meteor.methods({
         checkRights: function(role, itemType) {
-            var doc = AMx.findOne(
+            var doc = AMx.find(
                 {'_id': role},
                 {fields: {'items': {$elemMatch: {'_id': itemType}}}}
             );

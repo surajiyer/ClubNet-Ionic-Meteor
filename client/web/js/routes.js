@@ -6,8 +6,6 @@ angular.module('web.routes', [])
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
         
-        $urlRouterProvider.otherwise('/accountManagement')
-        
         $stateProvider
             .state('/', {
                 url: '/',
@@ -37,5 +35,6 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/accountManagement.ng.html',
                 controller: 'accountManagementCtrl'
             });
-
+        
+        $urlRouterProvider.otherwise('/accountManagement');
     });

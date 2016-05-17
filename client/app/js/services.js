@@ -14,6 +14,12 @@ angular.module('app.services', [])
         subscriptionReady.set(AMxHandle.ready());
     });
 
+    /**
+     * Services which depend on this service must check the subReady condition to ensure subscription to Access
+     * Control collection is ready prior to requesting permissions. Utilise the subReady variable inside a reactive
+     * computation like Tracker.autorun or Template helpers.
+     * @type {ReactiveVar}
+     */
     this.subReady = subscriptionReady;
 
     /**
@@ -21,7 +27,7 @@ angular.module('app.services', [])
      * @param role the type of user eg.: coach, player...
      * @param itemType the item for which permission is being requested
      * @param permission the type of permission being requested for the item: create, view, edit or delete.
-     * @returns true if allowed or false if denied
+     * @param callback
      */
     this.getPermission = function(role, itemType, permission, callback) {
         if(!subscriptionReady.get())
@@ -33,17 +39,21 @@ angular.module('app.services', [])
         if(typeof permission !== 'string')
             throw new Meteor.Error('Permission required must be a string');
 
-        var doc = Meteor.call('checkRights', role, itemType, function(err, doc) {
+        Meteor.call('checkRights', role, itemType, function(err, doc) {
             if(err) return;
-            console.log(doc);
-            callback(doc.items[0].permissions[permission]);
+            Tracker.autorun(function() {
+                console.log(doc.fetch());
+                callback(doc.items[0].permissions[permission]);
+            });
+            //callback(doc.items[0].permissions[permission]);
         });
     };
 })
 
 .service('CoachAccess', function(AccessControl) {
     this.showCoachBar = new ReactiveVar(false);
-    var self = this;
+    self = this;
+
     Tracker.autorun(function() {
         if(AccessControl.subReady.get()) {
             AccessControl.getPermission("coach", "coachbar", "view", function(bool) {
