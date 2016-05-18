@@ -17,7 +17,8 @@ const baseFeedItemSchema = new SimpleSchema({
     type :{type: String},
     sticky:{type: Boolean},
     clubID:{type: String},
-    status:{type: String, allowedValues:["published","unpublished"]}
+    status:{type: String, allowedValues:["published","unpublished"]},
+    timestamp:{type: String}
 });
 
 /**

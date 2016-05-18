@@ -102,7 +102,7 @@ angular.module('app.controllers', [])
                     lastName: 'iyer',
                     type: "coach",
                     clubID: "1",
-                    teamID: "supersonic-ultrasonic-beautiful-rolling-kick"
+                    teamID: "1"
                 }
             }, function (err) {
                 if (err) throw new Meteor.Error('Account registration error: ' + err.reason);
@@ -204,14 +204,24 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('formCtrl', function ($scope, $ionicModal) {
+    .controller('formCtrl', function ($scope, $ionicModal, $meteor) {
         /* Practicality*/
         $scope.newForm = {};
 
         $scope.form = function () {
-            $scope.newForm.subscribers = 0;
+
+            $scope.creatorID = Meteor.userId();
             $scope.newForm.type = 'Form';
+            $meteor.call('getClubID', function(err, result){
+                $scope.newForm.clubID = result;
+            });
+            $scope.newForm.status = 'published';
             $scope.newForm.timestamp = new Date().valueOf();
+            $scope.newForm.raised = '0';
+            $scope.newForm.locked = false;
+            $meteor.call('getTeamID', function(err, result){
+                $scope.newForm.teamID = result;
+            });
             Items.insert($scope.newForm);
             $scope.newForm = {};
             $scope.closeForm();
@@ -228,6 +238,7 @@ angular.module('app.controllers', [])
         };
 
         $scope.openForm = function () {
+            console.log(Meteor.user());
             $scope.formModal.show();
         };
     })

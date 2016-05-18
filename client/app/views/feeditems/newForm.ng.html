@@ -11,7 +11,7 @@
                 <span class="input-label">
                     Lijst type:
                 </span>
-                <select ng-model="newForm.formType">
+                <select ng-model="newForm.target">
                     <option value="laundry" selected>Laundry</option>
                     <option value="driving">Driving</option>
                     <option value="presence">Presence</option>
@@ -26,10 +26,18 @@
                 <input ng-model="newForm.description" type="text" placeholder="Description">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Amount:</span>
-                <input ng-model="newForm.amount" type="number" placeholder="Amount">
+                <span class="input-label">Repeat interval:</span>
+                <input ng-model="newForm.repeatInterval" type="number" placeholder="Repeat interval">
             </label>
-            <button ng-disabled="!newForm.name && !newForm.amount" ng-click="form()" class="button button-block button-positive">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Target value:</span>
+                <input ng-model="newForm.targetValue" type="number" placeholder="Target value">
+            </label>
+            <label class="">
+                <span class="input-label">Sticky?</span>
+                <input type="checkbox" ng-model="newForm.sticky">
+            </label>
+            <button ng-disabled="!newForm.target && !newForm.targetValue" ng-click="form()" class="button button-block button-positive">
                 Post
             </button>
         </div>

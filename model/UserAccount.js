@@ -23,9 +23,16 @@ Meteor.methods({
         var userID = Accounts.createUser(newUser);
         return userID;
     },
-    getTeam: function (userID) {
+    getClubID: function () {
         try {
-            return Meteor.users.findOne({_id: userID})[0].profile.clubID;
+            return Meteor.users.findOne({_id: Meteor.userId()})[0].profile.clubID;
+        } catch (err) {
+            console.log(err.error);
+        }
+    },
+    getTeamID: function () {
+        try {
+            return Meteor.users.findOne({_id: Meteor.userId()})[0].profile.teamID;
         } catch (err) {
             console.log(err.error);
         }
