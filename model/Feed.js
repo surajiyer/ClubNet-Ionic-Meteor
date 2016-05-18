@@ -5,13 +5,13 @@ Items = new Mongo.Collection("Items");
 Responses = new Mongo.Collection("FeedResponses");
 
 Meteor.startup(function () {
-    _.each(feedItemSchemas, function (schema) {
-        Items.attachSchema(feedItemSchemas[schema], {selector: {type: schema}});
-    });
-
-    _.each(responseSchemas, function (schema) {
-        Responses.attachSchema(responseSchemas[schema], {selector: {type: schema}});
-    });
+    // _.each(feedItemSchemas, function (schema) {
+    //     Items.attachSchema(feedItemSchemas[schema], {selector: {type: schema}});
+    // });
+    //
+    // _.each(responseSchemas, function (schema) {
+    //     Responses.attachSchema(responseSchemas[schema], {selector: {type: schema}});
+    // });
 
     Items.allow({
         insert: function (userId, doc) {
@@ -23,12 +23,10 @@ Meteor.startup(function () {
     });
 
     if (Meteor.isServer) {
-        // Meteor.publish('Feed', function publishFunction(itemTypes) {
-        //     return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
-        // });
-        Meteor.publish('Feed', function () {
-            return Items.find({}, {sort: {timestamp: -1}});
+        Meteor.publish('Feed', function publishFunction(itemTypes) {
+            return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
         });
+
     }
 });
 

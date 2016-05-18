@@ -111,9 +111,8 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('feedCtrl', function ($scope, CoachAccess) {
-        // Subscribe to the feed
-        Meteor.subscribe('Feed');
+    .controller('feedCtrl', function ($scope, CoachAccess, $reactive) {
+        $reactive(this).attach($scope);
 
         // Load the filter
         Meteor.call('ItemTypes', function (err, result) {
@@ -132,6 +131,16 @@ angular.module('app.controllers', [])
             }, this);
         });
 
+        Tracker.autorun(function() {
+            $scope.getReactively('itemTypes', true);
+            itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
+        });
+
+        // Subscribe to the feed
+        Meteor.subscribe('Feed', function() {
+            return [ $scope.getCollectionReactively('itemTypesFilter') ];
+        });
+
         // Set display filter model
         $scope.showFilter = false;
 
@@ -142,10 +151,8 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             items: function () {
-                $scope.getReactively('itemTypes', true);
-                if (!$scope.itemTypes) return;
-                var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
-                return Items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
+
+                return Items.find({}, {sort: {timestamp: -1}});
             },
             showCoachBar: function () {
                 return CoachAccess.showCoachBar.get();
@@ -259,7 +266,7 @@ angular.module('app.controllers', [])
         $scope.newHero = {};
 
         $scope.hero = function () {
-            $scope.newHero.type = 'Hero';
+            $scope.newHero.type = 'Heroes';
             $scope.newHero.timestamp = new Date().valueOf();
             Items.insert($scope.newHero);
             $scope.newHero = {};
