@@ -238,7 +238,7 @@ angular.module('app.controllers', [])
     })
 
     .controller('votingCtrl', function ($scope, $ionicModal) {
-        /* Voting */
+        /* Voting a*/
         $scope.newVoting = {};
 
         $scope.voting = function () {
