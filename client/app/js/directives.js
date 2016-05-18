@@ -25,7 +25,7 @@ angular.module('app.directives', [])
             link: function(scope, element, attrs) {
                 scope.signUp = function() {
                     scope.item.subscribers++;
-                    //items.update({_id: scope.item._id}, {$set: scope.item});
+                    //Items.update({_id: scope.item._id}, {$set: scope.item});
                 };
 
                 scope.refuse = function() {

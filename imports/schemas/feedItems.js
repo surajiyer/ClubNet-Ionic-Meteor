@@ -14,7 +14,7 @@ const feedItemTypesSchema = new SimpleSchema({
  */
 const baseFeedItemSchema = new SimpleSchema({
     creatorID:{type: String},
-    itemType :{type: String},
+    type :{type: String},
     sticky:{type: Boolean},
     clubID:{type: String},
     status:{type: String, allowedValues:["published","unpublished"]}
@@ -125,8 +125,8 @@ export default feedItemSchemas = {
     'base': baseFeedItemSchema,
     'heroes': heroesSchema,
     'form': formSchema,
-    'sponsor event': sponsorEventSchema,
-    'voting poll': votingPollSchema,
-    'exercise suggestion': exerciseSuggestionSchema,
+    'sponsor': sponsorEventSchema,
+    'voting': votingPollSchema,
+    'suggestion': exerciseSuggestionSchema,
     'betting': bettingRoundSchema
 };

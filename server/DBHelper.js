@@ -1,7 +1,7 @@
 Meteor.methods({
     'DBHelper.addFeedItem': function (newItem) {
         try {
-            items.insert(newItem);
+            Items.insert(newItem);
             console.log("added new item");
         } catch (err) {
             console.log("addFeedItem()" + err.message);
@@ -57,7 +57,7 @@ Meteor.methods({
             var setPar = {};
             for (var key in newInfo) {
                 setPar[key] = newInfo[key];
-                items.update({_id: itemID}, {$set: setPar}, {bypassCollection2: true});
+                Items.update({_id: itemID}, {$set: setPar}, {bypassCollection2: true});
             }
             console.log("updated feed item info");
         } catch (err) {
@@ -67,7 +67,7 @@ Meteor.methods({
     },
     "DBHelper.deleteFeedItem": function (itemID) {
         try {
-            items.remove({_id: itemID});
+            Items.remove({_id: itemID});
         } catch (err) {
             console.log("deleteFeedItem(): " + err.message);
         }
@@ -105,8 +105,8 @@ Meteor.methods({
             var clubid = Meteor.users.find({_id: id}).fetch()[0].profile.club;
             var teamid = Meteor.users.find({_id: id}).fetch()[0].profile.team;
             console.log(clubid + " " + teamid);
-            console.log(items.find().fetch());
-            return items.find(
+            console.log(Items.find().fetch());
+            return Items.find(
                 //itemType: {$in: itemTypes},
                 //status: 'published',
                 /*clubID: clubid,
@@ -196,7 +196,7 @@ Meteor.methods({
 //     sticky: true,
 // }
 // Meteor.users.remove({});
-// items.remove({});
+// Items.remove({});
 // Responses.remove({});
 // TypesCollection.remove({});
 // TypesCollection.insert({_id: "heroes", name:"Heroes!", icon :"tue.nl/icon"});

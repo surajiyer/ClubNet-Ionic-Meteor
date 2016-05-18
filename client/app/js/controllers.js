@@ -145,7 +145,7 @@ angular.module('app.controllers', [])
                 $scope.getReactively('itemTypes', true);
                 if (!$scope.itemTypes) return;
                 var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
-                return items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
+                return Items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
             },
             showCoachBar: function () {
                 return CoachAccess.showCoachBar.get();
@@ -179,7 +179,7 @@ angular.module('app.controllers', [])
         $scope.post = function () {
             $scope.newPost.type = 'Post';
             $scope.newPost.timestamp = new Date().valueOf();
-            items.insert($scope.newPost);
+            Items.insert($scope.newPost);
             $scope.newPost = {};
             $scope.closePost();
         };
@@ -207,7 +207,7 @@ angular.module('app.controllers', [])
             $scope.newForm.subscribers = 0;
             $scope.newForm.type = 'Form';
             $scope.newForm.timestamp = new Date().valueOf();
-            items.insert($scope.newForm);
+            Items.insert($scope.newForm);
             $scope.newForm = {};
             $scope.closeForm();
         };
@@ -234,7 +234,7 @@ angular.module('app.controllers', [])
         $scope.voting = function () {
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.timestamp = new Date().valueOf();
-            items.insert($scope.newVoting);
+            Items.insert($scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
         };
@@ -261,7 +261,7 @@ angular.module('app.controllers', [])
         $scope.hero = function () {
             $scope.newHero.type = 'Hero';
             $scope.newHero.timestamp = new Date().valueOf();
-            items.insert($scope.newHero);
+            Items.insert($scope.newHero);
             $scope.newHero = {};
             $scope.closeHero();
         };
