@@ -53,6 +53,10 @@ angular.module('app.services', [])
         }
     })
 
+    .service('Feed', function () {
+        
+    })
+
 // .service('AccessControl', function() {
 //     // Define subscriptions here
 //     var subscriptionReady = new ReactiveVar(false);

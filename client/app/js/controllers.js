@@ -115,8 +115,8 @@ angular.module('app.controllers', [])
 
     .controller('feedCtrl', function ($scope, CoachAccess) {
         // Load the filter
-        Meteor.call('ItemTypes', function (err, result) {
-            if (err) throw new Meteor.Error(err.reason);
+        Meteor.subscribe('ItemTypes', function () {
+            //if (err) throw new Meteor.Error(err.reason);
             var oldItemTypes = [];
             if ($scope.itemTypes) {
                 oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
@@ -124,7 +124,7 @@ angular.module('app.controllers', [])
                     return result;
                 }, {})
             }
-            $scope.itemTypes = result;
+            $scope.itemTypes = TypesCollection.find().fetch();
             _.each($scope.itemTypes, function (element) {
                 if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
                 else element.checked = true;
