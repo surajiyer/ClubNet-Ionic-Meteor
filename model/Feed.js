@@ -23,7 +23,7 @@ Meteor.startup(function () {
     });
 
     if (Meteor.isServer) {
-        Meteor.publish('Feed', function publishFunction(itemTypes) {
+        Meteor.publish('Feed', function(itemTypes) {
             return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
         });
 

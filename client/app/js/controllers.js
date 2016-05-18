@@ -111,8 +111,7 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('feedCtrl', function ($scope, CoachAccess, $reactive) {
-        $reactive(this).attach($scope);
+    .controller('feedCtrl', function ($scope, CoachAccess) {
 
         // Load the filter
         Meteor.call('ItemTypes', function (err, result) {
@@ -133,12 +132,12 @@ angular.module('app.controllers', [])
 
         Tracker.autorun(function() {
             $scope.getReactively('itemTypes', true);
-            itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
+            $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
         });
 
         // Subscribe to the feed
-        Meteor.subscribe('Feed', function() {
-            return [ $scope.getCollectionReactively('itemTypesFilter') ];
+        $scope.subscribe('Feed', function(){
+            return [$scope.getCollectionReactively('itemTypesFilter')]
         });
 
         // Set display filter model
@@ -151,7 +150,6 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             items: function () {
-
                 return Items.find({}, {sort: {timestamp: -1}});
             },
             showCoachBar: function () {
