@@ -98,8 +98,8 @@ angular.module('app.controllers', [])
                 email: $scope.user.email,
                 password: $scope.user.password,
                 profile: {
-                    firstName: 'suraj',
-                    lastName: 'iyer',
+                    firstName: 'THeBEst',
+                    lastName: 'byby',
                     type: "coach",
                     clubID: "1",
                     teamID: "1"
@@ -211,17 +211,13 @@ angular.module('app.controllers', [])
 
             $scope.creatorID = Meteor.userId();
             $scope.newForm.type = 'Form';
-            $meteor.call('getClubID', function(err, result){
-                $scope.newForm.clubID = result;
-            });
+            $scope.newForm.clubID = Meteor.user().profile.clubID;
             $scope.newForm.status = 'published';
             $scope.newForm.timestamp = new Date().valueOf();
             $scope.newForm.raised = '0';
             $scope.newForm.locked = false;
-            $meteor.call('getTeamID', function(err, result){
-                $scope.newForm.teamID = result;
-            });
-            Items.insert($scope.newForm);
+            $scope.newForm.teamID = Meteor.user().profile.teamID;
+            Meteor.call('DBHelper.addFeedItem', $scope.newForm);
             $scope.newForm = {};
             $scope.closeForm();
         };
@@ -237,7 +233,6 @@ angular.module('app.controllers', [])
         };
 
         $scope.openForm = function () {
-            console.log(Meteor.user());
             $scope.formModal.show();
         };
     })
