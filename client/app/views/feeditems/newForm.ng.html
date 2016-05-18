@@ -1,8 +1,8 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">Nieuwe Lijst</h1>
+        <h1 class="title">New list</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeForm()">Afsluiten</button>
+            <button class="button button-clear" ng-click="closeForm()">Close</button>
         </div>
     </ion-header-bar>
     <ion-content>
@@ -12,21 +12,21 @@
                     Lijst type:
                 </span>
                 <select ng-model="newForm.formType">
-                    <option value="laundry" selected>Wassen</option>
-                    <option value="driving">Rijden</option>
-                    <option value="presence">Aanwezigheid</option>
+                    <option value="laundry" selected>Laundry</option>
+                    <option value="driving">Driving</option>
+                    <option value="presence">Presence</option>
                 </select>
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Titel</span>
+                <span class="input-label">Title</span>
                 <input ng-model="newForm.title" type="text" placeholder="Title">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Beschrijving</span>
+                <span class="input-label">Description:</span>
                 <input ng-model="newForm.description" type="text" placeholder="Description">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Doelstelling:</span>
+                <span class="input-label">Amount:</span>
                 <input ng-model="newForm.amount" type="number" placeholder="Amount">
             </label>
             <button ng-disabled="!newForm.name && !newForm.amount" ng-click="form()" class="button button-block button-positive">

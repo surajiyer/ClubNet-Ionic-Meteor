@@ -1,18 +1,17 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">Nieuwe Poll</h1>
+        <h1 class="title">New poll</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeVoting()">Afsluiten</button>
+            <button class="button button-clear" ng-click="closeVoting()">Close</button>
         </div>
     </ion-header-bar>
     <ion-content>
         <div class="list">
             <label class="item item-input item-floating-label">
-                <span class="input-label">Omschrijving</span>
-                <input ng-model="newVoting.description" type="text" placeholder="Description">
+                <span class="input-label">Description</span>
+                <input ng-model="newVoting.message" type="text" placeholder="Description">
             </label>
-
-            <button ng-disabled="!newVoting.description" ng-click="voting()" class="button button-block button-positive">
+            <button ng-disabled="!newVoting.message" ng-click="voting()" class="button button-block button-positive">
                 Post
             </button>
         </div>

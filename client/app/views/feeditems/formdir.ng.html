@@ -7,12 +7,12 @@
     </p>
 </div>
 <div class="item item-body" ng-switch="item.formType">
-        We hebben nog {{(item.targetValue - item.raised) | number}} mensen nodig! <br/>
-        Reeds geregistreerd: {{item.raised | number}}
+        We need {{(item.targetValue - item.raised) | number}}! <br/>
+        Already registered: {{item.raised | number}}
 </div>
 <label class="item item-input item-select">
     <div class="input-label">
-        Aantal Stoelen:
+        Number of seats:
     </div>
     <select>
         <option value="1">1</option>
@@ -27,10 +27,10 @@
 <div class="item item-body">
     <p>
         <button class="button button-outline button-balanced" ng-click="signUp()">
-            Goedkeuren
+            Accept
         </button>
         <button class="button button-outline button-assertive" ng-click="refuse()">
-            Afwijzen
+            Refuse
         </button>
     </p>
 </div>

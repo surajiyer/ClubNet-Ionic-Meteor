@@ -13,9 +13,9 @@
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Beschrijving</span>
-                <input ng-model="newHero.description" type="text" placeholder="Description">
+                <input ng-model="newHero.message" type="text" placeholder="Description">
             </label>
-            <button ng-disabled="!newHero.description && !newHero.title" ng-click="hero()" class="button button-block button-positive">
+            <button ng-disabled="!newHero.message && !newHero.title" ng-click="hero()" class="button button-block button-positive">
                 Post
             </button>
         </div>

@@ -21,17 +21,18 @@ Meteor.startup(function () {
             return true;
         }
     });
+
+    if (Meteor.isServer) {
+        // Meteor.publish('Feed', function publishFunction(itemTypes) {
+        //     return items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
+        // });
+        Meteor.publish('Feed', function () {
+            return items.find({}, {sort: {timestamp: -1}});
+        });
+    }
 });
 
 if (Meteor.isServer) {
-    // Meteor.publish('Feed', function publishFunction(itemTypes) {
-    //     return items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
-    // });
-
-    Meteor.publish('Feed', function () {
-        return items.find({}, {sort: {timestamp: -1}});
-    });
-
     Meteor.methods({
         addResponse: function (newResponse) {
             try {
