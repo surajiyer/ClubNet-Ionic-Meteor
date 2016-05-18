@@ -112,7 +112,6 @@ angular.module('app.controllers', [])
     })
 
     .controller('feedCtrl', function ($scope, CoachAccess) {
-
         // Load the filter
         Meteor.call('ItemTypes', function (err, result) {
             if (err) throw new Meteor.Error(err.reason);
@@ -137,7 +136,7 @@ angular.module('app.controllers', [])
 
         // Subscribe to the feed
         $scope.subscribe('Feed', function(){
-            return [$scope.getCollectionReactively('itemTypesFilter')]
+            return [$scope.getCollectionReactively('itemTypesFilter')];
         });
 
         // Set display filter model
