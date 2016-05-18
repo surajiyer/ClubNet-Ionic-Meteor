@@ -22,10 +22,6 @@ Meteor.startup(function () {
         }
     });
 
-    Items.before.insert(function (userId, doc) {
-        doc.timestamp = Date.now();
-    });
-
     if (Meteor.isServer) {
         Meteor.publish('Feed', function(itemTypes) {
             return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
