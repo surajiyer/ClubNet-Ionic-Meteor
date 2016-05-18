@@ -1,38 +1,71 @@
 angular.module('app.services', [])
 
-.factory('BlankFactory', [function(){
+    .factory('BlankFactory', [function () {
 
-}])
+    }])
 
-.service('AccessControl', function() {
-    /**
-     * Check if user is permitted to get access to various aspects of the service.
-     * @param role the type of user eg.: coach, player...
-     * @param itemType the item for which permission is being requested
-     * @param permission the type of permission being requested for the item: create, view, edit or delete.
-     * @param callback function to call with the result as argument
-     */
-    this.getPermission = function(role, itemType, permission, callback) {
-        Meteor.call('checkRights', role, itemType, permission, function(err, result) {
-            if(err) throw new Meteor.Error(err.error);
-            if(typeof result !== 'boolean')
-                throw new Meteor.Error('Unexpected result type');
-            callback(result);
+    .service('AccessControl', function () {
+        /**
+         * Check if user is permitted to get access to various aspects of the service.
+         * @param role the type of user eg.: coach, player...
+         * @param itemType the item for which permission is being requested
+         * @param permission the type of permission being requested for the item: create, view, edit or delete.
+         * @param callback function to call with the result as argument
+         */
+        this.getPermission = function (role, itemType, permission, callback) {
+            Meteor.call('checkRights', role, itemType, permission, function (err, result) {
+                if (err) throw new Meteor.Error(err.error);
+                if (typeof result !== 'boolean')
+                    throw new Meteor.Error('Unexpected result type');
+                callback(result);
+            });
+        };
+    })
+
+    .service('CoachAccess', ['AccessControl', function (ac) {
+        self = this;
+        this.showCoachBar = new ReactiveVar(false);
+
+        Tracker.autorun(function () {
+            ac.getPermission('coach', 'coachbar', 'view', function (result) {
+                self.showCoachBar.set(result);
+            });
         });
-    };
-})
+    }])
 
-.service('CoachAccess', ['AccessControl', function(ac) {
-    self = this;
-    this.showCoachBar = new ReactiveVar(false);
+    .service('UserAccount', function () {
+        self = this;
+        self.register = function (email, password, onSuccess, onError) {
+            if (email != '' && password != '') {
+                Accounts.createUser({
+                    email: email,
+                    password: password
+                }, function (error) {
+                    if (error) {
+                        onError(error.reason);
+                    } else {
+                        onSuccess();
+                    }
+                });
+            } else {
+                onError('Please fill in email and password');
+            }
+        }
+    })
 
-    Tracker.autorun(function() {
-        ac.getPermission('coach', 'coachbar', 'view', function(result) {
-            self.showCoachBar.set(result);
-        });
-    });
-}])
-    
+    .service('LoginAccount', function () {
+        this.myFunc = (username, password) => {
+            Meteor.loginWithPassword(username, password, function (error) {
+                if (error) {
+                    console.log(error.reason); // Output error if login fails
+                    return false;
+                } else {
+                    return true;
+                }
+            });
+        }
+    })
+
 // .service('AccessControl', function() {
 //     // Define subscriptions here
 //     var subscriptionReady = new ReactiveVar(false);

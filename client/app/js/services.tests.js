@@ -1,5 +1,4 @@
 import 'angular-mocks';
-import '/server/AccessControl';
 import './services';
 
 describe('Access control', () => {
