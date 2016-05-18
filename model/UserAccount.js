@@ -44,12 +44,5 @@ Meteor.methods({
         };
         var userID = Accounts.createUser(newUser);
         return userID;
-    },
-    getTeam: function () {
-        try {
-            return Meteor.users.findOne({_id: this.userId})[0].profile.clubID;
-        } catch (err) {
-            console.log(err.error);
-        }
     }
 });

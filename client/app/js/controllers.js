@@ -41,17 +41,19 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('loginCtrl', function ($scope, $meteor, $state, LoginAccount) {
+    .controller('loginCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
             email: '',
             password: ''
         };
 
         $scope.login = function () {
-            var login = LoginAccount.myFunc($scope.user.email, $scope.user.password);
-            if (login) {
-                $state.go('menu.feed'); // Redirect user if login succeeds
-            }
+            Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+                if (error) {
+                    throw new Meteor.Error(error.reason);
+                }
+                $state.go('menu.feed');
+            });
         };
 
         $scope.goToRemindPassword = function () {
@@ -98,11 +100,11 @@ angular.module('app.controllers', [])
                 email: $scope.user.email,
                 password: $scope.user.password,
                 profile: {
-                    firstName: 'suraj',
-                    lastName: 'iyer',
+                    firstName: 'THeBEst',
+                    lastName: 'byby',
                     type: "coach",
                     clubID: "1",
-                    teamID: "supersonic-ultrasonic-beautiful-rolling-kick"
+                    teamID: "1"
                 }
             }, function (err) {
                 if (err) throw new Meteor.Error('Account registration error: ' + err.reason);
@@ -203,15 +205,21 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('formCtrl', function ($scope, $ionicModal) {
+    .controller('formCtrl', function ($scope, $ionicModal, $meteor) {
         /* Practicality*/
         $scope.newForm = {};
 
         $scope.form = function () {
-            $scope.newForm.subscribers = 0;
+
+            $scope.creatorID = Meteor.userId();
             $scope.newForm.type = 'Form';
+            $scope.newForm.clubID = Meteor.user().profile.clubID;
+            $scope.newForm.status = 'published';
             $scope.newForm.timestamp = new Date().valueOf();
-            Items.insert($scope.newForm);
+            $scope.newForm.raised = '0';
+            $scope.newForm.locked = false;
+            $scope.newForm.teamID = Meteor.user().profile.teamID;
+            Meteor.call('DBHelper.addFeedItem', $scope.newForm);
             $scope.newForm = {};
             $scope.closeForm();
         };
@@ -232,7 +240,7 @@ angular.module('app.controllers', [])
     })
 
     .controller('votingCtrl', function ($scope, $ionicModal) {
-        /* Voting */
+        /* Voting a*/
         $scope.newVoting = {};
 
         $scope.voting = function () {

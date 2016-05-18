@@ -97,32 +97,6 @@ Meteor.methods({
             console.log("getUserInFo():" + err.message);
         }
     },
-    "getFeed": function (itemTypes) {
-        try {
-            console.log("serverid:" + this.userId);
-            var id = this.userId;
-            //console.log(Meteor.users.find({_id: id}).fetch());
-            var clubid = Meteor.users.find({_id: id}).fetch()[0].profile.club;
-            var teamid = Meteor.users.find({_id: id}).fetch()[0].profile.team;
-            console.log(clubid + " " + teamid);
-            console.log(Items.find().fetch());
-            return Items.find(
-                //itemType: {$in: itemTypes},
-                //status: 'published',
-                /*clubID: clubid,
-                 $or: [
-                 {
-                 teamID: {$exists: true, $eq: teamid },
-                 },
-                 {
-                 teamID: {$exists: false},
-                 }
-                 ]*/
-            ).fetch();
-        } catch (err) {
-            console.log("getFeed(): " + err.message);
-        }
-    },
     "getResponsesOfOneItem": function (itemID) {
         try {
             return Responses.find({itemID: itemID});
