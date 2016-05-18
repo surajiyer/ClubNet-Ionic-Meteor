@@ -24,4 +24,4 @@ angular.module('web.translation', ['pascalprecht.translate'])
     "Password":"Password"
   };
   return translations;
-})
+})	

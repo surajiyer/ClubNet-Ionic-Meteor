@@ -1,0 +1,83 @@
+/*/* GENERAL LAYOUT STRUCTURE */
+
+html,body,.container-fluid {
+	font-family: 'Roboto', sans-serif;
+    height:100%;
+}
+
+.container-fluid {
+    display:table;
+    width: 100%;
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+.row
+{
+    height: 100%;
+    display: table-row;
+}
+
+.navigation {
+	height: 100%;
+    display: table-cell;
+    background-color: #333;
+}
+
+.content {
+    display: table-cell;
+  	float: none;
+}
+
+.no-float {
+    float: none; 
+}
+
+/* TOP BAR */
+
+header {
+    background-color: #499636;
+    height: 50px;
+}
+
+#header-clubname, #header-pagename {
+	padding-top: 10px;
+	font-size: 1.5em;
+	font-weight: bolder;
+	color: white;
+	text-transform: uppercase;
+	text-align: center;
+}
+
+/* NAVIGATION FOOTER */
+
+.navigation img {
+	display: block;
+    margin: 0 auto;
+	width: 50%;
+}
+
+#nav-footer {
+	font-size: 1.2em;
+	font-weight: lighter;
+	text-align: center;
+	color: #FFF;
+}
+
+/* NAVIGATION MENU */	
+
+#menu li a {
+	text-transform: uppercase;
+	font-weight: bold;
+    display: inline-block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+#menu li a:hover {
+    color: gray;
+}
