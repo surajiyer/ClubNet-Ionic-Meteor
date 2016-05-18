@@ -70,24 +70,18 @@ angular.module('app.controllers', [])
         };
 
         $scope.resetPassword = function () {
-            $meteor.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword).then(function () {
+            Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
+                if(err) throw new Meteor.Error('Forgot password error: ' + err.reason);
                 console.log('Reset password success');
-            }, function (err) {
-                console.log('Error resetting password - ', err);
             });
         };
 
         $scope.forgotPassword = function () {
-            if ($scope.forgotUser.email != '') {
-                $meteor.forgotPassword({email: $scope.forgotUser.email}).then(function () {
-                    console.log('Success sending forgot password email');
-                }, function (err) {
-                    console.log('Error sending forgot password email - ', err);
-                });
-            } else {
-                console.log('PLEASE ENTER EMAIL ADDRESS U BITCH');
-            }
-
+            if (!$scope.forgotUser.email)
+                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH');
+            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
+                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+            });
         };
 
         $scope.goBack = function () {
@@ -101,82 +95,62 @@ angular.module('app.controllers', [])
             password: ''
         };
         $scope.register = function () {
-            console.log($scope.user.email + ", " + $scope.user.password);
-            if ($scope.user.email != '' && $scope.user.password != '') {
-                /**/
-                    Accounts.createUser({
-                        email: $scope.user.email,
-                        password: $scope.user.password,
-                        profile:{
-                            userType:"coach",
-                            club: "1",
-                            team:"1"
-                        }
-                    }, function (error) {
-                        if (error) {
-                            console.log('Register error: ' + error.reason); // Output error if registration fails
-                        } else {
-                            $state.go('menu.feed'); // Redirect user if registration succeeds
-                        }
-                    });
-                    /*Meteor.call("DBHelper.addUser",{
-                        email: $scope.user.email,
-                        password: $scope.user.password,
-                    });
-                    $state.go('menu.feed');
-                    Meteor.loginWithPassword($scope.user);*/
-                
-                console.log(Meteor.users.find().fetch());
-            } else {
-                console.log('Please fill in email and password');
-            }
+            if (!$scope.user.email)
+                throw new Meteor.Error('Account registration error: e-mail is not valid');
+            Accounts.createUser({
+                email: $scope.user.email,
+                password: $scope.user.password,
+                profile: {
+                    firstName: 'suraj',
+                    lastName: 'iyer',
+                    type: "coach",
+                    clubID: "1",
+                    teamID: "supersonic-ultrasonic-beautiful-rolling-kick"
+                }
+            }, function (err) {
+                if (err) throw new Meteor.Error('Account registration error: ' + err.reason);
+                $state.go('menu.feed'); // Redirect user if registration succeeds
+            });
         }
     })
 
     .controller('feedCtrl', function ($scope, CoachAccess) {
         // Subscribe to the feed
         Meteor.subscribe('Feed');
-        
+
         // Load the filter
-        Meteor.call('ItemTypes', function(err, result) {
-            if(err) throw new Meteor.Error(err.error);
+        Meteor.call('ItemTypes', function (err, result) {
+            if (err) throw new Meteor.Error(err.reason);
             var oldItemTypes = [];
-            if($scope.itemTypes) {
+            if ($scope.itemTypes) {
                 oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
                     result[id] = {name: name, checked: checked};
                     return result;
                 }, {})
             }
             $scope.itemTypes = result;
-            _.each($scope.itemTypes, function(element) {
-                if(oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
+            _.each($scope.itemTypes, function (element) {
+                if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
                 else element.checked = true;
             }, this);
         });
-        
+
         // Set display filter model
         $scope.showFilter = false;
-        
+
         // Display/hide filter
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
         };
 
-
-      //  console.log(items);
-        
         $scope.helpers({
             items: function () {
                 $scope.getReactively('itemTypes', true);
-                if(!$scope.itemTypes) return;
-                var itemTypesFilter =  _.pluck(_.filter($scope.itemTypes, (type) => {return type.checked}), '_id');
-                Meteor.call("DBHelper.getFeed",itemTypesFilter,function(result) {
-                    console.log(result);
-                });
-                //return Items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
-                return Meteor.call("DBHelper.getFeed",itemTypesFilter);
+                if (!$scope.itemTypes) return;
+                var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
+                return items.find({'itemType': {$in: itemTypesFilter}}, {sort: {timestamp: -1}});
             },
-            showCoachBar: function() {
+            showCoachBar: function () {
                 return CoachAccess.showCoachBar.get();
             }
         });
@@ -208,7 +182,7 @@ angular.module('app.controllers', [])
         $scope.post = function () {
             $scope.newPost.type = 'Post';
             $scope.newPost.timestamp = new Date().valueOf();
-            Items.insert($scope.newPost);
+            items.insert($scope.newPost);
             $scope.newPost = {};
             $scope.closePost();
         };
@@ -236,7 +210,7 @@ angular.module('app.controllers', [])
             $scope.newForm.subscribers = 0;
             $scope.newForm.type = 'Form';
             $scope.newForm.timestamp = new Date().valueOf();
-            Items.insert($scope.newForm);
+            items.insert($scope.newForm);
             $scope.newForm = {};
             $scope.closeForm();
         };
@@ -263,7 +237,7 @@ angular.module('app.controllers', [])
         $scope.voting = function () {
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.timestamp = new Date().valueOf();
-            Items.insert($scope.newVoting);
+            items.insert($scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
         };
@@ -290,7 +264,7 @@ angular.module('app.controllers', [])
         $scope.hero = function () {
             $scope.newHero.type = 'Hero';
             $scope.newHero.timestamp = new Date().valueOf();
-            Items.insert($scope.newHero);
+            items.insert($scope.newHero);
             $scope.newHero = {};
             $scope.closeHero();
         };
