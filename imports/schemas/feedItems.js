@@ -122,11 +122,11 @@ const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema,{
 export { feedItemTypesSchema };
 
 export default feedItemSchemas = {
-    'base': baseFeedItemSchema,
-    'heroes': heroesSchema,
-    'form': formSchema,
-    'sponsor': sponsorEventSchema,
-    'voting': votingPollSchema,
-    'suggestion': exerciseSuggestionSchema,
-    'betting': bettingRoundSchema
+    'Base': baseFeedItemSchema,
+    'Heroes': heroesSchema,
+    'Form': formSchema,
+    'Sponsor': sponsorEventSchema,
+    'Voting': votingPollSchema,
+    'Suggestion': exerciseSuggestionSchema,
+    'Betting': bettingRoundSchema
 };

@@ -28,7 +28,7 @@ angular.module('app.controllers', [])
             } else {
                 $scope.error = 'De wachtwoorden komen niet overeen.'
             }
-        }
+        };
 
         $scope.error = '';
         $scope.errorVisible = {'visibility': 'hidden'};
@@ -46,7 +46,7 @@ angular.module('app.controllers', [])
             email: '',
             password: ''
         };
-        
+
         $scope.login = function () {
             var login = LoginAccount.myFunc($scope.user.email, $scope.user.password);
             if (login) {

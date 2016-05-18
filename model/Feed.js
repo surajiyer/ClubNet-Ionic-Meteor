@@ -22,6 +22,10 @@ Meteor.startup(function () {
         }
     });
 
+    Items.before.insert(function (userId, doc) {
+        doc.timestamp = Date.now();
+    });
+
     if (Meteor.isServer) {
         Meteor.publish('Feed', function(itemTypes) {
             return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
@@ -42,7 +46,7 @@ if (Meteor.isServer) {
         addResponse: function (newResponse) {
             Meteor.call('getTypeItem', newResponse._id, function (err, result) {
                 if (err) throw new Meteor.Error(err.reason);
-                if(result == 'voting') 
+                if(result == 'Voting')
                     Responses.insert(newResponse);
                 console.log("added new response");
             });

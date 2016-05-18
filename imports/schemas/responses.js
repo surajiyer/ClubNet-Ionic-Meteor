@@ -20,9 +20,9 @@ bettingResponseSchema = new SimpleSchema({
 });
 
 export default responseSchemas = {
-    'form': baseResponseSchema,
-    'heroes': baseResponseSchema,
-    'betting': bettingResponseSchema,
-    'sponsor event': baseResponseSchema,
-    'exercise suggestion': baseResponseSchema
+    'Form': baseResponseSchema,
+    'Heroes': baseResponseSchema,
+    'Betting': bettingResponseSchema,
+    'Sponsor': baseResponseSchema,
+    'Suggestion': baseResponseSchema
 };
