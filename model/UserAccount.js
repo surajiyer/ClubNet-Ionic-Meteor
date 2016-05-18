@@ -1,6 +1,12 @@
 import userSchemas from '/imports/schemas/users'
 
 Meteor.startup(function () {
+    Meteor.publish("userData", function () {
+        return Meteor.users.find(
+            {_id: this.userId},
+            {fields: {'other': 1, 'things': 1}}
+        );
+    });
     // _.each(userSchemas, function (schema) {
     //     Meteor.users.attachSchema(userSchemas[schema], {selector: {type: schema}});
     // });

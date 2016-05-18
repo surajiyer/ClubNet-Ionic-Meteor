@@ -42,7 +42,7 @@ if (Meteor.isServer) {
         addResponse: function (newResponse) {
             Meteor.call('getTypeItem', newResponse._id, function (err, result) {
                 if (err) throw new Meteor.Error(err.reason);
-                if(result == 'voting') 
+                if(result == 'Voting')
                     Responses.insert(newResponse);
                 console.log("added new response");
             });
