@@ -53,19 +53,6 @@ angular.module('app.services', [])
         }
     })
 
-    .service('LoginAccount', function () {
-        this.myFunc = (username, password) => {
-            Meteor.loginWithPassword(username, password, function (error) {
-                if (error) {
-                    console.log(error.reason); // Output error if login fails
-                    return false;
-                } else {
-                    return true;
-                }
-            });
-        }
-    })
-
 // .service('AccessControl', function() {
 //     // Define subscriptions here
 //     var subscriptionReady = new ReactiveVar(false);
