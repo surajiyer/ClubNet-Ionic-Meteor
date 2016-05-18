@@ -2,11 +2,26 @@
     {{item.type}}
 </div>
 <div class="item item-body">
+    <h2 id="polls-heading2">{{item.title}}</h2>
     <p>
-       Deadline: 2016-05-31
+        {{item.description}}
     </p>
 </div>
 <div class="item item-body">
-    Item ID: {{item._id}} <br/>
-    Timestamp: {{item.timestamp | date}}
+    <p>
+        Deadline: {{item.deadline}}
+    </p>
+</div>
+<form class="list">
+    <ion-radio name="Football" ng-repeat="exercise in item.exercises" ng-value="exercise.id" ng-model="item.selectedValue">
+        <img src="{{exercise.image}}" alt="" >
+        {{exercise.name}}
+    </ion-radio>
+</form>
+<div class="item item-body">
+    <p>
+        <button class="button button-outline button-balanced" ng-click="vote(item.selectedValue, item._id)">
+            Vote!
+        </button>
+    </p>
 </div>

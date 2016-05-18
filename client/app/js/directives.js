@@ -24,7 +24,7 @@ angular.module('app.directives', [])
             },
             link: function(scope, element, attrs) {
                 scope.signUp = function() {
-                    scope.item.subscribers++;
+                    console.log('forma');
                 };
 
                 scope.refuse = function() {
@@ -41,6 +41,7 @@ angular.module('app.directives', [])
             scope: {
                 item: "="
             }
+
         }
     })
 
@@ -50,6 +51,16 @@ angular.module('app.directives', [])
             templateUrl: 'client/app/views/feeditems/voting.ng.html',
             scope: {
                 item: "="
+            },
+            link: function(scope, element, attrs) {
+                scope.vote = function(value, id) {
+                    if (value) {
+                        //Meteor.call('DBHelper.updateFeedItemInfo', );
+                        console.log(value + '|' + id);
+                    } else {
+                        console.log('Please select what are you voting for');
+                    }
+                };
             }
         }
     })

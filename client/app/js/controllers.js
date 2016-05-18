@@ -211,7 +211,7 @@ angular.module('app.controllers', [])
 
         $scope.form = function () {
 
-            $scope.creatorID = Meteor.userId();
+            $scope.newForm.creatorID = Meteor.userId();
             $scope.newForm.type = 'Form';
             $scope.newForm.clubID = Meteor.user().profile.clubID;
             $scope.newForm.status = 'published';
@@ -240,13 +240,26 @@ angular.module('app.controllers', [])
     })
 
     .controller('votingCtrl', function ($scope, $ionicModal) {
-        /* Voting a*/
+        /* Voting */
         $scope.newVoting = {};
+        
+        $scope.selectedValue = '';
 
         $scope.voting = function () {
+            $scope.newVoting.creatorID = Meteor.userId();
             $scope.newVoting.type = 'Voting';
+            $scope.newVoting.clubID = Meteor.user().profile.clubID;
+            $scope.newVoting.status = 'published';
             $scope.newVoting.timestamp = new Date().valueOf();
-            Items.insert($scope.newVoting);
+            $scope.newVoting.nrVotes = 0;
+            $scope.newVoting.ended = false;
+            $scope.newVoting.teamID = Meteor.user().profile.teamID;
+            $scope.newVoting.exercises = [
+                {id: 1, name: 'pirmas', image: 'http://placehold.it/50x50', votes: 0},
+                {id: 2, name: 'antras', image: 'http://placehold.it/50x50', votes: 0},
+                {id: 3, name: 'trecias', image: 'http://placehold.it/50x50', votes: 0}
+            ];
+            Meteor.call('DBHelper.addFeedItem', $scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
         };

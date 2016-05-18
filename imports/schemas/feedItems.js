@@ -26,8 +26,10 @@ const baseFeedItemSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const exerciseSchema = new SimpleSchema({
+    id:{type: Number},
     name:{type:String},
-    image:{type:String}
+    image:{type:String},
+    votes:{type: Number}
 });
 
 /**
@@ -37,10 +39,6 @@ const exerciseSchema = new SimpleSchema({
 const votingPollSchema = new SimpleSchema([baseFeedItemSchema,{
     title:{type:String},
     deadline:{type:Date},
-    results:{type:[{
-        teamID: {type: String},
-        result:{type: Number}}
-    ]},
     exercises:{
         type:[exerciseSchema],
         minCount: 3,
