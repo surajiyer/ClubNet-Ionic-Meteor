@@ -3,7 +3,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
-
     <style type="text/css">
         .platform-ios .manual-ios-statusbar-padding {
             padding-top: 20px;
@@ -19,18 +18,17 @@
 
 <body>
 <!--TODO: change condition in production-->
-<div ng-if="Meteor.isCordova">
+<div ng-if="!Meteor.isCordova">
     <ion-nav-bar class="bar-stable">
     </ion-nav-bar>
     <ion-nav-view animation="slide-left-right-ios7"></ion-nav-view>
 </div>
-<div ng-if="!Meteor.isCordova">
+<div ng-if="Meteor.isCordova">
+    <!-- Scripts -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
 
-
     <!-- HEADER -->
-
     <header>
         <div class="col-md-2 col-md-2" id="header-clubname">Club name</div>
         <div class="col-md-10 col-lg-10 " id="header-pagename">Page title</div>
@@ -38,7 +36,6 @@
 
     <div class="container-fluid">
         <div class="row">
-
             <!-- NAVIGATION BAR -->
             <div class="col-md-2 col-xs-12 navigation no-float">
                 <div id="menu">
@@ -57,15 +54,11 @@
                 </div>
             </div>
 
-
             <!-- CONTENT -->
-
             <div class="col-md-10 col-xs-12 content no-float">
-                <div id="main" ui-view> </div>
+                <div id="main" ui-view></div>
             </div>
         </div>  <!-- ROW -->
-
     </div>
-
 </div>
 </body>

@@ -29,10 +29,7 @@ angular.module('web.controllers', [])
         }
     })
 
-
-
 ///***************************accountMangementCtrl**************************************//
-
     .controller('accountManagementCtrl', function ($scope, $meteor, $state) {
         // $scope.temp_user = {
         //     email: '',
@@ -44,9 +41,8 @@ angular.module('web.controllers', [])
         //     newPass: '',
         //     newPassCheck: ''
         // };
-
-
-        $scope.subscribe('userManagement');
+        
+        $scope.subscribe('userData');
 
         $scope.helpers({
             accountje: function () {
