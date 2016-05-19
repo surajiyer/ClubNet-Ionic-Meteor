@@ -179,3 +179,7 @@ p.decision {
 form.list {
     margin: 0;
 }
+
+#icon-back {
+    padding-right: 16px;
+}
