@@ -414,13 +414,82 @@ angular.module('app.controllers', [])
         });
     })
 
-    .controller('votingDetailCtrl', function($scope, $state, $stateParams) {
+    .controller('votingDetailCtrl', function($scope, $state, $stateParams, $meteor) {
         var itemID = $stateParams.itemID;
         console.log(itemID);
         $scope.autorun(function() {
             $scope.item = Items.find({ _id: itemID }).fetch()[0];
             console.log($scope.item);
         });
+
+        $scope.selectedValue = '';
+
+        $scope.updateChartValues = function() {
+            $meteor.call('DBHelper.getVotingResults', $scope.item._id).then(
+                function(result){
+                    $scope.chartValues = result;
+                },
+                function(err){
+                    console.log(err);
+                }
+            );
+        };
+
+        if ($scope.item != null) {
+            $scope.hasVoted = false;
+            $scope.hasEnded = false;
+            $meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id).then(
+                function(result){
+                    if (result.length >= $scope.item.nrVoters) {
+                        $scope.hasEnded = true;
+                    }
+                },
+                function (err){
+                    console.log(err);
+                }
+            );
+            $meteor.call('DBHelper.doesResponseExist',$scope.item._id, Meteor.userId()).then(
+                function(result){
+                    $scope.hasVoted = result;
+                },
+                function(err){
+                    console.log(err);
+                }
+            );
+            $scope.updateChartValues();
+            $scope.chartLabels = $scope.item.exercises.map(function(exercise) {return exercise.name});
+            $scope.chartValues = [[0,0,0]];
+
+        }
+
+        $scope.select = function($event, exer_id) {
+            // Let's try
+            $scope.item.selectedValue = exer_id;
+            elem = angular.element($event.currentTarget);
+            parent_div = elem.parent().parent().siblings(".image-placeholder-div")
+            parent_div.show();
+            elem.siblings().removeClass("selected");
+            elem.addClass("selected");
+            parent_div.children(".image-placeholder").attr("src", elem.children("img").attr("src"));
+        }
+
+        $scope.vote = function(itemID, itemType, value) {
+            if (value) {
+                var userID = Meteor.userId();
+                $meteor.call('DBHelper.putResponse', itemID, userID, itemType, value).then(
+                    function(result){
+                        $scope.updateChartValues();
+                        $scope.hasVoted = value;
+                    },
+                    function(err){
+                        console.log(err);
+                    }
+                );
+
+            } else {
+                console.log('Please select what are you voting for');
+            }
+        };
     })
 
     .controller('heroDetailCtrl', function($scope, $state, $stateParams) {

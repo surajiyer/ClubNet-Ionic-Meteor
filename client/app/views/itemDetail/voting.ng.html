@@ -1,6 +1,6 @@
 <div class="item item-divider">
-     <i class="fa fa-chevron-left" ui-sref="menu.feed" id="icon-back" aria-hidden="true"></i>
- {{item.type}}
+    <i class="fa fa-chevron-left" ui-sref="menu.feed" id="icon-back" aria-hidden="true"></i>
+    {{item.type}}
 
 </div>
 <div class="item item-body">
@@ -11,19 +11,38 @@
 </div>
 <div class="item item-body">
     <p>
-        Deadline: {{item.deadline}}
+        Deadline: {{item.deadline | date:'MM/dd/yyyy @ h:mma'}}
     </p>
 </div>
 <form class="list">
-    <ion-radio ng-repeat="exercise in item.exercises" ng-value="exercise.id" ng-model="item.selectedValue">
-        <img src="{{exercise.image}}" alt="" >
-        {{exercise.name}}
-    </ion-radio>
+    <!--<ion-radio ng-repeat="exercise in item.exercises" ng-value="exercise.id" ng-model="item.selectedValue">-->
+    <!--<img src="{{exercise.image}}" alt="" >-->
+    <!--{{exercise.name}}-->
+    <!--</ion-radio>-->
+    <div class="variants">
+        <div ng-repeat="exercise in item.exercises"
+             ng-click="select($event, exercise.id)"
+             ng-class="(($index + 1)== hasVoted) ? 'selected' : ''" >
+            <img src="{{exercise.image}}" width="100" alt="" />
+            <br />
+            {{exercise.name}}
+        </div>
+        <!--<div class="selected" ng-click="vote($event)"><img src="http://placehold.it/100x100" width="100" alt="" /><br />First</div>-->
+        <!--<div ng-click="vote($event)"><img src="http://www.printsonwood.com/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/g/r/grumpy-cat-rainbow-square_PRINT-crop-1x1.jpg.thumbnail_7.jpg" width="100" alt="" /><br />Second</div>-->
+        <!--<div ng-click="vote($event)"><img src="http://i3.cpcache.com/product/1293587386/rootin_for_putin_square_sticker.jpg?height=225&width=225" width="100" alt="" /><br />Third</div>-->
+    </div>
 </form>
-<div class="item item-body">
-    <p>
-        <button class="button button-outline button-balanced" ng-click="vote(item.selectedValue, item._id)">
-            Vote!
+<div class="item item-body image-placeholder-div" ng-if="!hasEnded">
+    <img src="http://placehold.it/300x300" class="image-placeholder" alt="" width="100%" />
+    <div class="col text-right">
+        <button class="button button-outline button-positive"
+                ng-click="vote(item._id, item.type, item.selectedValue)"
+                ng-disabled="hasVoted != 0">
+            {{(hasVoted != 0) ? 'Already voted' : 'Vote!'}}
         </button>
-    </p>
+    </div>
+
+</div>
+<div class="item item-body" ng-if="hasEnded">
+    <canvas id="bar" class="chart chart-bar" chart-data="chartValues" chart-labels="chartLabels"></canvas>
 </div>
