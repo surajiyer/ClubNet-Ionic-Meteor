@@ -336,9 +336,8 @@ angular.module('app.controllers', [])
                 }
             );
             $scope.updateChartValues();
-            $scope.chartLabels = $scope.item.exercises.map(function(exercise) {return exercise.name});
+            $scope.chartLabels = _.map($scope.item.exercises, function(exercise) {return exercise.name});
             $scope.chartValues = [[0,0,0]];
-
         }
 
         $scope.select = function($event, exer_id) {
@@ -350,7 +349,7 @@ angular.module('app.controllers', [])
             elem.siblings().removeClass("selected");
             elem.addClass("selected");
             parent_div.children(".image-placeholder").attr("src", elem.children("img").attr("src"));
-        }
+        };
 
         $scope.vote = function(itemID, itemType, value) {
             if (value) {
