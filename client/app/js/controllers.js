@@ -143,6 +143,10 @@ angular.module('app.controllers', [])
             $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
         });
 
+        $scope.openDetails = function () {
+            console.log("poep");
+        };
+        
         // Subscribe to the feed
         $scope.subscribe('Feed', function(){
             return [$scope.getCollectionReactively('itemTypesFilter')];
@@ -164,6 +168,10 @@ angular.module('app.controllers', [])
                 return CoachAccess.showCoachBar.get();
             }
         });
+
+
+
+
     })
 
     .controller('popoverCtrl', function ($scope, $ionicPopover) {
@@ -210,6 +218,12 @@ angular.module('app.controllers', [])
         $scope.openPost = function () {
             $scope.postmodal.show();
         };
+
+
+
+
+
+
     })
 
     .controller('formCtrl', function ($scope, $ionicModal, $meteor) {
@@ -334,4 +348,35 @@ angular.module('app.controllers', [])
     .controller('settingsCtrl', function ($scope) {
 
     })
+
+
+
+    .controller('postDetailCtrl', function($scope, $state, $stateParams) {
+
+        var itemID = $stateParams.itemID; //getting fooVal
+        console.log(itemID);
+
+    })
+
+    .controller('votingDetailCtrl', function($scope, $state, $stateParams) {
+
+        var itemID = $stateParams.itemID; //getting fooVal
+        console.log(itemID);
+        
+    })
+
+    .controller('heroDetailCtrl', function($scope, $state, $stateParams) {
+
+        var itemID = $stateParams.itemID; //getting fooVal
+        console.log(itemID);
+        
+    })
+
+    .controller('formdirDetailCtrl', function($scope, $state, $stateParams) {
+
+        var itemID = $stateParams.itemID; //getting fooVal
+        console.log(itemID);
+        
+    })
+
 
