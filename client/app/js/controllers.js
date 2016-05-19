@@ -363,33 +363,41 @@ angular.module('app.controllers', [])
 
     })
 
-
-
     .controller('postDetailCtrl', function($scope, $state, $stateParams) {
-
-        var itemID = $stateParams.itemID; //getting fooVal
+        var itemID = $stateParams.itemID;
         console.log(itemID);
-
+        $scope.autorun(function() {
+            $scope.item = Items.find({ _id: itemID }).fetch()[0];
+            console.log($scope.item);
+        });
     })
 
     .controller('votingDetailCtrl', function($scope, $state, $stateParams) {
-
-        var itemID = $stateParams.itemID; //getting fooVal
+        var itemID = $stateParams.itemID;
         console.log(itemID);
-        
+        $scope.autorun(function() {
+            $scope.item = Items.find({ _id: itemID }).fetch()[0];
+            console.log($scope.item);
+        });
     })
 
     .controller('heroDetailCtrl', function($scope, $state, $stateParams) {
-
-        var itemID = $stateParams.itemID; //getting fooVal
+        var itemID = $stateParams.itemID;
         console.log(itemID);
-        
+        $scope.autorun(function() {
+            $scope.item = Items.find({ _id: itemID }).fetch()[0];
+            console.log($scope.item);
+        });
     })
 
     .controller('formdirDetailCtrl', function($scope, $state, $stateParams) {
 
-        var itemID = $stateParams.itemID; //getting fooVal
+        var itemID = $stateParams.itemID;
         console.log(itemID);
+        $scope.autorun(function() {
+            $scope.item = Items.find({ _id: itemID }).fetch()[0];
+            console.log($scope.item);
+        });
         
     })
 
