@@ -15,7 +15,7 @@
     </p>
 </div>
 <form class="list">
-    <ion-radio name="Football" ng-repeat="exercise in item.exercises" ng-value="exercise.id" ng-model="item.selectedValue">
+    <ion-radio ng-repeat="exercise in item.exercises" ng-value="exercise.id" ng-model="item.selectedValue">
         <img src="{{exercise.image}}" alt="" >
         {{exercise.name}}
     </ion-radio>

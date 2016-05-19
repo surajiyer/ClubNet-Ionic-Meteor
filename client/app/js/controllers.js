@@ -1,4 +1,11 @@
 angular.module('app.controllers', [])
+
+    .controller('ItemCtrl', function($scope) {
+        if(!$scope.item) {
+            throw new Error("No item object passed.");
+        }
+    })
+
     .controller('profileCtrl', function ($scope, $meteor, $state) {
         $scope.temp_user = {
             email: '',
@@ -259,7 +266,7 @@ angular.module('app.controllers', [])
         
         $scope.selectedValue = '';
 
-        $scope.voting = function () {
+        $scope.newVoting = function () {
             $scope.newVoting.creatorID = Meteor.userId();
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.clubID = Meteor.user().profile.clubID;
@@ -269,10 +276,11 @@ angular.module('app.controllers', [])
             $scope.newVoting.ended = false;
             $scope.newVoting.teamID = Meteor.user().profile.teamID;
             $scope.newVoting.exercises = [
-                {id: 1, name: 'pirmas', image: 'http://placehold.it/50x50', votes: 0},
-                {id: 2, name: 'antras', image: 'http://placehold.it/50x50', votes: 0},
-                {id: 3, name: 'trecias', image: 'http://placehold.it/50x50', votes: 0}
+                {id: 1, name: 'pirmas', image: 'http://placehold.it/150x75'},
+                {id: 2, name: 'antras', image: 'http://placehold.it/150x75'},
+                {id: 3, name: 'trecias', image: 'http://placehold.it/150x75'}
             ];
+            $scope.newVoting.votes = [];
             Meteor.call('DBHelper.addFeedItem', $scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
@@ -290,6 +298,16 @@ angular.module('app.controllers', [])
 
         $scope.openVoting = function () {
             $scope.votingModal.show();
+        };
+
+        $scope.vote = function(value, id) {
+            if (value) {
+                var userID = Meteor.userId();
+
+                console.log(value + '|' + id + '|' + userID);
+            } else {
+                console.log('Please select what are you voting for');
+            }
         };
     })
 

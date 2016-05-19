@@ -1,9 +1,4 @@
 angular.module('app.directives', [])
-    .controller('ItemCtrl', function($scope) {
-        if(!$scope.item) {
-            throw new Error("No item object passed.");
-        }
-    })
 
     .directive('post', function () {
         return {
@@ -52,16 +47,7 @@ angular.module('app.directives', [])
             scope: {
                 item: "="
             },
-            link: function(scope, element, attrs) {
-                scope.vote = function(value, id) {
-                    if (value) {
-                        //Meteor.call('DBHelper.updateFeedItemInfo', );
-                        console.log(value + '|' + id);
-                    } else {
-                        console.log('Please select what are you voting for');
-                    }
-                };
-            }
+            controller: 'votingCtrl'
         }
     })
 
