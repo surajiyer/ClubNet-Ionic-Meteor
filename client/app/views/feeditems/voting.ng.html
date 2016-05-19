@@ -29,14 +29,12 @@
 </form>
 <div class="item item-body image-placeholder-div">
     <img src="http://placehold.it/300x300" class="image-placeholder" alt="" width="100%" />
+    <div class="col text-right">
+        <button class="button button-outline button-positive" ng-click="vote(item._id, item.type, item.selectedValue)">
+            Vote!
+        </button>
+    </div>
 </div>
 <div class="item item-body">
     <canvas id="bar" class="chart chart-bar" chart-data="chartValues" chart-labels="chartLabels"></canvas>
-</div>
-<div class="item item-body">
-    <p>
-        <button class="button button-outline button-balanced" ng-click="vote(item._id, item.type, item.selectedValue)">
-            Vote! {{hasVoted}}
-        </button>
-    </p>
 </div>
