@@ -1,1 +1,29 @@
-voting
+<div class="item item-divider">
+    {{item.type}}
+
+
+</div>
+<div class="item item-body">
+    <h2 id="polls-heading2">{{item.title}}</h2>
+    <p>
+        {{item.description}}
+    </p>
+</div>
+<div class="item item-body">
+    <p>
+        Deadline: {{item.deadline}}
+    </p>
+</div>
+<form class="list">
+    <ion-radio ng-repeat="exercise in item.exercises" ng-value="exercise.id" ng-model="item.selectedValue">
+        <img src="{{exercise.image}}" alt="" >
+        {{exercise.name}}
+    </ion-radio>
+</form>
+<div class="item item-body">
+    <p>
+        <button class="button button-outline button-balanced" ng-click="vote(item.selectedValue, item._id)">
+            Vote!
+        </button>
+    </p>
+</div>

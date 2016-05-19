@@ -1,1 +1,14 @@
-post
+<div class="item item-divider">
+    {{item.type}} 
+
+</div>
+<div class="item item-body">
+    <p>
+        {{item.message}}
+
+    </p>
+</div>
+<div class="item item-body">
+    Item ID: {{item._id}} <br/>
+    Timestamp: {{item.timestamp | date}}
+</div>
