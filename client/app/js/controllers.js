@@ -266,7 +266,8 @@ angular.module('app.controllers', [])
         
         $scope.selectedValue = '';
 
-        $scope.newVoting = function () {
+        $scope.addVoting = function () {
+            console.log($scope.newVoting.title);
             $scope.newVoting.creatorID = Meteor.userId();
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.clubID = Meteor.user().profile.clubID;
@@ -280,7 +281,6 @@ angular.module('app.controllers', [])
                 {id: 2, name: 'antras', image: 'http://placehold.it/150x75'},
                 {id: 3, name: 'trecias', image: 'http://placehold.it/150x75'}
             ];
-            $scope.newVoting.votes = [];
             Meteor.call('DBHelper.addFeedItem', $scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
@@ -300,15 +300,24 @@ angular.module('app.controllers', [])
             $scope.votingModal.show();
         };
 
-        $scope.vote = function(value, id) {
+        if ($scope.item != null) {
+            $scope.hasVoted = false;
+            Meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId(), function(err, result) {
+                $scope.hasVoted = result;
+            });
+        }
+
+        $scope.vote = function(itemID, itemType, value) {
             if (value) {
                 var userID = Meteor.userId();
-
-                console.log(value + '|' + id + '|' + userID);
+                Meteor.call('DBHelper.putResponse', itemID, userID, itemType, value);
             } else {
                 console.log('Please select what are you voting for');
             }
         };
+        
+        $scope.labels = ["Exercise A", "Exercise B", "Exercise C"];
+        $scope.data = [[10, 5, 7]];
     })
 
     .controller('heroCtrl', function ($scope, $ionicModal) {

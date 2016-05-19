@@ -1,5 +1,6 @@
 Meteor.methods({
     'DBHelper.addFeedItem': function (newItem) {
+        console.log(newItem);
         try {
             Items.insert(newItem);
             console.log("added new item");
@@ -72,13 +73,7 @@ Meteor.methods({
             console.log("deleteFeedItem(): " + err.message);
         }
     },
-    "DBHelper.deleteResponse": function (response) {
-        try {
-            Responses.remove({itemID: response.itemID, responsorID: response.responsorID})
-        } catch (err) {
-            console.log("deleteResponse(): " + err.message);
-        }
-    },
+
     "DBHelper.getPredefinedItemTypes": function () {
         try {
             var types = {};
@@ -106,9 +101,33 @@ Meteor.methods({
     },
     "DBHelper.doesResponseExist": function (itemID, userID) {
         try {
-            return Responses.find({itemID: itemID});
+            var count =  Responses.find({itemID: itemID, userID: userID}).count();
+           // var response = Responses.find({itemID:{ $exists: true, $eq: itemID }, userID: { $exists: true, $eq: userID } });
+            //console.log(response);
+            return count > 0;
         } catch (err) {
-            console.log("getResponseOfOneItem():" + err.message);
+            console.log("doesResponseExist():" + err.message);
+        }
+    },
+    "DBHelper.deleteResponse": function (response) {
+        try {
+            Responses.remove({itemID: response.itemID, responsorID: response.responsorID})
+        } catch (err) {
+            console.log("deleteResponse(): " + err.message);
+        }
+    },
+    "DBHelper.getResponsesOfItemType": function (itemType) {
+        try {
+            return Responses.find({itemType: itemType});
+        } catch (err) {
+            console.log("getResponsesOfItemType(): " + err.message);
+        }
+    },
+    "DBHelper.putResponse": function (itemID, userID, itemType, value) {
+        try {
+            return Responses.insert({itemID: itemID, userID: userID, itemType: itemType, value: value})
+        } catch (err) {
+            console.log("putResponse(): " + err.message);
         }
     }
 });
