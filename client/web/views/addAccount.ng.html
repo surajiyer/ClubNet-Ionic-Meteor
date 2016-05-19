@@ -1,0 +1,50 @@
+<div class="container">
+    <form g-submit="addAccount()">
+        <div class="form-group">
+            <label for="firstName">First Name</label>
+            <input type="text" class="form-control" id="firstName" placeholder="First Name" ng-model="temp_account.firstName">
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" class="form-control" id="lastName" placeholder="Last Name" ng-model="temp_account.lastName">
+        </div>
+        <div class="form-group">
+            <label for="email">Email address</label>
+            <input type="email" class="form-control" id="email" placeholder="Email" ng-model="temp_account.email">
+        </div>
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password" ng-model="temp_account.password">
+        </div>
+
+
+        <label class="item item-input item-select">
+            <div class="input-label" ng-model="temp_account.playerTeam">
+                Team
+            </div>
+            <select>
+                <option>C1</option>
+                <option selected>F1</option>
+                <option>A1</option>
+            </select>
+        </label>
+
+        <div class="form-group" style="padding-left: 35px;">
+            <label class="radio	">
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Player
+            </label>
+            <label class="radio">
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Coach
+            </label>
+            <label class="radio">
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Public Relations Manager
+            </label>
+        </div>
+
+        <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">Add User</a>
+
+
+
+    </form>
+
+</div>

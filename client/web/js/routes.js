@@ -11,11 +11,15 @@ angular.module('web.routes', [])
                 url: '/',
                 controller: function ($scope, $state) {
                     if (Meteor.userId()) {
-                        $state.go('accountManagement');
+                        $state.go('menu');
                     } else {
                         $state.go('login');
                     }
                 }
+            })
+            .state('menu', {
+                url: '/menu',
+                templateUrl: 'client/web/views/menu.ng.html'
             })
 
             .state('main', {
@@ -29,12 +33,23 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/login.ng.html',
                 controller: 'loginController'
             })
-            
-            .state('accountManagement', {
+
+            .state('menu.addAccount', {
+                url: '/addAccount',
+                templateUrl: 'client/web/views/addAccount.ng.html',
+                controller: 'addAccountController'
+            })
+
+            .state('menu.accountManagement', {
                 url: '/accountManagement',
                 templateUrl: 'client/web/views/accountManagement.ng.html',
                 controller: 'accountManagementCtrl'
+            })
+
+            .state('menu.sepQuotes', {
+                url: '/sepQuotes',
+                templateUrl: 'client/web/views/sepquotes.ng.html'
             });
         
-        $urlRouterProvider.otherwise('/accountManagement');
+        $urlRouterProvider.otherwise('/menu');
     });

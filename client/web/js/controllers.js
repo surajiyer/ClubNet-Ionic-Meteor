@@ -29,7 +29,38 @@ angular.module('web.controllers', [])
         }
     })
 
-///***************************accountMangementCtrl**************************************//
+
+    .controller('sepQuotesCtrl', function ($scope, $meteor, $state) {
+
+    })
+
+
+    .controller('addAccountCtrl', function ($scope, $meteor, $state) {
+
+        $scope.temp_account = {
+            email: '',
+            firstName: '',
+            lastName: '',
+            password: '',
+            accountType: '',
+            playerTeam: ''
+        };
+
+        $scope.addAccount = function () {
+            var firstName = $scope.temp_account.firstName;
+            var lastName = $scope.temp_account.lastName;
+            var email = $scope.temp_account.email;
+            var password = $scope.temp_account.password;
+            var accountType = $scope.temp_account.accountType;
+            var playerTeam = $scope.temp_account.playerTeam;
+
+            alert (firstName);
+        }
+    })
+
+
+    ///***************************accountMangementCtrl**************************************//
+
     .controller('accountManagementCtrl', function ($scope, $meteor, $state) {
         // $scope.temp_user = {
         //     email: '',
@@ -41,11 +72,12 @@ angular.module('web.controllers', [])
         //     newPass: '',
         //     newPassCheck: ''
         // };
-        
-        $scope.subscribe('userData');
+
+
+        $scope.subscribe('userManagement');
 
         $scope.helpers({
-            accountje: function () {
+            userAccounts: function () {
                 return Meteor.users.find();
             }
         });
