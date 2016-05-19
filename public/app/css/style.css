@@ -140,3 +140,7 @@ p.decision {
     float:      right !important; 
     margin-top: 4px !important;
 }
+
+#icon-back {
+    padding-right: 16px;
+}
