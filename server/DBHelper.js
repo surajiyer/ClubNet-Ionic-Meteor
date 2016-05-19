@@ -54,11 +54,11 @@ Meteor.methods({
     },
     "DBHelper.updateFeedItemInfo": function (itemID, newInfo) {
         try {
-            var setPar = {};
-            for (var key in newInfo) {
-                setPar[key] = newInfo[key];
-                Items.update({_id: itemID}, {$set: setPar}, {bypassCollection2: true});
-            }
+            Items.update(
+                {_id: itemID},
+                {$set: newInfo},
+                {bypassCollection2: true}
+            );
             console.log("updated feed item info");
         } catch (err) {
             console.log("updateFeedItemInfo():" + err.message)
@@ -90,14 +90,21 @@ Meteor.methods({
             console.log("getPredefinedItemTypes(): " + err.message);
         }
     },
-    "getUserInfo": function (userID) {
+    "DBHelper.getUserInfo": function (userID) {
         try {
             return Meteor.users.find({_id: userID});
         } catch (err) {
             console.log("getUserInFo():" + err.message);
         }
     },
-    "getResponsesOfOneItem": function (itemID) {
+    "DBHelper.getResponsesOfOneItem": function (itemID) {
+        try {
+            return Responses.find({itemID: itemID});
+        } catch (err) {
+            console.log("getResponseOfOneItem():" + err.message);
+        }
+    },
+    "DBHelper.doesResponseExist": function (itemID, userID) {
         try {
             return Responses.find({itemID: itemID});
         } catch (err) {

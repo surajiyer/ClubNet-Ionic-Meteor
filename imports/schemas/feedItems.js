@@ -28,8 +28,16 @@ const baseFeedItemSchema = new SimpleSchema({
 const exerciseSchema = new SimpleSchema({
     id:{type: Number},
     name:{type:String},
-    image:{type:String},
-    votes:{type: Number}
+    image:{type:String}
+});
+
+/**
+ * Database schema for votes
+ * @type {SimpleSchema}
+ */
+const voteSchema = new SimpleSchema({
+    userID:{type: String},
+    value:{type: String}
 });
 
 /**
@@ -49,7 +57,8 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema,{
     nrVoters:{type:Number},
     nrVotes:{type: Number},
     ended:{type:Boolean},
-    teamID:{type:String}
+    teamID:{type:String},
+    votes:{type:[voteSchema]}
 }]);
 
 /**
