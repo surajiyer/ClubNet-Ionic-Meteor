@@ -168,10 +168,6 @@ angular.module('app.controllers', [])
                 return CoachAccess.showCoachBar.get();
             }
         });
-
-
-
-
     })
 
     .controller('popoverCtrl', function ($scope, $ionicPopover) {
@@ -218,12 +214,6 @@ angular.module('app.controllers', [])
         $scope.openPost = function () {
             $scope.postmodal.show();
         };
-
-
-
-
-
-
     })
 
     .controller('formCtrl', function ($scope, $ionicModal, $meteor) {
@@ -277,9 +267,9 @@ angular.module('app.controllers', [])
             $scope.newVoting.ended = false;
             $scope.newVoting.teamID = Meteor.user().profile.teamID;
             $scope.newVoting.exercises = [
-                {id: 1, name: 'pirmas', image: 'http://placehold.it/150x75'},
-                {id: 2, name: 'antras', image: 'http://placehold.it/150x75'},
-                {id: 3, name: 'trecias', image: 'http://placehold.it/150x75'}
+                {id: 1, name: 'pirmas', image: 'http://placehold.it/100x100'},
+                {id: 2, name: 'antras', image: 'http://www.printsonwood.com/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/g/r/grumpy-cat-rainbow-square_PRINT-crop-1x1.jpg.thumbnail_7.jpg'},
+                {id: 3, name: 'trecias', image: 'http://i3.cpcache.com/product/1293587386/rootin_for_putin_square_sticker.jpg?height=225&width=225'}
             ];
             Meteor.call('DBHelper.addFeedItem', $scope.newVoting);
             $scope.newVoting = {};
@@ -305,6 +295,15 @@ angular.module('app.controllers', [])
             Meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId(), function(err, result) {
                 $scope.hasVoted = result;
             });
+        }
+
+        $scope.select = function($event, exer_id) {
+            $scope.item.selectedValue = exer_id;
+            jQuery(".image-placeholder-div").show();
+            elem = angular.element($event.currentTarget);
+            jQuery(".variants > div").removeClass("selected");
+            elem.addClass("selected");
+            jQuery(".image-placeholder").attr("src", elem.children("img").attr("src"));
         }
 
         $scope.vote = function(itemID, itemType, value) {
