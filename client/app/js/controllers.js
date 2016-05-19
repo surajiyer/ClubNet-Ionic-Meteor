@@ -254,15 +254,6 @@ angular.module('app.controllers', [])
         /* Voting */
         $scope.newVoting = {};
         
-        $scope.chartLabels = $scope.item.exercises.map(function(exercise) {return exercise.name});
-        $scope.chartValues = [[0,0,0]];
-        $scope.updateChartValues = function() {
-            Meteor.call('DBHelper.getVotingResults', $scope.item._id, function(err, result) {
-                $scope.chartValues = result;
-            });
-        };
-        $scope.updateChartValues();
-        
         $scope.selectedValue = '';
 
         $scope.addVoting = function () {
@@ -299,29 +290,56 @@ angular.module('app.controllers', [])
             $scope.votingModal.show();
         };
 
+        $scope.updateChartValues = function() {
+            Meteor.call('DBHelper.getVotingResults', $scope.item._id, function(err, result) {
+                $scope.chartValues = result;
+            });
+        };
+
         if ($scope.item != null) {
             $scope.hasVoted = false;
+            $scope.hasEnded = false;
+            Meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id, function(err, result){
+
+                if (err) {
+                    console.log(err);
+                } else {
+                    if (result.length >= $scope.item.nrVoters) {
+                        $scope.hasEnded = true;
+                    }
+                }
+
+            });
             Meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId(), function(err, result) {
                 $scope.hasVoted = result;
             });
+            $scope.updateChartValues();
+            $scope.chartLabels = $scope.item.exercises.map(function(exercise) {return exercise.name});
+            $scope.chartValues = [[0,0,0]];
+
         }
 
         $scope.select = function($event, exer_id) {
             // Let's try
             $scope.item.selectedValue = exer_id;
-            jQuery(".image-placeholder-div").show();
             elem = angular.element($event.currentTarget);
-            jQuery(".variants > div").removeClass("selected");
+            parent_div = elem.parent().parent().siblings(".image-placeholder-div")
+            parent_div.show();
+            elem.siblings().removeClass("selected");
             elem.addClass("selected");
-            jQuery(".image-placeholder").attr("src", elem.children("img").attr("src"));
+            parent_div.children(".image-placeholder").attr("src", elem.children("img").attr("src"));
         }
 
         $scope.vote = function(itemID, itemType, value) {
             if (value) {
                 var userID = Meteor.userId();
-                Meteor.call('DBHelper.putResponse', itemID, userID, itemType, value, function(err, result) {
-                    $scope.updateChartValues();
+                Meteor.call('DBHelper.putResponse', itemID, userID, itemType, value, function(err, result){
+
                 });
+                // TODO: HERE WE HAVE AN ASSUMPTION THAT WE ALWAYS SUCCEED IN PUTTING RESPONSE TO THE DB
+                $scope.updateChartValues();
+                $scope.hasVoted = value;
+                $scope.hasEnded = true;
             } else {
                 console.log('Please select what are you voting for');
             }

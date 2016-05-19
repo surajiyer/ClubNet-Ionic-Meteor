@@ -87,14 +87,14 @@ Meteor.methods({
     },
     "DBHelper.getUserInfo": function (userID) {
         try {
-            return Meteor.users.find({_id: userID});
+            return Meteor.users.find({_id: userID}).fetch();
         } catch (err) {
             console.log("getUserInFo():" + err.message);
         }
     },
     "DBHelper.getResponsesOfOneItem": function (itemID) {
         try {
-            return Responses.find({itemID: itemID});
+            return Responses.find({itemID: itemID}).fetch();
         } catch (err) {
             console.log("getResponseOfOneItem():" + err.message);
         }
@@ -111,10 +111,12 @@ Meteor.methods({
     },
     "DBHelper.doesResponseExist": function (itemID, userID) {
         try {
-            var count =  Responses.find({itemID: itemID, userID: userID}).count();
-           // var response = Responses.find({itemID:{ $exists: true, $eq: itemID }, userID: { $exists: true, $eq: userID } });
-            //console.log(response);
-            return count > 0;
+            var responses =  Responses.find({itemID: itemID, userID: userID}).fetch();
+            if (responses.length > 0) {
+                return responses[0].value;
+            } else {
+                return 0;
+            }
         } catch (err) {
             console.log("doesResponseExist():" + err.message);
         }
@@ -128,7 +130,7 @@ Meteor.methods({
     },
     "DBHelper.getResponsesOfItemType": function (itemType) {
         try {
-            return Responses.find({itemType: itemType});
+            return Responses.find({itemType: itemType}).fetch();
         } catch (err) {
             console.log("getResponsesOfItemType(): " + err.message);
         }
