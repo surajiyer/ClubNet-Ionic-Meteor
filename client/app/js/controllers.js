@@ -264,6 +264,15 @@ angular.module('app.controllers', [])
         /* Voting */
         $scope.newVoting = {};
         
+        $scope.chartLabels = $scope.item.exercises.map(function(exercise) {return exercise.name});
+        $scope.chartValues = [[0,0,0]];
+        $scope.updateChartValues = function() {
+            Meteor.call('DBHelper.getVotingResults', $scope.item._id, function(err, result) {
+                $scope.chartValues = result;
+            });
+        };
+        $scope.updateChartValues();
+        
         $scope.selectedValue = '';
 
         $scope.addVoting = function () {
@@ -310,14 +319,13 @@ angular.module('app.controllers', [])
         $scope.vote = function(itemID, itemType, value) {
             if (value) {
                 var userID = Meteor.userId();
-                Meteor.call('DBHelper.putResponse', itemID, userID, itemType, value);
+                Meteor.call('DBHelper.putResponse', itemID, userID, itemType, value, function(err, result) {
+                    $scope.updateChartValues();
+                });
             } else {
                 console.log('Please select what are you voting for');
             }
         };
-        
-        $scope.labels = ["Exercise A", "Exercise B", "Exercise C"];
-        $scope.data = [[10, 5, 7]];
     })
 
     .controller('heroCtrl', function ($scope, $ionicModal) {

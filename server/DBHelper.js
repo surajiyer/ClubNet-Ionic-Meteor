@@ -99,6 +99,16 @@ Meteor.methods({
             console.log("getResponseOfOneItem():" + err.message);
         }
     },
+    "DBHelper.getVotingResults": function (itemID) {
+        try {
+            votes = Responses.find({itemID: itemID});
+            result = [[0,0,0]];
+            votes.forEach(function(vote) {result[0][vote.value-1]++;});
+            return result;          
+        } catch (err) {
+            console.log("doesResponseExist():" + err.message);
+        }
+    },
     "DBHelper.doesResponseExist": function (itemID, userID) {
         try {
             var count =  Responses.find({itemID: itemID, userID: userID}).count();
