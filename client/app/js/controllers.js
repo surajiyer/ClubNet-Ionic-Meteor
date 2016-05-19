@@ -295,6 +295,9 @@ angular.module('app.controllers', [])
                 console.log('Please select what are you voting for');
             }
         };
+        
+        $scope.labels = ["Exercise A", "Exercise B", "Exercise C"];
+        $scope.data = [[10, 5, 7]];
     })
 
     .controller('heroCtrl', function ($scope, $ionicModal) {
