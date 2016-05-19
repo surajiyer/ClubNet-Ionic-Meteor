@@ -135,3 +135,8 @@ p.decision {
     background: #fff;
     padding: 10px;
 }
+
+#icon-expand {
+    float:      right !important; 
+    margin-top: 4px !important;
+}
