@@ -307,6 +307,7 @@ angular.module('app.controllers', [])
         }
 
         $scope.select = function($event, exer_id) {
+            // Let's try
             $scope.item.selectedValue = exer_id;
             jQuery(".image-placeholder-div").show();
             elem = angular.element($event.currentTarget);
