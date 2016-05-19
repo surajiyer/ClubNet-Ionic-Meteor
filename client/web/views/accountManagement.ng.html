@@ -1,4 +1,25 @@
 <div class="container">
-    <div ng-repeat="user in accountje | limitTo:display_limit">{{user.emails[0].address}}
+    ​
+    ​
+    <div class="container" style="margin: auto;">
+        <h2>User Overview</h2>
+        <p>Add, delete and manage your club's users.</p>
+        <table class="table table-condensed">
+            <thead>
+            <tr>
+                <th>Email</th>
+                <th>ID</th>
+                <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="user in userAccounts | limitTo:display_limit">
+                <td>{{user.emails[0].address}}</td>
+                <td>{{user._id}}</td>
+                <td>john@example.com</td>
+            </tr>
+            </tbody>
+        </table>
     </div>
+    ​
 </div>

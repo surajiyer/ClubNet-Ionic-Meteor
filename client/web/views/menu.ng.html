@@ -1,0 +1,38 @@
+<div class="container">
+    <!-- Scripts -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/web/css/layout.css"/>
+    <link rel="stylesheet" href="/web/css/side-menu.css"/>
+
+    <a href="#menu" id="menuLink" class="menu-link" ng-click="toggleMenu()">
+        <!-- Hamburger icon -->
+        Hi
+    </a>
+
+    <!-- NAVIGATION BAR -->
+    <div id="menu" class>
+        <div class="pure-menu">
+            <div id="menu-logo">
+                <img src="https://placeholdit.imgix.net/~text?txtsize=14&txt=150%C3%97150&w=150&h=150">
+            </div>
+            <a class="pure-menu-heading" href="#">Club name</a>
+            <ul>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Profile</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Feed</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Club management</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Club betting</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Members</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Log out</a></li>
+            </ul>
+        </div>
+        <div class="push"></div>
+        <div id="nav-footer">
+            <img src="/web/img/clubnet_logo_light.png">
+            Intuitive Technologies B.V.
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div ui-view></div>
+</div>
