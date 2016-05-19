@@ -20,9 +20,6 @@
 
 <body>
     <!--TODO: change condition in production-->
-    <div ng-if="Meteor.isCordova">
-
-
 <div ng-if="!Meteor.isCordova">
 
         <link rel="stylesheet" href="/app/css/style.css"/>
@@ -32,18 +29,12 @@
     </div>
 
 
-    <div ng-if="!Meteor.isCordova">
-
 
 <div ng-if="Meteor.isCordova">
     <!-- Scripts -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/web/css/layout.css"/>
-    <link rel="stylesheet" href="/web/css/side-menu.css"/>
 
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-        <div id="main" ui-view> </div>
+    <div id="main" ui-view> </div>
 
 
     </div>
