@@ -1,13 +1,13 @@
 TypesCollection = new Mongo.Collection("ItemTypes");
 
 TypesCollection.deny({
-    insert: function(){
+    insert: function () {
         return false;
     },
-    update: function(){
+    update: function () {
         return false;
     },
-    remove: function(){
+    remove: function () {
         return false;
     }
 });

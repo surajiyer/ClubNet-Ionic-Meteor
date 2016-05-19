@@ -10,8 +10,6 @@ angular.module('app.config', ['chart.js'])
         ChartJsProvider.setOptions('Line', {
             datasetFill: false
         });
-        
-        ChartJsProvider.setOptions('Bar', {
-            
-        });
+
+        ChartJsProvider.setOptions('Bar', {});
     }])   

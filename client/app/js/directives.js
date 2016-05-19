@@ -10,26 +10,26 @@ angular.module('app.directives', [])
         }
     })
 
-    .directive('formdir', function(){
+    .directive('formdir', function () {
         return {
             restrict: 'E',
             templateUrl: 'client/app/views/feeditems/formdir.ng.html',
             scope: {
                 item: "="
             },
-            link: function(scope, element, attrs) {
-                scope.signUp = function() {
+            link: function (scope, element, attrs) {
+                scope.signUp = function () {
                     console.log('forma');
                 };
 
-                scope.refuse = function() {
+                scope.refuse = function () {
                     console.log('Refuse');
                 };
             }
         }
     })
 
-    .directive('hero', function(){
+    .directive('hero', function () {
         return {
             restrict: 'E',
             templateUrl: 'client/app/views/feeditems/hero.ng.html',
@@ -40,7 +40,7 @@ angular.module('app.directives', [])
         }
     })
 
-    .directive('voting', function(){
+    .directive('voting', function () {
         return {
             restrict: 'E',
             templateUrl: 'client/app/views/feeditems/voting.ng.html',
@@ -51,7 +51,7 @@ angular.module('app.directives', [])
         }
     })
 
-    .directive('ionItemDivider', function(){
+    .directive('ionItemDivider', function () {
         return {
             restrict: 'E',
             replace: false,

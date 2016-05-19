@@ -3,8 +3,8 @@
  * @type {SimpleSchema}
  */
 var teamSchema = new SimpleSchema({
-    teamName:{type:String},
-    teamID:{type:String}
+    teamName: {type: String},
+    teamID: {type: String}
 });
 
 /**
@@ -12,14 +12,14 @@ var teamSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 var clubSchema = new SimpleSchema({
-    name:{type: String},
-    logo:{type: String},
-    colorSchema:{
-        type:[String],
-        label:"Three colors",
-        minCount:3,
-        maxCount:3
+    name: {type: String},
+    logo: {type: String},
+    colorSchema: {
+        type: [String],
+        label: "Three colors",
+        minCount: 3,
+        maxCount: 3
     }
 });
 
-export { teamSchema, clubSchema };
+export {teamSchema, clubSchema};

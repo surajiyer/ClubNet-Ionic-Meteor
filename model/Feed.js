@@ -23,8 +23,8 @@ Meteor.startup(function () {
     });
 
     if (Meteor.isServer) {
-        Meteor.publish('Feed', function(itemTypes) {
-            if(!itemTypes) {
+        Meteor.publish('Feed', function (itemTypes) {
+            if (!itemTypes) {
                 this.ready();
                 return;
             }

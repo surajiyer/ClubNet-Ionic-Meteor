@@ -64,7 +64,7 @@ Meteor.methods({
         var userID = Accounts.createUser(newUser);
         return userID;
     },
-    getType: function() {
+    getType: function () {
         //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
         return Meteor.user().profile.type;
     }

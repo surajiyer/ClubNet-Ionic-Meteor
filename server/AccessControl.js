@@ -18,7 +18,7 @@ Meteor.methods({
             {'_id': Meteor.call('getType')},
             {fields: {'items': {$elemMatch: {'_id': itemType}}}}
         );
-        
+
         return doc.items[0].permissions[permission];
     },
     setPermissions: function (newAccess) {
