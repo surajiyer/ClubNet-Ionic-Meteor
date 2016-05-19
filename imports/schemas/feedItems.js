@@ -15,10 +15,34 @@ const feedItemTypesSchema = new SimpleSchema({
 const baseFeedItemSchema = new SimpleSchema({
     creatorID:{type: String},
     type :{type: String},
-    sticky:{type: Boolean},
+    sticky:{
+        type: Boolean,
+        autoValue: function() {
+            return false;
+        }
+    },
     clubID:{type: String},
-    status:{type: String, allowedValues:["published","unpublished"]},
-    timestamp:{type: String}
+    status:{
+        type: String,
+        allowedValues:["published","unpublished"]
+    },
+    createdAt:{
+        type: String,
+        autoValue: function() {
+            if(this.isInsert) {
+                return new Date;
+            }
+        },
+        denyUpdate: true
+    },
+    modifiedAt:{
+        type: String,
+        autoValue: function() {
+            if(this.isUpdate) {
+                return new Date;
+            }
+        }
+    }
 });
 
 /**

@@ -8,19 +8,17 @@ Meteor.methods({
      * @param permission the type of permission being requested for the item: create, view, edit or delete.
      * @returns true if permitted or false if denied
      */
-    checkRights: function (role, itemType, permission) {
-        if (typeof role !== 'string')
-            throw new Meteor.Error('Role must be a string');
+    checkRights: function (itemType, permission) {
         if (typeof itemType !== 'string')
             throw new Meteor.Error('Item type must be a string');
         if (typeof permission !== 'string')
             throw new Meteor.Error('Permission required must be a string');
 
         var doc = AMx.findOne(
-            {'_id': role},
+            {'_id': Meteor.call('getType')},
             {fields: {'items': {$elemMatch: {'_id': itemType}}}}
         );
-
+        
         return doc.items[0].permissions[permission];
     },
     setPermissions: function (newAccess) {

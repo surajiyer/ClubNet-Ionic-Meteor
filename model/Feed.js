@@ -24,9 +24,12 @@ Meteor.startup(function () {
 
     if (Meteor.isServer) {
         Meteor.publish('Feed', function(itemTypes) {
+            if(!itemTypes) {
+                this.ready();
+                return;
+            }
             return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
         });
-
     }
 });
 
@@ -38,14 +41,6 @@ if (Meteor.isServer) {
             } catch (err) {
                 throw new Meteor.Error(err.message);
             }
-        },
-        addResponse: function (newResponse) {
-            Meteor.call('getItemType', newResponse._id, function (err, result) {
-                if (err) throw new Meteor.Error(err.reason);
-                if(result == 'Voting')
-                    Responses.insert(newResponse);
-                console.log("added new response");
-            });
         }
     })
 }
