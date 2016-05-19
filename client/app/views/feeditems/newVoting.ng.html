@@ -8,10 +8,30 @@
     <ion-content>
         <div class="list">
             <label class="item item-input item-floating-label">
-                <span class="input-label">Description</span>
-                <input ng-model="newVoting.message" type="text" placeholder="Description">
+                <span class="input-label">Title</span>
+                <input ng-model="newVoting.title" type="text" placeholder="Title">
             </label>
-            <button ng-disabled="!newVoting.message" ng-click="voting()" class="button button-block button-positive">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Deadline</span>
+                <input ng-model="newVoting.deadline" type="date">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Description</span>
+                <input ng-model="newVoting.description" type="text" placeholder="Description">
+            </label>
+            <label class="item">
+                <span class="input-label">Intermediate public</span>
+                <input type="checkbox" ng-model="newVoting.intermediatePublic">
+            </label>
+            <label class="item">
+                <span class="input-label">Final public</span>
+                <input type="checkbox" ng-model="newVoting.finalPublic">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Number of voters:</span>
+                <input ng-model="newVoting.nrVoters" type="number" placeholder="Number of voters">
+            </label>
+            <button ng-disabled="!newVoting.title && !newVoting.deadline" ng-click="addVoting()" class="button button-block button-positive">
                 Post
             </button>
         </div>

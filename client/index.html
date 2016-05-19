@@ -17,7 +17,7 @@
 </head>
 
 <body>
-<!--TODO: change condition in production-->
+    <!--TODO: change condition in production-->
 <div ng-if="!Meteor.isCordova">
     <link rel="stylesheet" href="/app/css/style.css"/>
     <ion-nav-bar class="bar-stable">
@@ -30,37 +30,8 @@
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/web/css/custom.css"/>
 
-    <!-- HEADER -->
-    <header>
-        <div class="col-md-2 col-md-2" id="header-clubname">Club name</div>
-        <div class="col-md-10 col-lg-10 " id="header-pagename">Page title</div>
-    </header>
+    <div id="main" ui-view> </div>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- NAVIGATION BAR -->
-            <div class="col-md-2 col-xs-12 navigation no-float">
-                <div id="menu">
-                    <ul>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Feed</a></li>
-                        <li><a href="#">Club management</a></li>
-                        <li><a href="#">Club betting</a></li>
-                        <li><a href="#">Members</a></li>
-                        <li><a href="#">Log out</a></li>
-                    </ul>
-                </div>
-                <div id="nav-footer">
-                    <img src="/web/img/clubnet_logo_light.png">
-                    Intuitive Technologies B.V.
-                </div>
-            </div>
 
-            <!-- CONTENT -->
-            <div class="col-md-10 col-xs-12 content no-float">
-                <div id="main" ui-view></div>
-            </div>
-        </div>  <!-- ROW -->
     </div>
-</div>
 </body>

@@ -1,9 +1,4 @@
 angular.module('app.directives', [])
-    .controller('ItemCtrl', function($scope) {
-        if(!$scope.item) {
-            throw new Error("No item object passed.");
-        }
-    })
 
     .directive('post', function () {
         return {
@@ -24,7 +19,7 @@ angular.module('app.directives', [])
             },
             link: function(scope, element, attrs) {
                 scope.signUp = function() {
-                    scope.item.subscribers++;
+                    console.log('forma');
                 };
 
                 scope.refuse = function() {
@@ -41,6 +36,7 @@ angular.module('app.directives', [])
             scope: {
                 item: "="
             }
+
         }
     })
 
@@ -50,7 +46,8 @@ angular.module('app.directives', [])
             templateUrl: 'client/app/views/feeditems/voting.ng.html',
             scope: {
                 item: "="
-            }
+            },
+            controller: 'votingCtrl'
         }
     })
 

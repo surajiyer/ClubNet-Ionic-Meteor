@@ -1,5 +1,6 @@
 Meteor.methods({
     'DBHelper.addFeedItem': function (newItem) {
+        console.log(newItem);
         try {
             Items.insert(newItem);
             console.log("added new item");
@@ -54,11 +55,11 @@ Meteor.methods({
     },
     "DBHelper.updateFeedItemInfo": function (itemID, newInfo) {
         try {
-            var setPar = {};
-            for (var key in newInfo) {
-                setPar[key] = newInfo[key];
-                Items.update({_id: itemID}, {$set: setPar}, {bypassCollection2: true});
-            }
+            Items.update(
+                {_id: itemID},
+                {$set: newInfo},
+                {bypassCollection2: true}
+            );
             console.log("updated feed item info");
         } catch (err) {
             console.log("updateFeedItemInfo():" + err.message)
@@ -72,13 +73,7 @@ Meteor.methods({
             console.log("deleteFeedItem(): " + err.message);
         }
     },
-    "DBHelper.deleteResponse": function (response) {
-        try {
-            Responses.remove({itemID: response.itemID, responsorID: response.responsorID})
-        } catch (err) {
-            console.log("deleteResponse(): " + err.message);
-        }
-    },
+
     "DBHelper.getPredefinedItemTypes": function () {
         try {
             var types = {};
@@ -90,18 +85,61 @@ Meteor.methods({
             console.log("getPredefinedItemTypes(): " + err.message);
         }
     },
-    "getUserInfo": function (userID) {
+    "DBHelper.getUserInfo": function (userID) {
         try {
-            return Meteor.users.find({_id: userID});
+            return Meteor.users.find({_id: userID}).fetch();
         } catch (err) {
             console.log("getUserInFo():" + err.message);
         }
     },
-    "getResponsesOfOneItem": function (itemID) {
+    "DBHelper.getResponsesOfOneItem": function (itemID) {
         try {
-            return Responses.find({itemID: itemID});
+            return Responses.find({itemID: itemID}).fetch();
         } catch (err) {
             console.log("getResponseOfOneItem():" + err.message);
+        }
+    },
+    "DBHelper.getVotingResults": function (itemID) {
+        try {
+            votes = Responses.find({itemID: itemID});
+            result = [[0,0,0]];
+            votes.forEach(function(vote) {result[0][vote.value-1]++;});
+            return result;          
+        } catch (err) {
+            console.log("doesResponseExist():" + err.message);
+        }
+    },
+    "DBHelper.doesResponseExist": function (itemID, userID) {
+        try {
+            var responses =  Responses.find({itemID: itemID, userID: userID}).fetch();
+            if (responses.length > 0) {
+                return responses[0].value;
+            } else {
+                return 0;
+            }
+        } catch (err) {
+            console.log("doesResponseExist():" + err.message);
+        }
+    },
+    "DBHelper.deleteResponse": function (response) {
+        try {
+            Responses.remove({itemID: response.itemID, responsorID: response.responsorID})
+        } catch (err) {
+            console.log("deleteResponse(): " + err.message);
+        }
+    },
+    "DBHelper.getResponsesOfItemType": function (itemType) {
+        try {
+            return Responses.find({itemType: itemType}).fetch();
+        } catch (err) {
+            console.log("getResponsesOfItemType(): " + err.message);
+        }
+    },
+    "DBHelper.putResponse": function (itemID, userID, itemType, value) {
+        try {
+            Responses.insert({itemID: itemID, userID: userID, itemType: itemType, value: value});
+        } catch (err) {
+            console.log("putResponse(): " + err.message);
         }
     }
 });

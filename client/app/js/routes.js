@@ -5,7 +5,9 @@ angular.module('app.routes', [])
         // Learn more here: https://github.com/angular-ui/ui-router
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
-        
+
+
+
         $stateProvider
             .state('/', {
                 url: '/',
@@ -74,6 +76,57 @@ angular.module('app.routes', [])
                 }
             })
 
+
+      .state('menu.post', {
+              url: '/post/:itemID',
+                views: {
+                    'side-menu-content': {
+                        templateUrl: 'client/app/views/itemDetail/post.ng.html',
+                        controller: 'postDetailCtrl'
+                    }
+                }
+            })
+
+
+
+      .state('menu.formdir', {
+              url: '/formdir/:itemID',
+                views: {
+                    'side-menu-content': {
+                        templateUrl: 'client/app/views/itemDetail/formdir.ng.html',
+                        controller: 'formdirDetailCtrl'
+                    }
+                }
+            })
+
+      
+
+
+      .state('menu.voting', {
+              url: '/voting/:itemID',
+                views: {
+                    'side-menu-content': {
+                        templateUrl: 'client/app/views/itemDetail/voting.ng.html',
+                        controller: 'votingDetailCtrl'
+                    }
+                }
+            })
+
+      
+
+
+      .state('menu.hero', {
+              url: '/hero/:itemID',
+                views: {
+                    'side-menu-content': {
+                        templateUrl: 'client/app/views/itemDetail/hero.ng.html',
+                        controller: 'heroDetailCtrl'
+                    }
+                }
+            })
+
+
+
             .state('menu.polls', {
                 url: '/polls',
                 views: {
@@ -82,7 +135,9 @@ angular.module('app.routes', [])
                         controller: 'pollsCtrl'
                     }
                 }
-            })
+            });
+
+
 
         $urlRouterProvider.otherwise('/')
     });
