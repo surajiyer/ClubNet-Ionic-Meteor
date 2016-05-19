@@ -7,9 +7,11 @@
         .platform-ios .manual-ios-statusbar-padding {
             padding-top: 20px;
         }
+
         .manual-remove-top-padding {
             padding-top: 0px;
         }
+
         .manual-remove-top-padding .scroll {
             padding-top: 0px !important;
         }
@@ -18,38 +20,44 @@
 
 <body>
 <!--TODO: change condition in production-->
-<div ng-if="!Meteor.isCordova">
+
+<div ng-if="Meteor.isCordova">
+
     <link rel="stylesheet" href="/app/css/style.css"/>
     <ion-nav-bar class="bar-stable">
     </ion-nav-bar>
     <ion-nav-view animation="slide-left-right-ios7"></ion-nav-view>
 </div>
-<div ng-if="Meteor.isCordova">
+
+<div ng-if="!Meteor.isCordova">
     <!-- Scripts -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/app/css/custom.css"/>
+    <link rel="stylesheet" href="/web/css/layout.css"/>
+    <link rel="stylesheet" href="/web/css/side-menu.css"/>
 
-    <!-- HEADER -->
-    <header>
-        <div class="col-md-2 col-md-2" id="header-clubname">Club name</div>
-        <div class="col-md-10 col-lg-10 " id="header-pagename">Page title</div>
-    </header>
+            <a href="#menu" id="menuLink" class="menu-link" ng-click="toggleMenu()">
+                <!-- Hamburger icon -->
+                Hi
+            </a>
 
-    <div class="container-fluid">
-        <div class="row">
             <!-- NAVIGATION BAR -->
-            <div class="col-md-2 col-xs-12 navigation no-float">
-                <div id="menu">
+            <div id="menu" class>
+                <div class="pure-menu">
+                    <div id="menu-logo">
+                        <img src="https://placeholdit.imgix.net/~text?txtsize=14&txt=150%C3%97150&w=150&h=150">
+                    </div>
+                    <a class="pure-menu-heading" href="#">Club name</a>
                     <ul>
-                        <li><a href="#">Profile</a></li>
-                        <li><a href="#">Feed</a></li>
-                        <li><a href="#">Club management</a></li>
-                        <li><a href="#">Club betting</a></li>
-                        <li><a href="#">Members</a></li>
-                        <li><a href="#">Log out</a></li>
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Profile</a></li>
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Feed</a></li>
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Club management</a></li>
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Club betting</a></li>
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Members</a></li>
+                        <li class="pure-menu-item"><a href="#" class="pure-menu-link">Log out</a></li>
                     </ul>
                 </div>
+                <div class="push"></div>
                 <div id="nav-footer">
                     <img src="/web/img/clubnet_logo_light.png">
                     Intuitive Technologies B.V.
@@ -57,10 +65,7 @@
             </div>
 
             <!-- CONTENT -->
-            <div class="col-md-10 col-xs-12 content no-float">
-                <div id="main" ui-view></div>
-            </div>
-        </div>  <!-- ROW -->
-    </div>
+                <div id="main" ui-view> </div>
+
 </div>
 </body>
