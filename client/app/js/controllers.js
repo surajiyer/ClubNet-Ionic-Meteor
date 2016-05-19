@@ -250,7 +250,7 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('votingCtrl', function ($scope, $ionicModal) {
+    .controller('votingCtrl', function ($scope, $ionicModal, $meteor) {
         /* Voting */
         $scope.newVoting = {};
         
@@ -271,7 +271,7 @@ angular.module('app.controllers', [])
                 {id: 2, name: 'antras', image: 'http://www.printsonwood.com/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/g/r/grumpy-cat-rainbow-square_PRINT-crop-1x1.jpg.thumbnail_7.jpg'},
                 {id: 3, name: 'trecias', image: 'http://i3.cpcache.com/product/1293587386/rootin_for_putin_square_sticker.jpg?height=225&width=225'}
             ];
-            Meteor.call('DBHelper.addFeedItem', $scope.newVoting);
+            $meteor.call('DBHelper.addFeedItem', $scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
         };
@@ -291,28 +291,37 @@ angular.module('app.controllers', [])
         };
 
         $scope.updateChartValues = function() {
-            Meteor.call('DBHelper.getVotingResults', $scope.item._id, function(err, result) {
-                $scope.chartValues = result;
-            });
+            $meteor.call('DBHelper.getVotingResults', $scope.item._id).then(
+                function(result){
+                    $scope.chartValues = result;
+                },
+                function(err){
+                    console.log(err);
+                }
+            );
         };
 
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
-            Meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id, function(err, result){
-
-                if (err) {
-                    console.log(err);
-                } else {
+            $meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id).then(
+                function(result){
                     if (result.length >= $scope.item.nrVoters) {
                         $scope.hasEnded = true;
                     }
+                },
+                function (err){
+                    console.log(err);
                 }
-
-            });
-            Meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId(), function(err, result) {
-                $scope.hasVoted = result;
-            });
+            );
+            $meteor.call('DBHelper.doesResponseExist',$scope.item._id, Meteor.userId()).then(
+                function(result){
+                    $scope.hasVoted = result;
+                },
+                function(err){
+                    console.log(err);
+                }
+            );
             $scope.updateChartValues();
             $scope.chartLabels = $scope.item.exercises.map(function(exercise) {return exercise.name});
             $scope.chartValues = [[0,0,0]];
@@ -333,13 +342,16 @@ angular.module('app.controllers', [])
         $scope.vote = function(itemID, itemType, value) {
             if (value) {
                 var userID = Meteor.userId();
-                Meteor.call('DBHelper.putResponse', itemID, userID, itemType, value, function(err, result){
+                $meteor.call('DBHelper.putResponse', itemID, userID, itemType, value).then(
+                    function(result){
+                        $scope.updateChartValues();
+                        $scope.hasVoted = value;
+                    },
+                    function(err){
+                        console.log(err);
+                    }
+                );
 
-                });
-                // TODO: HERE WE HAVE AN ASSUMPTION THAT WE ALWAYS SUCCEED IN PUTTING RESPONSE TO THE DB
-                $scope.updateChartValues();
-                $scope.hasVoted = value;
-                $scope.hasEnded = true;
             } else {
                 console.log('Please select what are you voting for');
             }

@@ -137,7 +137,7 @@ Meteor.methods({
     },
     "DBHelper.putResponse": function (itemID, userID, itemType, value) {
         try {
-            return Responses.insert({itemID: itemID, userID: userID, itemType: itemType, value: value})
+            Responses.insert({itemID: itemID, userID: userID, itemType: itemType, value: value});
         } catch (err) {
             console.log("putResponse(): " + err.message);
         }
