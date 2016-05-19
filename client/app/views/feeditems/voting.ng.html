@@ -25,8 +25,8 @@
 </div>
 <div class="item item-body">
     <p>
-        <button class="button button-outline button-balanced" ng-click="vote(item.selectedValue, item._id)">
-            Vote!
+        <button class="button button-outline button-balanced" ng-click="vote(item._id, item.type, item.selectedValue)">
+            Vote! {{hasVoted}}
         </button>
     </p>
 </div>
