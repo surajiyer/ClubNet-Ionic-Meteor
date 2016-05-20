@@ -28,7 +28,7 @@ Meteor.startup(function () {
                 this.ready();
                 return;
             }
-            return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
+            return Items.find({type: {$in: itemTypes}}, {$sort: {sticky: -1, createdAt: -1}});
         });
     }
 });
@@ -36,6 +36,7 @@ Meteor.startup(function () {
 if (Meteor.isServer) {
     Meteor.methods({
         addFeedItem: function (newItem) {
+            newItem.creatorID = Meteor.userId();
             Items.insert(newItem);
         },
         updateFeedItem: function (itemID, newInfo) {
@@ -60,7 +61,11 @@ if (Meteor.isServer) {
         },
         getResponse: function (itemID) {
             var response = Responses.find({itemID: itemID, userID: this.userId}).fetch();
-            return response[0].value;
+            if (response[0]) {
+                return response[0].value;
+            } else {
+                return 0;
+            }
         },
         deleteResponse: function (response) {
             Responses.remove({itemID: response.itemID, responsorID: response.responsorID});

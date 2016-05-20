@@ -179,7 +179,7 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             items: function () {
-                return Items.find({}, {sort: {timestamp: -1}});
+                return Items.find({}, {$sort: {sticky: -1, createdAt: -1}});
             }
         });
     })
@@ -236,7 +236,6 @@ angular.module('app.controllers', [])
 
         $scope.form = function () {
 
-            $scope.newForm.creatorID = Meteor.userId();
             $scope.newForm.type = 'Form';
             $scope.newForm.clubID = Meteor.user().profile.clubID;
             $scope.newForm.status = 'published';
@@ -272,7 +271,6 @@ angular.module('app.controllers', [])
 
         $scope.addVoting = function () {
             console.log($scope.newVoting.title);
-            $scope.newVoting.creatorID = Meteor.userId();
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.clubID = Meteor.user().profile.clubID;
             $scope.newVoting.status = 'published';
