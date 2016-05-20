@@ -141,6 +141,45 @@ p.decision {
     margin-top: 4px !important;
 }
 
+.image-placeholder-div {
+    text-align: center;
+    display: none;
+}
+
+.image-placeholder {
+    max-width: 100%;
+}
+
+.variants {
+    font-size: 0;
+}
+
+.variants > div {
+    display: inline-block;
+    width: 33.3%;
+    padding-top: 20px;
+    padding-bottom: 10px;
+    text-align: center;
+    font-size: 12px;
+}
+
+.variants > div img {
+    max-width: 80%;
+}
+
+.variants > div.selected {
+    background: #eee;
+}
+
+.variants > div:nth-of-type(2) {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+}
+
+form.list {
+    margin: 0;
+}
+
 #icon-back {
     padding-right: 16px;
 }

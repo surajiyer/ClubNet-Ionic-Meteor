@@ -3,10 +3,10 @@
  * @type {SimpleSchema}
  */
 baseResponseSchema = new SimpleSchema({
-    userID:{type:String},
-    itemID:{type:String},
-    itemType:{type: String},
-    value:{type:String}
+    userID: {type: String},
+    itemID: {type: String},
+    itemType: {type: String},
+    value: {type: Number}
 });
 
 /**
@@ -14,9 +14,9 @@ baseResponseSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 bettingResponseSchema = new SimpleSchema({
-    userID:{type:String},
-    itemID:{type:String},
-    bets:{type:[String], allowedValues :["win", "lose","tie","none"]}
+    userID: {type: String},
+    itemID: {type: String},
+    bets: {type: [String], allowedValues: ["win", "lose", "tie", "none"]}
 });
 
 export default responseSchemas = {

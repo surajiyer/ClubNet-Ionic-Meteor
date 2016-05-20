@@ -1,7 +1,7 @@
 angular.module('app.controllers', [])
 
-    .controller('ItemCtrl', function($scope) {
-        if(!$scope.item) {
+    .controller('ItemCtrl', function ($scope) {
+        if (!$scope.item) {
             throw new Error("No item object passed.");
         }
     })
@@ -33,7 +33,7 @@ angular.module('app.controllers', [])
                     console.log('Error changing password - ', error);
                 });
             } else {
-                $scope.error = 'De wachtwoorden komen niet overeen.'
+                $scope.error = "The passwords don't match.";
             }
         };
 
@@ -77,7 +77,7 @@ angular.module('app.controllers', [])
 
         $scope.resetPassword = function () {
             Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
-                if(err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
                 console.log('Reset password success');
             });
         };
@@ -95,7 +95,7 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('registerCtrl', function ($scope, $meteor, $state, UserAccount) {
+    .controller('registerCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
             email: '',
             password: ''
@@ -103,24 +103,34 @@ angular.module('app.controllers', [])
         $scope.register = function () {
             if (!$scope.user.email)
                 throw new Meteor.Error('Account registration error: e-mail is not valid');
-            Accounts.createUser({
+            var newUser = {
                 email: $scope.user.email,
                 password: $scope.user.password,
                 profile: {
-                    firstName: 'THeBEst',
-                    lastName: 'byby',
+                    firstName: "abc",
+                    lastName: "def",
                     type: "coach",
-                    clubID: "1",
-                    teamID: "1"
+                    clubID: "PSV",
+                    teamID: "dadada"
                 }
-            }, function (err) {
-                if (err) throw new Meteor.Error('Account registration error: ' + err.reason);
-                $state.go('menu.feed'); // Redirect user if registration succeeds
+            };
+            Meteor.call('addUser', newUser, function (err, result) {
+                if (err || typeof result !== 'string')
+                    throw new Meteor.Error('Account registration error: ' + err.reason);
+                Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+                    if (error) throw new Meteor.Error(error.reason);
+                    $state.go('menu.feed'); // Redirect user if registration succeeds
+                });
             });
-        }
+        };
     })
 
-    .controller('feedCtrl', function ($scope, CoachAccess) {
+    .controller('feedCtrl', function ($scope, AccessControl) {
+        // Display coach bar
+        AccessControl.getPermission('coachbar', 'view', function (result) {
+            $scope.showCoachBar = result;
+        });
+
         // Load the filter
         Meteor.subscribe('ItemTypes', function () {
             //if (err) throw new Meteor.Error(err.reason);
@@ -138,17 +148,25 @@ angular.module('app.controllers', [])
             }, this);
         });
 
-        Tracker.autorun(function() {
+        // Lead the feed
+        $scope.subscribe('Feed', function () {
+            return [$scope.getCollectionReactively('itemTypesFilter')];
+        });
+
+        // Change types filter on user interaction
+        Tracker.autorun(function () {
             $scope.getReactively('itemTypes', true);
-            $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
+            $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
+                return type.checked;
+            }), '_id');
         });
 
         $scope.openDetails = function () {
             console.log("poep");
         };
-        
+
         // Subscribe to the feed
-        $scope.subscribe('Feed', function(){
+        $scope.subscribe('Feed', function () {
             return [$scope.getCollectionReactively('itemTypesFilter')];
         });
 
@@ -163,15 +181,8 @@ angular.module('app.controllers', [])
         $scope.helpers({
             items: function () {
                 return Items.find({}, {sort: {timestamp: -1}});
-            },
-            showCoachBar: function () {
-                return CoachAccess.showCoachBar.get();
             }
         });
-
-
-
-
     })
 
     .controller('popoverCtrl', function ($scope, $ionicPopover) {
@@ -199,7 +210,7 @@ angular.module('app.controllers', [])
 
         $scope.post = function () {
             $scope.newPost.type = 'Post';
-            $scope.newPost.timestamp = new Date().valueOf();
+            $scope.newPost.timestamp = new Date;
             Items.insert($scope.newPost);
             $scope.newPost = {};
             $scope.closePost();
@@ -218,12 +229,6 @@ angular.module('app.controllers', [])
         $scope.openPost = function () {
             $scope.postmodal.show();
         };
-
-
-
-
-
-
     })
 
     .controller('formCtrl', function ($scope, $ionicModal, $meteor) {
@@ -236,7 +241,7 @@ angular.module('app.controllers', [])
             $scope.newForm.type = 'Form';
             $scope.newForm.clubID = Meteor.user().profile.clubID;
             $scope.newForm.status = 'published';
-            $scope.newForm.timestamp = new Date().valueOf();
+            $scope.newForm.timestamp = new Date;
             $scope.newForm.raised = '0';
             $scope.newForm.locked = false;
             $scope.newForm.teamID = Meteor.user().profile.teamID;
@@ -260,10 +265,10 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('votingCtrl', function ($scope, $ionicModal) {
+    .controller('votingCtrl', function ($scope, $ionicModal, $meteor) {
         /* Voting */
         $scope.newVoting = {};
-        
+
         $scope.selectedValue = '';
 
         $scope.addVoting = function () {
@@ -272,16 +277,24 @@ angular.module('app.controllers', [])
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.clubID = Meteor.user().profile.clubID;
             $scope.newVoting.status = 'published';
-            $scope.newVoting.timestamp = new Date().valueOf();
+            $scope.newVoting.timestamp = new Date;
             $scope.newVoting.nrVotes = 0;
             $scope.newVoting.ended = false;
             $scope.newVoting.teamID = Meteor.user().profile.teamID;
             $scope.newVoting.exercises = [
-                {id: 1, name: 'pirmas', image: 'http://placehold.it/150x75'},
-                {id: 2, name: 'antras', image: 'http://placehold.it/150x75'},
-                {id: 3, name: 'trecias', image: 'http://placehold.it/150x75'}
+                {id: 1, name: 'pirmas', image: 'http://placehold.it/100x100'},
+                {
+                    id: 2,
+                    name: 'antras',
+                    image: 'http://www.printsonwood.com/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/g/r/grumpy-cat-rainbow-square_PRINT-crop-1x1.jpg.thumbnail_7.jpg'
+                },
+                {
+                    id: 3,
+                    name: 'trecias',
+                    image: 'http://i3.cpcache.com/product/1293587386/rootin_for_putin_square_sticker.jpg?height=225&width=225'
+                }
             ];
-            Meteor.call('DBHelper.addFeedItem', $scope.newVoting);
+            $meteor.call('DBHelper.addFeedItem', $scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
         };
@@ -300,24 +313,73 @@ angular.module('app.controllers', [])
             $scope.votingModal.show();
         };
 
+        $scope.updateChartValues = function () {
+            $meteor.call('DBHelper.getVotingResults', $scope.item._id).then(
+                function (result) {
+                    $scope.chartValues = result;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+        };
+
         if ($scope.item != null) {
             $scope.hasVoted = false;
-            Meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId(), function(err, result) {
-                $scope.hasVoted = result;
+            $scope.hasEnded = false;
+            $meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id).then(
+                function (result) {
+                    if (result.length >= $scope.item.nrVoters) {
+                        $scope.hasEnded = true;
+                    }
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+            $meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId()).then(
+                function (result) {
+                    $scope.hasVoted = result;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+            $scope.updateChartValues();
+            $scope.chartLabels = _.map($scope.item.exercises, function (exercise) {
+                return exercise.name
             });
+            $scope.chartValues = [[0, 0, 0]];
         }
 
-        $scope.vote = function(itemID, itemType, value) {
+        $scope.select = function ($event, exer_id) {
+            // Let's try
+            $scope.item.selectedValue = exer_id;
+            elem = angular.element($event.currentTarget);
+            parent_div = elem.parent().parent().siblings(".image-placeholder-div")
+            parent_div.show();
+            elem.siblings().removeClass("selected");
+            elem.addClass("selected");
+            parent_div.children(".image-placeholder").attr("src", elem.children("img").attr("src"));
+        };
+
+        $scope.vote = function (itemID, itemType, value) {
             if (value) {
                 var userID = Meteor.userId();
-                Meteor.call('DBHelper.putResponse', itemID, userID, itemType, value);
+                $meteor.call('DBHelper.putResponse', itemID, userID, itemType, value).then(
+                    function (result) {
+                        $scope.updateChartValues();
+                        $scope.hasVoted = value;
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
+
             } else {
                 console.log('Please select what are you voting for');
             }
         };
-        
-        $scope.labels = ["Exercise A", "Exercise B", "Exercise C"];
-        $scope.data = [[10, 5, 7]];
     })
 
     .controller('heroCtrl', function ($scope, $ionicModal) {
@@ -326,7 +388,7 @@ angular.module('app.controllers', [])
 
         $scope.hero = function () {
             $scope.newHero.type = 'Heroes';
-            $scope.newHero.timestamp = new Date().valueOf();
+            $scope.newHero.timestamp = new Date;
             Items.insert($scope.newHero);
             $scope.newHero = {};
             $scope.closeHero();
@@ -355,42 +417,110 @@ angular.module('app.controllers', [])
 
     })
 
-    .controller('postDetailCtrl', function($scope, $state, $stateParams) {
+    .controller('postDetailCtrl', function ($scope, $state, $stateParams) {
         var itemID = $stateParams.itemID;
         console.log(itemID);
-        $scope.autorun(function() {
-            $scope.item = Items.find({ _id: itemID }).fetch()[0];
+        $scope.autorun(function () {
+            $scope.item = Items.find({_id: itemID}).fetch()[0];
             console.log($scope.item);
         });
     })
 
-    .controller('votingDetailCtrl', function($scope, $state, $stateParams) {
+    .controller('votingDetailCtrl', function ($scope, $state, $stateParams, $meteor) {
         var itemID = $stateParams.itemID;
         console.log(itemID);
-        $scope.autorun(function() {
-            $scope.item = Items.find({ _id: itemID }).fetch()[0];
+        $scope.autorun(function () {
+            $scope.item = Items.find({_id: itemID}).fetch()[0];
+            console.log($scope.item);
+        });
+
+        $scope.selectedValue = '';
+
+        $scope.updateChartValues = function () {
+            $meteor.call('DBHelper.getVotingResults', $scope.item._id).then(
+                function (result) {
+                    $scope.chartValues = result;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+        };
+
+        if ($scope.item != null) {
+            $scope.hasVoted = false;
+            $scope.hasEnded = false;
+            $meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id).then(
+                function (result) {
+                    if (result.length >= $scope.item.nrVoters) {
+                        $scope.hasEnded = true;
+                    }
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+            $meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId()).then(
+                function (result) {
+                    $scope.hasVoted = result;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+            $scope.updateChartValues();
+            $scope.chartLabels = _.map($scope.item.exercises, function (exercise) {
+                return exercise.name
+            });
+            $scope.chartValues = [[0, 0, 0]];
+        }
+
+        $scope.select = function ($event, exer_id) {
+            // Let's try
+            $scope.item.selectedValue = exer_id;
+            elem = angular.element($event.currentTarget);
+            parent_div = elem.parent().parent().siblings(".image-placeholder-div")
+            parent_div.show();
+            elem.siblings().removeClass("selected");
+            elem.addClass("selected");
+            parent_div.children(".image-placeholder").attr("src", elem.children("img").attr("src"));
+        };
+
+        $scope.vote = function (itemID, itemType, value) {
+            if (value) {
+                var userID = Meteor.userId();
+                $meteor.call('DBHelper.putResponse', itemID, userID, itemType, value).then(
+                    function (result) {
+                        $scope.updateChartValues();
+                        $scope.hasVoted = value;
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
+
+            } else {
+                console.log('Please select what are you voting for');
+            }
+        };
+    })
+
+    .controller('heroDetailCtrl', function ($scope, $state, $stateParams) {
+        var itemID = $stateParams.itemID;
+        console.log(itemID);
+        $scope.autorun(function () {
+            $scope.item = Items.find({_id: itemID}).fetch()[0];
             console.log($scope.item);
         });
     })
 
-    .controller('heroDetailCtrl', function($scope, $state, $stateParams) {
+    .controller('formdirDetailCtrl', function ($scope, $state, $stateParams) {
         var itemID = $stateParams.itemID;
         console.log(itemID);
-        $scope.autorun(function() {
-            $scope.item = Items.find({ _id: itemID }).fetch()[0];
+        $scope.autorun(function () {
+            $scope.item = Items.find({_id: itemID}).fetch()[0];
             console.log($scope.item);
         });
-    })
-
-    .controller('formdirDetailCtrl', function($scope, $state, $stateParams) {
-
-        var itemID = $stateParams.itemID;
-        console.log(itemID);
-        $scope.autorun(function() {
-            $scope.item = Items.find({ _id: itemID }).fetch()[0];
-            console.log($scope.item);
-        });
-        
     })
 
 

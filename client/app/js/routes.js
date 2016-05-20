@@ -6,8 +6,6 @@ angular.module('app.routes', [])
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
 
-
-
         $stateProvider
             .state('/', {
                 url: '/',
@@ -77,8 +75,8 @@ angular.module('app.routes', [])
             })
 
 
-      .state('menu.post', {
-              url: '/post/:itemID',
+            .state('menu.post', {
+                url: '/post/:itemID',
                 views: {
                     'side-menu-content': {
                         templateUrl: 'client/app/views/itemDetail/post.ng.html',
@@ -88,9 +86,8 @@ angular.module('app.routes', [])
             })
 
 
-
-      .state('menu.formdir', {
-              url: '/formdir/:itemID',
+            .state('menu.formdir', {
+                url: '/formdir/:itemID',
                 views: {
                     'side-menu-content': {
                         templateUrl: 'client/app/views/itemDetail/formdir.ng.html',
@@ -99,11 +96,9 @@ angular.module('app.routes', [])
                 }
             })
 
-      
 
-
-      .state('menu.voting', {
-              url: '/voting/:itemID',
+            .state('menu.voting', {
+                url: '/voting/:itemID',
                 views: {
                     'side-menu-content': {
                         templateUrl: 'client/app/views/itemDetail/voting.ng.html',
@@ -112,11 +107,9 @@ angular.module('app.routes', [])
                 }
             })
 
-      
 
-
-      .state('menu.hero', {
-              url: '/hero/:itemID',
+            .state('menu.hero', {
+                url: '/hero/:itemID',
                 views: {
                     'side-menu-content': {
                         templateUrl: 'client/app/views/itemDetail/hero.ng.html',
@@ -124,7 +117,6 @@ angular.module('app.routes', [])
                     }
                 }
             })
-
 
 
             .state('menu.polls', {
@@ -136,7 +128,6 @@ angular.module('app.routes', [])
                     }
                 }
             });
-
 
 
         $urlRouterProvider.otherwise('/')

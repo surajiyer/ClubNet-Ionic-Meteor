@@ -13,12 +13,36 @@ const feedItemTypesSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const baseFeedItemSchema = new SimpleSchema({
-    creatorID:{type: String},
-    type :{type: String},
-    sticky:{type: Boolean},
-    clubID:{type: String},
-    status:{type: String, allowedValues:["published","unpublished"]},
-    timestamp:{type: String}
+    creatorID: {type: String},
+    type: {type: String},
+    sticky: {
+        type: Boolean,
+        autoValue: function () {
+            return false;
+        }
+    },
+    clubID: {type: String},
+    status: {
+        type: String,
+        allowedValues: ["published", "unpublished"]
+    },
+    createdAt: {
+        type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return new Date;
+            }
+        },
+        denyUpdate: true
+    },
+    modifiedAt: {
+        type: String,
+        autoValue: function () {
+            if (this.isUpdate) {
+                return new Date;
+            }
+        }
+    }
 });
 
 /**
@@ -26,9 +50,9 @@ const baseFeedItemSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const exerciseSchema = new SimpleSchema({
-    id:{type: Number},
-    name:{type:String},
-    image:{type:String}
+    id: {type: Number},
+    name: {type: String},
+    image: {type: String}
 });
 
 /**
@@ -36,39 +60,39 @@ const exerciseSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const voteSchema = new SimpleSchema({
-    userID:{type: String},
-    value:{type: String}
+    userID: {type: String},
+    value: {type: String}
 });
 
 /**
  * Database schema for Voting polls
  * @type {SimpleSchema}
  */
-const votingPollSchema = new SimpleSchema([baseFeedItemSchema,{
-    title:{type:String},
-    deadline:{type:Date},
-    exercises:{
-        type:[exerciseSchema],
+const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
+    title: {type: String},
+    deadline: {type: Date},
+    exercises: {
+        type: [exerciseSchema],
         minCount: 3,
         maxCount: 3
     },
-    intermediatePublic:{type:Boolean},
-    finalPublic:{type:Boolean},
-    nrVoters:{type:Number},
-    nrVotes:{type: Number},
-    ended:{type:Boolean},
-    teamID:{type:String},
-    votes:{type:[voteSchema]}
+    intermediatePublic: {type: Boolean},
+    finalPublic: {type: Boolean},
+    nrVoters: {type: Number},
+    nrVotes: {type: Number},
+    ended: {type: Boolean},
+    teamID: {type: String},
+    votes: {type: [voteSchema]}
 }]);
 
 /**
  * Database schema for Heroes
  * @type {SimpleSchema}
  */
-const heroesSchema = new SimpleSchema([baseFeedItemSchema,{
-    title:{type: String},
-    text:{type:String},
-    image:{type: String}
+const heroesSchema = new SimpleSchema([baseFeedItemSchema, {
+    title: {type: String},
+    text: {type: String},
+    image: {type: String}
 }]);
 
 /**
@@ -76,9 +100,9 @@ const heroesSchema = new SimpleSchema([baseFeedItemSchema,{
  * @type {SimpleSchema}
  */
 const matchSchema = new SimpleSchema({
-    team2:{type: String},
-    team1:{type: String},
-    result:{type: String}
+    team2: {type: String},
+    team1: {type: String},
+    result: {type: String}
 });
 
 /**
@@ -86,48 +110,48 @@ const matchSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const bettingRoundSchema = new SimpleSchema({
-    matches:{type:[matchSchema], minCount : 3, maxCount: 5},
-    deadLine:{type:Date},
-    season:{type: String}
+    matches: {type: [matchSchema], minCount: 3, maxCount: 5},
+    deadLine: {type: Date},
+    season: {type: String}
 });
 
 /**
  * Database schema for Form
  * @type {SimpleSchema}
  */
-const formSchema = new SimpleSchema([baseFeedItemSchema,{
-    title:{type: String},
-    description:{type:String},
-    repeatInterval:{type: String},
-    target:{type:String},
-    targetValue:{type: Number},
-    raised:{type:Number},
-    locked:{type: Boolean},
-    teamID:{type:String}
+const formSchema = new SimpleSchema([baseFeedItemSchema, {
+    title: {type: String},
+    description: {type: String},
+    repeatInterval: {type: String},
+    target: {type: String},
+    targetValue: {type: Number},
+    raised: {type: Number},
+    locked: {type: Boolean},
+    teamID: {type: String}
 }]);
 
 /**
  * Database schema for Sponsoring
  * @type {SimpleSchema}
  */
-const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema,{
-    title:{type:String},
-    targetAmount:{type:Number},
-    raisedAmount:{type:Number},
-    description:{type: String}
+const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
+    title: {type: String},
+    targetAmount: {type: Number},
+    raisedAmount: {type: Number},
+    description: {type: String}
 }]);
 
 /**
  * Database schema for Exercise suggestions
  * @type {SimpleSchema}
  */
-const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema,{
-    teamID:{type: String},
-    playerID:{type : String},
-    suggestion:{type: String}
+const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema, {
+    teamID: {type: String},
+    playerID: {type: String},
+    suggestion: {type: String}
 }]);
 
-export { feedItemTypesSchema };
+export {feedItemTypesSchema};
 
 export default feedItemSchemas = {
     'Base': baseFeedItemSchema,

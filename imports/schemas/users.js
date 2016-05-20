@@ -5,7 +5,10 @@
 UserProfile = new SimpleSchema({
     firstName: {type: String},
     lastName: {type: String},
-    type: {type: String, allowedValues: ['coach', 'player', 'general']},
+    type: {
+        type: String,
+        allowedValues: ['coach', 'player', 'general']
+    },
     clubID: {type: String},
     bettingResults: {
         type: [{
@@ -13,6 +16,44 @@ UserProfile = new SimpleSchema({
             points: {type: Number}
         }],
         optional: true
+    },
+    teamID: {
+        type: String,
+        optional: true,
+        custom: function () {
+            var shouldBeRequired = this.siblingField('type').value == 'coach' || this.siblingField('type').value == 'player';
+            if (shouldBeRequired) {
+                // inserts
+                if (!this.operator) {
+                    if (!this.isSet || this.value === null || this.value === "") return "required";
+                }
+
+                // updates
+                else if (this.isSet) {
+                    if (this.operator === "$set" && this.value === null || this.value === "") return "required";
+                    if (this.operator === "$unset") return "required";
+                    if (this.operator === "$rename") return "required";
+                }
+            }
+        }
+    },
+    notes: {
+        type: [{
+            itemID: {type: String},
+            text: {type: String}
+        }],
+        optional: true,
+        custom: function () {
+            var shouldBeRequired = this.siblingField('type').value == 'coach';
+            if (shouldBeRequired) {
+                // updates
+                if (this.isSet) {
+                    if (this.operator === "$set" && this.value === null || this.value === "") return "required";
+                    if (this.operator === "$unset") return "required";
+                    if (this.operator === "$rename") return "required";
+                }
+            }
+        }
     }
 });
 
@@ -21,16 +62,16 @@ UserProfile = new SimpleSchema({
  * @type {SimpleSchema}
  */
 baseUserSchema = new SimpleSchema({
+    createdAt: {
+        type: Date
+    },
     username: {
         type: String,
         optional: true
     },
     emails: {
-        type: Array,
+        type: [Object],
         optional: true
-    },
-    "emails.$": {
-        type: Object
     },
     "emails.$.address": {
         type: String,
@@ -39,10 +80,9 @@ baseUserSchema = new SimpleSchema({
     "emails.$.verified": {
         type: Boolean
     },
-    createdAt: {
-        type: Date
+    profile: {
+        type: UserProfile
     },
-    profile: {type: UserProfile},
     services: {
         type: Object,
         optional: true,
@@ -54,31 +94,4 @@ baseUserSchema = new SimpleSchema({
     }
 });
 
-/**
- * Database schema for coach
- * @type {SimpleSchema}
- */
-coachSchema = new SimpleSchema([UserProfile, {
-    teamID: {type: String},
-    notes: {
-        type: [{
-            itemID: {type: String},
-            text: {type: String}
-        }],
-        optional: true
-    }
-}]);
-
-/**
- * Database schema for player
- * @type {SimpleSchema}
- */
-playerSchema = new SimpleSchema([UserProfile, {
-    teamID: {type: String}
-}]);
-
-export default userSchemas = {
-    'general': baseUserSchema,
-    'coach': coachSchema,
-    'player': playerSchema
-};
+export default userSchema = baseUserSchema;
