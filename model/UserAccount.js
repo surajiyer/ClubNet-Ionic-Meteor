@@ -64,8 +64,46 @@ Meteor.methods({
         var userID = Accounts.createUser(newUser);
         return userID;
     },
+    updateUser: function (newInfo) {
+        Meteor.users.update(
+            {_id: this.userId},
+            {$set: newInfo},
+            {bypassCollection2: true}
+        );
+    },
+    getUserInfo: function (userID) {
+        if (!isAdmin) {
+            this.ready();
+            return;
+        }
+        return Meteor.users.find({_id: userID}).fetch();
+    },
     getType: function () {
         //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
         return Meteor.user().profile.type;
-    }
+    },
+    addNote: function (newNote) {
+        newNote.creatorID = this.userId;
+        Meteor.users.update(
+            {_id: newNote.creatorID},
+            {
+                $push: {
+                    'notes': {
+                        itemID: newNote.itemID,
+                        text: newNote.text
+                    }
+                }
+            },
+            {bypassCollection2: true});
+    },
+    updateNote: function (newNote) {
+        Meteor.users.update(
+            {
+                _id: newNote.creatorID,
+                notes: {$elemMatch: {itemID: newNote.itemID}}
+            },
+            {$set: {"notes.$.text": newNote.text}},
+            {bypassCollection2: true}
+        );
+    },
 });

@@ -28,19 +28,61 @@ Meteor.startup(function () {
                 this.ready();
                 return;
             }
-            return Items.find({type: {$in: itemTypes}}, {sort: {timestamp: -1}});
+            return Items.find({type: {$in: itemTypes}}, {$sort: {sticky: -1, createdAt: -1}});
         });
     }
 });
 
 if (Meteor.isServer) {
     Meteor.methods({
+        addFeedItem: function (newItem) {
+            newItem.creatorID = Meteor.userId();
+            Items.insert(newItem);
+        },
+        updateFeedItem: function (itemID, newInfo) {
+            Items.update(
+                {_id: itemID},
+                {$set: newInfo},
+                {bypassCollection2: true}
+            );
+        },
+        deleteFeedItem: function (itemID) {
+            Items.remove({_id: itemID});
+        },
         getItemType: function (itemID) {
             try {
                 return Items.find({_id: itemID}).fetch()[0].type;
             } catch (err) {
                 throw new Meteor.Error(err.message);
             }
-        }
+        },
+        getResponsesOfOneItem: function (itemID) {
+            return Responses.find({itemID: itemID}).fetch();
+        },
+        getResponse: function (itemID) {
+            var response = Responses.find({itemID: itemID, userID: this.userId}).fetch();
+            if (response[0]) {
+                return response[0].value;
+            } else {
+                return 0;
+            }
+        },
+        deleteResponse: function (response) {
+            Responses.remove({itemID: response.itemID, responsorID: response.responsorID});
+        },
+        getResponsesOfItemType: function (itemType) {
+            return Responses.find({itemType: itemType}).fetch();
+        },
+        putResponse: function (itemID, userID, itemType, value) {
+            Responses.insert({itemID: itemID, userID: userID, itemType: itemType, value: value});
+        },
+        getVotingResults: function (itemID) {
+            votes = Responses.find({itemID: itemID});
+            result = [[0, 0, 0]];
+            votes.forEach(function (vote) {
+                result[0][vote.value - 1]++;
+            });
+            return result;
+        },
     })
 }
