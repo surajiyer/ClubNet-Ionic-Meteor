@@ -22,7 +22,7 @@
     <div class="variants">
         <div ng-repeat="exercise in item.exercises"
              ng-click="select($event, exercise.id)"
-             ng-class="(($index + 1)== hasVoted) ? 'selected' : ''" >
+             ng-class="(($index + 1) == hasVoted) ? 'selected' : ''" >
             <img src="{{exercise.image}}" width="100" alt="" />
                 <br />
                 {{exercise.name}}

@@ -5,7 +5,6 @@
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
             <button class="button button-icon icon ion-android-funnel" ng-click="openFilter()"></button>
-            <a class="fa fa-filter"></a>
         </ion-nav-buttons>
     </ion-nav-bar>
     <div ng-show="showFilter" class="filter-box">
@@ -22,7 +21,6 @@
         </ion-list>
     </div>
     <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
-
     <ion-content>
         <div id="feeditems" class="main-content">
             <div ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">

@@ -20,7 +20,7 @@ angular.module('app.routes', [])
             })
 
             .state('login', {
-                url: '/login',
+                url: '/login/',
                 templateUrl: 'client/app/views/login.ng.html',
                 controller: 'loginCtrl'
             })
@@ -45,7 +45,7 @@ angular.module('app.routes', [])
             })
 
             .state('menu.feed', {
-                url: '/feed',
+                url: '/feed/',
                 views: {
                     'side-menu-content': {
                         templateUrl: 'client/app/views/feed.ng.html',
