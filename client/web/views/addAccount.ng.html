@@ -1,20 +1,22 @@
+<h1>{{ 'Add user' | translate }}</h1>
+
 <div class="container">
     <form g-submit="addAccount()">
         <div class="form-group">
-            <label for="firstName">First Name</label>
-            <input type="text" class="form-control" id="firstName" placeholder="First Name" ng-model="temp_account.firstName">
+            <label for="firstName">{{ 'First name' | translate }}</label>
+            <input type="text" class="form-control" id="firstName" placeholder="{{ 'First name' | translate }}" ng-model="temp_account.firstName">
         </div>
         <div class="form-group">
-            <label for="lastName">Last Name</label>
-            <input type="text" class="form-control" id="lastName" placeholder="Last Name" ng-model="temp_account.lastName">
+            <label for="lastName">{{ 'Last name' | translate }}</label>
+            <input type="text" class="form-control" id="lastName" placeholder="{{ 'Last name' | translate }}" ng-model="temp_account.lastName">
         </div>
         <div class="form-group">
-            <label for="email">Email address</label>
-            <input type="email" class="form-control" id="email" placeholder="Email" ng-model="temp_account.email">
+            <label for="email">{{ 'Email address' | translate }}</label>
+            <input type="email" class="form-control" id="email" placeholder="{{ 'Email address' | translate }}" ng-model="temp_account.email">
         </div>
         <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" placeholder="Password" ng-model="temp_account.password">
+            <label for="password">{{ 'Password' | translate }}</label>
+            <input type="password" class="form-control" id="password" placeholder="{{ 'Password' | translate }}" ng-model="temp_account.password">
         </div>
 
 
@@ -31,17 +33,17 @@
 
         <div class="form-group" style="padding-left: 35px;">
             <label class="radio	">
-                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1"> Player
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">{{ 'Player' | translate }}
             </label>
             <label class="radio">
-                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Coach
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">{{ 'Coach' | translate }}
             </label>
             <label class="radio">
-                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2"> Public Relations Manager
+                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">{{ 'Public Relations manager' | translate }}
             </label>
         </div>
 
-        <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">Add User</a>
+        <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">{{ 'Add user' | translate }}</a>
 
 
 
