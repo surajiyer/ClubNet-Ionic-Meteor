@@ -15,14 +15,14 @@ angular.module('web.controllers', [])
             $meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                 if (error) {
                     $scope.error = error.reason;
-                    $scope.errorVisible = {'visibility': 'visible'};
+                    $scope.errorVisible = true;
                 } else {
                     $state.go('web.feed'); // Redirect user if login succeeds
                 }
             });
         };
         $scope.error = '';
-        $scope.errorVisible = {'visibility': 'hidden'};
+        $scope.errorVisible = false;
 
         $scope.goToRemindPassword = function() {
             $state.go('forgotPassword');
