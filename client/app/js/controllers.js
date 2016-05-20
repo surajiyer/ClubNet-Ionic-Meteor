@@ -345,7 +345,7 @@ angular.module('app.controllers', [])
                 $scope.hasEnded = true;
             }
 
-            $meteor.call('getResponse', $scope.item._id, Meteor.userId()).then(
+            $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
                     $scope.hasVoted = result;
                 },
@@ -477,7 +477,7 @@ angular.module('app.controllers', [])
                     console.log(err);
                 }
             );
-            $meteor.call('getResponse', $scope.item._id, Meteor.userId()).then(
+            $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
                     $scope.hasVoted = result;
                 },

@@ -58,8 +58,8 @@ if (Meteor.isServer) {
         getResponsesOfOneItem: function (itemID) {
             return Responses.find({itemID: itemID}).fetch();
         },
-        getResponse: function (itemID, userID) {
-            var response = Responses.find({itemID: itemID, userID: userID}).fetch();
+        getResponse: function (itemID) {
+            var response = Responses.find({itemID: itemID, userID: this.userId}).fetch();
             return response[0].value;
         },
         deleteResponse: function (response) {
@@ -72,16 +72,12 @@ if (Meteor.isServer) {
             Responses.insert({itemID: itemID, userID: userID, itemType: itemType, value: value});
         },
         getVotingResults: function (itemID) {
-            try {
-                votes = Responses.find({itemID: itemID});
-                result = [[0, 0, 0]];
-                _.each(votes, function (vote) {
-                    result[0][vote.value - 1]++;
-                });
-                return result;
-            } catch (err) {
-                console.log("getResponse():" + err.message);
-            }
+            votes = Responses.find({itemID: itemID});
+            result = [[0, 0, 0]];
+            votes.forEach(function (vote) {
+                result[0][vote.value - 1]++;
+            });
+            return result;
         },
     })
 }
