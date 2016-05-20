@@ -1,12 +1,12 @@
 angular.module('web.controllers', [])
-    .controller('mainController', function ($scope, $meteor, $state) {
+    .controller('mainCtrl', function ($scope, $meteor, $state) {
         $scope.logout = function () {
             $meteor.logout();
             $state.go('login');
         }
     })
 
-    .controller('loginController', function ($scope, $meteor, $state) {
+    .controller('loginCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
             email: '',
             password: ''

@@ -28,28 +28,28 @@ angular.module('web.routes', [])
             .state('web', {
                 url: '/web',
                 templateUrl: 'client/web/views/menu.ng.html',
-                controller: 'mainController'
+                controller: 'mainCtrl'
             })
 
             // Main
             .state('main', {
                 url: '/main',
                 templateUrl: 'client/web/views/main.ng.html',
-                controller: 'mainController'
+                controller: 'mainCtrl'
             })
 
             // Login
             .state('login', {
                 url: '/login',
                 templateUrl: 'client/web/views/login.ng.html',
-                controller: 'loginController'
+                controller: 'loginCtrl'
             })
 
             // Adding members
             .state('web.addAccount', {
                 url: '/addAccount',
                 templateUrl: 'client/web/views/addAccount.ng.html',
-                controller: 'addAccountController'
+                controller: 'addAccountCtrl'
             })
 
             // Member management
