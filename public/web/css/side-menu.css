@@ -28,12 +28,12 @@ This is the parent `<div>` that contains the menu and the content area.
     padding-left: 0;
 }
 #layout.active #menu {
-    left: 200px;
-    width: 200px;
+    left: 275px;
+    width: 275px;
 }
 
 #layout.active .menu-link {
-    left: 200px;
+    left: 275px;
 }
 /*
 The content `<div>` is where all your content goes.
@@ -79,8 +79,8 @@ appears on the left side of the page.
 */
 
 #menu {
-    margin-left: -200px; /* "#menu" width */
-    width: 200px;
+    margin-left: -275px; /* "#menu" width */
+    width: 275px;
     position: fixed;
     top: 0px;
     left: 0;
@@ -223,21 +223,21 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 
     #layout {
-        padding-left: 200px; /* left col width "#menu" */
+        padding-left: 275px; /* left col width "#menu" */
         left: 0;
     }
     #menu {
-        left: 200px;
+        left: 275px;
     }
 
     .menu-link {
         position: fixed;
-        left: 200px;
+        left: 275px;
         display: none;
     }
 
     #layout.active .menu-link {
-        left: 200px;
+        left: 275px;
     }
 }
 
@@ -250,6 +250,6 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     */
     #layout.active {
         position: relative;
-        left: 200px;
+        left: 275px;
     }
 }

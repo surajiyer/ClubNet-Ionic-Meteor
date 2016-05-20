@@ -11,15 +11,16 @@ angular.module('web.routes', [])
                 url: '/',
                 controller: function ($scope, $state) {
                     if (Meteor.userId()) {
-                        $state.go('menu');
+                        $state.go('web.feed');
                     } else {
                         $state.go('login');
                     }
                 }
             })
-            .state('menu', {
-                url: '/menu',
-                templateUrl: 'client/web/views/menu.ng.html'
+            .state('web', {
+                url: '/web',
+                templateUrl: 'client/web/views/menu.ng.html',
+                controller: 'mainController'
             })
 
             .state('main', {
@@ -34,22 +35,44 @@ angular.module('web.routes', [])
                 controller: 'loginController'
             })
 
-            .state('menu.addAccount', {
+            .state('web.addAccount', {
                 url: '/addAccount',
                 templateUrl: 'client/web/views/addAccount.ng.html',
                 controller: 'addAccountController'
             })
 
-            .state('menu.accountManagement', {
-                url: '/accountManagement',
-                templateUrl: 'client/web/views/accountManagement.ng.html',
+            .state('web.members', {
+                url: '/members',
+                templateUrl: 'client/web/views/members.ng.html',
                 controller: 'accountManagementCtrl'
             })
 
-            .state('menu.sepQuotes', {
+            .state('web.settings', {
+                url: '/settings',
+                templateUrl: 'client/web/views/settings.ng.html',
+                controller: 'accountManagementCtrl'
+            })
+
+            .state('web.profile', {
+                url: '/profile',
+                templateUrl: 'client/web/views/profile.ng.html'
+            })
+
+            .state('web.feed', {
+                url: '/feed',
+                templateUrl: 'client/web/views/feed.ng.html'
+            })
+
+            .state('web.betting', {
+                url: '/betting',
+                templateUrl: 'client/web/views/betting.ng.html',
+                controller: 'accountManagementCtrl'
+            })
+
+            .state('sepQuotes', {
                 url: '/sepQuotes',
                 templateUrl: 'client/web/views/sepquotes.ng.html'
             });
         
-        $urlRouterProvider.otherwise('/menu');
+        $urlRouterProvider.otherwise('/web/feed');
     });

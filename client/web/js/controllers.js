@@ -17,7 +17,7 @@ angular.module('web.controllers', [])
                     $scope.error = error.reason;
                     $scope.errorVisible = {'visibility': 'visible'};
                 } else {
-                    $state.go('main'); // Redirect user if login succeeds
+                    $state.go('web.feed'); // Redirect user if login succeeds
                 }
             });
         };
