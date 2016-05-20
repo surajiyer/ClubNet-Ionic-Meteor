@@ -35,12 +35,53 @@ Meteor.startup(function () {
 
 if (Meteor.isServer) {
     Meteor.methods({
+        addFeedItem: function (newItem) {
+            Items.insert(newItem);
+        },
+        updateFeedItem: function (itemID, newInfo) {
+            Items.update(
+                {_id: itemID},
+                {$set: newInfo},
+                {bypassCollection2: true}
+            );
+        },
+        deleteFeedItem: function (itemID) {
+            Items.remove({_id: itemID});
+        },
         getItemType: function (itemID) {
             try {
                 return Items.find({_id: itemID}).fetch()[0].type;
             } catch (err) {
                 throw new Meteor.Error(err.message);
             }
-        }
+        },
+        getResponsesOfOneItem: function (itemID) {
+            return Responses.find({itemID: itemID}).fetch();
+        },
+        getResponse: function (itemID, userID) {
+            var response = Responses.find({itemID: itemID, userID: userID}).fetch();
+            return response[0].value;
+        },
+        deleteResponse: function (response) {
+            Responses.remove({itemID: response.itemID, responsorID: response.responsorID});
+        },
+        getResponsesOfItemType: function (itemType) {
+            return Responses.find({itemType: itemType}).fetch();
+        },
+        putResponse: function (itemID, userID, itemType, value) {
+            Responses.insert({itemID: itemID, userID: userID, itemType: itemType, value: value});
+        },
+        getVotingResults: function (itemID) {
+            try {
+                votes = Responses.find({itemID: itemID});
+                result = [[0, 0, 0]];
+                _.each(votes, function (vote) {
+                    result[0][vote.value - 1]++;
+                });
+                return result;
+            } catch (err) {
+                console.log("getResponse():" + err.message);
+            }
+        },
     })
 }

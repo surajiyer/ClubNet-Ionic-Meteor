@@ -19,4 +19,10 @@ if (Meteor.isServer) {
     Meteor.publish('ItemTypes', function () {
         return TypesCollection.find({});
     });
+
+    Meteor.methods({
+        getItemTypes: function () {
+            return TypesCollection.find().fetch()[0];
+        },
+    });
 }
