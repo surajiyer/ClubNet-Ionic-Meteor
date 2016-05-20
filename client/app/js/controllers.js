@@ -41,10 +41,12 @@ angular.module('app.controllers', [])
         $scope.errorVisible = {'visibility': 'hidden'};
     })
 
-    .controller('menuCtrl', function ($scope, $meteor, $state) {
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window) {
         $scope.logout = function () {
             $meteor.logout();
-            $state.go('login');
+            $state.go('login').then(function(){
+                 $window.location.reload();
+            });
         }
     })
 
@@ -148,27 +150,24 @@ angular.module('app.controllers', [])
             }, this);
         });
 
-        // Lead the feed
-        $scope.subscribe('Feed', function () {
-            return [$scope.getCollectionReactively('itemTypesFilter')];
-        });
-
-        // Change types filter on user interaction
-        Tracker.autorun(function () {
+        Tracker.autorun(function() {
             $scope.getReactively('itemTypes', true);
-            $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
-                return type.checked;
-            }), '_id');
+            $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
+            $scope.subscribe('Feed', function() {
+                return [$scope.itemTypesFilter];
+            });
         });
 
         $scope.openDetails = function () {
             console.log("poep");
         };
-
+        
+        
         // Subscribe to the feed
-        $scope.subscribe('Feed', function () {
-            return [$scope.getCollectionReactively('itemTypesFilter')];
-        });
+        // $scope.subscribe('Feed', function(){
+        //     console.log($scope.getCollectionReactively('itemTypesFilter'));
+        //     return [$scope.getCollectionReactively('itemTypesFilter')];
+        // });
 
         // Set display filter model
         $scope.showFilter = false;
@@ -327,6 +326,8 @@ angular.module('app.controllers', [])
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
+
+            // Check if voting has ended because it reached limit of voters
             $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
                 function (result) {
                     if (result.length >= $scope.item.nrVoters) {
@@ -337,6 +338,13 @@ angular.module('app.controllers', [])
                     console.log(err);
                 }
             );
+
+            // Check if voting has ended because the deadline has passed
+            var today = new Date;
+            if (today > $scope.item.deadline) {
+                $scope.hasEnded = true;
+            }
+
             $meteor.call('getResponse', $scope.item._id, Meteor.userId()).then(
                 function (result) {
                     $scope.hasVoted = result;
@@ -375,7 +383,16 @@ angular.module('app.controllers', [])
                         console.log(err);
                     }
                 );
-
+                $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
+                    function(result){
+                        if (result.length >= $scope.item.nrVoters) {
+                            $scope.hasEnded = true;
+                        }
+                    },
+                    function (err){
+                        console.log(err);
+                    }
+                );
             } else {
                 console.log('Please select what are you voting for');
             }

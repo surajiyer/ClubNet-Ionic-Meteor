@@ -56,15 +56,6 @@ const exerciseSchema = new SimpleSchema({
 });
 
 /**
- * Database schema for votes
- * @type {SimpleSchema}
- */
-const voteSchema = new SimpleSchema({
-    userID: {type: String},
-    value: {type: String}
-});
-
-/**
  * Database schema for Voting polls
  * @type {SimpleSchema}
  */
@@ -76,13 +67,12 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         minCount: 3,
         maxCount: 3
     },
-    intermediatePublic: {type: Boolean},
-    finalPublic: {type: Boolean},
-    nrVoters: {type: Number},
-    nrVotes: {type: Number},
-    ended: {type: Boolean},
-    teamID: {type: String},
-    votes: {type: [voteSchema]}
+    intermediatePublic:{type:Boolean},
+    finalPublic:{type:Boolean},
+    nrVoters:{type:Number},
+    nrVotes:{type: Number},
+    ended:{type:Boolean},
+    teamID:{type:String}
 }]);
 
 /**

@@ -21,7 +21,6 @@
         </ion-list>
     </div>
     <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
-
     <ion-content>
         <div id="feeditems" class="main-content">
             <div ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">
