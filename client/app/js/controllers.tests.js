@@ -2,10 +2,11 @@ import 'angular-mocks';
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
-import './controllers.js'
-import './services.js'
-import './routes.js'
-import '/model/Feed'
+import {Accounts} from 'meteor/accounts-base';
+import './controllers.js';
+import './services.js';
+import './routes.js';
+import '/model/Feed';
 
 var scope, meteor, state, ctrl;
 
@@ -46,6 +47,57 @@ describe('registerCtrl', () => {
                 assert(Meteor.userId() != null, 'User is logged in.');
                 done(); 
             }, 500);
+        }, 100);
+    });
+
+    it("Should throw an error", (done) => {
+        var email = 'register';
+        var password = 'password';
+        Meteor.logout();
+        var spy = sinon.spy(scope, 'register');
+        setTimeout(function() {
+            //scope.user.email = email;
+            scope.user.password = password;
+            try {
+                scope.register();
+            }
+            catch (err) {
+                console.log('Hurray');
+            }
+            finally {
+                setTimeout(function() {
+                    //assert(Meteor.userId() != null, 'User is logged in.');
+                    //console.log(spy.threw());
+                    assert(spy.threw(), 'true');
+                    done();
+                }, 500);
+            }
+        }, 100);
+    });
+
+    it("Should register a user and be able to retrieve it", (done) => {
+        var email = 'register' + new Date().getTime() + '@test.test';
+        var password = 'password';
+        Meteor.logout();
+        var spy = sinon.spy(scope, 'register');
+        setTimeout(function() {
+            scope.user.email = email;
+            scope.user.password = password;
+            try {
+                scope.register();
+            }
+            catch (err) {
+                console.log('Hurray');
+            }
+            finally {
+                setTimeout(function() {
+                    console.log(Accounts.findUserByEmail(email));
+                    //assert(Meteor.userId() != null, 'User is logged in.');
+                    //console.log(spy.threw());
+                    assert(spy.threw(), 'true');
+                    done();
+                }, 500);
+            }
         }, 100);
     });
 });
@@ -95,15 +147,15 @@ describe('profileCtrl', () => {
 describe('loginCtrl', () => {
     setupTesting('loginCtrl');
     var userAccount;
-    
     beforeEach(inject((UserAccount) => {
         userAccount = UserAccount;
     }));
 
-    it("Should change password", (done) => {
+    it("Should log in and go to feed", (done) => {
         email = 'login' + new Date().getTime() + '@test.test';
         password = 'password';
-        
+        var spy = sinon.spy(state, 'go');
+
         Meteor.logout();
         setTimeout(function() {
             assert(Meteor.userId() == null, 'User should not be logged in.');
@@ -118,7 +170,8 @@ describe('loginCtrl', () => {
                     scope.login();
                     setTimeout(function() {
                         assert(Meteor.userId() != null, 'User should be logged in.');
-                        done(); 
+                        assert.equal(spy.calledWith('menu.feed'), true);
+                        done();
                     }, 500);
                 },
                 function(error) {
@@ -128,4 +181,36 @@ describe('loginCtrl', () => {
             );
         }, 100);
     });
+
+    it("Should go to forgot password page", (done) => {
+        var spy = sinon.spy(state, 'go');
+
+        Meteor.logout();
+        scope.goToRemindPassword();
+        setTimeout(function() {
+            assert.equal(spy.calledWith('forgotPassword'), true);
+            done();
+        }, 500);
+    });
+
 });
+
+describe('menuCtrl', () => {
+    setupTesting('menuCtrl');
+
+    it("Should log out and go to login page", (done) => {
+        var spy = sinon.spy(state, 'go');
+        setTimeout(() => {
+            scope.logout();
+            assert.equal(spy.calledWith('login'), true);
+            done();
+        }, 100);
+    });
+});
+
+describe('forgotPasswordCtrl', () => {
+    setupTesting('forgotPasswordCtrl');
+
+
+});
+
