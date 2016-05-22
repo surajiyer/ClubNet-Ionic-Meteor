@@ -27,7 +27,8 @@ angular.module('web.translation', ['pascalprecht.translate'])
             "Feed": "Feed",
             "Profile": "Profiel",
             "Club betting": "Clubpoule",
-            "Club settings": "Clubinstellingen"
+            "Club settings": "Clubinstellingen",
+            "Forgot password": "Wachtwoord vergeten"
             
         };
         translations.en = {

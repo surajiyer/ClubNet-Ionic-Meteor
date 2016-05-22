@@ -163,8 +163,8 @@ angular.module('app.controllers', [])
         $scope.openDetails = function () {
             console.log("poep");
         };
-
-
+        
+        
         // Subscribe to the feed
         // $scope.subscribe('Feed', function(){
         //     console.log($scope.getCollectionReactively('itemTypesFilter'));
@@ -181,7 +181,7 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             items: function () {
-                return Items.find({}, {sort: {createdAt: -1}});
+                return Items.find({}, {$sort: {sticky: -1, createdAt: -1}});
             }
         });
     })

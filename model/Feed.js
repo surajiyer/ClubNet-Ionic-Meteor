@@ -57,7 +57,7 @@ Meteor.startup(function () {
                 return;
             }
             check(itemTypes, [String]);
-            return Items.find({type: {$in: itemTypes}}, {sort: {createdAt: -1}});
+            return Items.find({type: {$in: itemTypes}}, {$sort: {sticky: -1, createdAt: -1}});
         });
     }
 
