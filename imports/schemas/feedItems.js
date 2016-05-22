@@ -1,3 +1,8 @@
+SimpleSchema.messages({
+    invalidDeadline: 'Deadline must be after current time',
+    maxVotes: 'Number of votes [value] cannot exceed allowed number of voters'
+});
+
 /**
  * Database schema for item types
  * @type {SimpleSchema}
@@ -13,21 +18,30 @@ const feedItemTypesSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const baseFeedItemSchema = new SimpleSchema({
-    creatorID: {type: String},
-    type: {type: String},
+    creatorID: {
+        type: String,
+        denyUpdate: true
+    },
+    type: {
+        type: String,
+        denyUpdate: true
+    },
     sticky: {
         type: Boolean,
+        optional: true,
         autoValue: function () {
-            return false;
+            if (this.isInsert)
+                return false;
         }
     },
-    clubID: {type: String},
-    status: {
+    clubID: {
         type: String,
-        allowedValues: ["published", "unpublished"]
+        denyUpdate: true
     },
+    published: {type: Boolean},
     createdAt: {
-        type: String,
+        type: Date,
+        optional: true,
         autoValue: function () {
             if (this.isInsert) {
                 return new Date;
@@ -36,11 +50,10 @@ const baseFeedItemSchema = new SimpleSchema({
         denyUpdate: true
     },
     modifiedAt: {
-        type: String,
+        type: Date,
+        optional: true,
         autoValue: function () {
-            if (this.isUpdate) {
-                return new Date;
-            }
+            return new Date;
         }
     }
 });
@@ -50,9 +63,12 @@ const baseFeedItemSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const exerciseSchema = new SimpleSchema({
-    id: {type: Number},
+    _id: {type: String},
     name: {type: String},
-    image: {type: String}
+    image: {
+        type: String,
+        regEx: SimpleSchema.RegEx.Url
+    }
 });
 
 /**
@@ -61,18 +77,90 @@ const exerciseSchema = new SimpleSchema({
  */
 const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
     title: {type: String},
-    deadline: {type: Date},
+    deadline: {
+        type: Date,
+        custom: function () {
+            // if deadline is before current time, give Invalid deadline error
+            if (this.value < new Date) return "invalidDeadline";
+        }
+    },
     exercises: {
         type: [exerciseSchema],
         minCount: 3,
         maxCount: 3
     },
-    intermediatePublic:{type:Boolean},
-    finalPublic:{type:Boolean},
-    nrVoters:{type:Number},
-    nrVotes:{type: Number},
-    ended:{type:Boolean},
-    teamID:{type:String}
+    intermediatePublic: {
+        type: Boolean,
+        optional: true,
+        autoValue: function () {
+            if (this.isInsert)
+                return true;
+        }
+    },
+    finalPublic: {
+        type: Boolean,
+        optional: true,
+        autoValue: function () {
+            if (this.isInsert)
+                return true;
+        }
+    },
+    nrVoters: {
+        type: Number,
+        min: 1
+    },
+    nrVotes: {
+        type: Number,
+        min: 0,
+        optional: true,
+        autoValue: function () {
+            if (this.isInsert)
+                return 0;
+        },
+        custom: function () {
+            // Set nrVoters field as a custom max value for nrVotes
+            if (this.value > this.siblingField('nrVoters').value)
+                return "maxVotes";
+        }
+    },
+    ended: {
+        type: Boolean,
+        optional: true,
+        autoValue: function () {
+            return new Date > this.siblingField('deadline').value;
+        }
+    },
+    teamID: {
+        type: String,
+        denyUpdate: true
+    }
+}]);
+
+/**
+ * Database schema for Form
+ * @type {SimpleSchema}
+ */
+const formSchema = new SimpleSchema([baseFeedItemSchema, {
+    title: {type: String},
+    description: {type: String},
+    teamID: {
+        type: String,
+        denyUpdate: true
+    },
+    repeatInterval: {
+        type: String,
+        optional: true
+    },
+    target: {type: String},
+    targetValue: {type: Number},
+    raisedValue: {type: Number},
+    locked: {
+        type: Boolean,
+        optional: true,
+        autoValue: function () {
+            return this.siblingField('raisedValue').value >= this.siblingField('targetValue').value;
+        }
+    }
 }]);
 
 /**
@@ -90,8 +178,8 @@ const heroesSchema = new SimpleSchema([baseFeedItemSchema, {
  * @type {SimpleSchema}
  */
 const matchSchema = new SimpleSchema({
-    team2: {type: String},
     team1: {type: String},
+    team2: {type: String},
     result: {type: String}
 });
 
@@ -100,25 +188,14 @@ const matchSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const bettingRoundSchema = new SimpleSchema({
-    matches: {type: [matchSchema], minCount: 3, maxCount: 5},
-    deadLine: {type: Date},
+    matches: {
+        type: [matchSchema],
+        minCount: 3,
+        maxCount: 5
+    },
+    deadline: {type: Date},
     season: {type: String}
 });
-
-/**
- * Database schema for Form
- * @type {SimpleSchema}
- */
-const formSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
-    description: {type: String},
-    repeatInterval: {type: String},
-    target: {type: String},
-    targetValue: {type: Number},
-    raised: {type: Number},
-    locked: {type: Boolean},
-    teamID: {type: String}
-}]);
 
 /**
  * Database schema for Sponsoring
@@ -126,9 +203,9 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
  */
 const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
     title: {type: String},
+    description: {type: String},
     targetAmount: {type: Number},
-    raisedAmount: {type: Number},
-    description: {type: String}
+    raisedAmount: {type: Number}
 }]);
 
 /**
@@ -136,7 +213,10 @@ const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
  * @type {SimpleSchema}
  */
 const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema, {
-    teamID: {type: String},
+    teamID: {
+        type: String,
+        denyUpdate: true
+    },
     playerID: {type: String},
     suggestion: {type: String}
 }]);
@@ -144,11 +224,10 @@ const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema, {
 export {feedItemTypesSchema};
 
 export default feedItemSchemas = {
-    'Base': baseFeedItemSchema,
-    'Heroes': heroesSchema,
-    'Form': formSchema,
-    'Sponsor': sponsorEventSchema,
     'Voting': votingPollSchema,
-    'Suggestion': exerciseSuggestionSchema,
-    'Betting': bettingRoundSchema
+    'Form': formSchema,
+    'Heroes': heroesSchema,
+    'Betting': bettingRoundSchema,
+    'Sponsor': sponsorEventSchema,
+    'Suggestion': exerciseSuggestionSchema
 };

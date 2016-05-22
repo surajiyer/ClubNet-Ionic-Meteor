@@ -1,13 +1,6 @@
-import userSchema from '/imports/schemas/users';
-
-/**
- * Check if user is a PR user.
- * @returns {boolean}
- */
-function isAdmin(userId) {
-    // TODO: check if PR user
-    return true;
-}
+import {isAdmin} from '/imports/common';
+import {userSchema, userProfileSchema} from '/imports/schemas/users';
+import {notesSchema} from '/imports/schemas/misc';
 
 Meteor.startup(function () {
     // Set deny rules
@@ -39,71 +32,60 @@ Meteor.startup(function () {
     // Publish userData
     if (Meteor.isServer) {
         Meteor.publish("userData", function () {
-                if (isAdmin(this.userId)) {
+                if (isAdmin(this.userId))
                     return Meteor.users.find({});
-                } else {
-                    this.ready();
-                }
+                this.ready();
             }
         );
     }
 
     // Attach user schema
-    // _.each(userSchemas, function (schema) {
-    //     Meteor.users.attachSchema(userSchemas[schema], {selector: {'profile.type': schema}});
-    // });
     Meteor.users.attachSchema(userSchema);
 });
 
 Meteor.methods({
     addUser: function (newUser) {
-        if (typeof newUser.email !== 'string')
-            throw new Meteor.Error('Email not provided');
-        if (typeof newUser.password !== 'string')
-            throw new Meteor.Error('Password not provided');
+        check(newUser, {
+            email: String,
+            password: String,
+            profile: userProfileSchema
+        });
         var userID = Accounts.createUser(newUser);
         return userID;
     },
-    updateUser: function (newInfo) {
+    updateUserProfile: function (newInfo) {
+        // TODO: should not check full user profile schema for update
+        check(newInfo, userProfileSchema);
         Meteor.users.update(
             {_id: this.userId},
-            {$set: newInfo},
-            {bypassCollection2: true}
+            {$set: {profile: newInfo}}
         );
     },
     getUserInfo: function (userID) {
-        if (!isAdmin) {
-            this.ready();
-            return;
-        }
+        check(userID, String);
+        check(this.userId, Match.Where(isAdmin));
         return Meteor.users.find({_id: userID}).fetch();
     },
-    getType: function () {
+    getUserType: function () {
+        check(this.userId, String);
         //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
         return Meteor.user().profile.type;
     },
     addNote: function (newNote) {
-        newNote.creatorID = this.userId;
+        check(newNote, notesSchema);
         Meteor.users.update(
-            {_id: newNote.creatorID},
-            {
-                $push: {
-                    'notes': {
-                        itemID: newNote.itemID,
-                        text: newNote.text
-                    }
-                }
-            },
-            {bypassCollection2: true});
+            {_id: this.userId},
+            {$push: {'notes': newNote}}
+        );
     },
     updateNote: function (newNote) {
+        check(newNote, notesSchema);
         Meteor.users.update(
             {
-                _id: newNote.creatorID,
+                _id: this.userId,
                 notes: {$elemMatch: {itemID: newNote.itemID}}
             },
-            {$set: {"notes.$.text": newNote.text}},
-            {bypassCollection2: true}
+            {$set: {"notes.$.text": newNote.text}}
         );
     },
 });

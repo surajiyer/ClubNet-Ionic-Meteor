@@ -5,9 +5,9 @@
 </div>
 <div class="item item-body">
     <h2 id="polls-heading2">{{item.title}}</h2>
-    <p>
-        {{item.description}}
-    </p>
+    <!--<p>-->
+        <!--{{item.description}}-->
+    <!--</p>-->
 </div>
 <div class="item item-body">
     <p>
@@ -15,13 +15,13 @@
     </p>
 </div>
 <form class="list">
-    <!--<ion-radio ng-repeat="exercise in item.exercises" ng-value="exercise.id" ng-model="item.selectedValue">-->
+    <!--<ion-radio ng-repeat="exercise in item.exercises" ng-value="exercise._id" ng-model="item.selectedValue">-->
     <!--<img src="{{exercise.image}}" alt="" >-->
     <!--{{exercise.name}}-->
     <!--</ion-radio>-->
     <div class="variants">
         <div ng-repeat="exercise in item.exercises"
-             ng-click="select($event, exercise.id)"
+             ng-click="select($event, exercise._id)"
              ng-class="(($index + 1)== hasVoted) ? 'selected' : ''" >
             <img src="{{exercise.image}}" width="100" alt="" />
             <br />
@@ -37,7 +37,7 @@
     <div class="col text-right">
         <button class="button button-outline button-positive"
                 ng-click="vote(item._id, item.type, item.selectedValue)"
-                ng-disabled="hasVoted != 0">
+                ng-disabled="hasVoted">
             {{(hasVoted != 0) ? 'Already voted' : 'Vote!'}}
         </button>
     </div>

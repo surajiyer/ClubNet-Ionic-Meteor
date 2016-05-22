@@ -1,13 +1,16 @@
+import { userTypes } from '/imports/common';
+import { notesSchema } from '/imports/schemas/misc';
+
 /**
  * Database schema for user profile
  * @type {SimpleSchema}
  */
-UserProfile = new SimpleSchema({
+const UserProfile = new SimpleSchema({
     firstName: {type: String},
     lastName: {type: String},
     type: {
         type: String,
-        allowedValues: ['coach', 'player', 'general']
+        allowedValues: userTypes
     },
     clubID: {type: String},
     bettingResults: {
@@ -21,7 +24,8 @@ UserProfile = new SimpleSchema({
         type: String,
         optional: true,
         custom: function () {
-            var shouldBeRequired = this.siblingField('type').value == 'coach' || this.siblingField('type').value == 'player';
+            var shouldBeRequired = this.siblingField('type').value == 'coach'
+                || this.siblingField('type').value == 'player';
             if (shouldBeRequired) {
                 // inserts
                 if (!this.operator) {
@@ -34,14 +38,13 @@ UserProfile = new SimpleSchema({
                     if (this.operator === "$unset") return "required";
                     if (this.operator === "$rename") return "required";
                 }
+            } else {
+                return "notAllowed";
             }
         }
     },
     notes: {
-        type: [{
-            itemID: {type: String},
-            text: {type: String}
-        }],
+        type: [notesSchema],
         optional: true,
         custom: function () {
             var shouldBeRequired = this.siblingField('type').value == 'coach';
@@ -52,6 +55,8 @@ UserProfile = new SimpleSchema({
                     if (this.operator === "$unset") return "required";
                     if (this.operator === "$rename") return "required";
                 }
+            } else {
+                return "notAllowed";
             }
         }
     }
@@ -61,7 +66,7 @@ UserProfile = new SimpleSchema({
  * Database schema for user accounts
  * @type {SimpleSchema}
  */
-baseUserSchema = new SimpleSchema({
+const baseUserSchema = new SimpleSchema({
     createdAt: {
         type: Date
     },
@@ -95,3 +100,4 @@ baseUserSchema = new SimpleSchema({
 });
 
 export default userSchema = baseUserSchema;
+export {baseUserSchema as userSchema, UserProfile as userProfileSchema}

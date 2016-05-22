@@ -1,8 +1,19 @@
+import {userTypes, isValidType} from '/imports/common';
+
+/**
+ * Database schema for feed item notes
+ * @type {SimpleSchema}
+ */
+const notesSchema = new SimpleSchema({
+    itemID: {type: String},
+    text: {type: String}
+});
+
 /**
  * Database schema for teams
  * @type {SimpleSchema}
  */
-var teamSchema = new SimpleSchema({
+const teamSchema = new SimpleSchema({
     teamName: {type: String},
     teamID: {type: String}
 });
@@ -11,15 +22,51 @@ var teamSchema = new SimpleSchema({
  * Database schema for clubs
  * @type {SimpleSchema}
  */
-var clubSchema = new SimpleSchema({
+const clubSchema = new SimpleSchema({
     name: {type: String},
     logo: {type: String},
-    colorSchema: {
-        type: [String],
-        label: "Three colors",
-        minCount: 3,
-        maxCount: 3
+    colorPrimary: {type: String},
+    colorAccent: {type: String}
+});
+
+const permissionSchema = new SimpleSchema({
+    _id: {
+        type: String,
+        custom: function () {
+            if(!isValidType(this.value)) return "notAllowed";
+        }
+    },
+    permissions: {type: Object},
+    'permissions.create': {
+        type: Boolean,
+        defaultValue: false
+    },
+    'permissions.edit': {
+        type: Boolean,
+        defaultValue: false
+    },
+    'permissions.view': {
+        type: Boolean,
+        defaultValue: false
+    },
+    'permissions.delete': {
+        type: Boolean,
+        defaultValue: false
     }
 });
 
-export {teamSchema, clubSchema};
+/**
+ * Database schema for Access Control
+ * @type {SimpleSchema}
+ */
+const accessControlSchema = new SimpleSchema({
+    _id: {
+        type: String,
+        allowedValues: userTypes
+    },
+    items: {
+        type: [permissionSchema]
+    }
+});
+
+export {notesSchema, teamSchema, clubSchema, accessControlSchema};

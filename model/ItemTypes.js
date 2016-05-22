@@ -1,15 +1,21 @@
+import {feedItemTypesSchema} from '/imports/schemas/feedItems';
+
 TypesCollection = new Mongo.Collection("ItemTypes");
 
-TypesCollection.deny({
-    insert: function () {
-        return false;
-    },
-    update: function () {
-        return false;
-    },
-    remove: function () {
-        return false;
-    }
+Meteor.startup(function () {
+    TypesCollection.attachSchema(feedItemTypesSchema);
+
+    TypesCollection.deny({
+        insert: function () {
+            return true;
+        },
+        update: function () {
+            return true;
+        },
+        remove: function () {
+            return true;
+        }
+    });
 });
 
 if (Meteor.isServer) {
@@ -22,7 +28,7 @@ if (Meteor.isServer) {
 
     Meteor.methods({
         getItemTypes: function () {
-            return TypesCollection.find().fetch()[0];
-        },
+            return TypesCollection.find().fetch();
+        }
     });
 }

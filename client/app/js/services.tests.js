@@ -12,7 +12,7 @@ describe('Access control', () => {
 
     it('should grant coach permission to view voting', function (done) {
         this.timeout(2000);
-        ac.getPermission("coach", "coachbar", "view", function (result) {
+        ac.getPermission("CoachBar", "view", function (result) {
             expect(result).toBe(true);
             done();
         });
