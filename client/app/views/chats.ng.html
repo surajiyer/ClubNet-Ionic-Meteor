@@ -1,38 +1,20 @@
 <ion-view view-title="Chats">
     <ion-nav-bar class="bar-stable">
-        <ion-nav-buttons side="left">
-            <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
-        </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <button class="button button-icon icon ion-android-funnel" ng-click="openFilter()"></button>
+            <button class="button button-icon icon ion-plus" ng-click="openFilter()"></button>
         </ion-nav-buttons>
     </ion-nav-bar>
-   
-
     <ion-content>
         <ion-list>
-          <ion-item ng-repeat="chat in chats | orderBy:'-lastMessage.timestamp'"
-                    class="item-chat item-remove-animate item-avatar item-icon-right"
-                    type="item-text-wrap">
-            <img ng-src="{{ chat.picture }}">
-            <h2>{{ chat.name }}</h2>
-            <p>{{ chat.lastMessage.text }}</p>
-            <span class="last-message-timestamp">{{ chat.lastMessage.timestamp }}</span>
-            <i class="icon ion-chevron-right icon-accessory"></i>
-          </ion-item>
+            <ion-item ng-repeat="chat in chats | orderBy:'-lastMessage.timestamp'"
+                      class="item-chat item-remove-animate item-avatar item-icon-right"
+                      type="item-text-wrap">
+                <img ng-src="{{ chat.picture }}">
+                <h2>{{ chat.name }}</h2>
+                <p>{{ chat.lastMessage.text }}</p>
+                <span class="last-message-timestamp">{{ chat.lastMessage.timestamp }}</span>
+                <i class="icon ion-chevron-right icon-accessory"></i>
+            </ion-item>
         </ion-list>
-
     </ion-content>
-
-    <div class="tabs tabs-icon-only" ng-if="showCoachBar">
-        <a class="tab-item" ui-sref="menu.polls">
-            <i class="icon ion-chatbubbles"></i>
-        </a>
-        <a class="tab-item" ng-controller="popoverCtrl">
-            <i class="icon ion-plus" ng-click="openPopover($event)"></i>
-        </a>
-        <a class="tab-item">
-            <i class="icon ion-edit"></i>
-        </a>
-    </div>
 </ion-view>
