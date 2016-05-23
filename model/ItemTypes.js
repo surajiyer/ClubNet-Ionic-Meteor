@@ -1,4 +1,7 @@
-TypesCollection = new Mongo.Collection("ItemTypes");
+import { Mongo } from 'meteor/mongo';
+import { Meteor } from 'meteor/meteor';
+
+export const TypesCollection = new Mongo.Collection("ItemTypes");
 
 TypesCollection.deny({
     insert: function () {
@@ -13,10 +16,14 @@ TypesCollection.deny({
 });
 
 if (Meteor.isServer) {
-    /**
-     * Cannot return a cursor in Meteor.methods, only EJON-able values.
-     */
-    Meteor.publish('ItemTypes', function () {
+    
+    Meteor.publish('ItemTypes', function publishItemTypes() {
         return TypesCollection.find({});
+    });
+
+    Meteor.methods({
+        getItemTypes: function () {
+            return TypesCollection.find().fetch()[0];
+        },
     });
 }

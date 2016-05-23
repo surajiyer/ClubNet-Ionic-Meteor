@@ -1,16 +1,47 @@
 <link rel="stylesheet" href="/web/css/login.css"/>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
 
+    <!--<div class="container">-->
+        <!--<img class="img-responsive" src="/web/img/clubnet_logo.png">-->
+        <!--<form class="form-signin">-->
+            <!--<h2 class="form-signin-heading">{{ 'Sign in' | translate }}</h2>-->
+            <!--<label for="inputEmail" class="sr-only">Email</label>-->
+            <!--<input type="email" id="inputEmail" class="form-control" placeholder="{{ 'Email address' | translate }}" ng-model="user.email" required autofocus>-->
+            <!--<label for="inputPassword" class="sr-only">Password</label>-->
+            <!--<input type="password" id="inputPassword" class="form-control" placeholder="{{ 'Password' | translate }}" ng-model="user.password" required>-->
+            <!--<div class="alert alert-warning" ng-style="errorVisible">-->
+                <!--{{ error }}-->
+            <!--</div>-->
+            <!--<button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">{{ 'Sign in' | translate }}</button>-->
+        <!--</form>-->
+    <!--</div>-->
+
 <div class="container">
-    <form class="form-signin">
-        <h2 class="form-signin-heading">{{ 'Sign in' | translate }}</h2>
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input type="email" id="inputEmail" class="form-control" placeholder="{{ 'Email address' | translate }}" ng-model="user.email" required autofocus>
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" id="inputPassword" class="form-control" placeholder="{{ 'Password' | translate }}" ng-model="user.password" required>
-        <div class="alert alert-warning" ng-style="errorVisible">
-            {{ error }}
+    <div class="row vertical-offset-100">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <div class="row-fluid user-row">
+                        <img src="web/img/clubnet_logo.png" class="img-responsive" />
+                    </div>
+                </div>
+                <div class="panel-body">
+                    <form accept-charset="UTF-8" role="form" class="form-signin">
+                            <!--<label class="panel-login">-->
+                                <!--<div class="login_result"></div>-->
+                            <!--</label>-->
+                            <input type="email" id="inputEmail" class="form-control" placeholder="{{ 'Email address' | translate }}" ng-model="user.email" required autofocus>
+                            <input type="password" id="inputPassword" class="form-control" placeholder="{{ 'Password' | translate }}" ng-model="user.password" required>
+                        <div ng-if="errorVisible" class="alert alert-warning">
+                            {{ error }}
+                        </div>
+                        <input class="btn btn-lg btn-success btn-block" type="submit" ng-click="login()" value="{{ 'Sign in' | translate }}">
+                        <div id="forgotpassword">
+                            <button type="button" class="btn btn-link">{{ 'Forgot password' | translate }}?</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <button class="btn btn-lg btn-primary btn-block" type="submit" ng-click="login()">{{ 'Sign in' | translate }}</button>
-    </form>
+    </div>
 </div>

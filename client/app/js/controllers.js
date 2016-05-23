@@ -41,10 +41,12 @@ angular.module('app.controllers', [])
         $scope.errorVisible = {'visibility': 'hidden'};
     })
 
-    .controller('menuCtrl', function ($scope, $meteor, $state) {
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window) {
         $scope.logout = function () {
             $meteor.logout();
-            $state.go('login');
+            $state.go('login').then(function(){
+                 $window.location.reload();
+            });
         }
     })
 
@@ -148,27 +150,24 @@ angular.module('app.controllers', [])
             }, this);
         });
 
-        // Lead the feed
-        $scope.subscribe('Feed', function () {
-            return [$scope.getCollectionReactively('itemTypesFilter')];
-        });
-
-        // Change types filter on user interaction
-        Tracker.autorun(function () {
+        Tracker.autorun(function() {
             $scope.getReactively('itemTypes', true);
-            $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
-                return type.checked;
-            }), '_id');
+            $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => { return type.checked; }), '_id');
+            $scope.subscribe('Feed', function() {
+                return [$scope.itemTypesFilter];
+            });
         });
 
         $scope.openDetails = function () {
             console.log("poep");
         };
-
+        
+        
         // Subscribe to the feed
-        $scope.subscribe('Feed', function () {
-            return [$scope.getCollectionReactively('itemTypesFilter')];
-        });
+        // $scope.subscribe('Feed', function(){
+        //     console.log($scope.getCollectionReactively('itemTypesFilter'));
+        //     return [$scope.getCollectionReactively('itemTypesFilter')];
+        // });
 
         // Set display filter model
         $scope.showFilter = false;
@@ -180,7 +179,7 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             items: function () {
-                return Items.find({}, {sort: {timestamp: -1}});
+                return Items.find({}, {$sort: {sticky: -1, createdAt: -1}});
             }
         });
     })
@@ -237,7 +236,6 @@ angular.module('app.controllers', [])
 
         $scope.form = function () {
 
-            $scope.newForm.creatorID = Meteor.userId();
             $scope.newForm.type = 'Form';
             $scope.newForm.clubID = Meteor.user().profile.clubID;
             $scope.newForm.status = 'published';
@@ -245,7 +243,7 @@ angular.module('app.controllers', [])
             $scope.newForm.raised = '0';
             $scope.newForm.locked = false;
             $scope.newForm.teamID = Meteor.user().profile.teamID;
-            Meteor.call('DBHelper.addFeedItem', $scope.newForm);
+            Meteor.call('addFeedItem', $scope.newForm);
             $scope.newForm = {};
             $scope.closeForm();
         };
@@ -273,7 +271,6 @@ angular.module('app.controllers', [])
 
         $scope.addVoting = function () {
             console.log($scope.newVoting.title);
-            $scope.newVoting.creatorID = Meteor.userId();
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.clubID = Meteor.user().profile.clubID;
             $scope.newVoting.status = 'published';
@@ -294,7 +291,7 @@ angular.module('app.controllers', [])
                     image: 'http://i3.cpcache.com/product/1293587386/rootin_for_putin_square_sticker.jpg?height=225&width=225'
                 }
             ];
-            $meteor.call('DBHelper.addFeedItem', $scope.newVoting);
+            $meteor.call('addFeedItem', $scope.newVoting);
             $scope.newVoting = {};
             $scope.closeVoting();
         };
@@ -314,7 +311,7 @@ angular.module('app.controllers', [])
         };
 
         $scope.updateChartValues = function () {
-            $meteor.call('DBHelper.getVotingResults', $scope.item._id).then(
+            $meteor.call('getVotingResults', $scope.item._id).then(
                 function (result) {
                     $scope.chartValues = result;
                 },
@@ -327,7 +324,9 @@ angular.module('app.controllers', [])
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
-            $meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id).then(
+
+            // Check if voting has ended because it reached limit of voters
+            $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
                 function (result) {
                     if (result.length >= $scope.item.nrVoters) {
                         $scope.hasEnded = true;
@@ -337,7 +336,14 @@ angular.module('app.controllers', [])
                     console.log(err);
                 }
             );
-            $meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId()).then(
+
+            // Check if voting has ended because the deadline has passed
+            var today = new Date;
+            if (today > $scope.item.deadline) {
+                $scope.hasEnded = true;
+            }
+
+            $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
                     $scope.hasVoted = result;
                 },
@@ -366,7 +372,7 @@ angular.module('app.controllers', [])
         $scope.vote = function (itemID, itemType, value) {
             if (value) {
                 var userID = Meteor.userId();
-                $meteor.call('DBHelper.putResponse', itemID, userID, itemType, value).then(
+                $meteor.call('putResponse', itemID, userID, itemType, value).then(
                     function (result) {
                         $scope.updateChartValues();
                         $scope.hasVoted = value;
@@ -375,7 +381,16 @@ angular.module('app.controllers', [])
                         console.log(err);
                     }
                 );
-
+                $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
+                    function(result){
+                        if (result.length >= $scope.item.nrVoters) {
+                            $scope.hasEnded = true;
+                        }
+                    },
+                    function (err){
+                        console.log(err);
+                    }
+                );
             } else {
                 console.log('Please select what are you voting for');
             }
@@ -437,7 +452,7 @@ angular.module('app.controllers', [])
         $scope.selectedValue = '';
 
         $scope.updateChartValues = function () {
-            $meteor.call('DBHelper.getVotingResults', $scope.item._id).then(
+            $meteor.call('getVotingResults', $scope.item._id).then(
                 function (result) {
                     $scope.chartValues = result;
                 },
@@ -450,7 +465,7 @@ angular.module('app.controllers', [])
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
-            $meteor.call('DBHelper.getResponsesOfOneItem', $scope.item._id).then(
+            $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
                 function (result) {
                     if (result.length >= $scope.item.nrVoters) {
                         $scope.hasEnded = true;
@@ -460,7 +475,7 @@ angular.module('app.controllers', [])
                     console.log(err);
                 }
             );
-            $meteor.call('DBHelper.doesResponseExist', $scope.item._id, Meteor.userId()).then(
+            $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
                     $scope.hasVoted = result;
                 },
@@ -489,7 +504,7 @@ angular.module('app.controllers', [])
         $scope.vote = function (itemID, itemType, value) {
             if (value) {
                 var userID = Meteor.userId();
-                $meteor.call('DBHelper.putResponse', itemID, userID, itemType, value).then(
+                $meteor.call('putResponse', itemID, userID, itemType, value).then(
                     function (result) {
                         $scope.updateChartValues();
                         $scope.hasVoted = value;

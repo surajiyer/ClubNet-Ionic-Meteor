@@ -1,27 +1,38 @@
 angular.module('web.translation', ['pascalprecht.translate'])
 
-.config(['$translateProvider', 'translations', function($translateProvider, translations) {
+    .config(['$translateProvider', 'translations', function ($translateProvider, translations) {
 
-  translations = translations();
+        translations = translations();
 
-  $translateProvider.translations('nl', translations.nl);
-  $translateProvider.translations('en', translations.en);
-  $translateProvider.preferredLanguage('en');
-}])
+        $translateProvider.translations('nl', translations.nl);
+        $translateProvider.translations('en', translations.en);
+        $translateProvider.preferredLanguage('nl');
+    }])
 
-.constant('translations', function() {
-  var translations = {};
-  translations.nl = {
-    "Sign in":"Log in",
-    "Email address":"Email adres",
-    "Password":"Wachtwoord",
-    "Signed in":"Aangemeld",
-    "Log out":"Uitloggen"
-  };
-  translations.en = {
-    "Sign in":"Sign in",
-    "Email address":"Email address",
-    "Password":"Password"
-  };
-  return translations;
-})	
+    .constant('translations', function () {
+        var translations = {};
+        translations.nl = {
+            "Sign in": "Log in",
+            "Email address": "Email adres",
+            "Password": "Wachtwoord",
+            "Signed in": "Aangemeld",
+            "Log out": "Uitloggen",
+            "First name": "Voornaam",
+            "Last name": "Achternaam",
+            "Members": "Leden",
+            "Add user": "Voeg gebruiker toe",
+            "Player": "Speler",
+            "Coach": "Trainer",
+            "Public Relations manager": "Public Relations manager",
+            "Feed": "Feed",
+            "Profile": "Profiel",
+            "Club betting": "Clubpoule",
+            "Club settings": "Clubinstellingen",
+            "Forgot password": "Wachtwoord vergeten"
+            
+        };
+        translations.en = {
+        };
+
+        return translations;
+    })	
