@@ -19,6 +19,10 @@ angular.module('app.routes', [])
                 }
             })
 
+
+
+
+
             .state('login', {
                 url: '/login/',
                 templateUrl: 'client/app/views/login.ng.html',
@@ -74,6 +78,16 @@ angular.module('app.routes', [])
                 }
             })
 
+            .state('menu.chats', {
+                url: '/chats',
+                views: {
+                    'side-menu-content': {
+                        templateUrl: 'client/app/views/chats.ng.html',
+                        controller: 'chatsCtrl'
+                    }
+                }
+            })
+
 
             .state('menu.post', {
                 url: '/post/:itemID',
@@ -106,6 +120,9 @@ angular.module('app.routes', [])
                     }
                 }
             })
+
+           
+
 
 
             .state('menu.hero', {
