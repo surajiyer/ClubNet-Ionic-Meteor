@@ -80,6 +80,13 @@ if (Meteor.isServer) {
             check(newItem, feedItemSchemas[newItem.type]);
             Items.insert(newItem);
         },
+        getFeedItemByCreatedAt: function (date) {
+            try {
+                return Items.find({createdAt: date}).fetch();
+            } catch (err) {
+                throw new Meteor.Error(err.message);
+            }
+        },
         updateFeedItem: function (itemID, newInfo) {
             check(itemID, String);
             // TODO: fix checking newInfo
