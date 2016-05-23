@@ -57,7 +57,7 @@ Meteor.startup(function () {
                 return;
             }
             check(itemTypes, [String]);
-            return Items.find({type: {$in: itemTypes}}, {$sort: {sticky: -1, createdAt: -1}});
+            return Items.find({type: {$in: itemTypes}}, {sort: {sticky: -1, createdAt: -1}});
         });
     }
 
@@ -77,6 +77,7 @@ if (Meteor.isServer) {
         addFeedItem: function (newItem) {
             newItem.creatorID = this.userId;
             newItem.clubID = Meteor.user().profile.clubID;
+            check(newItem.type, Match.Where(isValidType));
             check(newItem, feedItemSchemas[newItem.type]);
             Items.insert(newItem);
         },
@@ -117,6 +118,7 @@ if (Meteor.isServer) {
             check(this.userId, String);
             var response = Responses.find({itemID: itemID, userID: this.userId}).fetch()[0];
             if (response) return response.value;
+            else return 0;
         },
         deleteResponse: function (itemID) {
             check(itemID, String);

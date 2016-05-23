@@ -45,7 +45,7 @@ angular.module('app.routes', [])
             })
 
             .state('menu.feed', {
-                url: '/feed/',
+                url: '/feed',
                 views: {
                     'side-menu-content': {
                         templateUrl: 'client/app/views/feed.ng.html',
@@ -70,6 +70,16 @@ angular.module('app.routes', [])
                     'side-menu-content': {
                         templateUrl: 'client/app/views/profile.ng.html',
                         controller: 'profileCtrl'
+                    }
+                }
+            })
+
+            .state('menu.chat', {
+                url: '/chat',
+                views: {
+                    'side-menu-content': {
+                        templateUrl: 'client/app/views/chat.ng.html',
+                        controller: 'chatCtrl'
                     }
                 }
             })
@@ -117,18 +127,6 @@ angular.module('app.routes', [])
                     }
                 }
             })
-
-
-            .state('menu.polls', {
-                url: '/polls',
-                views: {
-                    'side-menu-content': {
-                        templateUrl: 'client/app/views/polls.ng.html',
-                        controller: 'pollsCtrl'
-                    }
-                }
-            });
-
 
         $urlRouterProvider.otherwise('/')
     });

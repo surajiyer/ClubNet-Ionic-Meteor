@@ -70,7 +70,7 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('forgotPasswordCtrl', function ($scope, $meteor, $state, $ionicHistory) {
+    .controller('forgotPasswordCtrl', function ($scope) {
         $scope.forgotUser = {
             email: '',
             token: '',
@@ -90,10 +90,6 @@ angular.module('app.controllers', [])
             Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
                 if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
             });
-        };
-
-        $scope.goBack = function () {
-            $ionicHistory.goBack();
         };
     })
 
@@ -125,6 +121,10 @@ angular.module('app.controllers', [])
                 });
             });
         };
+    })
+
+    .controller('chatCtrl', function($scope) {
+        
     })
 
     .controller('feedCtrl', function ($scope, AccessControl) {
@@ -181,7 +181,7 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             items: function () {
-                return Items.find({}, {$sort: {sticky: -1, createdAt: -1}});
+                return Items.find({}, {sort: {sticky: -1, createdAt: -1}});
             }
         });
     })
@@ -342,7 +342,7 @@ angular.module('app.controllers', [])
             // Check if already voted
             $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
-                    $scope.hasVoted = !!result;
+                    $scope.hasVoted = result;
                 },
                 function (err) {
                     console.log(err);
@@ -371,7 +371,7 @@ angular.module('app.controllers', [])
                 $meteor.call('putResponse', itemID, itemType, value).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = !!value;
+                        $scope.hasVoted = value;
                     },
                     function (err) {
                         console.log(err);
@@ -478,7 +478,7 @@ angular.module('app.controllers', [])
             // Check if already voted
             $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
-                    $scope.hasVoted = !!result;
+                    $scope.hasVoted = result;
                 },
                 function (err) {
                     console.log(err);
@@ -507,7 +507,7 @@ angular.module('app.controllers', [])
                 $meteor.call('putResponse', itemID, itemType, value).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = !!value;
+                        $scope.hasVoted = value;
                     },
                     function (err) {
                         console.log(err);

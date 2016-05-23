@@ -6,7 +6,7 @@ import '/model/Feed.js'
 
 addedItem = {};
 describe('FeedItems', () => {
-    
+
     it("Add FeedItem", (done) => {
         addedItem = {
             creatorID: 0,
@@ -17,7 +17,7 @@ describe('FeedItems', () => {
             createdAt: new Date,
             modifiedAt: new Date
         }
-        
+
         Meteor.call('addFeedItem', addedItem, function (err, result) {
             if (err) {
                 assert.fail();
@@ -25,7 +25,7 @@ describe('FeedItems', () => {
             done();
         });
     });
-    
+
     it("Get FeedItem", (done) => {
         Meteor.call('getFeedItemByCreatedAt', addedItem.createdAt, function (err, result) {
             if (err) {
@@ -36,7 +36,7 @@ describe('FeedItems', () => {
             done();
         });
     });
-    
+
     it("Delete FeedItem", (done) => {
         Meteor.call('deleteFeedItem', addedItem._id, function (err, result) {
             if (err) {
