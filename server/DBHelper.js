@@ -8,6 +8,13 @@ Meteor.methods({
             console.log("addFeedItem()" + err.message);
         }
     },
+    "DBHelper.getFeedItemByCreatedAt": function (date) {
+        try {
+            return Items.find({createdAt: date}).fetch();
+        } catch (err) {
+            console.log("getFeedItemByTimestamp():" + err.message);
+        }
+    },
     'DBHelper.addNote': function (newNote) {
         try {
             Meteor.users.update({
