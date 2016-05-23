@@ -32,6 +32,7 @@ function setupTesting(ctrlName) {
 describe('registerCtrl', () => {
     setupTesting('registerCtrl');
 
+    //Not Kevin
     it("Should register a user", (done) => {
         email = 'register' + new Date().getTime() + '@test.test';
         password = 'password';
@@ -50,6 +51,7 @@ describe('registerCtrl', () => {
         }, 100);
     });
 
+    //Kevin
     it("Should throw an error", (done) => {
         var email = 'register';
         var password = 'password';
@@ -75,26 +77,30 @@ describe('registerCtrl', () => {
         }, 100);
     });
 
-    it("Should register a user and be able to retrieve it", (done) => {
+    //Kevin
+    //There is something wrong with getting to Accounts here.
+    it("Should register a user and go to menu.feed", (done) => {
         var email = 'register' + new Date().getTime() + '@test.test';
         var password = 'password';
         Meteor.logout();
-        var spy = sinon.spy(scope, 'register');
+        var spy = sinon.spy(state, 'go');
         setTimeout(function() {
+
             scope.user.email = email;
             scope.user.password = password;
             try {
                 scope.register();
             }
             catch (err) {
-                console.log('Hurray');
+                console.log(err);
             }
             finally {
                 setTimeout(function() {
-                    console.log(Accounts.findUserByEmail(email));
+                    //console.log(Accounts.findUserByEmail(email));
                     //assert(Meteor.userId() != null, 'User is logged in.');
                     //console.log(spy.threw());
-                    assert(spy.threw(), 'true');
+                    //assert(spy.threw(), 'true');
+                    assert.equal(spy.calledWith('menu.feed'), true);
                     done();
                 }, 500);
             }
@@ -110,6 +116,7 @@ describe('profileCtrl', () => {
         userAccount = UserAccount;
     }));
 
+    //Not Kevin
     it("Should change password", (done) => {
         email = 'test' + new Date().getTime() + '@test.test';
         password = 'password';
@@ -122,7 +129,7 @@ describe('profileCtrl', () => {
                     console.log('Register successfull');
                     scope.temp_pass.oldPass = password;
                     scope.temp_pass.newPass = password + '1';
-                    scope.temp_pass.newPassCheck = password
+                    scope.temp_pass.newPassCheck = password;
                     scope.changePassword();
                     setTimeout(function() {
                         assert(scope.error != '', 'Change password should throw an error.');
@@ -140,6 +147,50 @@ describe('profileCtrl', () => {
                     assert.fail();
                 }
             );
+        }, 100);
+    });
+});
+
+describe('profileCtrl Kevin', () => {
+    setupTesting('profileCtrl');
+
+    it("Changes password", (done) => {
+        var email = 'login' + new Date().getTime() + '@test.test';
+        var fullName = 'Kevin';
+        var password = 'password';
+
+        var spy = sinon.spy(state, 'go');
+        setTimeout(() => {
+            scope.temp_user.email = email;
+            scope.temp_user.fullName = fullName;
+            scope.temp_pass.oldPass = password;
+            scope.temp_pass.newPass = password + '1';
+            scope.temp_pass.newPassCheck = password;
+            scope.changePassword();
+            setTimeout(() => {
+                assert.equal(spy.calledWith('menu.feed'), true);
+                done();
+            }, 500);
+        }, 100);
+    });
+
+    it("Should throw specific error", (done) => {
+        var email = 'login' + new Date().getTime() + '@test.test';
+        var fullName = 'Kevin';
+        var password = 'password';
+
+        var spy = sinon.spy(state, 'go');
+        setTimeout(() => {
+            scope.temp_user.email = email;
+            scope.temp_user.fullName = fullName;
+            scope.temp_pass.oldPass = password;
+            scope.temp_pass.newPass = password + '1';
+            scope.temp_pass.newPassCheck = password + '1';
+            scope.changePassword();
+            setTimeout(() => {
+                assert.equal(scope.error, "The passwords don't match.");
+                done();
+            }, 500);
         }, 100);
     });
 });
@@ -208,9 +259,46 @@ describe('menuCtrl', () => {
     });
 });
 
-describe('forgotPasswordCtrl', () => {
-    setupTesting('forgotPasswordCtrl');
+describe('feedCtrl', () => {
+    setupTesting('feedCtrl');
+    var accessControl;
 
+    beforeEach(inject((AccessControl) => {
+        accessControl = AccesControl;
+    }));
 
+    //Kevin
+    it("Should change password", (done) => {
+        email = 'test' + new Date().getTime() + '@test.test';
+        password = 'password';
+        Meteor.logout();
+        setTimeout(function() {
+            userAccount.register(
+                email,
+                password,
+                function() {
+                    console.log('Register successfull');
+                    scope.temp_pass.oldPass = password;
+                    scope.temp_pass.newPass = password + '1';
+                    scope.temp_pass.newPassCheck = password;
+                    scope.changePassword();
+                    setTimeout(function() {
+                        assert(scope.error != '', 'Change password should throw an error.');
+                        scope.error = '';
+                        scope.temp_pass.newPassCheck = password + '1';
+                        scope.changePassword();
+                        setTimeout(function() {
+                            assert(scope.error == '', 'Change password should not throw an error.');
+                            done();
+                        }, 500);
+                    }, 500);
+                },
+                function(error) {
+                    console.log('Register error: ' + error); // Output error if registration fails
+                    assert.fail();
+                }
+            );
+        }, 100);
+    });
 });
 
