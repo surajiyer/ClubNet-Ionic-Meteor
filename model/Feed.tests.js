@@ -1,7 +1,7 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
-import './DBHelper.js'
+import './Feed.js'
 import '/model/Feed.js'
 
 addedItem = {};
@@ -18,7 +18,7 @@ describe('FeedItems', () => {
             modifiedAt: new Date
         }
         
-        Meteor.call('DBHelper.addFeedItem', addedItem, function (err, result) {
+        Meteor.call('addFeedItem', addedItem, function (err, result) {
             if (err) {
                 assert.fail();
             }
@@ -27,7 +27,7 @@ describe('FeedItems', () => {
     });
     
     it("Get FeedItem", (done) => {
-        Meteor.call('DBHelper.getFeedItemByCreatedAt', addedItem.createdAt, function (err, result) {
+        Meteor.call('getFeedItemByCreatedAt', addedItem.createdAt, function (err, result) {
             if (err) {
                 assert.fail();
             }
@@ -38,11 +38,11 @@ describe('FeedItems', () => {
     });
     
     it("Delete FeedItem", (done) => {
-        Meteor.call('DBHelper.deleteFeedItem', addedItem._id, function (err, result) {
+        Meteor.call('deleteFeedItem', addedItem._id, function (err, result) {
             if (err) {
                 assert.fail();
             }
-            Meteor.call('DBHelper.getFeedItemByCreatedAt', addedItem.createdAt, function (err, result) {
+            Meteor.call('getFeedItemByCreatedAt', addedItem.createdAt, function (err, result) {
                 if (err) {
                     assert.fail();
                 }

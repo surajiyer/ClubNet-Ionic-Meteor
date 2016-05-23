@@ -39,6 +39,13 @@ if (Meteor.isServer) {
             newItem.creatorID = Meteor.userId();
             Items.insert(newItem);
         },
+        getFeedItemByCreatedAt: function (date) {
+            try {
+                return Items.find({createdAt: date}).fetch();
+            } catch (err) {
+                throw new Meteor.Error(err.message);
+            }
+        },
         updateFeedItem: function (itemID, newInfo) {
             Items.update(
                 {_id: itemID},
