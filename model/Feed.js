@@ -82,6 +82,7 @@ if (Meteor.isServer) {
             Items.insert(newItem);
         },
         getFeedItemByCreatedAt: function (date) {
+            check(date, Date);
             try {
                 return Items.find({createdAt: date}).fetch();
             } catch (err) {

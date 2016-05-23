@@ -8,6 +8,7 @@ import './controllers.js';
 import './services.js';
 import './routes.js';
 import '/model/Feed';
+//import '/model/Chats';
 
 import { TypesCollection } from '../../../model/ItemTypes.js';
 
