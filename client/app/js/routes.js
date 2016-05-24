@@ -19,12 +19,8 @@ angular.module('app.routes', [])
                 }
             })
 
-
-
-
-
             .state('login', {
-                url: '/login/',
+                url: '/login',
                 templateUrl: 'client/app/views/login.ng.html',
                 controller: 'loginCtrl'
             })
@@ -95,52 +91,6 @@ angular.module('app.routes', [])
                     templateUrl: 'client/app/views/chat.ng.html',
                     controller: 'chatCtrl'
                 }
-                }
-            })
-
-            .state('menu.post', {
-                url: '/post/:itemID',
-                views: {
-                    'side-menu-content': {
-                        templateUrl: 'client/app/views/itemDetail/post.ng.html',
-                        controller: 'postDetailCtrl'
-                    }
-                }
-            })
-
-
-            .state('menu.formdir', {
-                url: '/formdir/:itemID',
-                views: {
-                    'side-menu-content': {
-                        templateUrl: 'client/app/views/itemDetail/formdir.ng.html',
-                        controller: 'formdirDetailCtrl'
-                    }
-                }
-            })
-
-
-            .state('menu.voting', {
-                url: '/voting/:itemID',
-                views: {
-                    'side-menu-content': {
-                        templateUrl: 'client/app/views/itemDetail/voting.ng.html',
-                        controller: 'votingDetailCtrl'
-                    }
-                }
-            })
-
-           
-
-
-
-            .state('menu.hero', {
-                url: '/hero/:itemID',
-                views: {
-                    'side-menu-content': {
-                        templateUrl: 'client/app/views/itemDetail/hero.ng.html',
-                        controller: 'heroDetailCtrl'
-                    }
                 }
             })
 

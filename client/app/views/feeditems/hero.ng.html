@@ -1,12 +1,12 @@
-<div class="item item-divider">
+<div class="item item-divider" ng-controller="controlItemCtrl">
     {{item.type}}
-    <i class="fa fa-expand" ui-sref="menu.hero({itemID: item._id})" id="icon-expand" aria-hidden="true"></i>
+    <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" aria-hidden="true"></i>
 </div>
 <div class="item item-body">
     <span class="hero-name">{{item.title}}</span>
-    <img class="full-image" src="http://placehold.it/500x500">
+    <img class="full-image" src="{{item.image}}">
     <p>
-        {{item.message}}
+        {{item.text}}
     </p>
 </div>
 

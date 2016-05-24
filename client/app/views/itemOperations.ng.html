@@ -1,0 +1,15 @@
+<ion-popover-view>
+    <ion-content>
+        <div class="list">
+            <a class="item" ng-click="openVoting(item._id); closePopover()">
+                <i class="icon ion-edit"></i> Edit
+            </a>
+            <a class="item" ng-click="deleteItem(item._id); closePopover()">
+                <i class="icon ion-ios-trash"></i> Delete
+            </a>
+            <a class="item">
+                <i class="icon ion-compose"></i> Leave a note
+            </a>
+        </div>
+    </ion-content>
+</ion-popover-view>

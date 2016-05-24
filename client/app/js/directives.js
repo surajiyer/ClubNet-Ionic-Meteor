@@ -17,15 +17,7 @@ angular.module('app.directives', [])
             scope: {
                 item: "="
             },
-            link: function (scope, element, attrs) {
-                scope.signUp = function () {
-                    console.log('forma');
-                };
-
-                scope.refuse = function () {
-                    console.log('Refuse');
-                };
-            }
+            controller: 'formCtrl'
         }
     })
 
