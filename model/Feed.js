@@ -113,15 +113,14 @@ if (Meteor.isServer) {
             check(itemID, String);
             check(Meteor.userId(), String);
             return result = Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0];
-            else return 0;
         },
         deleteResponse: function (itemID) {
             check(itemID, String);
-            check(this.userId, String);
-            Responses.remove({itemID: itemID, userID: this.userId});
+            check(Meteor.userId(), String);
+            Responses.remove({itemID: itemID, userID: Meteor.userId()});
         },
         getResponsesOfItemType: function (itemType) {
-            check(itemType, Match.Where(isValidType));
+            check(itemType, String);
             return Responses.find({itemType: itemType}).fetch();
         },
         putResponse: function (itemID, itemType, value) {
@@ -145,6 +144,6 @@ if (Meteor.isServer) {
                 result[0][vote.value - 1]++;
             });
             return result;
-        },
+        }
     })
 }

@@ -157,21 +157,99 @@ if (Meteor.isServer) {
                 result = Meteor.call('getResponse', testItem._id);
                 assert(result.itemID == testItem._id);
                 testResponse = result
+            } catch (err) {
+                assert.fail();
+            }
+                
+            done();
+        });  
+        
+        it("Get Responses of One Item", (done) => {
+            
+            // Get responses with wrong parameter
+            try {
+                Meteor.call('getResponsesOfOneItem', false);
+                assert.fail();
+            } catch (err) {}
+            
+            // Get reponses of item without reponeses
+            try {
+                result = Meteor.call('getResponsesOfOneItem', 'otherItem');
+                assert(result.length == 0);
+            } catch (err) {
+                assert.fail();
+            }
+            
+            // Get reponses of item added in the previous test
+            try {
+                result = Meteor.call('getResponsesOfOneItem', testItem._id);
+                assert(result.length == 1);
+                assert(result[0].itemID == testItem._id);
+            } catch (err) {
+                assert.fail();
+            }
+            
+            done();
+        });
+        
+        it("Get Responses of ItemType", (done) => {
+            
+            // Get responses with wrong parameter
+            try {
+                Meteor.call('getResponsesOfItemType', false);
+                assert.fail();
+            } catch (err) {}
+            
+            // Get reponses of item without reponeses
+            try {
+                result = Meteor.call('getResponsesOfItemType', 'otherItemType');
+                assert(result.length == 0);
+            } catch (err) {
+                assert.fail();
+            }
+            
+            // Get reponses of item added in the previous test
+            try {
+                result = Meteor.call('getResponsesOfItemType', testItem.type);
+                assert(result.length == 1);
+            } catch (err) {
+                assert.fail();
+            }
+            
+            done();
+        });  
+        
+        it("Delete Response", (done) => {
+            
+            // Delete response with wrong parameter
+            try {
+                Meteor.call('deleteResponse', false);
+                assert.fail();
+            } catch (err) {}
+            
+            // Delete response added in the addResponse testcase
+            try {
+                result = Meteor.call('deleteResponse', testItem._id);
                 done();
             } catch (err) {
                 console.log(err);
                 assert.fail();
             }
-        });  
+        });
         
         it("Delete FeedItem", (done) => {
+            
+            // Delete item with wrong parameter
+            try {
+                Meteor.call('deleteFeedItem', false);
+                assert.fail();
+            } catch (err) {}
             
             // Delete item added in the addFeedItem testcase
             try {
                 result = Meteor.call('deleteFeedItem', testItem._id);
                 done();
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
         });
