@@ -57,7 +57,7 @@ Meteor.startup(function () {
                 return;
             }
             check(itemTypes, [String]);
-            return Items.find({type: {$in: itemTypes}}, {$sort: {sticky: -1, createdAt: -1}});
+            return Items.find({type: {$in: itemTypes}}, {sort: {sticky: -1, createdAt: -1}});
         });
     }
 
@@ -113,6 +113,7 @@ if (Meteor.isServer) {
             check(itemID, String);
             check(Meteor.userId(), String);
             return result = Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0];
+            else return 0;
         },
         deleteResponse: function (itemID) {
             check(itemID, String);

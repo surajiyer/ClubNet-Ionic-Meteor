@@ -9,7 +9,7 @@ import './Feed.js'
 if (Meteor.isServer) {
     
     describe('FeedItems', () => {
-        
+
         it("Add FeedItem", (done) => {
             
             // Mock user and userId since there is no user logged in while testing
@@ -28,7 +28,7 @@ if (Meteor.isServer) {
                 clubID: '1',
                 published: false,
                 createdAt: new Date
-            }
+            };
             
             // Adding the item without type
             try {
@@ -47,7 +47,7 @@ if (Meteor.isServer) {
                 assert.fail();
             }
         });
-        
+
         it("Get FeedItem", (done) => {
             
             // Get item with wrong parameter
@@ -110,7 +110,7 @@ if (Meteor.isServer) {
             }
             
         });
-        
+
         it("Put Response", (done) => {
             
             // Add schema to Responses

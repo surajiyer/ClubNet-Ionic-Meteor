@@ -29,16 +29,16 @@ const baseFeedItemSchema = new SimpleSchema({
     sticky: {
         type: Boolean,
         optional: true,
-        autoValue: function () {
-            if (this.isInsert)
-                return false;
-        }
+        defaultValue: false
     },
     clubID: {
         type: String,
         denyUpdate: true
     },
-    published: {type: Boolean},
+    published: {
+        type: Boolean,
+        defaultValue: true
+    },
     createdAt: {
         type: Date,
         optional: true,
@@ -152,8 +152,19 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
         optional: true
     },
     target: {type: String},
-    targetValue: {type: Number},
-    raisedValue: {type: Number},
+    targetValue: {
+        type: Number,
+        min: 0
+    },
+    raisedValue: {
+        type: Number,
+        min: 0,
+        optional: true,
+        autoValue: function() {
+            if(this.isInser)
+                return 0
+        }
+    },
     locked: {
         type: Boolean,
         optional: true,

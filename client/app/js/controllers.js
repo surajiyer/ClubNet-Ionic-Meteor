@@ -1,3 +1,5 @@
+import Moment from 'moment';
+
 angular.module('app.controllers', [])
 
     .controller('ItemCtrl', function ($scope) {
@@ -70,7 +72,7 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('forgotPasswordCtrl', function ($scope, $meteor, $state, $ionicHistory) {
+    .controller('forgotPasswordCtrl', function ($scope) {
         $scope.forgotUser = {
             email: '',
             token: '',
@@ -90,10 +92,6 @@ angular.module('app.controllers', [])
             Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
                 if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
             });
-        };
-
-        $scope.goBack = function () {
-            $ionicHistory.goBack();
         };
     })
 
@@ -117,7 +115,7 @@ angular.module('app.controllers', [])
                 }
             };
             Meteor.call('addUser', newUser, function (err, result) {
-                if (err || Match.test(result, String))
+                if (err || !Match.test(result, String))
                     throw new Meteor.Error('Account registration error: ' + err.reason);
                 Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                     if (error) throw new Meteor.Error(error.reason);
@@ -163,8 +161,8 @@ angular.module('app.controllers', [])
         $scope.openDetails = function () {
             console.log("poep");
         };
-        
-        
+
+
         // Subscribe to the feed
         // $scope.subscribe('Feed', function(){
         //     console.log($scope.getCollectionReactively('itemTypesFilter'));
@@ -181,7 +179,7 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             items: function () {
-                return Items.find({}, {$sort: {sticky: -1, createdAt: -1}});
+                return Items.find({}, {sort: {sticky: -1, createdAt: -1}});
             }
         });
     })
@@ -202,6 +200,72 @@ angular.module('app.controllers', [])
         //Cleanup the popover when we're done with it!
         $scope.$on('$destroy', function () {
             $scope.popover.remove();
+        });
+    })
+
+    .controller('chatsCtrl', function ($scope, $state, $stateParams) {
+
+        //  $scope.helpers({
+        //       data() {
+        //         return Chats.find();
+        //       }
+        //     });
+        // }
+
+        //     $scope.chats = [
+        //   {
+        //     _id: 0,
+        //     name: 'Ethan Gonzalez',
+        //     picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
+        //     lastMessage: {
+        //       text: 'You on your way?',
+        //       timestamp: Moment().subtract(1, 'hours').toDate()
+        //     }
+        //   },
+        //   {
+        //     _id: 1,
+        //     name: 'Bryan Wallace',
+        //     picture: 'https://randomuser.me/api/portraits/thumb/lego/1.jpg',
+        //     lastMessage: {
+        //       text: 'Hey, it\'s me',
+        //       timestamp: Moment().subtract(2, 'hours').toDate()
+        //     }
+        //   },
+        //   {
+        //     _id: 2,
+        //     name: 'Avery Stewart',
+        //     picture: 'https://randomuser.me/api/portraits/thumb/women/1.jpg',
+        //     lastMessage: {
+        //       text: 'I should buy a boat',
+        //       timestamp: Moment().subtract(1, 'days').toDate()
+        //     }
+        //   },
+        //   {
+        //     _id: 3,
+        //     name: 'Katie Peterson',
+        //     picture: 'https://randomuser.me/api/portraits/thumb/women/2.jpg',
+        //     lastMessage: {
+        //       text: 'Look at my mukluks!',
+        //       timestamp: Moment().subtract(4, 'days').toDate()
+        //     }
+        //   },
+        //   {
+        //     _id: 4,
+        //     name: 'Ray Edwards',
+        //     picture: 'https://randomuser.me/api/portraits/thumb/men/2.jpg',
+        //     lastMessage: {
+        //       text: 'This is wicked good ice cream.',
+        //       timestamp: Moment().subtract(2, 'weeks').toDate()
+        //     }
+        //   }
+        // ];
+
+        Meteor.subscribe('Chats');
+
+        $scope.helpers({
+            chats: function () {
+                return Chats.find();
+            }
         });
     })
 
@@ -342,7 +406,7 @@ angular.module('app.controllers', [])
             // Check if already voted
             $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
-                    $scope.hasVoted = !!result;
+                    $scope.hasVoted = result;
                 },
                 function (err) {
                     console.log(err);
@@ -371,7 +435,7 @@ angular.module('app.controllers', [])
                 $meteor.call('putResponse', itemID, itemType, value).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = !!value;
+                        $scope.hasVoted = value;
                     },
                     function (err) {
                         console.log(err);
@@ -418,10 +482,6 @@ angular.module('app.controllers', [])
         $scope.openHero = function () {
             $scope.heromodal.show();
         };
-    })
-
-    .controller('pollsCtrl', function ($scope) {
-
     })
 
     .controller('settingsCtrl', function ($scope) {
@@ -478,7 +538,7 @@ angular.module('app.controllers', [])
             // Check if already voted
             $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
-                    $scope.hasVoted = !!result;
+                    $scope.hasVoted = result;
                 },
                 function (err) {
                     console.log(err);
@@ -507,7 +567,7 @@ angular.module('app.controllers', [])
                 $meteor.call('putResponse', itemID, itemType, value).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = !!value;
+                        $scope.hasVoted = value;
                     },
                     function (err) {
                         console.log(err);
