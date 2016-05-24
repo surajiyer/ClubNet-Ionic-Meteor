@@ -8,6 +8,7 @@ angular.module('app.controllers', [])
         }
     })
 
+
     .controller('profileCtrl', function ($scope, $meteor, $state) {
         $scope.temp_user = {
             email: '',
@@ -262,12 +263,48 @@ angular.module('app.controllers', [])
 
         Meteor.subscribe('Chats');
 
+
+
+
         $scope.helpers({
             chats: function () {
                 return Chats.find();
             }
         });
     })
+
+    .controller('chatCtrl', function ($scope, $state, $stateParams) {
+
+        Meteor.subscribe('Messages');
+
+        //Messages.insert({ name: "Test", picture: "https://randomuser.me/api/portraits/thumb/men/2.jpg", chatId: "zf5jab8eKzu6ptC6s" });
+        //Messages.find({ chatId: "zf5jab8eKzu6ptC6s" }).fetch();
+        /*
+          chats.forEach((chat) =&gt; {
+            const message = Messages.findOne({ chatId: { $exists: false } });
+            chat.lastMessage = message;
+            const chatId = Chats.insert(chat);
+            Messages.update(message._id, { $set: { chatId } });
+          });
+        */
+        //Messages.update({_id : "F3Mg9KMfPFYmoxRuj"}, {$set:{chatId : "zf5jab8eKzu6ptC6s"}});
+
+
+        var chatId = $stateParams.chatId;
+        console.log(chatId);
+     
+        $scope.helpers({
+            messages: function () {
+                return Messages.find({ chatId: chatId });
+            },
+            chat: function () {
+                return Chats.findOne(chatId);
+            }
+        });
+
+
+    })
+
 
     .controller('postCtrl', function ($scope, $ionicModal) {
         /* Post */

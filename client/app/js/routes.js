@@ -88,6 +88,16 @@ angular.module('app.routes', [])
                 }
             })
 
+            .state('menu.chat', {
+                url: '/chats/:chatId',
+                views: {
+                    'side-menu-content': {
+                    templateUrl: 'client/app/views/chat.ng.html',
+                    controller: 'chatCtrl'
+                }
+                }
+            })
+
             .state('menu.post', {
                 url: '/post/:itemID',
                 views: {

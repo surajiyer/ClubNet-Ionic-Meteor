@@ -1,3 +1,5 @@
+@import "app/css/chat.scss";
+
 .main-content {
     max-width: 480px;
     margin-left: auto;

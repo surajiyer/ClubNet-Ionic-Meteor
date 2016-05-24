@@ -8,7 +8,8 @@
         <ion-list>
             <ion-item ng-repeat="chat in chats | orderBy:'-lastMessage.timestamp'"
                       class="item-chat item-remove-animate item-avatar item-icon-right"
-                      type="item-text-wrap">
+                      type="item-text-wrap"
+                      ui-sref="menu.chat({chatId: chat._id})">
                 <img ng-src="{{ chat.picture }}">
                 <h2>{{ chat.name }}</h2>
                 <p>{{ chat.lastMessage.text }}</p>
@@ -18,3 +19,4 @@
         </ion-list>
     </ion-content>
 </ion-view>
+
