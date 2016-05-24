@@ -1,11 +1,10 @@
-//import {feedItemTypesSchema} from '/imports/schemas/feedItems';
+import {chats, chatSessions, messages} from '/imports/schemas/chats';
 
 Chats = new Mongo.Collection("Chats");
-//Messages = new Mongo.Collection("Messages");
+ChatSessions = new Mongo.Collection("ChatSessions");
+Messages = new Mongo.Collection("Messages");
 
 Meteor.startup(function () {
-    // TypesCollection.attachSchema(feedItemTypesSchema);
-
     Chats.deny({
         insert: function () {
             return false;
@@ -30,6 +29,10 @@ Meteor.startup(function () {
         }
     });
 
+    // Attach the schemas
+    Chats.attachSchema(chats);
+    ChatSessions.attachSchema(chatSessions);
+    Messages.attachSchema(messages);
 
     //if (Chats.find().count() !== 0) return;
 
@@ -57,7 +60,7 @@ Meteor.startup(function () {
     //   }
     // ];
 
-    // messages.forEach((m) =&gt; {
+    // messages.forEach((m) => {
     //   Messages.insert(m);
     // });
 
@@ -84,7 +87,7 @@ Meteor.startup(function () {
     //   }
     // ];
 
-    // chats.forEach((chat) =&gt; {
+    // chats.forEach((chat) => {
     //   // const message = Messages.findOne({ chatId: { $exists: false } });
     //   // chat.lastMessage = message;
     //      const chatId = Chats.insert(chat);
@@ -93,6 +96,10 @@ Meteor.startup(function () {
 });
 
 if (Meteor.isServer) {
+    Meteor.publish('Chats', function () {
+        return Chats.find({});
+    });
+
     Meteor.publish('Chats', function () {
         return Chats.find({});
     });

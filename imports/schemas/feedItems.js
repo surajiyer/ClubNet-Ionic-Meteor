@@ -84,6 +84,9 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
             if (this.value < new Date) return "invalidDeadline";
         }
     },
+    training_id: {
+        type: String
+    },
     exercises: {
         type: [exerciseSchema],
         minCount: 3,
