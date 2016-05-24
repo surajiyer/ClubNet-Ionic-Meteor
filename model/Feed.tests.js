@@ -136,7 +136,7 @@ if (Meteor.isServer) {
             
             // Valid input          
             try {
-                Meteor.call('putResponse', testItem._id, testItem.type, 0);
+                Meteor.call('putResponse', testItem._id, testItem.type, '0');
             } catch (err) {
                 assert.fail();
             }
