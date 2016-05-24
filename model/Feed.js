@@ -112,7 +112,8 @@ if (Meteor.isServer) {
         getResponse: function (itemID) {
             check(itemID, String);
             check(Meteor.userId(), String);
-            return result = Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0];
+            result = Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0]
+            if (result) return result;
             else return 0;
         },
         deleteResponse: function (itemID) {
