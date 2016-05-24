@@ -75,27 +75,22 @@ Meteor.startup(function () {
 if (Meteor.isServer) {
     Meteor.methods({
         addFeedItem: function (newItem) {
-            newItem.creatorID = this.userId;
+            newItem.creatorID = Meteor.userId();
             newItem.clubID = Meteor.user().profile.clubID;
-            check(newItem.type, Match.Where(isValidType));
-            check(newItem, feedItemSchemas[newItem.type]);
-            Items.insert(newItem);
+            check(newItem, Items.simpleSchema({type: newItem.type}));
+            return Items.insert(newItem);
         },
-        getFeedItemByCreatedAt: function (date) {
-            check(date, Date);
-            try {
-                return Items.find({createdAt: date}).fetch();
-            } catch (err) {
-                throw new Meteor.Error(err.message);
-            }
+        getFeedItem: function (id) {
+            check(id, String);
+            return result = Items.find({ _id : id}).fetch()[0];
         },
-        updateFeedItem: function (itemID, newInfo) {
-            check(itemID, String);
-            // TODO: fix checking newInfo
-            check(newInfo, Object);
+        updateFeedItem: function (updatedItem) {
+            id = updatedItem._id;
+            delete updatedItem._id;
+            check(updatedItem, Items.simpleSchema({type: updatedItem.type}));
             Items.update(
-                {_id: itemID},
-                {$set: newInfo}
+                {_id: id},
+                {$set: updatedItem}
             );
         },
         deleteFeedItem: function (itemID) {
@@ -116,9 +111,8 @@ if (Meteor.isServer) {
         },
         getResponse: function (itemID) {
             check(itemID, String);
-            check(this.userId, String);
-            var response = Responses.find({itemID: itemID, userID: this.userId}).fetch()[0];
-            if (response) return response.value;
+            check(Meteor.userId(), String);
+            return result = Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0];
             else return 0;
         },
         deleteResponse: function (itemID) {
@@ -132,10 +126,16 @@ if (Meteor.isServer) {
         },
         putResponse: function (itemID, itemType, value) {
             check(itemID, String);
-            check(this.userId, String);
-            check(itemType, Match.Where(isValidType));
-            check(value, String);
-            Responses.insert({itemID: itemID, userID: this.userId, itemType: itemType, value: value});
+            check(itemType, String);
+            check(value, Number);
+            response = {
+                userID: Meteor.userId(),
+                itemID: itemID,
+                itemType: itemType,
+                value: value
+            }
+            check(response, Responses.simpleSchema({itemType: itemType}));
+            return Responses.insert(response);
         },
         getVotingResults: function (itemID) {
             check(itemID, String);
