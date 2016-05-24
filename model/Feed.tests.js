@@ -70,7 +70,7 @@ if (Meteor.isServer) {
         it("Get FeedItem Type", (done) => {
             // Get item type with wrong parameter
             try {
-                Meteor.call('getFeedItem', false);
+                Meteor.call('getFeedItemType', false);
                 assert.fail();
             } catch (err) {}
             
@@ -97,6 +97,12 @@ if (Meteor.isServer) {
             };
             assert(newTestItem.clubID != testItem.clubID);
             
+            // Update item with wrong parameter
+            try {
+                Meteor.call('updateFeedItem', false);
+                assert.fail();
+            } catch (err) {}
+            
             // Update testItem to newTestItem
             try {
                 Meteor.call('updateFeedItem', newTestItem);
@@ -105,7 +111,6 @@ if (Meteor.isServer) {
                 testItem = newTestItem;
                 done();
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
             
@@ -118,13 +123,13 @@ if (Meteor.isServer) {
             
             // Invalid id            
             try {
-                Meteor.call('putResponse', false, testItem.type, 0);
+                Meteor.call('putResponse', false, testItem.type, '0');
                 assert.fail();
             } catch (err) {}
             
             // Invalid id type          
             try {
-                Meteor.call('putResponse', testItem._id, false, 0);
+                Meteor.call('putResponse', testItem._id, false, '0');
                 assert.fail();
             } catch (err) {}
             
@@ -213,7 +218,6 @@ if (Meteor.isServer) {
                 result = Meteor.call('getResponsesOfItemType', testItem.type);
                 assert(result.length == 1);
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
             
@@ -275,7 +279,6 @@ if (Meteor.isServer) {
                 result = Meteor.call('deleteResponse', testItem._id);
                 done();
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
         });
