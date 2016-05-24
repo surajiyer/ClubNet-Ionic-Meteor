@@ -15,6 +15,17 @@
                     <option value="laundry" selected>Laundry</option>
                     <option value="driving">Driving</option>
                     <option value="presence">Presence</option>
+                    <option value="other">Other</option>
+                </select>
+            </label>
+            <label class="item item-input item-select">
+                <span class="input-label">
+                    Repeat interval:
+                </span>
+                <select ng-model="newForm.repeatInterval">
+                    <option value="daily" selected>Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
                 </select>
             </label>
             <label class="item item-input item-floating-label">
@@ -26,18 +37,11 @@
                 <input ng-model="newForm.description" type="text" placeholder="Description">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Repeat interval:</span>
-                <input ng-model="newForm.repeatInterval" type="number" placeholder="Repeat interval">
-            </label>
-            <label class="item item-input item-floating-label">
                 <span class="input-label">Target value:</span>
                 <input ng-model="newForm.targetValue" type="number" placeholder="Target value">
             </label>
-            <label class="">
-                <span class="input-label">Sticky?</span>
-                <input type="checkbox" ng-model="newForm.sticky">
-            </label>
-            <button ng-disabled="!newForm.target && !newForm.targetValue" ng-click="form()" class="button button-block button-positive">
+            <ion-checkbox ng-model="newForm.sticky">Sticky?</ion-checkbox>
+            <button ng-disabled="!newForm.target && !newForm.title" ng-click="form()" class="button button-block button-positive">
                 Post
             </button>
         </div>

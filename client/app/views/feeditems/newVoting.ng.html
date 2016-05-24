@@ -13,7 +13,7 @@
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Deadline</span>
-                <input ng-model="newVoting.deadline" type="date">
+                <input ng-model="newVoting.deadline" type="date" min="{{getCurrentDateISO()}}">
             </label>
             <!--<label class="item item-input item-floating-label">-->
                 <!--<span class="input-label">Description</span>-->

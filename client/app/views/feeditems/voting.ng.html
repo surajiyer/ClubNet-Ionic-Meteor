@@ -36,7 +36,7 @@
     <img src="http://placehold.it/300x300" class="image-placeholder" alt="" width="100%"/>
     <div class="col text-right">
         <button class="button button-outline button-positive"
-                ng-click="vote(item._id, item.type, item.selectedValue)"
+                ng-click="vote(item.selectedValue)"
                 ng-disabled="hasVoted != 0">
             {{hasVoted ? 'Already voted' : 'Vote!'}}
         </button>

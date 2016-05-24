@@ -126,7 +126,7 @@ if (Meteor.isServer) {
         putResponse: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
-            check(value, Number);
+            check(value, String);
             response = {
                 userID: Meteor.userId(),
                 itemID: itemID,

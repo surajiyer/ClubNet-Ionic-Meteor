@@ -6,7 +6,7 @@ baseResponseSchema = new SimpleSchema({
     userID: {type: String},
     itemID: {type: String},
     itemType: {type: String},
-    value: {type: Number}
+    value: {type: String}
 });
 
 /**
@@ -19,7 +19,7 @@ bettingResponseSchema = new SimpleSchema({
     bets: {type: [String], allowedValues: ["win", "lose", "tie", "none"]}
 });
 
-export {baseResponseSchema};
+//export {baseResponseSchema};
 export default responseSchemas = {
     'Voting': baseResponseSchema,
     'Form': baseResponseSchema,

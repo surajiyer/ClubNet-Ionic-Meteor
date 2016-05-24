@@ -1,5 +1,3 @@
-import Moment from 'moment';
-
 angular.module('app.controllers', [])
 
     .controller('ItemCtrl', function ($scope) {
@@ -73,7 +71,7 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('forgotPasswordCtrl', function ($scope) {
+    .controller('forgotPasswordCtrl', function ($scope, $meteor, $state, $ionicHistory) {
         $scope.forgotUser = {
             email: '',
             token: '',
@@ -163,6 +161,9 @@ angular.module('app.controllers', [])
             console.log("poep");
         };
 
+        $scope.getCurrentDateISO = function(){
+            return new Date().toISOString().substring(0, 10);
+        }
 
         // Subscribe to the feed
         // $scope.subscribe('Feed', function(){
@@ -341,7 +342,6 @@ angular.module('app.controllers', [])
             $scope.newForm.type = 'Form';
             $scope.newForm.published = true;
             $scope.newForm.createdAt = new Date;
-            $scope.newForm.raised = '0';
             $scope.newForm.locked = false;
             $scope.newForm.teamID = Meteor.user().profile.teamID;
             Meteor.call('addFeedItem', $scope.newForm);
@@ -362,6 +362,52 @@ angular.module('app.controllers', [])
         $scope.openForm = function () {
             $scope.formModal.show();
         };
+
+        $scope.showAlert = function() {
+            var alertPopup = $ionicPopup.alert({
+                template: 'Please select target value'
+            });
+        };
+
+        // Check if user has contributed to this item when initialising
+        if ($scope.item != null) {
+            $scope.item.hasContributed = false;
+            $meteor.call('getResponse', $scope.item._id).then(
+                function (result) {
+                    if (result != null) {
+                        $scope.item.hasContributed = result;
+                    }
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+        }
+
+        $scope.signUp = function (value) {
+            if (value) {
+                $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
+                    function (result) {
+                        $scope.item.hasContributed = !!value;
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
+            }
+
+        };
+
+        $scope.withdrawContribution = function () {
+            $meteor.call('deleteResponse', $scope.item._id).then(
+                function(result){
+                    $scope.item.hasContributed = false;
+                },
+                function(err){
+                    console.log(err);
+                }
+            );
+        }
     })
 
     .controller('votingCtrl', function ($scope, $ionicModal, $meteor) {
@@ -441,14 +487,14 @@ angular.module('app.controllers', [])
             );
 
             // Check if already voted
-            $meteor.call('getResponse', $scope.item._id).then(
-                function (result) {
-                    $scope.hasVoted = result;
-                },
-                function (err) {
-                    console.log(err);
-                }
-            );
+                $meteor.call('getResponse', $scope.item._id).then(
+                    function (result) {
+                        $scope.hasVoted = !!result;
+                    },
+                    function (err) {
+                        console.log(err);
+                    }
+                );
 
             // Load results chart
             $scope.chartValues = [[0, 0, 0]];
@@ -467,12 +513,12 @@ angular.module('app.controllers', [])
             parent_div.children(".image-placeholder").attr("src", elem.children("img").attr("src"));
         };
 
-        $scope.vote = function (itemID, itemType, value) {
+        $scope.vote = function (value) {
             if (value) {
-                $meteor.call('putResponse', itemID, itemType, value).then(
+                $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = value;
+                        $scope.hasVoted = !!value;
                     },
                     function (err) {
                         console.log(err);
@@ -501,7 +547,12 @@ angular.module('app.controllers', [])
         $scope.hero = function () {
             $scope.newHero.type = 'Heroes';
             $scope.newHero.createdAt = new Date;
-            Items.insert($scope.newHero);
+            $scope.newHero.image = 'http://www.placehold.it/300x300';
+            $scope.newHero.published = true;
+            Meteor.call('addFeedItem', $scope.newHero, function (err) {
+                // TODO: do something with error (show as popup?)
+                if (err) console.log(err);
+            });
             $scope.newHero = {};
             $scope.closeHero();
         };
@@ -575,7 +626,7 @@ angular.module('app.controllers', [])
             // Check if already voted
             $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
-                    $scope.hasVoted = result;
+                    $scope.hasVoted = !!result;
                 },
                 function (err) {
                     console.log(err);
@@ -604,7 +655,7 @@ angular.module('app.controllers', [])
                 $meteor.call('putResponse', itemID, itemType, value).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = value;
+                        $scope.hasVoted = !!value;
                     },
                     function (err) {
                         console.log(err);
