@@ -334,7 +334,7 @@ angular.module('app.controllers', [])
         };
     })
 
-    .controller('formCtrl', function ($scope, $ionicModal, $meteor) {
+    .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup) {
         /* Practicality*/
         $scope.newForm = {};
 
@@ -365,7 +365,7 @@ angular.module('app.controllers', [])
 
         $scope.showAlert = function() {
             var alertPopup = $ionicPopup.alert({
-                template: 'Please select target value'
+                title: 'Please select target value'
             });
         };
 

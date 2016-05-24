@@ -32,7 +32,7 @@
 <div class="item item-body">
         <button class="button button-outline button-balanced"
                 ng-if="item.hasContributed == false && (item.target == 'driving' || item.target == 'other')"
-                ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : $scope.showAlert()">
+                ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
             Contribute
         </button>
     <button class="button button-outline button-balanced"
