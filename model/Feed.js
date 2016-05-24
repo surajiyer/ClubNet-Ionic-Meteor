@@ -138,10 +138,10 @@ if (Meteor.isServer) {
         },
         getVotingResults: function (itemID) {
             check(itemID, String);
-            votes = Responses.find({itemID: itemID});
+            votes = Responses.find({itemID: itemID}).fetch();
             result = [[0, 0, 0]];
             votes.forEach(function (vote) {
-                result[0][vote.value - 1]++;
+                result[0][Number(vote.value)]++;
             });
             return result;
         }
