@@ -96,6 +96,9 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         minCount: 3,
         maxCount: 3
     },
+    training_id: {
+        type: String
+    },
     intermediatePublic: {
         type: Boolean,
         optional: true,

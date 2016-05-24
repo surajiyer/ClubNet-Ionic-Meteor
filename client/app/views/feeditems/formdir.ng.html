@@ -1,6 +1,6 @@
-<div class="item item-divider">
-    {{item.type}} / {{item.title}}
-    <i class="fa fa-expand" ui-sref="menu.formdir({itemID: item._id})" id="icon-expand" aria-hidden="true"></i>
+<div class="item item-divider" ng-controller="controlItemCtrl">
+    {{item.type}}
+    <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" aria-hidden="true"></i>
 </div>
 <div class="item item-body">
     <p>
