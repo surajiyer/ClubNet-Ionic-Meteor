@@ -7,7 +7,8 @@ Meteor.startup(function () {
 
     TypesCollection.deny({
         insert: function () {
-            return true;
+            // Enable in case of testing for feed item tests
+            return !Meteor.isTest;
         },
         update: function () {
             return true;
@@ -32,3 +33,5 @@ if (Meteor.isServer) {
         }
     });
 }
+
+export { TypesCollection }

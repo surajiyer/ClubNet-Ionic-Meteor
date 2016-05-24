@@ -221,7 +221,7 @@ const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema, {
     suggestion: {type: String}
 }]);
 
-export {feedItemTypesSchema};
+export {baseFeedItemSchema};
 
 export default feedItemSchemas = {
     'Voting': votingPollSchema,
