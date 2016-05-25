@@ -33,5 +33,3 @@ if (Meteor.isServer) {
         }
     });
 }
-
-export { TypesCollection }

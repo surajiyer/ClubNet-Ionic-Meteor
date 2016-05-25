@@ -24,6 +24,7 @@ const UserProfile = new SimpleSchema({
         type: String,
         optional: true,
         custom: function () {
+            if(!this.value) return;
             var shouldBeRequired = this.siblingField('type').value == 'coach'
                 || this.siblingField('type').value == 'player';
             if (shouldBeRequired) {
@@ -47,6 +48,7 @@ const UserProfile = new SimpleSchema({
         type: [notesSchema],
         optional: true,
         custom: function () {
+            if(!this.value) return;
             var shouldBeRequired = this.siblingField('type').value == 'coach';
             if (shouldBeRequired) {
                 // updates

@@ -2,7 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { Random } from 'meteor/random';
 import { assert } from 'meteor/practicalmeteor:chai';
 
-import { TypesCollection } from './ItemTypes.js';
+import './ItemTypes.js';
 
 if (Meteor.isServer) {
     describe('TypesCollection', () => {
