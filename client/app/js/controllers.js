@@ -215,7 +215,7 @@ angular.module('app.controllers', [])
 
         $scope.helpers({
             chats: function () {
-                return Chats.find({ chatId: chatId });
+                return Chats.find({});
             }
         });
     })
@@ -248,6 +248,23 @@ angular.module('app.controllers', [])
                 return Chats.findOne(chatId);
             }
         });
+
+
+             // $scope.sendMessage = function () {
+             //    if (_.isEmpty(this.message)) return;
+
+             //    $scope.callMethod('newMessage', {
+             //      text: this.message,
+             //      type: 'text',
+             //      chatId: this.chatId
+             //    });
+             
+             //    //delete this.message;
+             //  };
+
+
+
+       
 
 
     })
