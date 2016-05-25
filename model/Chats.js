@@ -2,7 +2,7 @@ import {chats, chatSessions, messages} from '/imports/schemas/chats';
 
 Chats = new Mongo.Collection("Chats");
 ChatSessions = new Mongo.Collection("ChatSessions");
-Messages = new Mongo.Collection("Messages");
+
 
 Meteor.startup(function () {
     Chats.deny({
