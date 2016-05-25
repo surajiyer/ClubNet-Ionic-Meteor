@@ -100,9 +100,6 @@ if (Meteor.isServer) {
         return Chats.find({});
     });
 
-    Meteor.publish('Chats', function () {
-        return Chats.find({});
-    });
 
     Meteor.methods({
         getChats: function () {
