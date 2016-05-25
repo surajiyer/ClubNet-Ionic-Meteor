@@ -1,4 +1,4 @@
-angular.module('web.controllers', [])
+angular.module('web.controllers', ['ui.bootstrap'])
     .controller('mainCtrl', function ($scope, $meteor, $state) {
         $scope.logout = function () {
             $meteor.logout();
@@ -74,18 +74,7 @@ angular.module('web.controllers', [])
 
     ///***************************accountMangementCtrl**************************************//
 
-    .controller('accountManagementCtrl', function ($scope, $meteor, $state) {
-        // $scope.temp_user = {
-        //     email: '',
-        //     fullName: ''
-        // };
-
-        // $scope.temp_pass = {
-        //     oldPass: '',
-        //     newPass: '',
-        //     newPassCheck: ''
-        // };
-
+    .controller('accountManagementCtrl', function ($scope, $modal, $log, $meteor, $state) {
 
         $scope.subscribe('userData');
 
@@ -94,4 +83,54 @@ angular.module('web.controllers', [])
                 return Meteor.users.find();
             }
         });
+
+        $scope.deleteAccount = function(user) {
+            Meteor.users.remove(user._id);
+        };
+
+        $scope.items = ['item1', 'item2', 'item3'];
+
+        $scope.animationsEnabled = true;
+
+        $scope.open = function (size) {
+
+            var modalInstance = $modal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'client/web/views/deleteAccountModal.ng.html',
+                controller: 'ModalInstanceCtrl',
+                size: size,
+                resolve: {
+                    items: function () {
+                        return $scope.items;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (selectedItem) {
+                $scope.selected = selectedItem;
+            }, function () {
+                $log.info('Modal dismissed at: ' + new Date());
+            });
+        };
+
+        $scope.toggleAnimation = function () {
+            $scope.animationsEnabled = !$scope.animationsEnabled;
+        };
+    })
+
+    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+
+        $scope.items = items;
+        $scope.selected = {
+            item: $scope.items[0]
+        };
+
+        $scope.ok = function () {
+            $modalInstance.close($scope.selected.item);
+        };
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+            deleteAccount(user);
+        };
     });
