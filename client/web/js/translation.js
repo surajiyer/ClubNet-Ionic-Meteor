@@ -6,7 +6,7 @@ angular.module('web.translation', ['pascalprecht.translate'])
 
         $translateProvider.translations('nl', translations.nl);
         $translateProvider.translations('en', translations.en);
-        $translateProvider.preferredLanguage('nl');
+        $translateProvider.preferredLanguage('en');
     }])
 
     .constant('translations', function () {

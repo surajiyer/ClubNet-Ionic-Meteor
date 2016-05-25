@@ -1,6 +1,10 @@
-<h1>{{ 'Add user' | translate }}</h1>
+<div class="header">
+    <h1>{{ 'Add user' | translate }}</h1>
+    <h2>{{ 'Add a club member to the ClubNet system' | translate }}</h2>
+</div>
 
-<div class="container">
+<div class="content">
+    <h2 class="content-subhead"></h2>
     <form g-submit="addAccount()">
         <div class="form-group">
             <label for="firstName">{{ 'First name' | translate }}</label>
@@ -14,11 +18,6 @@
             <label for="email">{{ 'Email address' | translate }}</label>
             <input type="email" class="form-control" id="email" placeholder="{{ 'Email address' | translate }}" ng-model="temp_account.email">
         </div>
-        <div class="form-group">
-            <label for="password">{{ 'Password' | translate }}</label>
-            <input type="password" class="form-control" id="password" placeholder="{{ 'Password' | translate }}" ng-model="temp_account.password">
-        </div>
-
 
         <label class="item item-input item-select">
             <div class="input-label" ng-model="temp_account.playerTeam">
@@ -48,5 +47,4 @@
 
 
     </form>
-
 </div>
