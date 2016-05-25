@@ -8,15 +8,15 @@
     <form g-submit="addAccount()">
         <div class="form-group">
             <label for="firstName">{{ 'First name' | translate }}</label>
-            <input type="text" class="form-control" id="firstName" placeholder="{{ 'First name' | translate }}" ng-model="temp_account.firstName">
+            <input type="text" class="form-control" id="firstName" placeholder="{{ 'First name' | translate }}" ng-model="user.firstName">
         </div>
         <div class="form-group">
             <label for="lastName">{{ 'Last name' | translate }}</label>
-            <input type="text" class="form-control" id="lastName" placeholder="{{ 'Last name' | translate }}" ng-model="temp_account.lastName">
+            <input type="text" class="form-control" id="lastName" placeholder="{{ 'Last name' | translate }}" ng-model="user.lastName">
         </div>
         <div class="form-group">
             <label for="email">{{ 'Email address' | translate }}</label>
-            <input type="email" class="form-control" id="email" placeholder="{{ 'Email address' | translate }}" ng-model="temp_account.email">
+            <input type="email" class="form-control" id="email" placeholder="{{ 'Email address' | translate }}" ng-model="user.email">
         </div>
 
         <label class="item item-input item-select">
@@ -24,23 +24,14 @@
                 Team
             </div>
             <select>
-                <option>C1</option>
-                <option selected>F1</option>
+                <option selected>None</option>
                 <option>A1</option>
+                <option>A2</option>
+                <option>A3</option>
+                <option>A4</option>
+                <option>A5</option>
             </select>
         </label>
-
-        <div class="form-group" style="padding-left: 35px;">
-            <label class="radio	">
-                <input type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">{{ 'Player' | translate }}
-            </label>
-            <label class="radio">
-                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">{{ 'Coach' | translate }}
-            </label>
-            <label class="radio">
-                <input type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">{{ 'Public Relations manager' | translate }}
-            </label>
-        </div>
 
         <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">{{ 'Add user' | translate }}</a>
 

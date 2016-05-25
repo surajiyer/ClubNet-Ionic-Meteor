@@ -24,6 +24,7 @@ const UserProfile = new SimpleSchema({
         type: String,
         optional: true,
         custom: function () {
+            if(!this.value) return;
             var shouldBeRequired = this.siblingField('type').value == 'coach'
                 || this.siblingField('type').value == 'player';
             if (shouldBeRequired) {
@@ -39,7 +40,7 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$rename") return "required";
                 }
             } else {
-                return "notAllowed";
+                return 'notAllowed';
             }
         }
     },
@@ -55,8 +56,6 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$unset") return "required";
                     if (this.operator === "$rename") return "required";
                 }
-            } else {
-                return "notAllowed";
             }
         }
     }

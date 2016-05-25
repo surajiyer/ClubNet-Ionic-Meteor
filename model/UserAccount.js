@@ -43,49 +43,51 @@ Meteor.startup(function () {
     Meteor.users.attachSchema(userSchema);
 });
 
-Meteor.methods({
-    addUser: function (newUser) {
-        check(newUser, {
-            email: String,
-            password: String,
-            profile: userProfileSchema
-        });
-        var userID = Accounts.createUser(newUser);
-        return userID;
-    },
-    updateUserProfile: function (newInfo) {
-        // TODO: should not check full user profile schema for update
-        check(newInfo, userProfileSchema);
-        Meteor.users.update(
-            {_id: this.userId},
-            {$set: {profile: newInfo}}
-        );
-    },
-    getUserInfo: function (userID) {
-        check(userID, String);
-        check(this.userId, Match.Where(isAdmin));
-        return Meteor.users.find({_id: userID}).fetch();
-    },
-    getUserType: function () {
-        check(this.userId, String);
-        //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
-        return Meteor.user().profile.type;
-    },
-    addNote: function (newNote) {
-        check(newNote, notesSchema);
-        Meteor.users.update(
-            {_id: this.userId},
-            {$push: {'notes': newNote}}
-        );
-    },
-    updateNote: function (newNote) {
-        check(newNote, notesSchema);
-        Meteor.users.update(
-            {
-                _id: this.userId,
-                notes: {$elemMatch: {itemID: newNote.itemID}}
-            },
-            {$set: {"notes.$.text": newNote.text}}
-        );
-    },
-});
+if(Meteor.isServer) {
+    Meteor.methods({
+        addUser: function (newUser) {
+            check(newUser, {
+                email: String,
+                password: String,
+                profile: userProfileSchema
+            });
+            var userID = Accounts.createUser(newUser);
+            return userID;
+        },
+        updateUserProfile: function (newInfo) {
+            // TODO: should not check full user profile schema for update
+            check(newInfo, userProfileSchema);
+            Meteor.users.update(
+                {_id: this.userId},
+                {$set: {profile: newInfo}}
+            );
+        },
+        getUserInfo: function (userID) {
+            check(userID, String);
+            check(this.userId, Match.Where(isAdmin));
+            return Meteor.users.find({_id: userID}).fetch();
+        },
+        getUserType: function () {
+            check(this.userId, String);
+            //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
+            return Meteor.user().profile.type;
+        },
+        addNote: function (newNote) {
+            check(newNote, notesSchema);
+            Meteor.users.update(
+                {_id: this.userId},
+                {$push: {'notes': newNote}}
+            );
+        },
+        updateNote: function (newNote) {
+            check(newNote, notesSchema);
+            Meteor.users.update(
+                {
+                    _id: this.userId,
+                    notes: {$elemMatch: {itemID: newNote.itemID}}
+                },
+                {$set: {"notes.$.text": newNote.text}}
+            );
+        },
+    });
+}
