@@ -1,6 +1,6 @@
-<div class="item item-divider">
-    {{item.type}} / {{item.title}}
-    <i class="fa fa-expand" ui-sref="menu.formdir({itemID: item._id})" id="icon-expand" aria-hidden="true"></i>
+<div class="item item-divider" ng-controller="controlItemCtrl">
+    {{item.type}}
+    <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" aria-hidden="true"></i>
 </div>
 <div class="item item-body">
     <p>
@@ -8,30 +8,41 @@
     </p>
 </div>
 <div class="item item-body" ng-switch="item.formType">
-        We need {{(item.targetValue - item.raised) | number}}! <br/>
-        Already registered: {{item.raised | number}}
+        We need {{(item.targetValue - item.raisedValue) | number}}! <br/>
+        Already registered: {{item.raisedValue | number}}
 </div>
-<label class="item item-input item-select">
-    <div class="input-label">
-        Number of seats:
-    </div>
-    <select>
-        <option value="1">1</option>
-        <option value="2">2</option>
-        <option value="3" selected>3</option>
-        <option value="4">4</option>
-        <option value="5">5</option>
-        <option value="6">6</option>
-        <option value="7">7</option>
-    </select>
-</label>
+<div ng-init="item.currentContribution = '-1'">
+    <label class="item item-input item-select"
+           ng-if="(item.target == 'driving' || item.target == 'other') && item.hasContributed == false" >
+        <div class="input-label">
+            Contribution:
+        </div>
+        <select ng-model="item.currentContribution">
+            <option value="0">Please select value</option>
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+            <option value="4">4</option>
+            <option value="5">5</option>
+            <option value="6">6</option>
+            <option value="7">7</option>
+        </select>
+    </label>
+</div>
 <div class="item item-body">
-    <p>
-        <button class="button button-outline button-balanced" ng-click="signUp()">
-            Accept
+        <button class="button button-outline button-balanced"
+                ng-if="item.hasContributed == false && (item.target == 'driving' || item.target == 'other')"
+                ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
+            Contribute
         </button>
-        <button class="button button-outline button-assertive" ng-click="refuse()">
-            Refuse
+    <button class="button button-outline button-balanced"
+            ng-if="item.hasContributed == false && (item.target == 'laundry' || item.target == 'presence')"
+            ng-click="signUp(item.currentContribution)">
+        Contribute
+    </button>
+        <button class="button button-outline button-assertive"
+                ng-if="item.hasContributed != false"
+                ng-click="withdrawContribution()">
+            Withdraw your contribution
         </button>
-    </p>
 </div>

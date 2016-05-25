@@ -112,23 +112,21 @@ if (Meteor.isServer) {
         getResponse: function (itemID) {
             check(itemID, String);
             check(Meteor.userId(), String);
-            result = Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0]
-            if (result) return result;
-            else return 0;
+            return Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0];
         },
         deleteResponse: function (itemID) {
             check(itemID, String);
-            check(this.userId, String);
-            Responses.remove({itemID: itemID, userID: this.userId});
+            check(Meteor.userId(), String);
+            Responses.remove({itemID: itemID, userID: Meteor.userId()});
         },
         getResponsesOfItemType: function (itemType) {
-            check(itemType, Match.Where(isValidType));
+            check(itemType, String);
             return Responses.find({itemType: itemType}).fetch();
         },
         putResponse: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
-            check(value, Number);
+            check(value, String);
             response = {
                 userID: Meteor.userId(),
                 itemID: itemID,
@@ -140,12 +138,12 @@ if (Meteor.isServer) {
         },
         getVotingResults: function (itemID) {
             check(itemID, String);
-            votes = Responses.find({itemID: itemID});
+            votes = Responses.find({itemID: itemID}).fetch();
             result = [[0, 0, 0]];
             votes.forEach(function (vote) {
-                result[0][vote.value - 1]++;
+                result[0][Number(vote.value)]++;
             });
             return result;
-        },
+        }
     })
 }

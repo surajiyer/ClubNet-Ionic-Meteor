@@ -6,7 +6,7 @@ baseResponseSchema = new SimpleSchema({
     userID: {type: String},
     itemID: {type: String},
     itemType: {type: String},
-    value: {type: Number}
+    value: {type: String}
 });
 
 /**

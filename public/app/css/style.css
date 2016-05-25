@@ -139,8 +139,8 @@ p.decision {
 }
 
 #icon-expand {
-    float:      right !important; 
-    margin-top: 4px !important;
+    float:      right !important;
+    font-size: 20px;
 }
 
 .image-placeholder-div {
@@ -186,13 +186,10 @@ form.list {
     padding-right: 16px;
 }
 
-
-.item-chat {
-  .last-message-timestamp {
+.item-chat .last-message-timestamp {
     position: absolute;
     top: 16px;
     right: 38px;
     font-size: 14px;
     color: #9A9898;
-  }
 }

@@ -1,0 +1,43 @@
+[{
+	"training1": {
+		"trId": "WzhG8DaJnnjr9zkw7",
+		"date": "2016-03-23T00:00:00.000Z",
+		"exercises": [{
+			"exId": "a01",
+			"item": "Koningskoppel",
+			"description": "Afwerken op doel vanuit een voorzet.",
+			"matchtypes": ["individual", "pairs", "left-vs-right"]
+		}, {
+			"exId": "a02",
+			"item": "Zestienmeterkogels",
+			"description": "Afwerken op doel vanuit een pass uit het zestienmetergebied.",
+			"matchtypes": ["individual", "pairs", "left-vs-right"]
+		}, {
+			"exId": "a03",
+			"item": "Inspelen-kaatsen-afwerken",
+			"description": "Afwerken op doel vanuit een pass uit het zestienmetergebied.",
+			"matchtypes": ["individual"]
+		}]
+	}
+}, {
+	"training2": {
+		"trId": "eToCn46ZEfsgsFxXh",
+		"date": "2016-04-18T00:00:00.000Z",
+		"exercises": [{
+			"exId": "pt01",
+			"item": "Pass- en trapvorm met loopvorm",
+			"description": "Korte combinaties op snelheid om de balaanname en kaatstechniek te oefenen.",
+			"matchtypes": []
+		}, {
+			"exId": "pt02",
+			"item": "Pass- en trapvorm met één-twee-combinaties en dribbelen ",
+			"description": "Afwisseling van pass- en loopmomenten als uitbreiding van de warming-up.",
+			"matchtypes": []
+		}, {
+			"exId": "p01",
+			"item": "Positiespel met overtal",
+			"description": "Positiespel met twee teams en vier kaatsers die meespelen met de balbezittende partij.",
+			"matchtypes": ["team"]
+		}]
+	}
+}]

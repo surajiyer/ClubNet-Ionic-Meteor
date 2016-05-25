@@ -29,11 +29,18 @@ const baseFeedItemSchema = new SimpleSchema({
     sticky: {
         type: Boolean,
         optional: true,
-        defaultValue: false
+        autoValue: function(){
+            if (this.isInsert) {
+                return false;
+            }
+        }
     },
     clubID: {
         type: String,
         denyUpdate: true
+    },
+    published: {
+        type: Boolean
     },
     published: {
         type: Boolean,
@@ -84,10 +91,16 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
             if (this.value < new Date) return "invalidDeadline";
         }
     },
+    training_id: {
+        type: String
+    },
     exercises: {
         type: [exerciseSchema],
         minCount: 3,
         maxCount: 3
+    },
+    training_id: {
+        type: String
     },
     intermediatePublic: {
         type: Boolean,
@@ -158,11 +171,11 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
     },
     raisedValue: {
         type: Number,
-        min: 0,
         optional: true,
+        min: 0,
         autoValue: function() {
-            if(this.isInser)
-                return 0
+            if (this.isInsert)
+                return 0;
         }
     },
     locked: {
@@ -233,6 +246,7 @@ const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema, {
 }]);
 
 export {baseFeedItemSchema};
+export {feedItemTypesSchema};
 
 export default feedItemSchemas = {
     'Voting': votingPollSchema,

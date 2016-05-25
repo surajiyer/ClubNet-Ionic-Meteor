@@ -7,13 +7,22 @@
     </ion-header-bar>
     <ion-content>
         <div class="list">
+            <label class="item item-input item-select">
+                <div class="input-label">
+                    Training
+                </div>
+                <select ng-model="newVoting.training_id">
+                    <option value="">Select a training</option>
+                    <option ng-repeat="training in trainings" value="{{training.trId}}">{{training.date | date:'MM/dd/yyyy @ h:mma' }}</option>
+                </select>
+            </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Title</span>
                 <input ng-model="newVoting.title" type="text" placeholder="Title">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Deadline</span>
-                <input ng-model="newVoting.deadline" type="date">
+                <input ng-model="newVoting.deadline" type="date" min="{{getCurrentDateISO()}}">
             </label>
             <!--<label class="item item-input item-floating-label">-->
                 <!--<span class="input-label">Description</span>-->
