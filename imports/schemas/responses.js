@@ -19,7 +19,7 @@ bettingResponseSchema = new SimpleSchema([baseResponseSchema, {
     value: {type: [String], allowedValues: ["win", "lose", "tie", "none"]}
 }]);
 
-//export {baseResponseSchema};
+export {baseResponseSchema};
 export default responseSchemas = {
     'Voting': baseResponseSchema,
     'Form': baseResponseSchema,

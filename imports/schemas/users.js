@@ -40,7 +40,7 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$rename") return "required";
                 }
             } else {
-                return "notAllowed";
+                return 'notAllowed';
             }
         }
     },
@@ -57,8 +57,6 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$unset") return "required";
                     if (this.operator === "$rename") return "required";
                 }
-            } else {
-                return "notAllowed";
             }
         }
     }

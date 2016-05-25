@@ -7,7 +7,7 @@ import { baseResponseSchema } from '/imports/schemas/responses';
 import './Feed.js'
 
 if (Meteor.isServer) {
-    
+    userId = '1'
     describe('FeedItems', () => {
 
         it("Add FeedItem", (done) => {
@@ -17,7 +17,7 @@ if (Meteor.isServer) {
                 user: sinon.stub().returns({
                     profile : { clubID : '-'}
                 }),
-                userId: sinon.stub().returns('-')
+                userId: sinon.stub().returns(userId)
             };
             
             // Add schema to Items
@@ -70,7 +70,7 @@ if (Meteor.isServer) {
         it("Get FeedItem Type", (done) => {
             // Get item type with wrong parameter
             try {
-                Meteor.call('getFeedItem', false);
+                Meteor.call('getFeedItemType', false);
                 assert.fail();
             } catch (err) {}
             
@@ -97,6 +97,12 @@ if (Meteor.isServer) {
             };
             assert(newTestItem.clubID != testItem.clubID);
             
+            // Update item with wrong parameter
+            try {
+                Meteor.call('updateFeedItem', false);
+                assert.fail();
+            } catch (err) {}
+            
             // Update testItem to newTestItem
             try {
                 Meteor.call('updateFeedItem', newTestItem);
@@ -105,7 +111,6 @@ if (Meteor.isServer) {
                 testItem = newTestItem;
                 done();
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
             
@@ -118,13 +123,13 @@ if (Meteor.isServer) {
             
             // Invalid id            
             try {
-                Meteor.call('putResponse', false, testItem.type, 0);
+                Meteor.call('putResponse', false, testItem.type, '0');
                 assert.fail();
             } catch (err) {}
             
             // Invalid id type          
             try {
-                Meteor.call('putResponse', testItem._id, false, 0);
+                Meteor.call('putResponse', testItem._id, false, '0');
                 assert.fail();
             } catch (err) {}
             
@@ -136,7 +141,7 @@ if (Meteor.isServer) {
             
             // Valid input          
             try {
-                Meteor.call('putResponse', testItem._id, testItem.type, 0);
+                Meteor.call('putResponse', testItem._id, testItem.type, '0');
             } catch (err) {
                 assert.fail();
             }
@@ -217,6 +222,48 @@ if (Meteor.isServer) {
             }
             
             done();
+        });
+        
+        it("Get Voting Results", (done) => {
+            
+            // Get results with wrong parameter
+            try {
+                Meteor.call('getVotingResults', false);
+                console.log('false value');
+            } catch (err) {}
+            
+            // Get results of item added in the previous test
+            try {
+                result = Meteor.call('getVotingResults', testItem._id);
+                assert(result[0].length == 3);
+                assert(result[0][0] == 1);
+                assert(result[0][1] == 0);
+                assert(result[0][2] == 0);
+            } catch (err) {
+                assert.fail();
+            }
+            
+            // Add extra responses and check result
+            try { 
+                userId = '2';
+                Meteor.call('putResponse', testItem._id, testItem.type, '0');
+                userId = '3';
+                Meteor.call('putResponse', testItem._id, testItem.type, '1');
+                result = Meteor.call('getVotingResults', testItem._id);
+                assert(result[0].length == 3);
+                assert(result[0][0] == 2);
+                assert(result[0][1] == 1);
+                assert(result[0][2] == 0);
+                
+                Meteor.call('deleteResponse', testItem._id);
+                userId = '2';
+                Meteor.call('deleteResponse', testItem._id);
+                userId = '1';
+            } catch (err) {
+                assert.fail();
+            }
+            
+            done();
         });  
         
         it("Delete Response", (done) => {
@@ -232,7 +279,6 @@ if (Meteor.isServer) {
                 result = Meteor.call('deleteResponse', testItem._id);
                 done();
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
         });

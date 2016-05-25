@@ -9,16 +9,19 @@
             <table class="table table-condensed">
                 <thead>
                 <tr>
+                    <th>First name</th>
+                    <th>Last name</th>
                     <th>Email</th>
-                    <th>ID</th>
-                    <th>Email</th>
+                    <th>Team</th>
+                    <th>Edit</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="user in userAccounts | limitTo:display_limit">
+                    <td>{{user.profile.firstName}}</td>
+                    <td>{{user.profile.lastName}}</td>
                     <td>{{user.emails[0].address}}</td>
-                    <td>{{user._id}}</td>
-                    <td>john@example.com</td>
+                    <td>{{user.profile.team}}</td>
                 </tr>
                 </tbody>
             </table>

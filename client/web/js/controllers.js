@@ -36,26 +36,39 @@ angular.module('web.controllers', [])
 
 
     .controller('addAccountCtrl', function ($scope, $meteor, $state) {
-
-        $scope.temp_account = {
-            email: '',
+        $scope.user = {
             firstName: '',
             lastName: '',
-            password: '',
-            accountType: '',
-            playerTeam: ''
+            email: ''
         };
 
-        $scope.addAccount = function () {
-            var firstName = $scope.temp_account.firstName;
-            var lastName = $scope.temp_account.lastName;
-            var email = $scope.temp_account.email;
-            var password = $scope.temp_account.password;
-            var accountType = $scope.temp_account.accountType;
-            var playerTeam = $scope.temp_account.playerTeam;
+        alert(email);
 
-            alert (firstName);
-        }
+        $scope.addAccount = function () {
+            if (!$scope.user.email)
+                throw new Meteor.Error('Account registration error: e-mail is not valid');
+            var newUser = {
+                email: $scope.user.email,
+                password: "dev",
+                profile: {
+                    firstName: $scope.user.firstName,
+                    lastName: $scope.user.lastName,
+                    type: 'general',
+                    clubID: "PSV"
+                }
+            };
+            console.log(newUser);
+            Meteor.call('addUser', newUser, function (err, result) {
+                console.log('nu zijn we hier jonguh');
+                if (err) {
+                    console.log(err);
+                } else {
+                    console.log("User added");
+                    $state.go('web.members'); // Redirect user if registration succeeds
+                }
+            });
+
+        };
     })
 
 
@@ -74,7 +87,7 @@ angular.module('web.controllers', [])
         // };
 
 
-        $scope.subscribe('userManagement');
+        $scope.subscribe('userData');
 
         $scope.helpers({
             userAccounts: function () {
