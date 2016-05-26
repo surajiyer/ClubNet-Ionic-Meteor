@@ -37,7 +37,7 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/main.ng.html',
                 controller: 'mainCtrl'
             })
-
+            
             // Login
             .state('login', {
                 url: '/login',
@@ -63,7 +63,7 @@ angular.module('web.routes', [])
             .state('web.settings', {
                 url: '/settings',
                 templateUrl: 'client/web/views/settings.ng.html',
-                controller: 'accountManagementCtrl'
+                controller: 'settingsCtrl'
             })
 
             // User profile
@@ -90,5 +90,21 @@ angular.module('web.routes', [])
                 url: '/sepquotes',
                 templateUrl: 'client/web/views/sepquotes.ng.html'
             });
-        $urlRouterProvider.otherwise('/web/feed');
+        $urlRouterProvider.otherwise('/');
+    })
+    .run(function($rootScope, $location, $state) {
+        $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
+                                                    , fromState, fromParams) {
+
+            var isLogin = toState.name === "login";
+            if(isLogin){
+                return; // no need to redirect 
+            }
+
+            // now, redirect only not authenticated
+            if (!Meteor.userId()) {
+                e.preventDefault(); // stop current execution
+                $state.go('login');
+            }   
+        });
     });

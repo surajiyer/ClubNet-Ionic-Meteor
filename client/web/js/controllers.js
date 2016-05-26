@@ -12,13 +12,22 @@ angular.module('web.controllers', ['ui.bootstrap'])
             password: ''
         };
         $scope.login = function () {
-            $meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-                if (error) {
-                    $scope.error = error.reason;
+            result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function(result){
+                if (Meteor.user().profile.type != 'pr') {
+                    $scope.user.email = '';
+                    $scope.user.password = '';
+                    $scope.error = 'Only PR users can enter';
                     $scope.errorVisible = true;
+                    Meteor.logout();
                 } else {
-                    $state.go('web.feed'); // Redirect user if login succeeds
+                    // Redirect user if login succeeds
+                    $state.go('web.feed');
                 }
+            }, function(err){
+                console.log('error');
+                console.log(err);
+                $scope.error = err.reason;
+                $scope.errorVisible = true;
             });
         };
         $scope.error = '';
@@ -34,6 +43,72 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     })
 
+    .directive('customOnChange', function() {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var onChangeHandler = scope.$eval(attrs.customOnChange);
+                element.bind('change', onChangeHandler);
+            }
+        };
+    })
+
+    .controller('settingsCtrl', function ($scope, $meteor, $state) {
+
+        $meteor.call('getClub').then(function(result){
+            $scope.currentClub = result;
+        }, function(err){
+            console.log(err);
+        });
+
+        $meteor.call('getImage').then(function(result){
+            //console.log(result);
+        }, function(err){
+            console.log(err);
+        });
+
+        $meteor.subscribe('images');
+
+        $scope.uploadFile = function (event) {
+            var files = event.target.files;
+
+            for (var i = 0, ln = files.length; i < ln; i++) {
+
+                files[i].userId = Meteor.userId();
+                Images.insert(files[i], function (err, fileObj) {
+                    if (err) {
+                       // console.log(err);
+                    } else {
+                        console.log(fileObj.url({brokenIsFine: true}));
+                    }
+                });
+            }
+        }
+
+        $scope.save = function(){
+            var updatedClub = {
+                name: $scope.currentClub.name,
+                colorPrimary: $scope.currentClub.colorPrimary,
+                colorSecondary: $scope.currentClub.colorSecondary,
+                colorAccent: $scope.currentClub.colorAccent,
+                heroesMax: $scope.currentClub.heroesMax
+            };
+
+            $meteor.call('updateClub', updatedClub).then(function(result){}, function(err){
+                console.log(err);
+            });
+
+        }
+
+        $scope.helpers({
+            club: function () {
+                return Clubs.find({});
+            },
+            images: function () {
+                return Images.find({});
+            }
+        });
+    })
 
     .controller('addAccountCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
@@ -45,6 +120,15 @@ angular.module('web.controllers', ['ui.bootstrap'])
         
         $scope.error = '';
         $scope.errorVisible = false;        
+        $scope.generatePassword = function() {
+            var length = 8,
+                charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                retVal = "";
+            for (var i = 0, n = charset.length; i < length; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * n));
+            }
+            return retVal;
+        }
         
         $scope.addAccount = function () {
             var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -61,7 +145,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             } else {
                  var newUser = {
                     email: $scope.user.email,
-                    password: "dev",
+                    password: $scope.generatePassword(),
                     profile: {
                         firstName: $scope.user.firstName,
                         lastName: $scope.user.lastName,
@@ -70,22 +154,14 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     }
                 };
                 
-                // Meteor.call('addUser', newUser, function (result,err) {
-                //     if (err) {
-                //         $scope.error = err.reason;
-                //         $scope.errorVisible = true;
-                //     } else {
-                //         $state.go('web.members'); // Redirect user if registration succeeds
-                //     }
-                // });
                 $meteor.call('addUser', newUser).then(function(result){
                     console.log('result');
-                    $state.go('web.members'); // Redirect user if registration succeeds                    
+                    $state.go('web.members'); // Redirect user if registration succeeds
                 }, function(err){
                     console.log('error');
                     console.log(err);
                     $scope.error = err.reason;
-                    $scope.errorVisible = true;                    
+                    $scope.errorVisible = true;
                 });
             }
         };
@@ -105,7 +181,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
         });
 
         $scope.deleteAccount = function(user) {
-            Meteor.users.remove(user._id);
+            if (user.type !== 'pr') {
+                Meteor.users.remove(user._id);
+            }
         };
 
         // Open the modal
@@ -125,7 +203,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
             // Show when modal was closed in console
             modalInstance.result.then(function (selectedUser) {
-                Meteor.users.remove(selectedUser._id);
+                    Meteor.users.remove(selectedUser._id);
             }, function () {
                 // Modal dismissed
             });
@@ -143,4 +221,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
+    })
+    
+    .controller('resetPasswordCtrl', function ($scope, $meteor, $state) {
+        console.log('reset password controller');
     });

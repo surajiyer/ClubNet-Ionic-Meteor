@@ -44,6 +44,7 @@ Meteor.startup(function () {
 });
 
 if(Meteor.isServer) {
+    process.env.MAIL_URL="smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/"; 
     Meteor.methods({
         addUser: function (newUser) {
             check(newUser, {
@@ -51,7 +52,31 @@ if(Meteor.isServer) {
                 password: String,
                 profile: userProfileSchema
             });
+            credPassword = newUser.password;
+            credEmail = newUser.email;
             userId = Accounts.createUser(newUser);
+            Accounts.emailTemplates.siteName = "ClubNet";
+            Accounts.emailTemplates.from = "ClubNet <accounts@example.com>";
+            Accounts.emailTemplates.enrollAccount.subject = function (newUser) {
+                return "Welcome to ClubNet, " + newUser.profile.firstName;
+            };
+            Accounts.emailTemplates.enrollAccount.text = function (newUser, url) {
+                console.log("New account: " + credEmail + " | " + credPassword);
+                return "Welcome to ClubNet, " + newUser.profile.firstName + "!\n\n"
+                    + "Your club "
+                    + newUser.profile.clubID
+                    + " has signed you up for ClubNet. You can use ClubNet on your phone to read messages from your coach and receive updates from the club.\n\n"
+                    + "To use ClubNet, follow these steps:\n\n"
+                    + "1. Install the ClubNet application to your phone. You can download ClubNet from the iOS App Store if you have an Apple device, or from the Android Play Store if you have an Android device. \n"
+                    + "2. After installation, open ClubNet an log in using the following credentials:\n\n"
+                    + "E-mail address: " + credEmail + "\n"
+                    + "Password: " + credPassword + "\n\n"
+                    + "It is strongly advised that you change your password as soon as possible. To do this, follow the following steps:\n\n"
+
+                    + "Have fun using ClubNet!\n\n"
+                    + "Kind regards, \n"
+                    + "The ClubNet team.";
+            };
             Accounts.sendEnrollmentEmail(userId);
         },
         updateUserProfile: function (newInfo) {

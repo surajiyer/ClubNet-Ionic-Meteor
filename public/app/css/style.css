@@ -116,6 +116,10 @@ p.decision {
     border-radius: 2px;
 }
 
+.modal-backdrop .bar-header .button {
+    color: #000;
+}
+
 .full-image {
     max-width: 500px;
     display: block;
