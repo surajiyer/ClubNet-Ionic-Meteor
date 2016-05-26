@@ -26,7 +26,9 @@ const clubSchema = new SimpleSchema({
     name: {type: String},
     logo: {type: String},
     colorPrimary: {type: String},
-    colorAccent: {type: String}
+    colorSecondary: {type: String},
+    colorAccent: {type: String},
+    heroesMax: {type: Number}
 });
 
 const permissionSchema = new SimpleSchema({

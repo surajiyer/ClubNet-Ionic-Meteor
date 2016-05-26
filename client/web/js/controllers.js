@@ -34,6 +34,72 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     })
 
+    .directive('customOnChange', function() {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var onChangeHandler = scope.$eval(attrs.customOnChange);
+                element.bind('change', onChangeHandler);
+            }
+        };
+    })
+
+    .controller('settingsCtrl', function ($scope, $meteor, $state) {
+
+        $meteor.call('getClub').then(function(result){
+            $scope.currentClub = result;
+        }, function(err){
+            console.log(err);
+        });
+
+        $meteor.call('getImage').then(function(result){
+            //console.log(result);
+        }, function(err){
+            console.log(err);
+        });
+
+        $meteor.subscribe('images');
+
+        $scope.uploadFile = function (event) {
+            var files = event.target.files;
+
+            for (var i = 0, ln = files.length; i < ln; i++) {
+
+                files[i].userId = Meteor.userId();
+                Images.insert(files[i], function (err, fileObj) {
+                    if (err) {
+                       // console.log(err);
+                    } else {
+                        console.log(fileObj.url({brokenIsFine: true}));
+                    }
+                });
+            }
+        }
+
+        $scope.save = function(){
+            var updatedClub = {
+                name: $scope.currentClub.name,
+                colorPrimary: $scope.currentClub.colorPrimary,
+                colorSecondary: $scope.currentClub.colorSecondary,
+                colorAccent: $scope.currentClub.colorAccent,
+                heroesMax: $scope.currentClub.heroesMax
+            };
+
+            $meteor.call('updateClub', updatedClub).then(function(result){}, function(err){
+                console.log(err);
+            });
+
+        }
+
+        $scope.helpers({
+            club: function () {
+                return Clubs.find({});
+            },
+            images: function () {
+                return Images.find({});
+            }
+        });
+    })
 
     .controller('addAccountCtrl', function ($scope, $meteor, $state) {
         $scope.user = {

@@ -34,6 +34,9 @@ aldeed:collection2
 fortawesome:fontawesome
 sebastianilves:angular-chart-js
 audit-argument-checks
-fourseven:scss
 http
 check
+fourseven:scss
+cfs:standard-packages
+cfs:filesystem
+cfs:gridfs

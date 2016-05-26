@@ -4,8 +4,33 @@
 </div>
 
 <div class="content">
-    <h2 class="content-subhead"></h2>
-    <p>
-        Settings content
-    </p>
+    <h2 class="content-subhead">Club</h2>
+    <div class="row">
+        <label class="col-md-4" for="clubname">Club name</label>
+        <div class="col-md-8">
+            <input class="form-control" type="text" id="clubname" name="clubname" ng-model="currentClub.name">
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-md-4" for="clubname">Club logo</label>
+        <div class="col-md-8">
+            <input type="file" custom-on-change="uploadFile">
+        </div>
+    </div>
+    <div class="row">
+        <label class="col-md-4" for="clubname">Colors: </label>
+        <div class="col-md-8">
+            <input id="color1" type="color" ng-model="currentClub.colorPrimary" />
+            <input id="color2" type="color" ng-model="currentClub.colorSecondary" />
+            <input id="color3" type="color" ng-model="currentClub.colorAccent" />
+        </div>
+    </div>
+    <h2 class="content-subhead">Feed</h2>
+    <div class="row">
+        <label class="col-md-4" for="clubname">Maximum amount of heroes per month</label>
+        <div class="col-md-6">
+            <input class="form-control" type="text" id="heroesMax" name="heroesMax" ng-model="currentClub.heroesMax">
+        </div>
+    </div>
+    <button ng-click="save()">Save</button>
 </div>

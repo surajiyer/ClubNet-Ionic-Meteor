@@ -63,7 +63,7 @@ angular.module('web.routes', [])
             .state('web.settings', {
                 url: '/settings',
                 templateUrl: 'client/web/views/settings.ng.html',
-                controller: 'accountManagementCtrl'
+                controller: 'settingsCtrl'
             })
 
             // User profile
