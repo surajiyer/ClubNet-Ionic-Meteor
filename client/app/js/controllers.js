@@ -440,6 +440,20 @@ angular.module('app.controllers', [])
         $scope.trainings  = [];
         $scope.exercises  = [];
 
+
+        $meteor.call('getTrainings').then(
+            function (result) {
+                $scope.trainings = result;
+            },
+            function (err) {
+                console.log(err);
+            }
+        );
+
+        //console.log($meteor.call("getTrainingObj", "eToCn46ZEfsgsFxXh"));
+
+        //console.log(_.find([{name: 3}, {name: 4}], function(obj){ return obj.name == 3; }));
+
         $scope.addVoting = function () {
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.published = true;
@@ -460,6 +474,12 @@ angular.module('app.controllers', [])
                     // TODO: do something with error (show as popup?)
                     if (err) console.log(err);
                 });
+                $meteor.call("getTrainingObj", $scope.newVoting.training_id).then(
+                    function (result) {
+                        $scope.item.training_date = result.date;
+                    },
+                    function (err) {}
+                );
             }
             $scope.newVoting = {};
             $scope.closeVoting();
@@ -506,7 +526,6 @@ angular.module('app.controllers', [])
         $scope.updateChartValues = function() {
             $meteor.call('getVotingResults', $scope.item._id).then(
                 function(result){
-                    console.log(result);
                     $scope.chartValues = result;
                 },
                 function (err) {
@@ -519,14 +538,11 @@ angular.module('app.controllers', [])
             $scope.hasVoted = false;
             $scope.hasEnded = false;
 
-
-            $meteor.call('getTrainings').then(
+            $meteor.call("getTrainingObj", $scope.item.training_id).then(
                 function (result) {
-                    $scope.trainings = result;
+                    $scope.item.training_date = result.date;
                 },
-                function (err) {
-                    console.log(err);
-                }
+                function (err) {}
             );
 
             $meteor.call('getExercises', $scope.item.training_id).then(

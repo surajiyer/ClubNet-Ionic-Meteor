@@ -161,6 +161,11 @@ if (Meteor.isServer) {
                 return null;
             }
         },
+        getTrainingObj: function(trainingID) {
+            check(trainingID, String);
+            var trainings = Meteor.call("getTrainings");
+            return _.find(trainings, function(obj){ return obj.trId == trainingID; });
+        },
         getExercises: function(trainingID) {
             check(trainingID, String);
             var trainings = Meteor.call("getTrainings");
