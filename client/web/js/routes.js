@@ -38,6 +38,13 @@ angular.module('web.routes', [])
                 controller: 'mainCtrl'
             })
 
+            // Main
+            .state('enroll', {
+                url: '/enroll-account/:token',
+                templateUrl: 'client/web/views/enroll.ng.html',
+                action: 'resetPassword'
+            })
+
             // Login
             .state('login', {
                 url: '/login',
@@ -90,5 +97,5 @@ angular.module('web.routes', [])
                 url: '/sepquotes',
                 templateUrl: 'client/web/views/sepquotes.ng.html'
             });
-        $urlRouterProvider.otherwise('/');
+        $urlRouterProvider.otherwise('/login');
     });
