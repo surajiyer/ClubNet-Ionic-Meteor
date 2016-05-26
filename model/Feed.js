@@ -1,6 +1,7 @@
 import {isValidType} from '/imports/common';
 import feedItemSchemas from '/imports/schemas/feedItems';
 import responseSchemas from '/imports/schemas/responses';
+import { HTTP } from 'meteor/http'
 
 Items = new Mongo.Collection("Items");
 Responses = new Mongo.Collection("FeedResponses");
@@ -85,9 +86,11 @@ if (Meteor.isServer) {
             return result = Items.find({ _id : id}).fetch()[0];
         },
         updateFeedItem: function (updatedItem) {
-            id = updatedItem._id;
+            // updatedItem.creatorID = Meteor.userId();
+            // updatedItem.clubID = Meteor.user().profile.clubID;
+            check(updatedItem, Object);
+            var id = updatedItem._id;
             delete updatedItem._id;
-            check(updatedItem, Items.simpleSchema({type: updatedItem.type}));
             Items.update(
                 {_id: id},
                 {$set: updatedItem}
@@ -144,6 +147,25 @@ if (Meteor.isServer) {
                 result[0][Number(vote.value)]++;
             });
             return result;
+        },
+        getTrainings: function() {
+            try {
+                var obj = HTTP.call("GET", Meteor.absoluteUrl("trainings.json"));
+                obj = obj.data;
+                for (var training in obj) {
+                    obj[training] = obj[training]['training'+(parseInt(training)+1)];
+                }
+                return obj;
+            } catch(err) {
+                throw new Meteor.Error(err.message);
+                return null;
+            }
+        },
+        getExercises: function(trainingID) {
+            check(trainingID, String);
+            var trainings = Meteor.call("getTrainings");
+            trainings = _.find(trainings, function(tr){ return tr.trId == trainingID; });
+            return trainings.exercises;
         }
     })
 }

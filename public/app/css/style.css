@@ -157,8 +157,9 @@ p.decision {
 }
 
 .variants > div {
-    display: inline-block;
-    width: 33.3%;
+    display: table-cell;
+    vertical-align: top;
+    width: 20%;
     padding-top: 20px;
     padding-bottom: 10px;
     text-align: center;

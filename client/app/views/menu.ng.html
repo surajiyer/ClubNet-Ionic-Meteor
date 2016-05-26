@@ -8,7 +8,7 @@
                 <ion-item ui-sref="menu.profile" menu-close=""><i class="icon ion-person"></i> Profile</ion-item>
                 <ion-item ui-sref="menu.chats" menu-close=""><i class="icon ion-chatbubbles"></i> Chat</ion-item>
                 <ion-item ui-sref="menu.settings" menu-close=""><i class="icon ion-gear-a"></i> Settings</ion-item>
-                <ion-item ng-click="logout()" menu-close=""><i class="icon ion-log-out"></i> Log out</ion-item>
+                <ion-item ui-sref="menu.logout" ng-click="logout($event)" menu-close=""><i class="icon ion-log-out"></i> Log out</ion-item>
             </ion-list>
         </ion-content>
     </ion-side-menu>

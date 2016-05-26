@@ -40,9 +40,6 @@ const baseFeedItemSchema = new SimpleSchema({
         denyUpdate: true
     },
     published: {
-        type: Boolean
-    },
-    published: {
         type: Boolean,
         defaultValue: true
     },
@@ -90,14 +87,6 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
             // if deadline is before current time, give Invalid deadline error
             if (this.value < new Date) return "invalidDeadline";
         }
-    },
-    training_id: {
-        type: String
-    },
-    exercises: {
-        type: [exerciseSchema],
-        minCount: 3,
-        maxCount: 3
     },
     training_id: {
         type: String

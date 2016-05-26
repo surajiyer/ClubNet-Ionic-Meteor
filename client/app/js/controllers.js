@@ -42,7 +42,8 @@ angular.module('app.controllers', [])
     })
 
     .controller('menuCtrl', function ($scope, $meteor, $state, $window) {
-        $scope.logout = function () {
+        $scope.logout = function ($event) {
+            $event.stopPropagation();
             $meteor.logout();
             $state.go('login').then(function () {
                 $window.location.reload();
@@ -328,7 +329,6 @@ angular.module('app.controllers', [])
 
     })
 
-
     .controller('postCtrl', function ($scope, $ionicModal) {
         /* Post */
         $scope.newPost = {};
@@ -436,23 +436,27 @@ angular.module('app.controllers', [])
         /* Voting */
         $scope.newVoting = {};
         $scope.editingItem = 0;
-        
-        $scope.selectedValue = '';
 
         $scope.trainings  = [];
         $scope.exercises  = [];
 
-        $http.get('/trainings.json')
-            .then(function(res){
-                xa = res.data;
-                for (var key in xa) {
-                    for (var key2 in xa[key]) {
-                        $scope.trainings.push(xa[key][key2]);
-                    }
-                }
-            }, function() {
-                console.log("lol");
-            });
+        $meteor.call('getTrainings').then(
+            function (result) {
+                $scope.trainings = result;
+            },
+            function (err) {
+                console.log(err);
+            }
+        );
+
+        $meteor.call('getExercises', 'WzhG8DaJnnjr9zkw7').then(
+            function (result) {
+                $scope.exercises = result;
+            },
+            function (err) {
+                console.log(err);
+            }
+        );
 
         $scope.addVoting = function () {
             $scope.newVoting.type = 'Voting';
@@ -461,31 +465,19 @@ angular.module('app.controllers', [])
             $scope.newVoting.nrVotes = 0;
             $scope.newVoting.ended = false;
             $scope.newVoting.teamID = Meteor.user().profile.teamID;
-            $scope.newVoting.exercises = [
-                {
-                    _id: '1',
-                    name: 'pirmas',
-                    image: 'http://placehold.it/100x100'
-                },
-                {
-                    _id: '2',
-                    name: 'antras',
-                    image: 'http://www.printsonwood.com/media/catalog/product/cache/1/image/650x/040ec09b1e35df139433887a97daa66f/g/r/grumpy-cat-rainbow-square_PRINT-crop-1x1.jpg.thumbnail_7.jpg'
-                },
-                {
-                    _id: '3',
-                    name: 'trecias',
-                    image: 'http://i3.cpcache.com/product/1293587386/rootin_for_putin_square_sticker.jpg?height=225&width=225'
-                }
-            ];
             if ($scope.editingItem == 0) {
-                $meteor.call('DBHelper.addFeedItem', $scope.newVoting, function (err) {
+                $meteor.call('addFeedItem', $scope.newVoting, function (err) {
                     // TODO: do something with error (show as popup?)
                     if (err) console.log(err);
                 });
             } else {
+                $scope.newVoting._id = $scope.item._id;
                 console.log("We need to update the table.");
                 console.log($scope.newVoting);
+                $meteor.call('updateFeedItem', $scope.newVoting, function (err) {
+                    // TODO: do something with error (show as popup?)
+                    if (err) console.log(err);
+                });
             }
             $scope.newVoting = {};
             $scope.closeVoting();
@@ -512,6 +504,7 @@ angular.module('app.controllers', [])
                     intermediatePublic: getElement.intermediatePublic,
                     finalPublic: getElement.finalPublic,
                     nrVoters: getElement.nrVoters,
+                    training_id: getElement.training_id,
                 };
             }
             $scope.votingModal.show();
@@ -531,6 +524,7 @@ angular.module('app.controllers', [])
         $scope.updateChartValues = function() {
             $meteor.call('getVotingResults', $scope.item._id).then(
                 function(result){
+                    console.log(result);
                     $scope.chartValues = result;
                 },
                 function (err) {
@@ -557,36 +551,42 @@ angular.module('app.controllers', [])
             );
 
             // Check if already voted
-                $meteor.call('getResponse', $scope.item._id).then(
-                    function (result) {
-                        $scope.hasVoted = !!result;
-                    },
-                    function (err) {
-                        console.log(err);
-                    }
-                );
+            $meteor.call('getResponse', $scope.item._id).then(
+                function (result) {
+                    $scope.hasVoted = result ? result.value : 0;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
 
             // Load results chart
             $scope.chartValues = [[0, 0, 0]];
             $scope.updateChartValues();
-            $scope.chartLabels = _.pluck($scope.item.exercises, 'name');
+            $scope.chartLabels = [1, 2, 3];
         }
 
-        $scope.select = function ($event, exer_id) {
+        $scope.select = function ($event, index) {
             // Let's try
-            $scope.item.selectedValue = exer_id;
             elem = angular.element($event.currentTarget);
             elem.parent().parent().siblings(".image-placeholder-div").show()
                 .children(".image-placeholder").attr("src", elem.children("img").attr("src"));
-            elem.addClass("selected").siblings().removeClass("selected");
+            if ($scope.item.selectedValue == index) {
+                elem.removeClass("selected");
+                elem.parent().parent().siblings(".image-placeholder-div").hide();
+                $scope.item.selectedValue = "";
+            } else {
+                elem.addClass("selected").siblings().removeClass("selected");
+                $scope.item.selectedValue = index;
+            }
         };
 
         $scope.vote = function (value) {
             if (value) {
-                $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
+                $meteor.call('putResponse', $scope.item._id, $scope.item.type, value.toString()).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = !!value;
+                        $scope.hasVoted = value;
                     },
                     function (err) {
                         console.log(err);
