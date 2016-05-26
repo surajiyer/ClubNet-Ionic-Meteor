@@ -149,8 +149,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     profile: {
                         firstName: $scope.user.firstName,
                         lastName: $scope.user.lastName,
-                        type: 'general',
-                        clubID: "PSV"
+                        type: $scope.user.team != '' ? 'player' : 'general',
+                        clubID: "PSV",
+                        teamID: $scope.user.team
                     }
                 };
                 
