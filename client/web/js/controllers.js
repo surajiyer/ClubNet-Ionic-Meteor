@@ -41,9 +41,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             lastName: '',
             email: ''
         };
-
-        alert(email);
-
+        
         $scope.addAccount = function () {
             if (!$scope.user.email)
                 throw new Meteor.Error('Account registration error: e-mail is not valid');
@@ -75,7 +73,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     ///***************************accountMangementCtrl**************************************//
 
-    .controller('accountManagementCtrl', function ($rootScope, $scope, $modal, $log, userService) {
+    .controller('accountManagementCtrl', function ($scope, $modal, $log) {
 
         $scope.subscribe('userData');
 
@@ -85,57 +83,46 @@ angular.module('web.controllers', ['ui.bootstrap'])
             }
         });
 
-        $scope.userService = userService;
-
         $scope.deleteAccount = function(user) {
             Meteor.users.remove(user._id);
         };
 
-        $scope.items = ['item1', 'item2', 'item3'];
-
-        $scope.animationsEnabled = true;
-
         // Open the modal
-        $scope.open = function (size) {
-
+        $scope.open = function (user) {
+            $scope.selectedUser = user
+            console.log(user);
+            console.log($scope.selectedUser);
             var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
+                animation: true,
                 templateUrl: 'client/web/views/deleteAccountModal.ng.html',
                 controller: 'ModalInstanceCtrl',
-                size: size,
+                size: 'sm',
                 resolve: {
-                    items: function () {
-                        return $scope.items;
+                    selectedUser: function () {
+                        return $scope.selectedUser;
                     }
                 }
             });
 
             // Show when modal was closed in console
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
+            modalInstance.result.then(function (selectedUser) {
+                Meteor.users.remove(selectedUser._id);
             }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
+                // Modal dismissed
             });
         };
     })
 
-    .controller('ModalInstanceCtrl', function ($rootScope, $scope, $modalInstance, items) {
-
-        $scope.items = items;
-        $scope.selected = {
-            item: $scope.items[0]
-        };
-
-        $scope.ok = function (user) {
-            Meteor.user.remove(user._id);
-            $modalInstance.close($scope.selected.item);
+    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, selectedUser) {
+        
+        $scope.selectedUser = selectedUser;
+        
+        $scope.ok = function () {
+            console.log($scope.selectedUser);
+            $modalInstance.close($scope.selectedUser);
         };
 
         $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
+            $modalInstance.dismiss();
         };
-    })
-
-    .service('userService', function() {
-        this.user = null;
-});
+    });
