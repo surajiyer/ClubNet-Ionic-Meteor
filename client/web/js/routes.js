@@ -90,5 +90,5 @@ angular.module('web.routes', [])
                 url: '/sepquotes',
                 templateUrl: 'client/web/views/sepquotes.ng.html'
             });
-        $urlRouterProvider.otherwise('/web/feed');
+        $urlRouterProvider.otherwise('/');
     });

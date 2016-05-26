@@ -39,8 +39,8 @@ function onReady() {
 if (Meteor.isCordova) {
     angular.element(document).on("deviceready", onReady);
 }
-else {
-    angular.element(document).ready(onReady);
-}
+// else {
+//     angular.element(document).ready(onReady);
+// }
 
 MONGO_URL = "mongodb://clubnet-9079:Zqz2HTvk7VX8bujl_YHv@clubnet-9079.mongo.dbs.appsdeck.eu:30065/clubnet-9079";
