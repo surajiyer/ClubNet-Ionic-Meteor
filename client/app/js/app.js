@@ -36,7 +36,7 @@ function onReady() {
 }
 
 // TODO: Remove else condition in production
-if (Meteor.isCordova) {
+if (!Meteor.isCordova) {
     angular.element(document).on("deviceready", onReady);
 }
 // else {

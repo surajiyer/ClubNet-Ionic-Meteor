@@ -28,7 +28,7 @@
         </div>
     </div>
 </form>
-<div class="item item-body image-placeholder-div" ng-if="!hasEnded">
+<div class="item item-body image-placeholder-div " ng-if="!hasEnded">
     <img src="http://placehold.it/300x300" class="image-placeholder" alt="" width="100%" />
     <b>{{ exercises[item.selectedValue-1].item }}</b><br />
     {{ exercises[item.selectedValue-1].description }}<br /><br />
@@ -40,6 +40,6 @@
         </button>
     </div>
 </div>
-<div class="item item-body" ng-if="hasEnded">
+<div class="item item-body" ng-if="(!hasEnded && item.intermediatePublic) || (hasEnded && item.finalPublic)">
     <canvas id="bar" class="chart chart-bar" chart-data="chartValues" chart-labels="chartLabels"></canvas>
 </div>

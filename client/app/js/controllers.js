@@ -158,7 +158,9 @@ angular.module('app.controllers', [])
         });
 
         $scope.getCurrentDateISO = function(){
-            return new Date().toISOString().substring(0, 10);
+            var date = new Date();
+            date.setDate(date.getDate()-1);
+            return date.toISOString().substring(0, 10);
         }
 
         // Set display filter model
@@ -515,19 +517,18 @@ angular.module('app.controllers', [])
             );
         };
 
+        $meteor.call('getTrainings').then(
+            function (result) {
+                $scope.trainings = result;
+            },
+            function (err) {
+                console.log(err);
+            }
+        );
+
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
-
-
-            $meteor.call('getTrainings').then(
-                function (result) {
-                    $scope.trainings = result;
-                },
-                function (err) {
-                    console.log(err);
-                }
-            );
 
             $meteor.call('getExercises', $scope.item.training_id).then(
                 function (result) {

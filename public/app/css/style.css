@@ -11,6 +11,14 @@ ion-view.pane {
     background: #eee;
 }
 
+.saved-notification {
+    -webkit-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+    -ms-transition: all 500ms ease;
+    -o-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
+
 .menu .has-header {
     top: 0;
     background: #263238;

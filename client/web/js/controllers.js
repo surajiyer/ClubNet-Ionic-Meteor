@@ -53,7 +53,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
         };
     })
 
-    .controller('settingsCtrl', function ($scope, $meteor, $state) {
+    .controller('settingsCtrl', function ($scope, $meteor, $timeout) {
 
         $meteor.call('getClub').then(function(result){
             $scope.currentClub = result;
@@ -79,12 +79,14 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     if (err) {
                        // console.log(err);
                     } else {
-                        console.log(fileObj.url({brokenIsFine: true}));
+                        $meteor.call('updateClub', {logo: fileObj.url({brokenIsFine: true})}).then(function(result){}, function(err){
+                            console.log(err);
+                        });
                     }
                 });
             }
         }
-
+        $scope.saved = false;
         $scope.save = function(){
             var updatedClub = {
                 name: $scope.currentClub.name,
@@ -93,7 +95,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 colorAccent: $scope.currentClub.colorAccent,
                 heroesMax: $scope.currentClub.heroesMax
             };
-
+            $scope.saved = true;
+            $timeout(function(){$scope.saved = false;}, 1500);
             $meteor.call('updateClub', updatedClub).then(function(result){}, function(err){
                 console.log(err);
             });
