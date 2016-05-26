@@ -39,7 +39,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.user = {
             firstName: '',
             lastName: '',
-            email: ''
+            email: '',
+            team: ''
         };
         
         $scope.addAccount = function () {
@@ -51,8 +52,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 profile: {
                     firstName: $scope.user.firstName,
                     lastName: $scope.user.lastName,
-                    type: 'general',
-                    clubID: "PSV"
+                    type: ($scope.user.team == '' ? 'general' : 'player'),
+                    clubID: "PSV",
+                    teamID: $scope.user.team
                 }
             };
 
