@@ -44,7 +44,7 @@ Meteor.startup(function () {
 });
 
 if(Meteor.isServer) {
-    process.env.MAIL_URL="smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:465/"; 
+    process.env.MAIL_URL="smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/"; 
     Meteor.methods({
         addUser: function (newUser) {
             check(newUser, {
