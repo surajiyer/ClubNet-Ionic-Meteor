@@ -39,7 +39,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.user = {
             firstName: '',
             lastName: '',
-            email: ''
+            email: '',
+            team: ''
         };
         
         $scope.addAccount = function () {
@@ -88,7 +89,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     ///***************************accountMangementCtrl**************************************//
 
-    .controller('accountManagementCtrl', function ($scope, $modal, $log) {
+    .controller('accountManagementCtrl', function ($scope, $modal) {
 
         $scope.subscribe('userData');
 
@@ -109,7 +110,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 animation: false,
                 templateUrl: 'client/web/views/deleteAccountModal.ng.html',
                 controller: 'ModalInstanceCtrl',
-                size: 'sm',
+                size: '',
                 resolve: {
                     selectedUser: function () {
                         return $scope.selectedUser;
