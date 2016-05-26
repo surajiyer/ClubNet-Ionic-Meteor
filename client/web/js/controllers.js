@@ -12,13 +12,22 @@ angular.module('web.controllers', ['ui.bootstrap'])
             password: ''
         };
         $scope.login = function () {
-            $meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-                if (error) {
-                    $scope.error = error.reason;
+            result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function(result){
+                if (Meteor.user().profile.type != 'pr') {
+                    $scope.user.email = '';
+                    $scope.user.password = '';
+                    $scope.error = 'Only PR users can enter';
                     $scope.errorVisible = true;
+                    Meteor.logout();
                 } else {
-                    $state.go('web.feed'); // Redirect user if login succeeds
+                    // Redirect user if login succeeds
+                    $state.go('web.feed');
                 }
+            }, function(err){
+                console.log('error');
+                console.log(err);
+                $scope.error = err.reason;
+                $scope.errorVisible = true;
             });
         };
         $scope.error = '';
@@ -147,12 +156,12 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 
                 $meteor.call('addUser', newUser).then(function(result){
                     console.log('result');
-                    $state.go('web.members'); // Redirect user if registration succeeds                    
+                    $state.go('web.members'); // Redirect user if registration succeeds
                 }, function(err){
                     console.log('error');
                     console.log(err);
                     $scope.error = err.reason;
-                    $scope.errorVisible = true;                    
+                    $scope.errorVisible = true;
                 });
             }
         };
@@ -172,7 +181,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
         });
 
         $scope.deleteAccount = function(user) {
-            Meteor.users.remove(user._id);
+            if (user.type !== 'pr') {
+                Meteor.users.remove(user._id);
+            }
         };
 
         // Open the modal
@@ -192,7 +203,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
             // Show when modal was closed in console
             modalInstance.result.then(function (selectedUser) {
-                Meteor.users.remove(selectedUser._id);
+                    Meteor.users.remove(selectedUser._id);
             }, function () {
                 // Modal dismissed
             });
