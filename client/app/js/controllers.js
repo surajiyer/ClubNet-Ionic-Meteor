@@ -440,24 +440,6 @@ angular.module('app.controllers', [])
         $scope.trainings  = [];
         $scope.exercises  = [];
 
-        $meteor.call('getTrainings').then(
-            function (result) {
-                $scope.trainings = result;
-            },
-            function (err) {
-                console.log(err);
-            }
-        );
-
-        $meteor.call('getExercises', 'WzhG8DaJnnjr9zkw7').then(
-            function (result) {
-                $scope.exercises = result;
-            },
-            function (err) {
-                console.log(err);
-            }
-        );
-
         $scope.addVoting = function () {
             $scope.newVoting.type = 'Voting';
             $scope.newVoting.published = true;
@@ -536,6 +518,25 @@ angular.module('app.controllers', [])
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
+
+
+            $meteor.call('getTrainings').then(
+                function (result) {
+                    $scope.trainings = result;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+
+            $meteor.call('getExercises', $scope.item.training_id).then(
+                function (result) {
+                    $scope.exercises = result;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
 
             // Check if voting has ended because the deadline has passed
             // or if number of votes exceeds allowed number of voters

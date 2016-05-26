@@ -144,7 +144,7 @@ if (Meteor.isServer) {
             votes = Responses.find({itemID: itemID}).fetch();
             result = [[0, 0, 0]];
             votes.forEach(function (vote) {
-                result[0][Number(vote.value)]++;
+                result[0][Number(vote.value)-1]++;
             });
             return result;
         },

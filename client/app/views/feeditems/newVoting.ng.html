@@ -29,18 +29,19 @@
                 <!--<input ng-model="newVoting.description" type="text" placeholder="Description">-->
             <!--</label>-->
             <label class="item">
-                <span class="input-label">Intermediate public</span>
+                <span class="input-label">Show intermediate results to the team</span>
                 <input type="checkbox" ng-model="newVoting.intermediatePublic">
             </label>
             <label class="item">
-                <span class="input-label">Final public</span>
+                <span class="input-label">Show final results to the team</span>
                 <input type="checkbox" ng-model="newVoting.finalPublic">
             </label>
             <label class="item item-input item-floating-label">
                 <span class="input-label">Number of voters:</span>
                 <input ng-model="newVoting.nrVoters" type="number" placeholder="Number of voters">
             </label>
-            <button ng-disabled="!newVoting.title && !newVoting.deadline" ng-click="addVoting()" class="button button-block button-positive">
+            <button ng-disabled="!newVoting.title || !newVoting.deadline || !newVoting.training_id || !newVoting.nrVoters"
+                    ng-click="addVoting()" class="button button-block button-positive">
                 Post
             </button>
         </div>
