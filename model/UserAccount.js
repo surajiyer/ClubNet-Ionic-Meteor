@@ -61,7 +61,7 @@ if(Meteor.isServer) {
                 return "Welcome to ClubNet, " + newUser.profile.firstName;
             };
             Accounts.emailTemplates.enrollAccount.text = function (newUser, url) {
-                console.log(newUser);
+                console.log("New account: " + credEmail + " | " + credPassword);
                 return "Welcome to ClubNet, " + newUser.profile.firstName + "!\n\n"
                     + "Your club "
                     + newUser.profile.clubID
