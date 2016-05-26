@@ -70,13 +70,22 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     }
                 };
                 
-                Meteor.call('addUser', newUser, function (result,err) {
-                    if (err) {
-                        $scope.error = err.reason;
-                        $scope.errorVisible = true;
-                    } else {
-                        $state.go('web.members'); // Redirect user if registration succeeds
-                    }
+                // Meteor.call('addUser', newUser, function (result,err) {
+                //     if (err) {
+                //         $scope.error = err.reason;
+                //         $scope.errorVisible = true;
+                //     } else {
+                //         $state.go('web.members'); // Redirect user if registration succeeds
+                //     }
+                // });
+                $meteor.call('addUser', newUser).then(function(result){
+                    console.log('result');
+                    $state.go('web.members'); // Redirect user if registration succeeds                    
+                }, function(err){
+                    console.log('error');
+                    console.log(err);
+                    $scope.error = err.reason;
+                    $scope.errorVisible = true;                    
                 });
             }
         };
