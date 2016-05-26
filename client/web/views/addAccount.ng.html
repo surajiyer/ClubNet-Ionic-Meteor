@@ -32,6 +32,10 @@
                 <option>A5</option>
             </select>
         </label>
+        
+        <div ng-if="errorVisible" class="alert alert-warning">
+            {{ error }}
+        </div>
 
         <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">{{ 'Add user' | translate }}</a>
 

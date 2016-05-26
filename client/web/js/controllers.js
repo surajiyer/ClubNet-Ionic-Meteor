@@ -43,30 +43,45 @@ angular.module('web.controllers', ['ui.bootstrap'])
         };
         
         $scope.addAccount = function () {
-            if (!$scope.user.email)
-                throw new Meteor.Error('Account registration error: e-mail is not valid');
-            var newUser = {
-                email: $scope.user.email,
-                password: "dev",
-                profile: {
-                    firstName: $scope.user.firstName,
-                    lastName: $scope.user.lastName,
-                    type: 'general',
-                    clubID: "PSV"
-                }
-            };
+            var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            
+            if (!$scope.user.firstName) {
+                    $scope.error = 'No first name specified';
+                    $scope.errorVisible = true;                
+            } else if (!$scope.user.lastName) {
+                    $scope.error = 'No last name specified';
+                    $scope.errorVisible = true;                
+            } else if (!mailRegularExpression.test($scope.user.email)) {
+                    $scope.error = 'No valid email specified';
+                    $scope.errorVisible = true;                
+            } else {
+                 var newUser = {
+                    email: $scope.user.email,
+                    password: "dev",
+                    profile: {
+                        firstName: $scope.user.firstName,
+                        lastName: $scope.user.lastName,
+                        type: 'general',
+                        clubID: "PSV"
+                    }
+                };
+                
+                $scope.error = '';
+                $scope.errorVisible = false;
 
-            console.log(newUser);
-            Meteor.call('addUser', newUser, function (err, result) {
-                console.log('nu zijn we hier jonguh');
-                if (err) {
+                Meteor.call('addUser', newUser, function (result,err) {
+                    console.log('frontend result');
+                    console.log(result);
+                    console.log('frontend error');
                     console.log(err);
-                } else {
-                    console.log("User added");
-                    $state.go('web.members'); // Redirect user if registration succeeds
-                }
-            });
-
+                    if (err) {
+                        $scope.error = err.reason;
+                        $scope.errorVisible = true;
+                    } else {
+                        $state.go('web.members'); // Redirect user if registration succeeds
+                    }
+                });
+            }
         };
     })
 
@@ -79,7 +94,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         $scope.helpers({
             userAccounts: function () {
-                return Meteor.users.find();
+                return Meteor.users.find({}, {sort: [['profile.lastName', 'asc']]});
             }
         });
 
@@ -90,10 +105,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
         // Open the modal
         $scope.open = function (user) {
             $scope.selectedUser = user
-            console.log(user);
-            console.log($scope.selectedUser);
             var modalInstance = $modal.open({
-                animation: true,
+                animation: false,
                 templateUrl: 'client/web/views/deleteAccountModal.ng.html',
                 controller: 'ModalInstanceCtrl',
                 size: 'sm',
@@ -118,7 +131,6 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.selectedUser = selectedUser;
         
         $scope.ok = function () {
-            console.log($scope.selectedUser);
             $modalInstance.close($scope.selectedUser);
         };
 

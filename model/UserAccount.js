@@ -51,8 +51,11 @@ if(Meteor.isServer) {
                 password: String,
                 profile: userProfileSchema
             });
-            var userID = Accounts.createUser(newUser);
-            return userID;
+            try {
+                Accounts.createUser(newUser);
+            } catch (err) {
+                return err;
+            }
         },
         updateUserProfile: function (newInfo) {
             // TODO: should not check full user profile schema for update
