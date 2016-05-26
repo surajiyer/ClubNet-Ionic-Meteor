@@ -39,103 +39,108 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.user = {
             firstName: '',
             lastName: '',
-            email: ''
+            email: '',
+            team: ''
         };
-
-        alert(email);
-
+        
+        $scope.error = '';
+        $scope.errorVisible = false;        
+        
         $scope.addAccount = function () {
-            if (!$scope.user.email)
-                throw new Meteor.Error('Account registration error: e-mail is not valid');
-            var newUser = {
-                email: $scope.user.email,
-                password: "dev",
-                profile: {
-                    firstName: $scope.user.firstName,
-                    lastName: $scope.user.lastName,
-                    type: 'general',
-                    clubID: "PSV"
-                }
-            };
-
-            console.log(newUser);
-            Meteor.call('addUser', newUser, function (err, result) {
-                console.log('nu zijn we hier jonguh');
-                if (err) {
+            var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+            
+            if (!$scope.user.firstName) {
+                    $scope.error = 'No first name specified';
+                    $scope.errorVisible = true;                
+            } else if (!$scope.user.lastName) {
+                    $scope.error = 'No last name specified';
+                    $scope.errorVisible = true;                
+            } else if (!mailRegularExpression.test($scope.user.email)) {
+                    $scope.error = 'No valid email specified';
+                    $scope.errorVisible = true;                
+            } else {
+                 var newUser = {
+                    email: $scope.user.email,
+                    password: "dev",
+                    profile: {
+                        firstName: $scope.user.firstName,
+                        lastName: $scope.user.lastName,
+                        type: 'general',
+                        clubID: "PSV"
+                    }
+                };
+                
+                // Meteor.call('addUser', newUser, function (result,err) {
+                //     if (err) {
+                //         $scope.error = err.reason;
+                //         $scope.errorVisible = true;
+                //     } else {
+                //         $state.go('web.members'); // Redirect user if registration succeeds
+                //     }
+                // });
+                $meteor.call('addUser', newUser).then(function(result){
+                    console.log('result');
+                    $state.go('web.members'); // Redirect user if registration succeeds                    
+                }, function(err){
+                    console.log('error');
                     console.log(err);
-                } else {
-                    console.log("User added");
-                    $state.go('web.members'); // Redirect user if registration succeeds
-                }
-            });
-
+                    $scope.error = err.reason;
+                    $scope.errorVisible = true;                    
+                });
+            }
         };
     })
 
 
     ///***************************accountMangementCtrl**************************************//
 
-    .controller('accountManagementCtrl', function ($rootScope, $scope, $modal, $log, userService) {
+    .controller('accountManagementCtrl', function ($scope, $modal) {
 
         $scope.subscribe('userData');
 
         $scope.helpers({
             userAccounts: function () {
-                return Meteor.users.find();
+                return Meteor.users.find({}, {sort: [['profile.lastName', 'asc']]});
             }
         });
-
-        $scope.userService = userService;
 
         $scope.deleteAccount = function(user) {
             Meteor.users.remove(user._id);
         };
 
-        $scope.items = ['item1', 'item2', 'item3'];
-
-        $scope.animationsEnabled = true;
-
         // Open the modal
-        $scope.open = function (size) {
-
+        $scope.open = function (user) {
+            $scope.selectedUser = user
             var modalInstance = $modal.open({
-                animation: $scope.animationsEnabled,
+                animation: false,
                 templateUrl: 'client/web/views/deleteAccountModal.ng.html',
                 controller: 'ModalInstanceCtrl',
-                size: size,
+                size: '',
                 resolve: {
-                    items: function () {
-                        return $scope.items;
+                    selectedUser: function () {
+                        return $scope.selectedUser;
                     }
                 }
             });
 
             // Show when modal was closed in console
-            modalInstance.result.then(function (selectedItem) {
-                $scope.selected = selectedItem;
+            modalInstance.result.then(function (selectedUser) {
+                Meteor.users.remove(selectedUser._id);
             }, function () {
-                $log.info('Modal dismissed at: ' + new Date());
+                // Modal dismissed
             });
         };
     })
 
-    .controller('ModalInstanceCtrl', function ($rootScope, $scope, $modalInstance, items) {
-
-        $scope.items = items;
-        $scope.selected = {
-            item: $scope.items[0]
-        };
-
-        $scope.ok = function (user) {
-            Meteor.user.remove(user._id);
-            $modalInstance.close($scope.selected.item);
+    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, selectedUser) {
+        
+        $scope.selectedUser = selectedUser;
+        
+        $scope.ok = function () {
+            $modalInstance.close($scope.selectedUser);
         };
 
         $scope.cancel = function () {
-            $modalInstance.dismiss('cancel');
+            $modalInstance.dismiss();
         };
-    })
-
-    .service('userService', function() {
-        this.user = null;
-});
+    });

@@ -30,9 +30,11 @@
         <!-- Scripts -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
         <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/web/css/custom.css"/>
 
-        <!-- View for content -->
-        <div id="main" ui-view> </div>
+        <!-- View for all content (menu + content) -->
+        <div id="layout">
+            <div ui-view style="overflow: auto; height: 100vh;"></div>
+        </div>
     </div>
 </body>
+

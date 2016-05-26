@@ -1,7 +1,4 @@
-
-
 /*/* GENERAL LAYOUT STRUCTURE */
-
 
 body {
     color: #777;
@@ -13,7 +10,7 @@ body {
 }
 
 /*
-Add transition to containers so they can push in and out.
+            MENU TRANSITIONS
 */
 #layout,
 #menu,
@@ -26,7 +23,7 @@ Add transition to containers so they can push in and out.
 }
 
 /*
-This is the parent `<div>` that contains the menu and the content area.
+            LAYOUT: CONTAINS .CONTENT + #MENU
 */
 #layout {
     position: relative;
@@ -41,7 +38,7 @@ This is the parent `<div>` that contains the menu and the content area.
     left: 150px;
 }
 /*
-The content `<div>` is where all your content goes.
+            CONTENT
 */
 .content {
     margin: 0 auto;
@@ -76,23 +73,6 @@ The content `<div>` is where all your content goes.
     color: #888;
 }
 
-
-/* TOP BAR */
-
-header {
-    background-color: #499636;
-    height: 50px;
-}
-
-#header-clubname, #header-pagename {
-	padding-top: 10px;
-	font-size: 1.5em;
-	font-weight: bolder;
-	color: white;
-	text-transform: uppercase;
-	text-align: center;
-}
-
 /* NAVIGATION FOOTER */
 
 #menu img {
@@ -113,7 +93,6 @@ header {
 
 #menu {
     min-height: 100%;
-    margin: 0 auto -155px; /* the bottom margin is the negative value of the footer's height */
 }
 
 #menu li a {
@@ -142,12 +121,15 @@ header {
     box-shadow: 0px 0px 20px #3b7a2c;
 }
 
-/* CLUBNET LOGO IN MENU */
-
-.nav-footer, .push {
-    height: 155px; /* '.push' must be the same height as 'footer' */
-}
+/* BUTTON COLOR */
 
 .button {
     background-color: #499636 !important;
+}
+
+/* DELETE MODAL */
+
+.modal-open .modal {
+    background: none;
+    width: 100%;
 }
