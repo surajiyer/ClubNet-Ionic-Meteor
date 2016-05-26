@@ -52,7 +52,23 @@ if(Meteor.isServer) {
                 password: String,
                 profile: userProfileSchema
             });
+            credPassword = newUser.password;
+            credEmail = newUser.email;
             userId = Accounts.createUser(newUser);
+            Accounts.emailTemplates.siteName = "ClubNet";
+            Accounts.emailTemplates.from = "ClubNet <accounts@example.com>";
+            Accounts.emailTemplates.enrollAccount.subject = function (newUser) {
+                return "Welcome to ClubNet, " + newUser.profile.firstName;
+            };
+            Accounts.emailTemplates.enrollAccount.text = function (newUser, url) {
+                console.log(newUser);
+                return "Welcome to ClubNet, " + newUser.profile.firstName + "!\n\n"
+                    + "Your club " + newUser.profile.clubID +  " has signed you up for the ClubNet system. You can use the following credentials to log in:\n\n"
+                    + "E-mail address: " + credEmail + "\n"
+                    + "Password: " + credPassword + "\n\n"
+                    +   "Kind regards,\n" +
+                        "The ClubNet team.";
+            };
             Accounts.sendEnrollmentEmail(userId);
         },
         updateUserProfile: function (newInfo) {
