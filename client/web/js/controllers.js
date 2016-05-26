@@ -57,8 +57,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             };
 
             console.log(newUser);
-            Meteor.call('addUser', newUser, function (err, result) {
-                console.log('nu zijn we hier jonguh');
+            Meteor.call('addUser', newUser, function (err) {
                 if (err) {
                     console.log(err);
                 } else {
@@ -73,7 +72,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     ///***************************accountMangementCtrl**************************************//
 
-    .controller('accountManagementCtrl', function ($scope, $modal, $log) {
+    .controller('accountManagementCtrl', function ($scope, $modal) {
 
         $scope.subscribe('userData');
 
@@ -96,7 +95,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 animation: true,
                 templateUrl: 'client/web/views/deleteAccountModal.ng.html',
                 controller: 'ModalInstanceCtrl',
-                size: 'sm',
+                size: '',
                 resolve: {
                     selectedUser: function () {
                         return $scope.selectedUser;

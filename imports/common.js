@@ -1,4 +1,4 @@
-const userTypes = ['coach', 'player', 'general'];
+const userTypes = ['coach', 'player', 'general', 'pr'];
 
 /**
  * Check if user is a PR user.
