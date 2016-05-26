@@ -43,6 +43,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
             team: ''
         };
         
+        $scope.error = '';
+        $scope.errorVisible = false;        
+        
         $scope.addAccount = function () {
             var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
             
@@ -67,14 +70,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     }
                 };
                 
-                $scope.error = '';
-                $scope.errorVisible = false;
-
                 Meteor.call('addUser', newUser, function (result,err) {
-                    console.log('frontend result');
-                    console.log(result);
-                    console.log('frontend error');
-                    console.log(err);
                     if (err) {
                         $scope.error = err.reason;
                         $scope.errorVisible = true;
