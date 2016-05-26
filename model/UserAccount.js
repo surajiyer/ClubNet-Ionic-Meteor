@@ -63,11 +63,19 @@ if(Meteor.isServer) {
             Accounts.emailTemplates.enrollAccount.text = function (newUser, url) {
                 console.log(newUser);
                 return "Welcome to ClubNet, " + newUser.profile.firstName + "!\n\n"
-                    + "Your club " + newUser.profile.clubID +  " has signed you up for the ClubNet system. You can use the following credentials to log in:\n\n"
+                    + "Your club "
+                    + newUser.profile.clubID
+                    + " has signed you up for ClubNet. You can use ClubNet on your phone to read messages from your coach and receive updates from the club.\n\n"
+                    + "To use ClubNet, follow these steps:\n\n"
+                    + "1. Install the ClubNet application to your phone. You can download ClubNet from the iOS App Store if you have an Apple device, or from the Android Play Store if you have an Android device. \n"
+                    + "2. After installation, open ClubNet an log in using the following credentials:\n\n"
                     + "E-mail address: " + credEmail + "\n"
                     + "Password: " + credPassword + "\n\n"
-                    +   "Kind regards,\n" +
-                        "The ClubNet team.";
+                    + "It is strongly advised that you change your password as soon as possible. To do this, follow the following steps:\n\n"
+
+                    + "Have fun using ClubNet!\n\n"
+                    + "Kind regards, \n"
+                    + "The ClubNet team.";
             };
             Accounts.sendEnrollmentEmail(userId);
         },
