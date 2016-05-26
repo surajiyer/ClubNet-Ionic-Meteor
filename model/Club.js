@@ -1,3 +1,4 @@
+import clubSchema from '/imports/schemas/responses';
 Clubs = new Mongo.Collection("Clubs");
 Meteor.startup(function () {
     Clubs.allow({
@@ -27,6 +28,7 @@ Meteor.startup(function () {
 if (Meteor.isServer) {
     Meteor.methods({
         updateClub: function (updatedItem) {
+            check(updatedItem, Object);
             var clubID = Meteor.user().profile.clubID;
             Clubs.update(
                 {_id: clubID},

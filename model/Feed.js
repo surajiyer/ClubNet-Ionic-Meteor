@@ -52,13 +52,15 @@ Meteor.startup(function () {
     });
 
     if (Meteor.isServer) {
+
         Meteor.publish('Feed', function (itemTypes) {
             if (!itemTypes) {
                 this.ready();
                 return;
             }
             check(itemTypes, [String]);
-            return Items.find({type: {$in: itemTypes}}, {sort: {sticky: -1, createdAt: -1}});
+            var teamID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.teamID;
+            return Items.find({type: {$in: itemTypes}, teamID: teamID}, {sort: {sticky: -1, createdAt: -1}});
         });
     }
 

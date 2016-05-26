@@ -158,7 +158,9 @@ angular.module('app.controllers', [])
         });
 
         $scope.getCurrentDateISO = function(){
-            return new Date().toISOString().substring(0, 10);
+            var date = new Date();
+            date.setDate(date.getDate()-1);
+            return date.toISOString().substring(0, 10);
         }
 
         // Set display filter model
