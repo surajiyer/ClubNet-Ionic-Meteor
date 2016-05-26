@@ -57,6 +57,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     clubID: "PSV"
                 }
             };
+
             console.log(newUser);
             Meteor.call('addUser', newUser, function (err, result) {
                 console.log('nu zijn we hier jonguh');
@@ -74,7 +75,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     ///***************************accountMangementCtrl**************************************//
 
-    .controller('accountManagementCtrl', function ($scope, $modal, $log, $meteor, $state) {
+    .controller('accountManagementCtrl', function ($rootScope, $scope, $modal, $log, userService) {
 
         $scope.subscribe('userData');
 
@@ -84,6 +85,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
             }
         });
 
+        $scope.userService = userService;
+
         $scope.deleteAccount = function(user) {
             Meteor.users.remove(user._id);
         };
@@ -92,6 +95,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         $scope.animationsEnabled = true;
 
+        // Open the modal
         $scope.open = function (size) {
 
             var modalInstance = $modal.open({
@@ -106,31 +110,32 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 }
             });
 
+            // Show when modal was closed in console
             modalInstance.result.then(function (selectedItem) {
                 $scope.selected = selectedItem;
             }, function () {
                 $log.info('Modal dismissed at: ' + new Date());
             });
         };
-
-        $scope.toggleAnimation = function () {
-            $scope.animationsEnabled = !$scope.animationsEnabled;
-        };
     })
 
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, items) {
+    .controller('ModalInstanceCtrl', function ($rootScope, $scope, $modalInstance, items) {
 
         $scope.items = items;
         $scope.selected = {
             item: $scope.items[0]
         };
 
-        $scope.ok = function () {
+        $scope.ok = function (user) {
+            Meteor.user.remove(user._id);
             $modalInstance.close($scope.selected.item);
         };
 
         $scope.cancel = function () {
             $modalInstance.dismiss('cancel');
-            deleteAccount(user);
         };
-    });
+    })
+
+    .service('userService', function() {
+        this.user = null;
+});
