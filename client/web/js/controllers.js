@@ -45,6 +45,15 @@ angular.module('web.controllers', ['ui.bootstrap'])
         
         $scope.error = '';
         $scope.errorVisible = false;        
+        $scope.generatePassword = function() {
+            var length = 8,
+                charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
+                retVal = "";
+            for (var i = 0, n = charset.length; i < length; ++i) {
+                retVal += charset.charAt(Math.floor(Math.random() * n));
+            }
+            return retVal;
+        }
         
         $scope.addAccount = function () {
             var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -61,7 +70,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             } else {
                  var newUser = {
                     email: $scope.user.email,
-                    password: "dev",
+                    password: $scope.generatePassword(),
                     profile: {
                         firstName: $scope.user.firstName,
                         lastName: $scope.user.lastName,
@@ -70,14 +79,6 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     }
                 };
                 
-                // Meteor.call('addUser', newUser, function (result,err) {
-                //     if (err) {
-                //         $scope.error = err.reason;
-                //         $scope.errorVisible = true;
-                //     } else {
-                //         $state.go('web.members'); // Redirect user if registration succeeds
-                //     }
-                // });
                 $meteor.call('addUser', newUser).then(function(result){
                     console.log('result');
                     $state.go('web.members'); // Redirect user if registration succeeds                    
@@ -143,4 +144,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
+    })
+    
+    .controller('resetPasswordCtrl', function ($scope, $meteor, $state) {
+        console.log('reset password controller');
     });
