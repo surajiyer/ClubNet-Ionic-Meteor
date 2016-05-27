@@ -70,6 +70,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         $meteor.subscribe('images');
 
+        $scope.hostname = 'http://' + window.location.hostname;
+
         $scope.uploadFile = function (event) {
             var files = event.target.files;
 
@@ -103,7 +105,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             });
 
         }
-
+        console.log(Clubs.find({}).fetch());
         $scope.helpers({
             club: function () {
                 return Clubs.find({});

@@ -1,12 +1,22 @@
 /*/* GENERAL LAYOUT STRUCTURE */
-
+input[type="color"] {
+    display: inline-block;
+}
 body {
     color: #777;
+}
+
+.content .row {
+    padding: 15px 0;
 }
 
 .pure-img-responsive {
     max-width: 100%;
     height: auto;
+}
+
+.inline-block {
+    display: inline-block;
 }
 
 /*
@@ -132,4 +142,10 @@ body {
 .modal-open .modal {
     background: none;
     width: 100%;
+}
+
+.settings-club-logo {
+    max-width: 250px;
+    padding: 20px;
+    float: right;
 }

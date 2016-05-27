@@ -15,7 +15,6 @@ standard-minifier-css   # CSS minifier run for production mode
 standard-minifier-js    # JS minifier run for production mode
 es5-shim                # ECMAScript 5 compatibility for older browsers.
 
-driftyco:ionic
 angular
 dburles:collection-helpers
 tomi:upload-server
@@ -40,3 +39,4 @@ fourseven:scss
 cfs:standard-packages
 cfs:filesystem
 cfs:gridfs
+thospaeth:angular-color-picker
