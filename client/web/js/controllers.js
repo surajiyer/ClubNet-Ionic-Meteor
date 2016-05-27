@@ -222,6 +222,47 @@ angular.module('web.controllers', ['ui.bootstrap'])
         };
     })
 
+    .controller('profileCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            id: Meteor.user()._id,
+            firstName: Meteor.user().profile.firstName,
+            lastName: Meteor.user().profile.lastName,
+            email: Meteor.user().emails[0].address
+        };
+        
+        $scope.error = '';
+        $scope.errorVisible = false;    
+        $scope.updatedVisible = false;    
+        
+        $scope.saveChanges = function () {
+            if (!$scope.user.firstName) {
+                    $scope.error = 'No first name specified';
+                    $scope.errorVisible = true;                
+            } else if (!$scope.user.lastName) {
+                    $scope.error = 'No last name specified';
+                    $scope.errorVisible = true;                
+            } else {
+                 var updatedProfile = {
+                    firstName: $scope.user.firstName,
+                    lastName: $scope.user.lastName,
+                    type: 'pr',
+                    clubID: "PSV",
+                    teamID: ''
+                };
+                
+                $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function(result){
+                    $scope.updatedVisible = true;
+                    $scope.errorVisible = false;
+                }, function(err){
+                    $scope.updatedVisible = false;
+                    console.log('error');
+                    console.log(err);
+                    $scope.error = err.reason;
+                    $scope.errorVisible = true;
+                });
+            }
+        };
+    })
 
     ///***************************accountMangementCtrl**************************************//
 

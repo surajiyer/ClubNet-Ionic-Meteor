@@ -76,7 +76,8 @@ angular.module('web.routes', [])
             // User profile
             .state('web.profile', {
                 url: '/profile',
-                templateUrl: 'client/web/views/profile.ng.html'
+                templateUrl: 'client/web/views/profile.ng.html',
+                controller: 'profileCtrl'
             })
 
             // Feed
