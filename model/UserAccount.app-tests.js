@@ -1,7 +1,6 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
-import {StubCollections} from 'meteor/hwillson:stub-collections';
 
 import {isAdmin} from '/imports/common';
 import {userSchema, userProfileSchema} from '/imports/schemas/users';
@@ -28,7 +27,7 @@ if (Meteor.isServer) {
 
             // Create item without type
             testUser = {
-                email: 'test@test.test10',
+                email: 'test@test.test50',
                 password: 'test',
                 profile: {lastName: 'Test', type: 'player', clubID: 'test'}
             };
@@ -58,14 +57,16 @@ if (Meteor.isServer) {
             testProfile = {firstName: 'Test', lastName: 14, type: 'player', clubID: 'test'};
             // Get item with wrong parameter
             try {
-                Meteor.call('updateUserProfile', testProfile);
+                Meteor.call('updateUserProfile',testUser._id, testProfile);
                 assert.fail();
-            } catch (err) {}
+            } catch (err) {
+            }
 
             testProfile.lastName = 'newTest';
+            testUser.profile = testProfile;
             // Get item added in the previous test
             try {
-                Meteor.call('updateUserProfile', testProfile);
+                Meteor.call('updateUserProfile',testUser._id, testProfile);
                 done();
             } catch (err) {
                 assert.fail();
