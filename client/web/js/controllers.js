@@ -14,9 +14,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.login = function () {
             result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function(result){
                 if (Meteor.user().profile.type != 'pr') {
-                    $scope.user.email = '';
-                    $scope.user.password = '';
-                    $scope.error = 'Only PR users can enter';
+                    $scope.error = 'Incorrect credentials';
                     $scope.errorVisible = true;
                     Meteor.logout();
                 } else {
@@ -24,9 +22,12 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     $state.go('web.feed');
                 }
             }, function(err){
-                console.log('error');
                 console.log(err);
-                $scope.error = err.reason;
+                if (err.error == 400 || err.error == 403) {
+                    $scope.error = 'Incorrect credentials'
+                } else {
+                    $scope.error = err.reason;                    
+                }
                 $scope.errorVisible = true;
             });
         };
