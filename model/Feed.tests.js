@@ -4,10 +4,10 @@ import {Meteor} from 'meteor/meteor';
 
 import { baseFeedItemSchema } from '/imports/schemas/feedItems';
 import { baseResponseSchema } from '/imports/schemas/responses';
-import './Feed.js'
+import './Feed.js';
 
 if (Meteor.isServer) {
-    userId = '1'
+    userId = '1';
     describe('FeedItems', () => {
 
         it("Add FeedItem", (done) => {
