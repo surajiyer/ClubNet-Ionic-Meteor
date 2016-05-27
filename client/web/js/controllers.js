@@ -104,7 +104,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             });
 
         }
-
+        console.log(Clubs.find({}).fetch());
         $scope.helpers({
             club: function () {
                 return Clubs.find({});

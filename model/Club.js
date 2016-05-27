@@ -19,6 +19,8 @@ Meteor.startup(function () {
     if (Meteor.isServer) {
         Meteor.publish('Clubs', function () {
             var clubID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.clubID;
+            console.log(this.userId + '|');
+            console.log(Clubs.find({_id: clubID}).fetch());
             return Clubs.find({_id: clubID});
         });
     }
