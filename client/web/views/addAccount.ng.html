@@ -21,6 +21,16 @@
 
         <label class="item item-input item-select">
             <div class="input-label" ng-model="temp_account.playerTeam">
+                Role
+            </div>
+            <select ng-model="user.role">
+                <option value="player" selected>Player</option>
+                <option value="general">General club member</option>
+            </select>
+        </label>
+
+        <label class="item item-input item-select">
+            <div class="input-label" ng-model="temp_account.playerTeam">
                 Team
             </div>
             <select ng-model="user.team">

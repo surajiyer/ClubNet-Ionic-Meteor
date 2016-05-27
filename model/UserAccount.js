@@ -75,7 +75,8 @@ if(Meteor.isServer) {
 
                     + "Have fun using ClubNet!\n\n"
                     + "Kind regards, \n"
-                    + "The ClubNet team.";
+                    + "The ClubNet team.\n\n" +
+                    url;
             };
             Accounts.sendEnrollmentEmail(userId);
         },
