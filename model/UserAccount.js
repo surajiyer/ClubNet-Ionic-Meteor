@@ -104,6 +104,7 @@ if(Meteor.isServer) {
         addNote: function (newNote) {
             check(newNote, notesSchema);
             Meteor.users.update(
+                {_id: Meteor.userId()},
                 {$push: {'notes': newNote}}
             );
         },
@@ -111,6 +112,7 @@ if(Meteor.isServer) {
             check(newNote, notesSchema);
             Meteor.users.update(
                 {
+                    _id: Meteor.userId(),
                     notes: {$elemMatch: {itemID: newNote.itemID}}
                 },
                 {$set: {"notes.$.text": newNote.text}}
