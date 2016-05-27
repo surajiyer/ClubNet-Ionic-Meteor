@@ -10,7 +10,9 @@
 ion-view.pane {
     background: #eee;
 }
-
+.settings-club-logo {
+    max-width: 350px;
+}
 .saved-notification {
     -webkit-transition: all 500ms ease;
     -moz-transition: all 500ms ease;
