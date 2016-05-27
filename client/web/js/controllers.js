@@ -159,7 +159,58 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 };
                 
                 $meteor.call('addUser', newUser).then(function(result){
-                    console.log('result');
+                    $state.go('web.members'); // Redirect user if registration succeeds
+                }, function(err){
+                    console.log('error');
+                    console.log(err);
+                    $scope.error = err.reason;
+                    $scope.errorVisible = true;
+                });
+            }
+        };
+    })
+    
+    .controller('editAccountCtrl', function ($scope, $meteor, $state, $stateParams) {
+        $scope.user = {
+            id: $stateParams.userID,
+            firstName: '',
+            lastName: '',
+            email: '',
+            team: ''
+        };
+        
+        $meteor.call('getUserInfo', $scope.user.id).then(function(result){
+            $scope.user.firstName = result.profile.firstName;
+            $scope.user.lastName = result.profile.lastName;
+            $scope.user.email = result.emails[0].address;
+            $scope.user.team = result.profile.teamID;
+        }, function(err){
+            console.log('error');
+            console.log(err);
+            $scope.error = err.reason;
+            $scope.errorVisible = true;
+        });
+        
+        $scope.error = '';
+        $scope.errorVisible = false;        
+        
+        $scope.saveChanges = function () {
+            if (!$scope.user.firstName) {
+                    $scope.error = 'No first name specified';
+                    $scope.errorVisible = true;                
+            } else if (!$scope.user.lastName) {
+                    $scope.error = 'No last name specified';
+                    $scope.errorVisible = true;                
+            } else {
+                 var updatedProfile = {
+                    firstName: $scope.user.firstName,
+                    lastName: $scope.user.lastName,
+                    type: $scope.user.team != '' ? 'player' : 'general',
+                    clubID: "PSV",
+                    teamID: $scope.user.team
+                };
+                
+                $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function(result){
                     $state.go('web.members'); // Redirect user if registration succeeds
                 }, function(err){
                     console.log('error');
@@ -174,7 +225,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     ///***************************accountMangementCtrl**************************************//
 
-    .controller('accountManagementCtrl', function ($scope, $modal) {
+    .controller('accountManagementCtrl', function ($scope, $modal, $state) {
 
         $scope.subscribe('userData');
 
@@ -190,8 +241,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
             }
         };
 
-        // Open the modal
-        $scope.open = function (user) {
+        // Open the delete modal
+        $scope.delete = function (user) {
             $scope.selectedUser = user
             var modalInstance = $modal.open({
                 animation: false,
@@ -211,6 +262,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
             }, function () {
                 // Modal dismissed
             });
+        };
+        
+        // Go to the edit screen
+        $scope.edit = function (user) {
+            $state.go('web.editAccount', {'userID' : user._id});
         };
     })
 

@@ -51,6 +51,13 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/addAccount.ng.html',
                 controller: 'addAccountCtrl'
             })
+            
+            // Editing members
+            .state('web.editAccount', {
+                url: '/editAccount/:userID',
+                templateUrl: 'client/web/views/editAccount.ng.html',
+                controller: 'editAccountCtrl'
+            })
 
             // Member management
             .state('web.members', {

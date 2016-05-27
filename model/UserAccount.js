@@ -79,18 +79,19 @@ if(Meteor.isServer) {
             };
             Accounts.sendEnrollmentEmail(userId);
         },
-        updateUserProfile: function (newInfo) {
+        updateUserProfile: function (userID, newInfo) {
             // TODO: should not check full user profile schema for update
+            check(userID, String);
             check(newInfo, userProfileSchema);
             Meteor.users.update(
-                {_id: this.userId},
+                {_id: userID},
                 {$set: {profile: newInfo}}
             );
         },
         getUserInfo: function (userID) {
             check(userID, String);
             check(this.userId, Match.Where(isAdmin));
-            return Meteor.users.find({_id: userID}).fetch();
+            return Meteor.users.find({_id: userID}).fetch()[0];
         },
         getUserType: function () {
             check(this.userId, String);
