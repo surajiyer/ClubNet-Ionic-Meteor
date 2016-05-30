@@ -78,7 +78,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Settings: provides the functionality for the settings page of the web interface
+     *  Settings
+     *  @summary Provides the functionality for the settings page of the web interface
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -107,8 +108,10 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.hostname = 'http://' + window.location.hostname;
 
         /**
-         * @summary Function for retrieving the club name that a logged in user is associated with.
-         * @param event
+         * @summary Function for uploading a file.
+         * @method uploadFile
+         * @param {Object} event The file to upload.
+         * @after All the images are uploaded to the server.
          */
         $scope.uploadFile = function (event) {
             var files = event.target.files;
@@ -116,18 +119,26 @@ angular.module('web.controllers', ['ui.bootstrap'])
             for (var i = 0, ln = files.length; i < ln; i++) {
 
                 files[i].userId = Meteor.userId();
+                // Insert all the images into the Images collection.
                 Images.insert(files[i], function (err, fileObj) {
                     if (err) {
                        // console.log(err);
                     } else {
+                        //Good is normal
                         $meteor.call('updateClub', {logo: fileObj.url({brokenIsFine: true})}).then(function(result){}, function(err){
                             console.log(err);
                         });
                     }
                 });
             }
-        }
+        };
+
         $scope.saved = false;
+        /**
+         * @summary Function for saving the new settings for the club.
+         * @method save
+         * @after The new settings are saved on the server.
+         */
         $scope.save = function(){
             var updatedClub = {
                 name: $scope.currentClub.name,
@@ -142,8 +153,15 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 console.log(err);
             });
 
-        }
+        };
+
         console.log(Clubs.find({}).fetch());
+        /**
+         * @summary Helper functions
+         * @method save
+         * @param {Function} club Returns all the clubs
+         * @param {Function} images Returns the images
+         */
         $scope.helpers({
             club: function () {
                 return Clubs.find({});
