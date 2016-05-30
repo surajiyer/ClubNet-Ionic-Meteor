@@ -17,7 +17,7 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr ng-repeat="user in userAccounts | limitTo:display_limit">
+                <tr ng-repeat="user in userAccounts | limitTo:display_limit" id="member-row">
                     <td>{{user.profile.firstName}}</td>
                     <td>{{user.profile.lastName}}</td>
                     <td>{{user.emails[0].address}}</td>
