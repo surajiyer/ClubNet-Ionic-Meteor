@@ -8,7 +8,7 @@ Meteor.startup(function () {
     TypesCollection.deny({
         insert: function () {
             // Enable in case of testing for feed item tests
-            return !Meteor.isTest;
+            return true;
         },
         update: function () {
             return true;

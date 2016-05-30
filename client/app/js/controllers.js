@@ -129,9 +129,8 @@ angular.module('app.controllers', [])
         AccessControl.getPermission('CoachBar', 'view', function (result) {
             $scope.showCoachBar = result;
         });
-
-        // Load the filter
-        Meteor.subscribe('ItemTypes', function () {
+        
+        $scope.updateItemTypes = function() {
             //if (err) throw new Meteor.Error(err.reason);
             var oldItemTypes = [];
             if ($scope.itemTypes) {
@@ -145,7 +144,10 @@ angular.module('app.controllers', [])
                 if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
                 else element.checked = true;
             }, this);
-        });
+        };
+
+        // Load the filter
+        Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
         Tracker.autorun(function () {
             $scope.getReactively('itemTypes', true);
