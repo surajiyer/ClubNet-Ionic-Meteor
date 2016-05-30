@@ -124,6 +124,7 @@ if(Meteor.isServer) {
          * If so, it will try to get the information.
          * @method getUserInfo
          * @param {String} userID The id of the user who's information needs to be retrieved.
+         * @return {Object} The information of the user as an object
          */
         getUserInfo: function (userID) {
             check(userID, String);
@@ -135,6 +136,7 @@ if(Meteor.isServer) {
          * It will first check whether the parameters are valid.
          * If so, it will try to get the type of the user.
          * @method getUserType
+         * @returns {String} Type of the user
          */
         getUserType: function () {
             check(Meteor.userId(), String);
