@@ -24,6 +24,7 @@ angular.module('web.routes', [])
                 }
             })
 
+            // Enroll page
             .state('enroll', {
                 url: '/enroll/:token',
                 templateUrl: 'client/web/views/enroll.ng.html'
@@ -115,7 +116,7 @@ angular.module('web.routes', [])
             console.log(toState);
             console.log('fromState');
             console.log(fromState);
-            if(toState.name === "login" || toState.name == "enroll"){
+            if(toState.name === "login"){
                 return; // no need to redirect
             }
 
