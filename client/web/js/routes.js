@@ -111,11 +111,11 @@ angular.module('web.routes', [])
                                                     , fromState, fromParams) {
 
             if(toState.name === "login" || toState.name == "enroll"){
+                return; // no need to redirect
             }
 
             // now, redirect only not authenticated
             if (!Meteor.userId()) {
-                return; // no need to redirect
                 e.preventDefault(); // stop current execution
                 $state.go('login');
             }
