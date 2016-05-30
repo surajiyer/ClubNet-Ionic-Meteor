@@ -227,11 +227,18 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     .controller('profileCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
-            id: Meteor.user()._id,
-            firstName: Meteor.user().profile.firstName,
-            lastName: Meteor.user().profile.lastName,
-            email: Meteor.user().emails[0].address
-        };
+            id: '',
+            firstName: '',
+            lastName: '',
+            email: ''
+        }
+        
+        $scope.retrieveUser = function() {
+            $scope.user.id = Meteor.user()._id;
+            $scope.user.firstName = Meteor.user().profile.firstName;
+            $scope.user.lastName = Meteor.user().profile.lastName;
+            $scope.user.email = Meteor.user().emails[0].address;    
+        }
         
         $scope.error = '';
         $scope.errorVisible = false;    
@@ -265,6 +272,18 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 });
             }
         };
+        
+        if (Meteor.user() != undefined) {
+            $scope.retrieveUser();
+        } else {
+            setTimeout(function() {
+                if (Meteor.user() != undefined) {
+                    $scope.retrieveUser();
+                    $scope.$apply();
+                }
+            }, 100);
+        }
+        
     })
 
     ///***************************accountMangementCtrl**************************************//
