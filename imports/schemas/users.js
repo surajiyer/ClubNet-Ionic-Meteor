@@ -1,4 +1,4 @@
-import { userTypes } from '/imports/common';
+import * as utils from '/imports/common';
 import { notesSchema } from '/imports/schemas/misc';
 
 /**
@@ -10,7 +10,7 @@ const UserProfile = new SimpleSchema({
     lastName: {type: String},
     type: {
         type: String,
-        allowedValues: userTypes
+        allowedValues: utils.userTypes
     },
     clubID: {type: String},
     bettingResults: {
@@ -57,6 +57,8 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$unset") return "required";
                     if (this.operator === "$rename") return "required";
                 }
+            } else {
+                return 'notAllowed';
             }
         }
     }

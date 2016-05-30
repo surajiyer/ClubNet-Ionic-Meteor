@@ -2,7 +2,7 @@
  * Database base schema for responses
  * @type {SimpleSchema}
  */
-baseResponseSchema = new SimpleSchema({
+const baseResponseSchema = new SimpleSchema({
     userID: {type: String},
     itemID: {type: String},
     itemType: {type: String},
@@ -13,13 +13,15 @@ baseResponseSchema = new SimpleSchema({
  * Database schema for betting responses
  * @type {SimpleSchema}
  */
-bettingResponseSchema = new SimpleSchema([baseResponseSchema, {
-    userID: {type: String},
-    itemID: {type: String},
-    value: {type: [String], allowedValues: ["win", "lose", "tie", "none"]}
+const bettingResponseSchema = new SimpleSchema([baseResponseSchema, {
+    value: {
+        type: [String],
+        allowedValues: ["win", "lose", "tie", "none"]
+    }
 }]);
 
 export {baseResponseSchema};
+
 export default responseSchemas = {
     'Voting': baseResponseSchema,
     'Form': baseResponseSchema,

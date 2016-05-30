@@ -1,4 +1,4 @@
-import {isValidType} from '/imports/common';
+import * as utils from '/imports/common';
 import feedItemSchemas from '/imports/schemas/feedItems';
 import responseSchemas from '/imports/schemas/responses';
 
@@ -57,7 +57,10 @@ Meteor.startup(function () {
                 return;
             }
             check(itemTypes, [String]);
-            return Items.find({type: {$in: itemTypes}}, {sort: {sticky: -1, createdAt: -1}});
+            return Items.find({
+                clubID: utils.getUserClubID(this.userId), 
+                type: {$in: itemTypes}
+            }, {sort: {sticky: -1, createdAt: -1}});
         });
     }
 
@@ -82,12 +85,12 @@ if (Meteor.isServer) {
         },
         getFeedItem: function (id) {
             check(id, String);
-            return result = Items.find({ _id : id}).fetch()[0];
+            return result = Items.find({_id: id}).fetch()[0];
         },
         updateFeedItem: function (updatedItem) {
-            id = updatedItem._id;
+            check(updatedItem, Object);
+            var id = updatedItem._id;
             delete updatedItem._id;
-            check(updatedItem, Items.simpleSchema({type: updatedItem.type}));
             Items.update(
                 {_id: id},
                 {$set: updatedItem}
@@ -124,26 +127,25 @@ if (Meteor.isServer) {
             return Responses.find({itemType: itemType}).fetch();
         },
         putResponse: function (itemID, itemType, value) {
-            check(itemID, String);
-            check(itemType, String);
-            check(value, String);
-            response = {
+            var response = {
                 userID: Meteor.userId(),
                 itemID: itemID,
                 itemType: itemType,
                 value: value
-            }
+            };
             check(response, Responses.simpleSchema({itemType: itemType}));
             return Responses.insert(response);
         },
         getVotingResults: function (itemID) {
             check(itemID, String);
-            votes = Responses.find({itemID: itemID}).fetch();
+            votes = Meteor.call('getResponsesOfOneItem', itemID);
             result = [[0, 0, 0]];
             votes.forEach(function (vote) {
                 result[0][Number(vote.value)]++;
             });
             return result;
+        },
+        getBettingResults: function (itemID) {
         }
     })
 }

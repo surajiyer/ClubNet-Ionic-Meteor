@@ -1,42 +1,73 @@
-import {isAdmin} from '/imports/common';
+import * as utils from '/imports/common';
 import {userSchema, userProfileSchema} from '/imports/schemas/users';
 import {notesSchema} from '/imports/schemas/misc';
+
+const getUsersFromTeam = function (clubID, teamID, userTypes) {
+    if(!userTypes) userTypes = utils.userTypes;
+    return Meteor.users.find(
+        {
+            'profile.clubID': clubID,
+            'profile.teamID': teamID,
+            'profile.type': {$in: userTypes}
+        },
+        {
+            fields: {
+                '_id': 1,
+                'profile.firstName': 1,
+                'profile.lastName': 1,
+                'profile.type': 1
+            }
+        }
+    );
+};
 
 Meteor.startup(function () {
     // Set deny rules
     Meteor.users.deny({
         insert: function (userId) {
-            return !isAdmin(userId);
+            return !utils.isAdmin(userId);
         },
         update: function (userId) {
-            return !isAdmin(userId);
+            return !utils.isAdmin(userId);
         },
         remove: function (userId) {
-            return !isAdmin(userId);
+            return !utils.isAdmin(userId);
         }
     });
 
     // Set allow rules
     Meteor.users.allow({
         insert: function (userId) {
-            return isAdmin(userId);
+            return utils.isAdmin(userId);
         },
         update: function (userId) {
-            return isAdmin(userId);
+            return utils.isAdmin(userId);
         },
         remove: function (userId) {
-            return isAdmin(userId);
+            return utils.isAdmin(userId);
         }
     });
 
     // Publish userData
     if (Meteor.isServer) {
         Meteor.publish("userData", function () {
-                if (isAdmin(this.userId))
+            console.log(this.userId);
+            var userType = utils.getUserType(this.userId);
+            switch (userType) {
+                case 'pr':
                     return Meteor.users.find({});
-                this.ready();
+                case 'coach':
+                    var clubID = utils.getUserClubID(this.userId);
+                    var teamID = utils.getUserTeamID(this.userId);
+                    return getUsersFromTeam(clubID, teamID, ['coach', 'player']);
+                case 'player':
+                    var clubID = utils.getUserClubID(this.userId);
+                    var teamID = utils.getUserTeamID(this.userId);
+                    return getUsersFromTeam(clubID, teamID, ['coach']);
+                default:
+                    this.ready();
             }
-        );
+        });
     }
 
     // Attach user schema
@@ -44,7 +75,7 @@ Meteor.startup(function () {
 });
 
 // TODO: remove Meteor.isServer for latency compensation
-if(Meteor.isServer) {
+if (Meteor.isServer) {
     Meteor.methods({
         addUser: function (newUser) {
             check(newUser, {
@@ -52,13 +83,12 @@ if(Meteor.isServer) {
                 password: String,
                 profile: userProfileSchema
             });
-            check(this.userId, Match.Where(isAdmin));
+            //check(this.userId, Match.Where(utils.isAdmin));
             var userID = Accounts.createUser(newUser);
             return userID;
         },
         updateUserProfile: function (newInfo) {
-            // TODO: should not check full user profile schema for update
-            check(newInfo, userProfileSchema);
+            check(newInfo, Object);
             Meteor.users.update(
                 {_id: this.userId},
                 {$set: {profile: newInfo}}
@@ -66,12 +96,11 @@ if(Meteor.isServer) {
         },
         getUserInfo: function (userID) {
             check(userID, String);
-            check(this.userId, Match.Where(isAdmin));
+            check(this.userId, Match.Where(utils.isAdmin));
             return Meteor.users.find({_id: userID}).fetch();
         },
         getUserType: function () {
             check(this.userId, String);
-            //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
             return Meteor.user().profile.type;
         },
         addNote: function (newNote) {

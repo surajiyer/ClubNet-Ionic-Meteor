@@ -40,9 +40,6 @@ const baseFeedItemSchema = new SimpleSchema({
         denyUpdate: true
     },
     published: {
-        type: Boolean
-    },
-    published: {
         type: Boolean,
         defaultValue: true
     },
@@ -83,7 +80,10 @@ const exerciseSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     deadline: {
         type: Date,
         custom: function () {
@@ -103,7 +103,7 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         type: Boolean,
         optional: true,
         autoValue: function () {
-            if (this.isInsert)
+            if (!this.isSet && this.isInsert)
                 return true;
         }
     },
@@ -111,7 +111,7 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         type: Boolean,
         optional: true,
         autoValue: function () {
-            if (this.isInsert)
+            if (!this.isSet && this.isInsert)
                 return true;
         }
     },
@@ -151,7 +151,10 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
  * @type {SimpleSchema}
  */
 const formSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     description: {type: String},
     teamID: {
         type: String,
@@ -189,7 +192,10 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
  * @type {SimpleSchema}
  */
 const heroesSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     text: {type: String},
     image: {type: String}
 }]);
@@ -223,7 +229,10 @@ const bettingRoundSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     description: {type: String},
     targetAmount: {type: Number},
     raisedAmount: {type: Number}

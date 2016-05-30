@@ -1,4 +1,4 @@
-import {userTypes, isValidType} from '/imports/common';
+import * as utils from '/imports/common';
 
 /**
  * Database schema for feed item notes
@@ -33,7 +33,7 @@ const permissionSchema = new SimpleSchema({
     _id: {
         type: String,
         custom: function () {
-            if(!isValidType(this.value)) return "notAllowed";
+            if(!utils.isValidType(this.value)) return "notAllowed";
         }
     },
     permissions: {type: Object},
@@ -55,6 +55,9 @@ const permissionSchema = new SimpleSchema({
     }
 });
 
+utils.userTypes.push('yolo');
+console.log(utils.userTypes);
+
 /**
  * Database schema for Access Control
  * @type {SimpleSchema}
@@ -62,7 +65,7 @@ const permissionSchema = new SimpleSchema({
 const accessControlSchema = new SimpleSchema({
     _id: {
         type: String,
-        allowedValues: userTypes
+        allowedValues: utils.userTypes
     },
     items: {
         type: [permissionSchema]

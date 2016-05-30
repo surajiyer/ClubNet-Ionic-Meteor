@@ -4,12 +4,33 @@ Chats = new Mongo.Collection("Chats");
 //ChatSessions = new Mongo.Collection("ChatSessions");
 Messages = new Mongo.Collection("Messages");
 
+if (Meteor.isServer) {
+    Meteor.publish('Chats', function () {
+        return Chats.find({users: this.userId});
+    });
+
+    Meteor.publish('Messages', function (chatId, messageId) {
+        selector.chatID = chatId;
+        if(messageId) selector._id = messageId;
+        return Messages.find(selector);
+    });
+}
+
+/**
+ * Get the status of the chat
+ * @returns {*}
+ */
+const getChatStatus = function (chatID) {
+    return Chat.find({_id: chatID}).fetch()[0].status;
+};
+
 Meteor.startup(function () {
     Chats.allow({
-        insert: function (userId) {
+        insert: function (userId, doc) {
             var isValidUser = userId == this.userId;
             var hasPermission = Meteor.call('checkRights', 'Chat', 'create');
-            return isValidUser && hasPermission;
+            var chatIsOpen = getChatStatus(doc.chatID) == 'open';
+            return isValidUser && hasPermission && chatIsOpen;
         },
         update: function (userId, doc) {
             var isValidUser = userId == this.userId;
@@ -20,7 +41,7 @@ Meteor.startup(function () {
             var isValidUser = userId == this.userId;
             var hasPermission = Meteor.call('checkRights', 'Chat', 'delete');
             var allowed = isValidUser && hasPermission;
-            if(allowed) {
+            if (allowed) {
                 Messages.remove({chatID: doc._id});
             }
             return allowed;
@@ -32,7 +53,7 @@ Meteor.startup(function () {
             var isValidUser = userId == this.userId;
             return isValidUser;
         },
-        update: function (userId) {
+        update: function () {
             return false;
         },
         remove: function (userId) {
@@ -47,13 +68,3 @@ Meteor.startup(function () {
     //ChatSessions.attachSchema(chatSessions);
     Messages.attachSchema(messages);
 });
-
-if (Meteor.isServer) {
-    Meteor.publish('Chats', function () {
-        return Chats.find({users: this.userId});
-    });
-
-    Meteor.publish('Messages', function (chatId) {
-        return Messages.find({chatID: chatId});
-    });
-}

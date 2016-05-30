@@ -1,9 +1,76 @@
 angular.module('app.controllers', [])
 
-    .controller('ItemCtrl', function ($scope) {
-        if (!$scope.item) {
-            throw new Error("No item object passed.");
+    .controller('registerCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            email: '',
+            password: ''
+        };
+        $scope.register = function () {
+            if (!$scope.user.email)
+                throw new Meteor.Error('Account registration error: e-mail is not valid');
+            var newUser = {
+                email: $scope.user.email,
+                password: $scope.user.password,
+                profile: {
+                    firstName: "p",
+                    lastName: "1",
+                    type: "player",
+                    clubID: "club",
+                    teamID: "team1"
+                }
+            };
+            Meteor.call('addUser', newUser, function (err, result) {
+                if (err || !Match.test(result, String))
+                    throw new Meteor.Error('Account registration error: ' + err.reason);
+                Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+                    if (error) throw new Meteor.Error(error.reason);
+                    $state.go('menu.feed'); // Redirect user if registration succeeds
+                });
+            });
+        };
+    })
+
+    .controller('loginCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            email: '',
+            password: ''
+        };
+
+        $scope.login = function () {
+            Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+                if (error) {
+                    throw new Meteor.Error(error.reason);
+                }
+                $state.go('menu.feed');
+            });
+        };
+
+        $scope.goToRemindPassword = function () {
+            $state.go('forgotPassword');
         }
+    })
+
+    .controller('forgotPasswordCtrl', function ($scope) {
+        $scope.forgotUser = {
+            email: '',
+            token: '',
+            newPassword: ''
+        };
+
+        $scope.resetPassword = function () {
+            Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
+                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+                console.log('Reset password success');
+            });
+        };
+
+        $scope.forgotPassword = function () {
+            if (!$scope.forgotUser.email)
+                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH');
+            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
+                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+            });
+        };
     })
 
     .controller('profileCtrl', function ($scope, $meteor, $state) {
@@ -50,79 +117,6 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('loginCtrl', function ($scope, $meteor, $state) {
-        $scope.user = {
-            email: '',
-            password: ''
-        };
-
-        $scope.login = function () {
-            Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-                if (error) {
-                    throw new Meteor.Error(error.reason);
-                }
-                $state.go('menu.feed');
-            });
-        };
-
-        $scope.goToRemindPassword = function () {
-            $state.go('forgotPassword');
-        }
-    })
-
-    .controller('forgotPasswordCtrl', function ($scope, $meteor, $state, $ionicHistory) {
-        $scope.forgotUser = {
-            email: '',
-            token: '',
-            newPassword: ''
-        };
-
-        $scope.resetPassword = function () {
-            Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-                console.log('Reset password success');
-            });
-        };
-
-        $scope.forgotPassword = function () {
-            if (!$scope.forgotUser.email)
-                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH');
-            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-            });
-        };
-    })
-
-    .controller('registerCtrl', function ($scope, $meteor, $state) {
-        $scope.user = {
-            email: '',
-            password: ''
-        };
-        $scope.register = function () {
-            if (!$scope.user.email)
-                throw new Meteor.Error('Account registration error: e-mail is not valid');
-            var newUser = {
-                email: $scope.user.email,
-                password: $scope.user.password,
-                profile: {
-                    firstName: "abc",
-                    lastName: "def",
-                    type: "coach",
-                    clubID: "PSV",
-                    teamID: "dadada"
-                }
-            };
-            Meteor.call('addUser', newUser, function (err, result) {
-                if (err || !Match.test(result, String))
-                    throw new Meteor.Error('Account registration error: ' + err.reason);
-                Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-                    if (error) throw new Meteor.Error(error.reason);
-                    $state.go('menu.feed'); // Redirect user if registration succeeds
-                });
-            });
-        };
-    })
-
     .controller('feedCtrl', function ($scope, AccessControl) {
         // Display coach bar
         AccessControl.getPermission('CoachBar', 'view', function (result) {
@@ -156,9 +150,9 @@ angular.module('app.controllers', [])
             });
         });
 
-        $scope.getCurrentDateISO = function(){
+        $scope.getCurrentDateISO = function () {
             return new Date().toISOString().substring(0, 10);
-        }
+        };
 
         // Set display filter model
         $scope.showFilter = false;
@@ -194,7 +188,13 @@ angular.module('app.controllers', [])
         });
     })
 
-    .controller('controlItemCtrl', function ($scope, $ionicPopover) {
+    .controller('ItemCtrl', function ($scope) {
+        if (!$scope.item) {
+            throw new Error("No item object passed.");
+        }
+    })
+
+    .controller('controlItemCtrl', function ($scope, $ionicPopover, Chat) {
         /* POPOVER */
         $ionicPopover.fromTemplateUrl('client/app/views/itemOperations.ng.html', {
             scope: $scope
@@ -213,121 +213,51 @@ angular.module('app.controllers', [])
         });
     })
 
-    .controller('chatsCtrl', function ($scope, $state, $stateParams) {
-
-        //  $scope.helpers({
-        //       data() {
-        //         return Chats.find();
-        //       }
-        //     });
-        // }
-
-        //     $scope.chats = [
-        //   {
-        //     _id: 0,
-        //     name: 'Ethan Gonzalez',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
-        //     lastMessage: {
-        //       text: 'You on your way?',
-        //       timestamp: Moment().subtract(1, 'hours').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 1,
-        //     name: 'Bryan Wallace',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/lego/1.jpg',
-        //     lastMessage: {
-        //       text: 'Hey, it\'s me',
-        //       timestamp: Moment().subtract(2, 'hours').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 2,
-        //     name: 'Avery Stewart',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/women/1.jpg',
-        //     lastMessage: {
-        //       text: 'I should buy a boat',
-        //       timestamp: Moment().subtract(1, 'days').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 3,
-        //     name: 'Katie Peterson',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/women/2.jpg',
-        //     lastMessage: {
-        //       text: 'Look at my mukluks!',
-        //       timestamp: Moment().subtract(4, 'days').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 4,
-        //     name: 'Ray Edwards',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/men/2.jpg',
-        //     lastMessage: {
-        //       text: 'This is wicked good ice cream.',
-        //       timestamp: Moment().subtract(2, 'weeks').toDate()
-        //     }
-        //   }
-        // ];
-
-        Meteor.subscribe('Chats');
-
+    .controller('chatsCtrl', function ($scope, Chat) {
         $scope.helpers({
-            chats: function () {
-                return Chats.find({});
-            }
+            chats: Chat.getChats
         });
     })
 
-    .controller('chatCtrl', function ($scope, $state, $stateParams) {
+    .controller('chatCtrl', function ($scope, Chat) {
+        // Load chat info
+        Tracker.autorun(function() {
+            if(!handle.ready()) return;
+            Chat.getOneChat($scope.chat._id, $scope.chat);
+            handle.stop();
+        });
 
-        Meteor.subscribe('Messages');
+        $scope.helpers({
+            chats: Chat.getChats
+        });
+    })
 
-        //Messages.insert({ name: "Test", picture: "https://randomuser.me/api/portraits/thumb/men/2.jpg", chatId: "zf5jab8eKzu6ptC6s" });
-        //Messages.find({ chatId: "zf5jab8eKzu6ptC6s" }).fetch();
-        /*
-          chats.forEach((chat) =&gt; {
-            const message = Messages.findOne({ chatId: { $exists: false } });
-            chat.lastMessage = message;
-            const chatId = Chats.insert(chat);
-            Messages.update(message._id, { $set: { chatId } });
-          });
-        */
-        //Messages.update({_id : "F3Mg9KMfPFYmoxRuj"}, {$set:{chatId : "zf5jab8eKzu6ptC6s"}});
+    .controller('messagingCtrl', function ($scope, $state, $stateParams, Chat) {
+        // Load chat info
+        Chat.getOneChat($stateParams.chatId, $scope.chat);
 
+        // Meteor.subscribe('Messages', chat._id, function () {
+        //     $scope.chat.title = 'Chat';
+        //     $scope.chat.picture = 'http://www.iconsdb.com/icons/preview/green/football-2-xl.png';
+        // });
+        //
+        // $scope.changeStatus = function (newStatus) {
+        //     Chats.update({_id: chat._id}, {status: newStatus});
+        // };
+        //
+        // $scope.addMessage = function (message) {
+        //     Messages.insert({chatID: chat._id, message: message});
+        // };
 
-        var chatId = $stateParams.chatId;
-        console.log(chatId);
-     
         $scope.helpers({
             messages: function () {
-                return Messages.find({ chatId: chatId });
+                return Messages.find({chatId: chat._id});
             },
             chat: function () {
-                return Chats.findOne(chatId);
+                return Chats.find({_id: chat._id});
             }
         });
-
-
-             // $scope.sendMessage = function () {
-             //    if (_.isEmpty(this.message)) return;
-
-             //    $scope.callMethod('newMessage', {
-             //      text: this.message,
-             //      type: 'text',
-             //      chatId: this.chatId
-             //    });
-             
-             //    //delete this.message;
-             //  };
-
-
-
-       
-
-
     })
-
 
     .controller('postCtrl', function ($scope, $ionicModal) {
         /* Post */
@@ -385,7 +315,7 @@ angular.module('app.controllers', [])
             $scope.formModal.show();
         };
 
-        $scope.showAlert = function() {
+        $scope.showAlert = function () {
             var alertPopup = $ionicPopup.alert({
                 title: 'Please select target value'
             });
@@ -410,7 +340,7 @@ angular.module('app.controllers', [])
             if (value) {
                 $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
                     function (result) {
-                        $scope.item.hasContributed = !!value;
+                        $scope.item.hasContributed = value;
                     },
                     function (err) {
                         console.log(err);
@@ -422,10 +352,10 @@ angular.module('app.controllers', [])
 
         $scope.withdrawContribution = function () {
             $meteor.call('deleteResponse', $scope.item._id).then(
-                function(result){
+                function (result) {
                     $scope.item.hasContributed = false;
                 },
-                function(err){
+                function (err) {
                     console.log(err);
                 }
             );
@@ -436,21 +366,21 @@ angular.module('app.controllers', [])
         /* Voting */
         $scope.newVoting = {};
         $scope.editingItem = 0;
-        
+
         $scope.selectedValue = '';
 
-        $scope.trainings  = [];
-        $scope.exercises  = [];
+        $scope.trainings = [];
+        $scope.exercises = [];
 
         $http.get('/trainings.json')
-            .then(function(res){
+            .then(function (res) {
                 xa = res.data;
                 for (var key in xa) {
                     for (var key2 in xa[key]) {
                         $scope.trainings.push(xa[key][key2]);
                     }
                 }
-            }, function() {
+            }, function () {
                 console.log("lol");
             });
 
@@ -504,7 +434,7 @@ angular.module('app.controllers', [])
         $scope.openVoting = function (itemId = 0) {
             $scope.editingItem = itemId;
             if (itemId != 0) {
-                getElement = Items.findOne({_id : itemId});
+                getElement = Items.findOne({_id: itemId});
                 $scope.newVoting = {
                     title: getElement.title,
                     deadline: getElement.deadline,
@@ -517,20 +447,20 @@ angular.module('app.controllers', [])
             $scope.votingModal.show();
         };
 
-        $scope.deleteItem = function(itemId) {
+        $scope.deleteItem = function (itemId) {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure you want to delete the feed item?'
             });
-            confirmPopup.then(function(res) {
-                if(res) {
+            confirmPopup.then(function (res) {
+                if (res) {
                     $meteor.call('deleteFeedItem', itemId);
                 }
             });
         };
-        
-        $scope.updateChartValues = function() {
+
+        $scope.updateChartValues = function () {
             $meteor.call('getVotingResults', $scope.item._id).then(
-                function(result){
+                function (result) {
                     $scope.chartValues = result;
                 },
                 function (err) {
@@ -557,14 +487,14 @@ angular.module('app.controllers', [])
             );
 
             // Check if already voted
-                $meteor.call('getResponse', $scope.item._id).then(
-                    function (result) {
-                        $scope.hasVoted = !!result;
-                    },
-                    function (err) {
-                        console.log(err);
-                    }
-                );
+            $meteor.call('getResponse', $scope.item._id).then(
+                function (result) {
+                    $scope.hasVoted = result;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
 
             // Load results chart
             $scope.chartValues = [[0, 0, 0]];
@@ -586,7 +516,7 @@ angular.module('app.controllers', [])
                 $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
                     function (result) {
                         $scope.updateChartValues();
-                        $scope.hasVoted = !!value;
+                        $scope.hasVoted = value;
                     },
                     function (err) {
                         console.log(err);
