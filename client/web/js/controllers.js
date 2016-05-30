@@ -173,20 +173,31 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  Add Account Controller
+     *  @summary Provides all functionality for the login screen of the web interface
      *  @param {String} Name of the controller
      *  @param {Function}
      */
     .controller('addAccountCtrl', function ($scope, $meteor, $state) {
+
+        // Credentials filled in on the add account page
         $scope.user = {
             firstName: '',
             lastName: '',
             email: '',
             team: ''
         };
-        
+
+        // Sring for error message
         $scope.error = '';
-        $scope.errorVisible = false;        
+
+        // Boolean defines whether error message is visible to users
+        $scope.errorVisible = false;
+
+        /**
+         *  @summary Function to generate a random password for newly created users
+         *  @returns retVal The password that is assigned to a user after creation
+         */
         $scope.generatePassword = function() {
             var length = 8,
                 charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
@@ -196,10 +207,18 @@ angular.module('web.controllers', ['ui.bootstrap'])
             }
             return retVal;
         }
-        
+
+        /**
+         *  @summary Function to add accounts to the database
+         *  First, this function checks whether all fields have been filled in correctly and with valid information.
+         *  If valid information, the account is added to the database.
+         */
         $scope.addAccount = function () {
+
+            // Regular expression to check whether filled in e-mail is valid
             var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-            
+
+            // Check whether all filled in information is valid.
             if (!$scope.user.firstName) {
                     $scope.error = 'No first name specified';
                     $scope.errorVisible = true;                
@@ -221,13 +240,16 @@ angular.module('web.controllers', ['ui.bootstrap'])
                         teamID: $scope.user.team
                     }
                 };
-                
+
+                // Add the user to the database with this Meteor call
                 $meteor.call('addUser', newUser).then(function(result){
                     $state.go('web.members'); // Redirect user if registration succeeds
+                    // Show error if unexpected things happen
                 }, function(err){
                     console.log('error');
                     console.log(err);
                     $scope.error = err.reason;
+                    // Define whether error is shown to user
                     $scope.errorVisible = true;
                 });
             }
@@ -235,7 +257,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  Edit Account Controller
+     *  @summary Functionality for editing a user from the web interface
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -247,7 +270,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
             email: '',
             team: ''
         };
-        
+
+        // Retrieve user information from the database
         $meteor.call('getUserInfo', $scope.user.id).then(function(result){
             $scope.user.firstName = result.profile.firstName;
             $scope.user.lastName = result.profile.lastName;
@@ -259,17 +283,24 @@ angular.module('web.controllers', ['ui.bootstrap'])
             $scope.error = err.reason;
             $scope.errorVisible = true;
         });
-        
+
+        // Error message String
         $scope.error = '';
-        $scope.errorVisible = false;        
-        
+        $scope.errorVisible = false;
+
+        /**
+         *  @summary Function for saving the new user changes to the database
+         */
         $scope.saveChanges = function () {
+            // Check to see whether first name has been entered
             if (!$scope.user.firstName) {
                     $scope.error = 'No first name specified';
-                    $scope.errorVisible = true;                
+                    $scope.errorVisible = true;
+            // Check to see whether last name has been entered
             } else if (!$scope.user.lastName) {
                     $scope.error = 'No last name specified';
-                    $scope.errorVisible = true;                
+                    $scope.errorVisible = true;
+            // Changed updateProfile object to new values
             } else {
                  var updatedProfile = {
                     firstName: $scope.user.firstName,
@@ -278,7 +309,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     clubID: "PSV",
                     teamID: $scope.user.team
                 };
-                
+
+                // Update the account in the database
                 $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function(result){
                     $state.go('web.members'); // Redirect user if registration succeeds
                 }, function(err){
@@ -292,7 +324,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  Profile Controller
+     *  @summary Provides all functionality for the profile page of the web interface
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -303,19 +336,23 @@ angular.module('web.controllers', ['ui.bootstrap'])
             lastName: '',
             email: ''
         }
-        
+
+        // Retrieve user information from the database
         $scope.retrieveUser = function() {
             $scope.user.id = Meteor.user()._id;
             $scope.user.firstName = Meteor.user().profile.firstName;
             $scope.user.lastName = Meteor.user().profile.lastName;
             $scope.user.email = Meteor.user().emails[0].address;    
         }
-        
+
+        // Error messages
         $scope.error = '';
         $scope.errorVisible = false;    
         $scope.updatedVisible = false;    
-        
+
+        // Save updated user profile to the database
         $scope.saveChanges = function () {
+            // Validation of filled in information
             if (!$scope.user.firstName) {
                     $scope.error = 'No first name specified';
                     $scope.errorVisible = true;                
@@ -330,10 +367,12 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     clubID: "PSV",
                     teamID: ''
                 };
-                
+
+                // Do the actual saving on the database
                 $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function(result){
                     $scope.updatedVisible = true;
                     $scope.errorVisible = false;
+                    // Generate error if needed
                 }, function(err){
                     $scope.updatedVisible = false;
                     console.log('error');
@@ -343,7 +382,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 });
             }
         };
-        
+
+        // Time out 100ms because of Meteor bug where user is undefined when routing to this page
         if (Meteor.user() != undefined) {
             $scope.retrieveUser();
         } else {
@@ -358,20 +398,24 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  Account Management Controller
+     *  @summary Provides all functionality for the members page of the web interface.
      *  @param {String} Name of the controller
      *  @param {Function}
      */
     .controller('accountManagementCtrl', function ($scope, $modal, $state) {
 
+        // Subscription to userData so that all users can be displayed
         $scope.subscribe('userData');
 
+        // Sort list on last name
         $scope.helpers({
             userAccounts: function () {
                 return Meteor.users.find({}, {sort: [['profile.lastName', 'asc']]});
             }
         });
 
+        // Delete account if it is not of type pr
         $scope.deleteAccount = function(user) {
             if (user.type !== 'pr') {
                 Meteor.users.remove(user._id);
@@ -408,7 +452,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  Modal Controller
+     *  @summary Provides all functionality for the delete modal
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -426,7 +471,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  Reset password
+     *  @summary Provides functionality for the password reset screen
      *  @param {String} Name of the controller
      *  @param {Function}
      */
