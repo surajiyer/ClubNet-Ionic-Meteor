@@ -19,12 +19,12 @@
             <input type="email" class="form-control" id="email" placeholder="{{ 'Email address' | translate }}" ng-model="user.email">
         </div>
 
-        <div class="form-group">
-            <label class="item item-input item-select">
+        <div class="form-group" uib-popover="I appeared on mouse enter!" popover-trigger="mouseenter">
+            <label class="item item-input item-select" uib-popover="I appeared on mouse enter!" popover-trigger="mouseenter">
                 <div class="input-label" ng-model="temp_account.playerTeam">
                     Team
                 </div>
-                <select class="form-control" ng-model="user.team">
+                <select class="form-control" ng-model="user.team" uib-popover="I appeared on mouse enter!" popover-trigger="mouseenter">
                     <option value="" selected>None</option>
                     <option value="A1">A1</option>
                     <option value="A2">A2</option>
@@ -33,6 +33,9 @@
                     <option value="A5">A5</option>
                 </select>
             </label>
+            <div>
+                The user will be of the type player if a team is selected, otherwise they will be of type general.
+            </div>
         </div>
         
         <div ng-if="errorVisible" class="alert alert-warning">
