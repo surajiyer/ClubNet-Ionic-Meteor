@@ -19,26 +19,29 @@
             <input type="email" class="form-control" id="email" placeholder="{{ 'Email address' | translate }}" ng-model="user.email">
         </div>
 
-        <label class="item item-input item-select">
-            <div class="input-label" ng-model="temp_account.playerTeam">
-                Team
-            </div>
-            <select ng-model="user.team">
-                <option value="" selected>None</option>
-                <option value="A1">A1</option>
-                <option value="A2">A2</option>
-                <option value="A3">A3</option>
-                <option value="A4">A4</option>
-                <option value="A5">A5</option>
-            </select>
-        </label>
+        <div class="form-group">
+            <label class="item item-input item-select">
+                <div class="input-label" ng-model="temp_account.playerTeam">
+                    Team
+                </div>
+                <select class="form-control" ng-model="user.team">
+                    <option value="" selected>None</option>
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="A3">A3</option>
+                    <option value="A4">A4</option>
+                    <option value="A5">A5</option>
+                </select>
+            </label>
+        </div>
         
         <div ng-if="errorVisible" class="alert alert-warning">
             {{ error }}
         </div>
-
-        <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">{{ 'Add user' | translate }}</a>
-
+        
+        <div class="form-group">
+            <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="btn btn-primary">{{ 'Add user' | translate }}</a>
+        </div>
 
 
     </form>
