@@ -5,6 +5,7 @@ import {Meteor} from 'meteor/meteor';
 /**
  * @summary Rules and Methods for the users collection.
  * On startup it will set the deny and allow rules, publish the user data and attach the userSchema
+ * @instancename Meteor.users
  * @param {Object} userSchema The schema that will the attached to the users collection.
  */
 Meteor.startup(function () {
@@ -54,12 +55,12 @@ if(Meteor.isServer) {
     process.env.MAIL_URL="smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/"; 
     Meteor.methods({
         /**
-         * @summary Function for adding a new user to the collection
+         * @summary Function for adding a new user to the collection.
          * It will check whether or not the new user adheres to the schema.
          * If so, it will add the user to the collection and it will send an enrollment email to the new user.
          * @method addUser
          * @param {Object} newUser An object that wants to be added to the collection, needs to adhere to the schema.
-         * @returns {String} userId The id of the newly created user.
+         * @returns {String} userId The id of the newly created user
          */
         addUser: function (newUser) {
             // Validate the information in the newUser.
@@ -103,9 +104,9 @@ if(Meteor.isServer) {
         /**
          * @summary Function for updating the information of a certain user.
          * It will first check whether the parameters are valid.
-         * If so, it will update the user with the new information
+         * If so, it will update the user with the new information.
          * @method updateUserProfile
-         * @param {String} userID The id of the user to have its information be updated
+         * @param {String} userID The id of the user to have its information be updated.
          * @param {Object} newInfo The new information to be added to the user.
          */
         updateUserProfile: function (userID, newInfo) {
@@ -124,7 +125,7 @@ if(Meteor.isServer) {
          * If so, it will try to get the information.
          * @method getUserInfo
          * @param {String} userID The id of the user who's information needs to be retrieved.
-         * @return {Object} The information of the user as an object
+         * @return {Object} The information of the user
          */
         getUserInfo: function (userID) {
             check(userID, String);
