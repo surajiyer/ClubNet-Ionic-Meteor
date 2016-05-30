@@ -275,7 +275,10 @@ angular.module('web.controllers', ['ui.bootstrap'])
             id: '',
             firstName: '',
             lastName: '',
-            email: ''
+            email: '',
+            oldPassword: '',
+            newPassword: '',
+            confirmNewPassword: ''
         }
         
         $scope.retrieveUser = function() {
@@ -287,15 +290,21 @@ angular.module('web.controllers', ['ui.bootstrap'])
         
         $scope.error = '';
         $scope.errorVisible = false;    
-        $scope.updatedVisible = false;    
+        $scope.updatedVisible = false; 
+        
+        $scope.passwordError = '';
+        $scope.passwordErrorVisible = false;    
+        $scope.passwordUpdatedVisible = false;   
         
         $scope.saveChanges = function () {
             if (!$scope.user.firstName) {
                     $scope.error = 'No first name specified';
-                    $scope.errorVisible = true;                
+                    $scope.errorVisible = true;   
+                    $scope.updatedVisible = false;             
             } else if (!$scope.user.lastName) {
                     $scope.error = 'No last name specified';
-                    $scope.errorVisible = true;                
+                    $scope.errorVisible = true;  
+                    $scope.updatedVisible = false;              
             } else {
                  var updatedProfile = {
                     firstName: $scope.user.firstName,
@@ -310,10 +319,37 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     $scope.errorVisible = false;
                 }, function(err){
                     $scope.updatedVisible = false;
-                    console.log('error');
-                    console.log(err);
                     $scope.error = err.reason;
                     $scope.errorVisible = true;
+                });
+            }
+        };
+        
+        $scope.savePasswordChanges = function () {
+            if (!$scope.user.oldPassword) {
+                $scope.passwordError = 'Old password not filled in';
+                $scope.passwordErrorVisible = true;     
+                $scope.passwordUpdatedVisible = false;           
+            } else if (!$scope.user.newPassword) {
+                $scope.passwordError = 'No new password specified';
+                $scope.passwordErrorVisible = true;          
+                $scope.passwordUpdatedVisible = false;            
+            } else if (!$scope.user.confirmNewPassword) {
+                $scope.passwordError = 'Please confirm your new password';
+                $scope.passwordErrorVisible = true;        
+                $scope.passwordUpdatedVisible = false;              
+            } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
+                $scope.passwordError = 'New passwords are do not match';
+                $scope.passwordErrorVisible = true;     
+                $scope.passwordUpdatedVisible = false; 
+            } else {
+                $meteor.changePassword($scope.user.oldPassword, $scope.user.newPassword).then(function () {
+                    $scope.passwordUpdatedVisible = true;
+                    $scope.passwordErrorVisible = false;
+                }, function (error) {
+                    $scope.passwordUpdatedVisible = false;
+                    $scope.passwordError = error.reason;
+                    $scope.passwordErrorVisible = true;
                 });
             }
         };
