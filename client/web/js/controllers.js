@@ -1,67 +1,101 @@
 angular.module('web.controllers', ['ui.bootstrap'])
+
+    /**
+     *  Main Controller
+     *  @summary Overarching web interface functionality. Logging out.
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('mainCtrl', function ($scope, $meteor, $state) {
+        /**
+         * @summary This function logs out the user and redirects it to the login page.
+         */
         $scope.logout = function () {
             $meteor.logout();
             $state.go('login');
         }
     })
 
+    /**
+     *  Login Controller
+     *  @summary Provides all functionality for the login screen of the web interface.
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('loginCtrl', function ($scope, $meteor, $state) {
+
+        /**
+         *  Filled in credentials by the user
+         */
         $scope.user = {
             email: '',
             password: ''
         };
+
+        /**
+         * @summary Function for logging in a user
+         * First, the function tries to sign in using the email and password that was filled in by the user.
+         * If correct PR credentials, the user is redirected to the web interface feed page.
+         * If incorrect credentials or user type is not PR, a generic error message is returned.
+         */
         $scope.login = function () {
+            // Sign in the user if credentials match a user from the database
             result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function(result){
+                // If signed in user is not of type PR, give an error message and log them out
                 if (Meteor.user().profile.type != 'pr') {
                     $scope.error = 'Incorrect credentials';
                     $scope.errorVisible = true;
                     Meteor.logout();
+                 // If PR user, log in and redirect
                 } else {
                     // Redirect user if login succeeds
                     $state.go('web.feed');
                 }
             }, function(err){
+                // Show error message in console
                 console.log(err);
+                // Show generic error message to user instead of specific Meteor messages giving too much information
                 if (err.error == 400 || err.error == 403) {
                     $scope.error = 'Incorrect credentials'
                 } else {
                     $scope.error = err.reason;                    
                 }
+                // Define whether error message is shown.
                 $scope.errorVisible = true;
             });
         };
+        // String describing the unexpected behaviour
         $scope.error = '';
+        // Boolean defining whether error is visible to user
         $scope.errorVisible = false;
 
+        /**
+         * @summary Function to redirect user to forgot password page
+         */
         $scope.goToRemindPassword = function() {
             $state.go('forgotPassword');
         }
     })
 
-
-    .controller('sepQuotesCtrl', function ($scope, $meteor, $state) {
-
-    })
-
-    .directive('customOnChange', function() {
-        return {
-            restrict: 'A',
-            link: function (scope, element, attrs) {
-                var onChangeHandler = scope.$eval(attrs.customOnChange);
-                element.bind('change', onChangeHandler);
-            }
-        };
-    })
-
+    /**
+     *  Settings: provides the functionality for the settings page of the web interface
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('settingsCtrl', function ($scope, $meteor, $timeout) {
 
+        /**
+         * @summary Function for retrieving the club name that a logged in user is associated with.
+         */
         $meteor.call('getClub').then(function(result){
             $scope.currentClub = result;
         }, function(err){
             console.log(err);
         });
 
+        /**
+         * @summary Function for retrieving the image URL for the club logo, which is in the database
+         */
         $meteor.call('getImage').then(function(result){
             //console.log(result);
         }, function(err){
@@ -72,6 +106,10 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         $scope.hostname = 'http://' + window.location.hostname;
 
+        /**
+         * @summary Function for retrieving the club name that a logged in user is associated with.
+         * @param event
+         */
         $scope.uploadFile = function (event) {
             var files = event.target.files;
 
@@ -116,6 +154,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
         });
     })
 
+    /**
+     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('addAccountCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
             firstName: '',
@@ -172,7 +215,12 @@ angular.module('web.controllers', ['ui.bootstrap'])
             }
         };
     })
-    
+
+    /**
+     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('editAccountCtrl', function ($scope, $meteor, $state, $stateParams) {
         $scope.user = {
             id: $stateParams.userID,
@@ -225,6 +273,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
         };
     })
 
+    /**
+     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('profileCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
             id: '',
@@ -286,8 +339,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
         
     })
 
-    ///***************************accountMangementCtrl**************************************//
-
+    /**
+     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('accountManagementCtrl', function ($scope, $modal, $state) {
 
         $scope.subscribe('userData');
@@ -333,6 +389,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
         };
     })
 
+    /**
+     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('ModalInstanceCtrl', function ($scope, $modalInstance, selectedUser) {
         
         $scope.selectedUser = selectedUser;
@@ -345,7 +406,12 @@ angular.module('web.controllers', ['ui.bootstrap'])
             $modalInstance.dismiss();
         };
     })
-    
+
+    /**
+     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('resetPasswordCtrl', function ($scope, $meteor, $state) {
         console.log('reset password controller');
     });

@@ -78,6 +78,14 @@ Meteor.startup(function () {
             }
         });
     }
+    
+    /**
+     *  Change the url for enrollment emails since the default includes a dash which casuses
+     *  some issues.
+     */
+    Accounts.urls.enrollAccount = function(token){
+        return Meteor.absoluteUrl("#/enroll/" + token);
+    }
 
     // Attach user schema
     Meteor.users.attachSchema(userSchema);
@@ -110,6 +118,9 @@ if(Meteor.isServer) {
             // Create an email template
             var credPassword = newUser.password;
             var credEmail = newUser.email;
+            // AccountsTemplates.configureRoute('enrollAccount', {
+            //     path: '/enroll'
+            // });
             Accounts.emailTemplates.siteName = "ClubNet";
             Accounts.emailTemplates.from = "ClubNet <accounts@example.com>";
             Accounts.emailTemplates.enrollAccount.subject = function (newUser) {

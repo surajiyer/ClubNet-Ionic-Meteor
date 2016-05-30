@@ -132,7 +132,7 @@ if (Meteor.isServer) {
             );
         },
         /**
-         * @summary Function for deleteing  a feed item.
+         * @summary Function for deleting a feed item.
          * It will first check whether the parameters are valid.
          * If so, it will delete the feed item.
          * @method deleteFeedItem
@@ -147,7 +147,7 @@ if (Meteor.isServer) {
          * It will first check whether the parameters are valid.
          * If so, it will try to get the information.
          * @method getFeedItemType
-         * @param {String} id The id of the feed item for which the type needs to be retrieved.
+         * @param {String} itemID The id of the feed item for which the type needs to be retrieved.
          * @returns {String} The type of the feed item
          */
         getFeedItemType: function (itemID) {
@@ -163,7 +163,7 @@ if (Meteor.isServer) {
          * It will first check whether the parameters are valid.
          * If so, it will try to get the information.
          * @method getResponsesOfOnItem
-         * @param {String} id The id of the feed item for which the responses need to be retrieved.
+         * @param {String} itemID The id of the feed item for which the responses need to be retrieved.
          * @returns {Array} The responses of the feed item
          */
         getResponsesOfOneItem: function (itemID) {
@@ -175,7 +175,7 @@ if (Meteor.isServer) {
          * It will first check whether the parameters are valid.
          * If so, it will try to get the information.
          * @method getResponse
-         * @param {String} id The id of the feed item for which the response needs to be retrieved.
+         * @param {String} itemID The id of the feed item for which the response needs to be retrieved.
          * @returns {Object} The response
          */
         getResponse: function (itemID) {
@@ -188,7 +188,7 @@ if (Meteor.isServer) {
          * It will first check whether the parameters are valid.
          * If so, it will try to get the information.
          * @method deleteResponse
-         * @param {String} id The id of the feed item for which response needs to be deleted.
+         * @param {String} itemID The id of the feed item for which response needs to be deleted.
          */
         deleteResponse: function (itemID) {
             check(itemID, String);
@@ -272,7 +272,7 @@ if (Meteor.isServer) {
          * It will first check whether the parameters are valid.
          * If so, it will try to get the information.
          * @method getTrainingObj
-         * @param {String} id The id of the training which needs to be retrieved.
+         * @param {String} trainingID The id of the training which needs to be retrieved.
          * @returns {Object} The training
          */
         getTrainingObj: function(trainingID) {
@@ -285,7 +285,7 @@ if (Meteor.isServer) {
          * It will first check whether the parameters are valid.
          * If so, it will try to get the information.
          * @method getExercises
-         * @param {String} id The id of the training for which the exercises need to be retrieved.
+         * @param {String} trainingID The id of the training for which the exercises need to be retrieved.
          * @returns {Array} The exercises of a training
          */
         getExercises: function(trainingID) {
