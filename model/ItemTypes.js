@@ -4,7 +4,7 @@ import {feedItemTypesSchema} from '/imports/schemas/feedItems';
  * On startup it will set the deny rules and attach the feedItemTypesSchema
  * This collection holds all the possible types of items that can be created.
  * @instancename TypesCollection
- * @param {Object} feedItemTypesSchema The schema that will the attached to the TypesCollection collection.
+ * @param {Function} Function to execute on startup.
  */
 TypesCollection = new Mongo.Collection("ItemTypes");
 

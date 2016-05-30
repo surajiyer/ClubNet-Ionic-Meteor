@@ -6,7 +6,7 @@ import {Meteor} from 'meteor/meteor';
  * @summary Rules and Methods for the users collection.
  * On startup it will set the deny and allow rules, publish the user data and attach the userSchema
  * @instancename Meteor.users
- * @param {Object} userSchema The schema that will the attached to the users collection.
+ * @param {Function} Function to execute on startup.
  */
 Meteor.startup(function () {
     // Set deny rules
