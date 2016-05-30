@@ -1,7 +1,27 @@
-import {isAdmin} from '/imports/common';
+import * as utils from '/imports/common';
 import {userSchema, userProfileSchema} from '/imports/schemas/users';
 import {notesSchema} from '/imports/schemas/misc';
 import {Meteor} from 'meteor/meteor';
+
+const getUsersFromTeam = function (clubID, teamID, userTypes) {
+    if(!userTypes) userTypes = utils.userTypes;
+    return Meteor.users.find(
+        {
+            'profile.clubID': clubID,
+            'profile.teamID': teamID,
+            'profile.type': {$in: userTypes}
+        },
+        {
+            fields: {
+                '_id': 1,
+                'profile.firstName': 1,
+                'profile.lastName': 1,
+                'profile.type': 1
+            }
+        }
+    );
+};
+
 /**
  * @summary Rules and Methods for the users collection.
  * On startup it will set the deny and allow rules, publish the user data and attach the userSchema
@@ -13,13 +33,13 @@ Meteor.startup(function () {
     // Except admins, nobody is allowed insertion, deletion and removal
     Meteor.users.deny({
         insert: function (userId) {
-            return !isAdmin(userId);
+            return !utils.isAdmin(userId);
         },
         update: function (userId) {
-            return !isAdmin(userId);
+            return !utils.isAdmin(userId);
         },
         remove: function (userId) {
-            return !isAdmin(userId);
+            return !utils.isAdmin(userId);
         }
     });
 
@@ -27,24 +47,36 @@ Meteor.startup(function () {
     // Except admins, nobody is allowed insertion, deletion and removal
     Meteor.users.allow({
         insert: function (userId) {
-            return isAdmin(userId);
+            return utils.isAdmin(userId);
         },
         update: function (userId) {
-            return isAdmin(userId);
+            return utils.isAdmin(userId);
         },
         remove: function (userId) {
-            return isAdmin(userId);
+            return utils.isAdmin(userId);
         }
     });
 
-    // If the user that is logged in is an admin user, publish all users in the collection.
+    // Publish userData
     if (Meteor.isServer) {
         Meteor.publish("userData", function () {
-                if (isAdmin(this.userId))
+            console.log(this.userId);
+            var userType = utils.getUserType(this.userId);
+            switch (userType) {
+                case 'pr':
                     return Meteor.users.find({});
-                this.ready();
+                case 'coach':
+                    var clubID = utils.getUserClubID(this.userId);
+                    var teamID = utils.getUserTeamID(this.userId);
+                    return getUsersFromTeam(clubID, teamID, ['coach', 'player']);
+                case 'player':
+                    var clubID = utils.getUserClubID(this.userId);
+                    var teamID = utils.getUserTeamID(this.userId);
+                    return getUsersFromTeam(clubID, teamID, ['coach']);
+                default:
+                    this.ready();
             }
-        );
+        });
     }
     
     /**
@@ -59,8 +91,9 @@ Meteor.startup(function () {
     Meteor.users.attachSchema(userSchema);
 });
 
+// TODO: remove Meteor.isServer for latency compensation
 if(Meteor.isServer) {
-    process.env.MAIL_URL="smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/"; 
+    process.env.MAIL_URL="smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/";
     Meteor.methods({
         /**
          * @summary Function for adding a new user to the collection.
@@ -77,11 +110,14 @@ if(Meteor.isServer) {
                 password: String,
                 profile: userProfileSchema
             });
+            
+            // Validate if user who is adding another user is a PR user
+            //check(this.userId, Match.Where(utils.isAdmin));
             // Add the user to the collection
-            userId = Accounts.createUser(newUser);
+            var userId = Accounts.createUser(newUser);
             // Create an email template
-            credPassword = newUser.password;
-            credEmail = newUser.email;
+            var credPassword = newUser.password;
+            var credEmail = newUser.email;
             // AccountsTemplates.configureRoute('enrollAccount', {
             //     path: '/enroll'
             // });
@@ -124,6 +160,7 @@ if(Meteor.isServer) {
             // TODO: should not check full user profile schema for update
             check(userID, String);
             check(newInfo, userProfileSchema);
+            check(this.userId, Match.Where(utils.isAdmin));
             Meteor.users.update(
                 {_id: userID},
                 {$set: {profile: newInfo}}

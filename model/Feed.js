@@ -1,10 +1,11 @@
-import {isValidType} from '/imports/common';
+import * as utils from '/imports/common';
 import feedItemSchemas from '/imports/schemas/feedItems';
 import responseSchemas from '/imports/schemas/responses';
 import { HTTP } from 'meteor/http'
 
 Items = new Mongo.Collection("Items");
 Responses = new Mongo.Collection("FeedResponses");
+
 /**
  * @summary Rules and Methods for the items collection.
  * On startup it will set the deny and allow rules, publish the item data and attach the feedItemSchema and responseSchema
@@ -64,6 +65,10 @@ Meteor.startup(function () {
                 return;
             }
             check(itemTypes, [String]);
+            // return Items.find({
+            //     clubID: utils.getUserClubID(this.userId), 
+            //     type: {$in: itemTypes}
+            // }, {sort: {sticky: -1, createdAt: -1}});
             var teamID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.teamID;
             return Items.find({type: {$in: itemTypes}, teamID: teamID}, {sort: {sticky: -1, createdAt: -1}});
         });
@@ -106,7 +111,7 @@ if (Meteor.isServer) {
          */
         getFeedItem: function (id) {
             check(id, String);
-            return result = Items.find({ _id : id}).fetch()[0];
+            return result = Items.find({_id: id}).fetch()[0];
         },
         /**
          * @summary Function for updating the information of a feed item.
@@ -216,12 +221,12 @@ if (Meteor.isServer) {
             check(itemID, String);
             check(itemType, String);
             check(value, String);
-            response = {
+            var response = {
                 userID: Meteor.userId(),
                 itemID: itemID,
                 itemType: itemType,
                 value: value
-            }
+            };
             check(response, Responses.simpleSchema({itemType: itemType}));
             return Responses.insert(response);
         },
@@ -236,12 +241,14 @@ if (Meteor.isServer) {
          */
         getVotingResults: function (itemID) {
             check(itemID, String);
-            votes = Responses.find({itemID: itemID}).fetch();
+            votes = Meteor.call('getResponsesOfOneItem', itemID);
             result = [[0, 0, 0]];
             votes.forEach(function (vote) {
                 result[0][Number(vote.value)-1]++;
             });
             return result;
+        },
+        getBettingResults: function (itemID) {
         },
         /**
          * @summary Function for retrieving a list of trainings.

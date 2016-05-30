@@ -51,3 +51,46 @@ angular.module('app.directives', [])
             template: '<div class="item item-divider" ng-transclude=""></div>'
         }
     })
+
+    .directive('input', function ($timeout) {
+        return {
+            restrict: 'E',
+            scope: {
+                'returnClose': '=',
+                'onReturn': '&',
+                'onFocus': '&',
+                'onBlur': '&'
+            },
+            link: function (scope, element) {
+                element.bind('focus', function (e) {
+                    if (!scope.onFocus) return;
+
+                    $timeout(() => {
+                        scope.onFocus();
+                    });
+                });
+
+                element.bind('blur', function (e) {
+                    if (!scope.onBlur) return;
+
+                    $timeout(() => {
+                        scope.onBlur();
+                    });
+                });
+
+                element.bind('keydown', function (e) {
+                    if (e.which != 13) return;
+
+                    if (scope.returnClose) {
+                        element[0].blur();
+                    }
+
+                    if (scope.onReturn) {
+                        $timeout(() => {
+                            scope.onReturn();
+                        });
+                    }
+                });
+            }
+        }
+    })

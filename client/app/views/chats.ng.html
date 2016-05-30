@@ -1,12 +1,15 @@
 <ion-view view-title="Chats">
     <ion-nav-bar class="bar-stable">
+        <ion-nav-buttons side="left">
+            <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
+        </ion-nav-buttons>
         <ion-nav-buttons side="right">
             <button class="button button-icon icon ion-plus" ng-click="openFilter()"></button>
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content>
         <ion-list>
-            <ion-item ng-repeat="chat in chats | orderBy:'-lastMessage.timestamp'"
+            <ion-item ng-repeat="chat in chats"
                       class="item-chat item-remove-animate item-avatar item-icon-right"
                       type="item-text-wrap"
                       ui-sref="menu.chat({chatId: chat._id})">
