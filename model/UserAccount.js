@@ -57,6 +57,7 @@ if(Meteor.isServer) {
          * @summary Function for adding a new user to the collection
          * It will check whether or not the new user adheres to the schema.
          * If so, it will add the user to the collection and it will send an enrollment email to the new user.
+         * @method addUser
          * @param {Object} newUser An object that wants to be added to the collection, needs to adhere to the schema.
          * @returns {String} userId The id of the newly created user.
          */
@@ -103,6 +104,7 @@ if(Meteor.isServer) {
          * @summary Function for updating the information of a certain user.
          * It will first check whether the parameters are valid.
          * If so, it will update the user with the new information
+         * @method updateUserProfile
          * @param {String} userID The id of the user to have its information be updated
          * @param {Object} newInfo The new information to be added to the user.
          */
@@ -120,6 +122,7 @@ if(Meteor.isServer) {
          * This can only be done by a user that had admin level rights.
          * It will first check whether the parameters are valid and if the user is an admin.
          * If so, it will try to get the information.
+         * @method getUserInfo
          * @param {String} userID The id of the user who's information needs to be retrieved.
          */
         getUserInfo: function (userID) {
@@ -131,6 +134,7 @@ if(Meteor.isServer) {
          * @summary Function for getting the type of the current logged in user.
          * It will first check whether the parameters are valid.
          * If so, it will try to get the type of the user.
+         * @method getUserType
          */
         getUserType: function () {
             check(Meteor.userId(), String);
@@ -141,6 +145,7 @@ if(Meteor.isServer) {
          * @summary Function for adding a note.
          * It will first check whether the parameters adhere to the schema.
          * If so, it will store the note as a part of the user.
+         * @method addNote
          * @param newNote The note that needs to be added.
          */
         addNote: function (newNote) {
@@ -154,6 +159,7 @@ if(Meteor.isServer) {
          * @summary Function for updating a note.
          * It will first check whether the parameters adhere to the schema.
          * If so, it will find the note and update the text.
+         * @method updateNote
          * @param newNote The note that needs to be updated, but with different text.
          */
         updateNote: function (newNote) {
