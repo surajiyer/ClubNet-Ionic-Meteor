@@ -1,7 +1,8 @@
 angular.module('web.controllers', ['ui.bootstrap'])
 
     /**
-     *  Main Controller: overarching web interface functionality.
+     *  Main Controller
+     *  @summary Overarching web interface functionality. Logging out.
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -16,7 +17,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
+     *  Login Controller
+     *  @summary Provides all functionality for the login screen of the web interface.
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -83,8 +85,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
     .controller('settingsCtrl', function ($scope, $meteor, $timeout) {
 
         /**
-         * @summary Function for retrieving the club a user is logged into.
-         * @param 
+         * @summary Function for retrieving the club name that a logged in user is associated with.
          */
         $meteor.call('getClub').then(function(result){
             $scope.currentClub = result;
@@ -92,6 +93,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
             console.log(err);
         });
 
+        /**
+         * @summary Function for retrieving the image URL for the club logo, which is in the database
+         */
         $meteor.call('getImage').then(function(result){
             //console.log(result);
         }, function(err){
@@ -102,6 +106,10 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         $scope.hostname = 'http://' + window.location.hostname;
 
+        /**
+         * @summary Function for retrieving the club name that a logged in user is associated with.
+         * @param event
+         */
         $scope.uploadFile = function (event) {
             var files = event.target.files;
 
