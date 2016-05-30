@@ -1,6 +1,7 @@
 import {isAdmin} from '/imports/common';
 import {userSchema, userProfileSchema} from '/imports/schemas/users';
 import {notesSchema} from '/imports/schemas/misc';
+import {Meteor} from 'meteor/meteor';
 
 Meteor.startup(function () {
     // Set deny rules
@@ -75,9 +76,11 @@ if(Meteor.isServer) {
 
                     + "Have fun using ClubNet!\n\n"
                     + "Kind regards, \n"
-                    + "The ClubNet team.";
+                    + "The ClubNet team.\n\n" +
+                    url;
             };
             Accounts.sendEnrollmentEmail(userId);
+            return userId;
         },
         updateUserProfile: function (userID, newInfo) {
             // TODO: should not check full user profile schema for update
@@ -90,18 +93,18 @@ if(Meteor.isServer) {
         },
         getUserInfo: function (userID) {
             check(userID, String);
-            check(this.userId, Match.Where(isAdmin));
+            check(Meteor.userId(), Match.Where(isAdmin));
             return Meteor.users.find({_id: userID}).fetch()[0];
         },
         getUserType: function () {
-            check(this.userId, String);
+            check(Meteor.userId(), String);
             //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
             return Meteor.user().profile.type;
         },
         addNote: function (newNote) {
             check(newNote, notesSchema);
             Meteor.users.update(
-                {_id: this.userId},
+                {_id: Meteor.userId()},
                 {$push: {'notes': newNote}}
             );
         },
@@ -109,7 +112,7 @@ if(Meteor.isServer) {
             check(newNote, notesSchema);
             Meteor.users.update(
                 {
-                    _id: this.userId,
+                    _id: Meteor.userId(),
                     notes: {$elemMatch: {itemID: newNote.itemID}}
                 },
                 {$set: {"notes.$.text": newNote.text}}

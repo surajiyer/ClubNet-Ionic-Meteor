@@ -24,6 +24,12 @@ angular.module('web.routes', [])
                 }
             })
 
+            .state('enroll', {
+                url: '/enroll-account/:token',
+                templateUrl: 'client/web/views/enroll.ng.html',
+                controller: 'loginCtrl'
+            })
+
             // Just the menu view
             .state('web', {
                 url: '/web',
@@ -104,15 +110,14 @@ angular.module('web.routes', [])
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                     , fromState, fromParams) {
 
-            var isLogin = toState.name === "login";
-            if(isLogin){
-                return; // no need to redirect 
+            if(toState.name === "login" || toState.name == "enroll"){
             }
 
             // now, redirect only not authenticated
             if (!Meteor.userId()) {
+                return; // no need to redirect
                 e.preventDefault(); // stop current execution
                 $state.go('login');
-            }   
+            }
         });
     });
