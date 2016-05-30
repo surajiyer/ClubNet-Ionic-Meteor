@@ -9,13 +9,14 @@ angular.module('web', ['angular-meteor',
     'ui.router',
     'web.controllers',
     'web.routes',
-    'web.translation']);
+    'web.translation',
+    'color.picker']);
 
 function onReady() {
     angular.bootstrap(document, ['web']);
 }
 
 // TODO: Change condition in production
-if (Meteor.isCordova) {
+if (!Meteor.isCordova) {
     angular.element(document).ready(onReady);
 }

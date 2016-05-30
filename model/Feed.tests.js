@@ -4,10 +4,10 @@ import {Meteor} from 'meteor/meteor';
 
 import { baseFeedItemSchema } from '/imports/schemas/feedItems';
 import { baseResponseSchema } from '/imports/schemas/responses';
-import './Feed.js'
+import './Feed.js';
 
 if (Meteor.isServer) {
-    userId = '1'
+    userId = '1';
     describe('FeedItems', () => {
 
         it("Add FeedItem", (done) => {
@@ -282,15 +282,15 @@ if (Meteor.isServer) {
                 assert.fail();
             }
         });
-        
+
         it("Delete FeedItem", (done) => {
-            
+
             // Delete item with wrong parameter
             try {
                 Meteor.call('deleteFeedItem', false);
                 assert.fail();
             } catch (err) {}
-            
+
             // Delete item added in the addFeedItem testcase
             try {
                 result = Meteor.call('deleteFeedItem', testItem._id);
@@ -299,5 +299,30 @@ if (Meteor.isServer) {
                 assert.fail();
             }
         });
+
+        it("Get trainings", (done) => {
+
+            // Try to get some trainings
+            try {
+                Meteor.call('getTrainings');
+                done();
+            } catch (err) {
+                assert(false, "Error with training retrieval.");
+            }
+
+        });
+
+        it("Get exercsises for a particular training", (done) => {
+
+            // Get exercises for invalid type parameter.
+            try {
+                Meteor.call('getExercises', false);
+                assert(false, "No exercises should be retrieved when a invalid parameter is passed.");
+            } catch (err) {
+                done();
+            }
+
+        });
+
     });
 }

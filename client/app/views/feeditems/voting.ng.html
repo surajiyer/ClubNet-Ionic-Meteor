@@ -3,6 +3,11 @@
     <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" aria-hidden="true"></i>
 </div>
 <div class="item item-body">
+    <p>
+        Training: {{item.training_date | date:'MM/dd/yyyy @ h:mma'}}
+    </p>
+</div>
+<div class="item item-body">
     <h2 id="polls-heading2">{{item.title}}</h2>
     <p>
         {{item.description}}
@@ -15,16 +20,18 @@
 </div>
 <form class="list">
     <div class="variants">
-        <div ng-repeat="exercise in item.exercises"
-             ng-click="select($event, exercise.id)"
+        <div ng-repeat="exercise in exercises"
+             ng-click="select($event, $index+1)"
              ng-class="(($index + 1) == hasVoted) ? 'selected' : ''" >
-            <img src="{{exercise.image}}" width="100" alt="" />
-            <br />{{exercise.name}}
+            <img src="/exercise_images/{{ exercise.exId }}.jpg" width="100" alt="" />
+            <br />{{exercise.item}}
         </div>
     </div>
 </form>
-<div class="item item-body image-placeholder-div" ng-if="!hasEnded">
+<div class="item item-body image-placeholder-div " ng-if="!hasEnded">
     <img src="http://placehold.it/300x300" class="image-placeholder" alt="" width="100%" />
+    <b>{{ exercises[item.selectedValue-1].item }}</b><br />
+    {{ exercises[item.selectedValue-1].description }}<br /><br />
     <div class="col text-right">
         <button class="button button-outline button-positive"
                 ng-click="vote(item.selectedValue)"
@@ -33,6 +40,6 @@
         </button>
     </div>
 </div>
-<div class="item item-body" ng-if="hasEnded">
+<div class="item item-body" ng-if="(!hasEnded && item.intermediatePublic) || (hasEnded && item.finalPublic)">
     <canvas id="bar" class="chart chart-bar" chart-data="chartValues" chart-labels="chartLabels"></canvas>
 </div>

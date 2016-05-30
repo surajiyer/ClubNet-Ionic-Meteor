@@ -6,7 +6,7 @@ angular.module('web.routes', [])
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
 
-        /*
+        /**
          *       Routes for the web interface
          */
 
@@ -24,6 +24,12 @@ angular.module('web.routes', [])
                 }
             })
 
+            .state('enroll', {
+                url: '/enroll-account/:token',
+                templateUrl: 'client/web/views/enroll.ng.html',
+                controller: 'loginCtrl'
+            })
+
             // Just the menu view
             .state('web', {
                 url: '/web',
@@ -37,7 +43,7 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/main.ng.html',
                 controller: 'mainCtrl'
             })
-
+            
             // Login
             .state('login', {
                 url: '/login',
@@ -51,6 +57,13 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/addAccount.ng.html',
                 controller: 'addAccountCtrl'
             })
+            
+            // Editing members
+            .state('web.editAccount', {
+                url: '/editAccount/:userID',
+                templateUrl: 'client/web/views/editAccount.ng.html',
+                controller: 'editAccountCtrl'
+            })
 
             // Member management
             .state('web.members', {
@@ -63,13 +76,14 @@ angular.module('web.routes', [])
             .state('web.settings', {
                 url: '/settings',
                 templateUrl: 'client/web/views/settings.ng.html',
-                controller: 'accountManagementCtrl'
+                controller: 'settingsCtrl'
             })
 
             // User profile
             .state('web.profile', {
                 url: '/profile',
-                templateUrl: 'client/web/views/profile.ng.html'
+                templateUrl: 'client/web/views/profile.ng.html',
+                controller: 'profileCtrl'
             })
 
             // Feed
@@ -91,5 +105,20 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/sepquotes.ng.html'
             });
 
-        $urlRouterProvider.otherwise('/web/feed');
+        $urlRouterProvider.otherwise('/');
+    })
+    .run(function($rootScope, $location, $state) {
+        $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
+                                                    , fromState, fromParams) {
+
+            if(toState.name === "login" || toState.name == "enroll"){
+                return; // no need to redirect
+            }
+
+            // now, redirect only not authenticated
+            if (!Meteor.userId()) {
+                e.preventDefault(); // stop current execution
+                $state.go('login');
+            }
+        });
     });

@@ -10,6 +10,16 @@
 ion-view.pane {
     background: #eee;
 }
+.settings-club-logo {
+    max-width: 350px;
+}
+.saved-notification {
+    -webkit-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+    -ms-transition: all 500ms ease;
+    -o-transition: all 500ms ease;
+    transition: all 500ms ease;
+}
 
 .menu .has-header {
     top: 0;
@@ -116,6 +126,10 @@ p.decision {
     border-radius: 2px;
 }
 
+.modal-backdrop .bar-header .button {
+    color: #000;
+}
+
 .full-image {
     max-width: 500px;
     display: block;
@@ -157,8 +171,9 @@ p.decision {
 }
 
 .variants > div {
-    display: inline-block;
-    width: 33.3%;
+    display: table-cell;
+    vertical-align: top;
+    width: 20%;
     padding-top: 20px;
     padding-bottom: 10px;
     text-align: center;

@@ -1,16 +1,11 @@
-<div class="container">
-    <!-- Scripts -->
+<!-- Scripts -->
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
     <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/web/css/layout.css"/>
     <link rel="stylesheet" href="/web/css/side-menu.css"/>
 
-    <!--<a href="#menu" id="menuLink" class="menu-link" ng-click="toggleMenu()">-->
-        <!--&lt;!&ndash; Hamburger icon &ndash;&gt;-->
-    <!--</a>-->
-
     <!-- NAVIGATION BAR -->
-    <div id="menu" class>
+    <div id="menu">
         <div class="pure-menu">
             <div id="menu-logo">
                 <img src="https://placeholdit.imgix.net/~text?txtsize=19&txt=200%C3%97200&w=200&h=200">
@@ -25,7 +20,6 @@
                 <li class="pure-menu-item"><a href="" ng-click="logout()" class="pure-menu-link">{{ 'Log out' | translate }}</a></li>
             </ul>
         </div>
-        <div class="push"></div>
         <div id="nav-footer">
             <img src="/web/img/clubnet_logo_light.png">
             Intuitive Technologies B.V.
@@ -33,5 +27,4 @@
     </div>
 
     <!-- CONTENT -->
-    <div id="layout"><div ui-view></div></div>  
-</div>
+    <div class="content"><div ui-view></div></div>
