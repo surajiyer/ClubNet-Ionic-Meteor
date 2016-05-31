@@ -10,6 +10,9 @@ if (Meteor.isServer) {
     });
 
     Meteor.publish('Messages', function (chatId, messageId) {
+        check(chatId, String);
+        check(messageId, Match.Maybe(messageId));
+        var selector = {};
         selector.chatID = chatId;
         if(messageId) selector._id = messageId;
         return Messages.find(selector);

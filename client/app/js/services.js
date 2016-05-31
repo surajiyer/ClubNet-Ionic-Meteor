@@ -37,25 +37,26 @@ angular.module('app.services', [])
          * @param currentChat
          * @returns {*|any}
          */
-        const getOneChat = function(chatID, currentChat) {
-            currentChat = Chats.find({_id: chatID}).fetch()[0];
+        const getOneChat = function (chatID) {
+            var currentChat = Chats.find({_id: chatID}).fetch()[0];
             Meteor.subscribe('Messages', currentChat._id, currentChat.lastMessage, function () {
                 // Get recipient user
                 var recipient = currentChat.users[0];
-                if(recipient == Meteor.userId()) recipient = currentChat.users[1];
-                recipient = Meteor.users.find({_id: recipient});
+                if (recipient == Meteor.userId()) recipient = currentChat.users[1];
+                recipient = Meteor.users.find({_id: recipient}).fetch()[0];
 
                 // Load the chat title to the recipient name
                 currentChat.title = recipient.profile.firstName + " " + recipient.profile.lastName;
-                currentChat.picture = 'http://www.iconsdb.com/icons/preview/green/football-2-xl.png';
+                currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
                 currentChat.lastMessage = Messages.find({_id: currentChat.lastMessage}).fetch()[0];
             });
+            return currentChat;
         };
 
         /**
          * Get messages of a given chat
          */
-        const getMessages = function(chatID) {
+        const getMessages = function (chatID) {
             return Messages.find({chatId: chatID});
         };
 
@@ -73,6 +74,6 @@ angular.module('app.services', [])
 
         return {
             getChats: getChats,
-            getOneChat: getOneChat,
+            getOneChat: getOneChat
         }
     })
