@@ -531,8 +531,6 @@ angular.module('web.controllers', ['ui.bootstrap'])
                         clubID: 'PSV',
                         teamID: ''
                     };
-                    console.log('userID');
-                    console.log(Meteor.userId());
                     $meteor.call('updateUserProfile', Meteor.userId(), updatedProfile).then(function(result){
                     }, function(err){
                         console.log('Profile not updated to pr');
