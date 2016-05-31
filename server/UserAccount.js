@@ -3,9 +3,6 @@ import {userSchema, userProfileSchema} from '/imports/schemas/users';
 import {notesSchema} from '/imports/schemas/misc';
 import {Meteor} from 'meteor/meteor';
 
-// Set the SMTP server for the mail
-process.env.MAIL_URL = "smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/";
-
 const getUsersFromTeam = function (clubID, teamID, userTypes) {
     if (!userTypes) userTypes = utils.userTypes;
     return Meteor.users.find(
@@ -62,6 +59,7 @@ Meteor.startup(function () {
 
     // Publish userData
     Meteor.publish("userData", function () {
+        console.log(this.userId);
         var userType = utils.getUserType(this.userId);
         switch (userType) {
             case 'pr':
@@ -80,17 +78,27 @@ Meteor.startup(function () {
     });
 
     /**
-     *  Change the url for enrollment emails since the default includes a dash which casuses
+     *  Change the url for enrollment emails since the default includes a dash which causes
      *  some issues.
      */
     Accounts.urls.enrollAccount = function (token) {
         return Meteor.absoluteUrl("#/enroll/" + token);
     };
 
+    /**
+     *  Change the url for password reset emails since the default includes a dash which causes
+     *  some issues.
+     */
+    Accounts.urls.resetPassword = function (token) {
+        return Meteor.absoluteUrl("#/resetpassword/" + token);
+    };
+
     // Attach user schema
     Meteor.users.attachSchema(userSchema);
 });
 
+// TODO: remove Meteor.isServer for latency compensation
+process.env.MAIL_URL = "smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/";
 Meteor.methods({
     /**
      * @summary Function for adding a new user to the collection.
@@ -157,7 +165,9 @@ Meteor.methods({
         // TODO: should not check full user profile schema for update
         check(userID, String);
         check(newInfo, userProfileSchema);
-        check(Meteor.userId(), Match.Where(utils.isAdmin));
+        if (Meteor.userId() != userID) {
+            check(Meteor.userId(), Match.Where(utils.isAdmin));
+        }
         Meteor.users.update(
             {_id: userID},
             {$set: {profile: newInfo}}
@@ -219,5 +229,5 @@ Meteor.methods({
             },
             {$set: {"notes.$.text": newNote.text}}
         );
-    },
+    }
 });
