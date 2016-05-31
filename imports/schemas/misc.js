@@ -57,9 +57,6 @@ const permissionSchema = new SimpleSchema({
     }
 });
 
-utils.userTypes.push('yolo');
-console.log(utils.userTypes);
-
 /**
  * Database schema for Access Control
  * @type {SimpleSchema}

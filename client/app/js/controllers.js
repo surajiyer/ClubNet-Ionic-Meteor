@@ -174,7 +174,7 @@ angular.module('app.controllers', [])
             var date = new Date();
             date.setDate(date.getDate()-1);
             return date.toISOString().substring(0, 10);
-        }
+        };
 
         // Set display filter model
         $scope.showFilter = false;
@@ -216,7 +216,7 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('controlItemCtrl', function ($scope, $ionicPopover, Chat) {
+    .controller('controlItemCtrl', function ($scope, $ionicPopover) {
         /* POPOVER */
         $ionicPopover.fromTemplateUrl('client/app/views/itemOperations.ng.html', {
             scope: $scope
@@ -236,27 +236,27 @@ angular.module('app.controllers', [])
     })
 
     .controller('chatsCtrl', function ($scope, Chat) {
-        $scope.helpers({
-            chats: Chat.getChats
-        });
-    })
+        $scope.addChat = function() {
 
-    .controller('chatCtrl', function ($scope, Chat) {
-        // Load chat info
-        Tracker.autorun(function() {
-            if(!handle.ready()) return;
-            Chat.getOneChat($scope.chat._id, $scope.chat);
-            handle.stop();
-        });
+        };
 
         $scope.helpers({
             chats: Chat.getChats
         });
     })
 
-    .controller('messagingCtrl', function ($scope, $state, $stateParams, Chat) {
+    .controller('chatInfoCtrl', function ($scope, Chat) {
+        $scope.helpers({
+            // Load chat info
+            chat: function() {
+                return Chat.getOneChat($scope.chat._id);
+            }
+        });
+    })
+
+    .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
         // Load chat info
-        Chat.getOneChat($stateParams.chatId, $scope.chat);
+        Chat.getOneChat($stateParams.chatId);
 
         // Meteor.subscribe('Messages', chat._id, function () {
         //     $scope.chat.title = 'Chat';

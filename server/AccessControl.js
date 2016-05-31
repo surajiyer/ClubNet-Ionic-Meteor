@@ -5,7 +5,6 @@ AMx = new Mongo.Collection("AccessControl");
 
 Meteor.startup(function () {
     AMx.attachSchema(accessControlSchema);
-    console.log(process.env.MONGO_URL);
 });
 
 Meteor.methods({
