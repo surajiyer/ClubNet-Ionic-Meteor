@@ -6,9 +6,9 @@ angular.module('web.routes', [])
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
 
-        /*
-        *       Routes for the web interface
-        */
+        /**
+         *       Routes for the web interface
+         */
 
         $stateProvider
             .state('/', {
@@ -24,10 +24,11 @@ angular.module('web.routes', [])
                 }
             })
 
+            // Enroll page
             .state('enroll', {
-                url: '/enroll-account/:token',
+                url: '/enroll/:token',
                 templateUrl: 'client/web/views/enroll.ng.html',
-                controller: 'loginCtrl'
+                controller: 'enrollCtrl'
             })
 
             // Just the menu view
@@ -104,13 +105,14 @@ angular.module('web.routes', [])
                 url: '/sepquotes',
                 templateUrl: 'client/web/views/sepquotes.ng.html'
             });
+
         $urlRouterProvider.otherwise('/');
     })
     .run(function($rootScope, $location, $state) {
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                     , fromState, fromParams) {
-
-            if(toState.name === "login" || toState.name == "enroll"){
+                                                        
+            if(toState.name === "login" || toState.name === "enroll"){
                 return; // no need to redirect
             }
 

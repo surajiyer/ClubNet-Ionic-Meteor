@@ -6,8 +6,10 @@ import {isAdmin} from '/imports/common';
 import {userSchema, userProfileSchema} from '/imports/schemas/users';
 import {notesSchema} from '/imports/schemas/misc';
 import './UserAccount.js';
-
-//meteor test --full-app --driver-package practicalmeteor:mocha
+/**
+ * @summary Tests for methods in UserAccount.js
+ * To run this, call meteor test --full-app --driver-package practicalmeteor:mocha
+ */
 
 if (Meteor.isServer) {
     let testUser;
@@ -15,6 +17,12 @@ if (Meteor.isServer) {
     userId = '1';
     describe('UserAccount', () => {
 
+        /**
+         * @summary Adding a user with incomplete data throws error
+         * This sets up the environment for all the following test cases.
+         * It makes a testUser without a firstName and then tries to add it to the users collection.
+         * This should throw an error.
+         */
         it("Adding user with incomplete data throws error", () => {
             // Mock user and userId since there is no user logged in while testing
             global.Meteor = {
@@ -23,12 +31,13 @@ if (Meteor.isServer) {
                 }),
                 userId: sinon.stub().returns(userId)
             };
+            //another stub
             Meteor.userId = sinon.stub().returns(userId);
 
-            // Add schema to Items
+            // Add schema to the users collection
             Meteor.users.attachSchema(userSchema);
 
-            // Create item without type
+            // Create the test user without a first name
             testUser = {
                 email: 'test@test.test',
                 password: 'test',
@@ -38,99 +47,155 @@ if (Meteor.isServer) {
             // Adding the item without an required attribute
             try {
                 Meteor.call('addUser', testUser);
+                // It should throw an error, if it does not, the test fails.
                 assert.fail();
             } catch (err) {
             }
 
         });
 
+        /**
+         * @summary Adding a user with complete data succeeds
+         * It adds the needed firstName to the testUser.
+         * Then it tries to add this user to the users collection.
+         * This should succeed.
+         */
         it("Adding user with complete data succeeds", (done) => {
-            // Add type to item
+            // Add the missing firstName to the testUser
             testUser.profile.firstName = 'Test';
 
-            // Add the item with type
+            // Add the testUser to the collection
             try {
                 testUser._id = Meteor.call('addUser', testUser);
+                // Should succeed
                 done();
             } catch (err) {
                 assert.fail();
             }
         });
 
+        /**
+         * @summary Updating a user with incomplete data throws error
+         * It makes a testProfile with a incorrect lastName.
+         * Then it tries to update the profile of the previous created user.
+         * This should throw an error.
+         */
         it("Update User Profile with incomplete data throws error", () => {
-
+            // Create a testProfile with a number for lastName
             testProfile = {firstName: 'Test', lastName: 14, type: 'player', clubID: 'test'};
-            // Get item with wrong parameter
+            // Update the profile of the previous created user with the new testProfile
             try {
                 Meteor.call('updateUserProfile',testUser._id, testProfile);
+                // It should throw an error, if it does not, the test fails
                 assert.fail();
             } catch (err) {
             }
         });
 
+        /**
+         * @summary Updating a user with complete data succeeds
+         * It updates the testProfile with the correct data.
+         * Then it tries to update the profile of the previous created user.
+         * This should succeed.
+         */
         it("Update User Profile with complete data succeeds", (done) => {
-
+            // Update the testProfile with the correct data
             testProfile.lastName = 'newTest';
+            // Set the testUser profile to be the same as the testProfile
+            // This is for later testing purposes
             testUser.profile = testProfile;
-            // Get item added in the previous test
+            // Update the profile of the previous created user with the new testProfile
             try {
                 Meteor.call('updateUserProfile',testUser._id, testProfile);
+                // Should succeed
                 done();
             } catch (err) {
                 assert.fail();
             }
         });
 
+        /**
+         * @summary Getting user info with wrong parameters
+         * It tries to get a user with a wrong parameter
+         * This should throw error.
+         */
         it("Get user info with non string id throws error", () => {
 
-            // Get item with wrong parameter
+            // Get user with wrong parameter
             try {
                 Meteor.call('getUserInfo', 1234);
+                // It should throw an error, if it does not, the test fails
                 assert.fail();
             } catch (err) {
             }
         });
 
+        /**
+         * @summary Getting user info with non existing id
+         * It tries to get a user that does not exist
+         * This should throw error.
+         */
         it("Get user info with non existing string id throws error", () => {
 
-            // Get item with wrong parameter
+            // Get user with id that does not exist
             try {
                 Meteor.call('getUserInfo', 'test');
+                // It should throw an error, if it does not, the test fails
                 assert.fail();
             } catch (err) {
             }
         });
 
+        /**
+         * @summary Getting user info with existing id.
+         * It tries to get the user we previously created in the database
+         * Then a couple of asserts to check whether this user is indeed the same
+         * This should succeed.
+         */
         it("Get user info with existing string id succeeds", (done) => {
 
-            // Get item added in the previous test
+            // Get user with correct id
             try {
                 var gettingUser = Meteor.call('getUserInfo', testUser._id);
+                // Checks to see whether the user is the same or not.
                 assert.equal(gettingUser.emails[0].address, testUser.email);
                 assert.equal(gettingUser.profile.firstName, testUser.profile.firstName);
                 assert.equal(gettingUser.profile.lastName, testUser.profile.lastName);
                 assert.equal(gettingUser.profile.type, testUser.profile.type);
                 assert.equal(gettingUser.profile.clubID, testUser.profile.clubID);
+                // Should succeed
                 done();
             } catch (err) {
                 assert.fail();
             }
         });
 
+        /**
+         * @summary Deleting a user with existing id.
+         * It tries to remove the previously created user.
+         * This should succeed.
+         */
         it("Deletes user with existing id", (done) => {
-            // Get item with wrong parameter
+            // Remove the user from the collection
             try {
                 Meteor.users.remove(testUser._id);
+                // Should succeed
                 done();
             } catch (err) {
                 assert.fail();
             }
         });
 
+        /**
+         * @summary Getting user info from previously deleted user.
+         * It tries to get the previously created user that is now deleted.
+         * This should throw error.
+         */
         it("Should not be possible to get user info anymore", () => {
-
+            // Get user with correct id, but is deleted
             try {
                 Meteor.call('getUserInfo', testUser._id);
+                // It should throw an error, if it does not, the test fails
                 assert.fail();
             } catch (err) {}
 
