@@ -125,17 +125,23 @@ angular.module('app.controllers', [])
         $scope.errorVisible = {'visibility': 'hidden'};
     })
 
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window) {
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window, currentClub) {
         $scope.logout = function ($event) {
             $event.stopPropagation();
             $meteor.logout();
             $state.go('login').then(function () {
                 $window.location.reload();
             });
-        }
+        };
+
+        currentClub.getClub().then(function(result){
+             $scope.currentClub = result;
+        }, function(err){
+            console.log(err);
+        });
     })
 
-    .controller('feedCtrl', function ($scope, AccessControl) {
+    .controller('feedCtrl', function ($scope, AccessControl, $meteor) {
         // Display coach bar
         AccessControl.getPermission('CoachBar', 'view', function (result) {
             $scope.showCoachBar = result;
@@ -157,6 +163,8 @@ angular.module('app.controllers', [])
             }, this);
         };
 
+        $scope.limit = 2;
+
         // Load the filter
         Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
@@ -165,11 +173,25 @@ angular.module('app.controllers', [])
             $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
                 return type.checked;
             }), '_id');
-            $scope.subscribe('Feed', function () {
-                return [$scope.itemTypesFilter];
-            });
+            Meteor.subscribe('Feed', $scope.getReactively('itemTypesFilter'), $scope.getReactively('limit'));
         });
+        
+        /* Call to get the number of items that could possible be retrieved.
+        *  Needed for preventing indefinite increase of limit in infiniteScroll */
+        $meteor.call('getItemsCount').then(function(result){
+            $scope.maxItems = result;
+        }, function(err){
+            console.log(err);
+        });
+        
+        /* Function which increases the limit for rendering feed items - infinite scroll */
+        $scope.loadMore = function() {
+            if ($scope.limit > $scope.maxItems) return;
+            var len = $scope.limit;
+            $scope.limit = len + 1;
+        };
 
+        /* Function to get current date in ISO format */
         $scope.getCurrentDateISO = function(){
             var date = new Date();
             date.setDate(date.getDate()-1);
@@ -284,7 +306,7 @@ angular.module('app.controllers', [])
         $scope.post = function () {
             $scope.newPost.type = 'Post';
             $scope.newPost.createdAt = new Date;
-            Items.insert($scope.newPost);
+            Meteor.call('addFeedItem', $scope.newPost);
             $scope.newPost = {};
             $scope.closePost();
         };

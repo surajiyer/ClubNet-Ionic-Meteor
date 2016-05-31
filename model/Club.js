@@ -17,11 +17,9 @@ Meteor.startup(function () {
     });
 
     if (Meteor.isServer) {
-        Meteor.publish('Clubs', function () {
+        Meteor.publish('clubs', function () {
             var clubID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.clubID;
-            console.log(this.userId + '|');
-            console.log(Clubs.find({_id: clubID}).fetch());
-            return Clubs.find({_id: clubID});
+            return Clubs.find({});
         });
     }
 });
@@ -36,7 +34,7 @@ if (Meteor.isServer) {
                 {$set: updatedItem}
             );
 
-            return true;
+            return updatedItem;
         },
         getClub: function () {
             var clubID = Meteor.user().profile.clubID;

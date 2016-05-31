@@ -1,5 +1,9 @@
-<img class='header-picture' ng-src="{{ chat.picture }}">
-<h2>{{ chat.title }}</h2>
-<p>{{ chat.lastMessage.message }}</p>
-<span class="last-message-timestamp">{{ chat.lastMessage.createdAt | date }}</span>
-<i class="icon ion-chevron-right icon-accessory"></i>
+<div class="item-chat item-remove-animate item-avatar item-icon-right"
+                      type="item-text-wrap">
+	<img  style="margin-top: 20px" ng-src="{{ chat.picture }}">
+<div style="margin-top:20px">
+	<h2>{{ chat.title }}</h2>
+	<p>{{ chat.lastMessage.message }} - <span>{{ chat.lastMessage.createdAt | date }}</span></p>
+	</div>
+	<i class="icon ion-chevron-right icon-accessory"></i>
+</div>

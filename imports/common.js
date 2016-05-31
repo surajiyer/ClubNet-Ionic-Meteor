@@ -1,4 +1,5 @@
 export let userTypes = ['coach', 'player', 'pr', 'general'];
+import {Meteor} from 'meteor/meteor';
 
 export const getUserType = function (userId) {
     check(userId, String);

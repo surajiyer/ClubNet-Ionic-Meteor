@@ -36,12 +36,10 @@
             <label for="clubname">Club logo</label>
             <input type="file" custom-on-change="uploadFile">
         </div>
-
         <div class="col-md-8">
-            <img src="{{hostname + ':3000' + currentClub.logo}}" alt="logo" class="settings-club-logo" />
+            <img src="{{hostname + currentClub.logo}}" alt="logo" class="settings-club-logo" />
         </div>
     </div>
-    <div ng-repeat="c in club">{{c._id}}{{club}}</div>
     <h2 class="content-subhead">Feed</h2>
     <div class="row">
         <label class="col-md-4" for="clubname">Maximum amount of heroes per month</label>

@@ -40,3 +40,4 @@ cfs:standard-packages
 cfs:filesystem
 cfs:gridfs
 thospaeth:angular-color-picker
+raix:push

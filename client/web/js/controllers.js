@@ -12,7 +12,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $scope.logout = function () {
             $meteor.logout();
             $state.go('login');
-        }
+        };
+        $scope.hostname = 'http://' + window.location.hostname + ':3000';
+       
     })
 
     /**
@@ -110,6 +112,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
             console.log(err);
         });
 
+        /**
+         * @summary Function for retrieving the image URL for the club logo, which is in the database
+         */
         $meteor.call('getImage').then(function(result){
             //console.log(result);
         }, function(err){
@@ -117,43 +122,58 @@ angular.module('web.controllers', ['ui.bootstrap'])
         });
 
         $meteor.subscribe('images');
+        $meteor.subscribe('clubs');
 
-        $scope.hostname = 'http://' + window.location.hostname;
+        $scope.hostname = 'http://' + window.location.hostname + ':3000';
 
+        /**
+         * @summary Function for uploading a file.
+         * @method uploadFile
+         * @param {Object} event The file to upload.
+         * @after All the images are uploaded to the server.
+         */
         $scope.uploadFile = function (event) {
             var files = event.target.files;
 
             for (var i = 0, ln = files.length; i < ln; i++) {
 
                 files[i].userId = Meteor.userId();
+                // Insert all the images into the Images collection.
                 Images.insert(files[i], function (err, fileObj) {
                     if (err) {
-                       // console.log(err);
+                        console.log(err);
                     } else {
-                        $meteor.call('updateClub', {logo: fileObj.url({brokenIsFine: true})}).then(function(result){}, function(err){
-                            console.log(err);
-                        });
+                        console.log(fileObj.url({brokenIsFine: true}));
+                        $scope.currentClub.logo = fileObj.url({brokenIsFine: true});
                     }
                 });
             }
-        }
+        };
+
         $scope.saved = false;
+        /**
+         * @summary Function for saving the new settings for the club.
+         * @method save
+         * @after The new settings are saved on the server.
+         */
         $scope.save = function(){
-            var updatedClub = {
-                name: $scope.currentClub.name,
-                colorPrimary: $scope.currentClub.colorPrimary,
-                colorSecondary: $scope.currentClub.colorSecondary,
-                colorAccent: $scope.currentClub.colorAccent,
-                heroesMax: $scope.currentClub.heroesMax
-            };
+
             $scope.saved = true;
             $timeout(function(){$scope.saved = false;}, 1500);
-            $meteor.call('updateClub', updatedClub).then(function(result){}, function(err){
+            $meteor.call('updateClub', $scope.currentClub).then(function(result){
+                $scope.currentClub = result;
+            }, function(err){
                 console.log(err);
             });
 
-        }
-        console.log(Clubs.find({}).fetch());
+        };
+
+        /**
+         * @summary Helper functions
+         * @method save
+         * @param {Function} club Returns all the clubs
+         * @param {Function} images Returns the images
+         */
         $scope.helpers({
             club: function () {
                 return Clubs.find({});
@@ -162,6 +182,21 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 return Images.find({});
             }
         });
+    })
+
+    /**
+     *  Custom on change Controller: puts a listener on file input change
+     *  @param {String} Name of the directive
+     *  @param {Function}
+     */
+    .directive('customOnChange', function() {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var onChangeHandler = scope.$eval(attrs.customOnChange);
+                element.bind('change', onChangeHandler);
+            }
+        };
     })
 
     /**

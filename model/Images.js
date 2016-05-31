@@ -33,7 +33,6 @@ if (Meteor.isServer) {
     });
 
     Meteor.methods({
-
         getImage: function(){
             return Images.find().fetch()[0];
         }
