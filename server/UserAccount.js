@@ -3,6 +3,8 @@ import {userSchema, userProfileSchema} from '/imports/schemas/users';
 import {notesSchema} from '/imports/schemas/misc';
 import {Meteor} from 'meteor/meteor';
 
+process.env.MAIL_URL = "smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/";
+
 const getUsersFromTeam = function (clubID, teamID, userTypes) {
     if (!userTypes) userTypes = utils.userTypes;
     return Meteor.users.find(
@@ -59,7 +61,7 @@ Meteor.startup(function () {
 
     // Publish userData
     Meteor.publish("userData", function () {
-        var userType = utils.getUserType(Meteor.userId());
+        var userType = utils.getUserType(this.userId);
         switch (userType) {
             case 'pr':
                 return Meteor.users.find({});
@@ -97,7 +99,6 @@ Meteor.startup(function () {
 });
 
 // TODO: remove Meteor.isServer for latency compensation
-process.env.MAIL_URL = "smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/";
 Meteor.methods({
     /**
      * @summary Function for adding a new user to the collection.

@@ -44,6 +44,7 @@ const chats = new SimpleSchema({
         custom: function () {
             var hasPermission = Meteor.call('checkRights', 'ChatStatus', 'edit');
             var users = this.siblingField('users').value;
+            // TODO: remove this
             console.log(users);
             var userBelongsToChat = _.contains(users, Meteor.userId());
             if (!hasPermission && !userBelongsToChat)
