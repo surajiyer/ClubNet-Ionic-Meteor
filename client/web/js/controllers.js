@@ -1,8 +1,7 @@
 angular.module('web.controllers', ['ui.bootstrap'])
 
     /**
-     *  Main Controller
-     *  @summary Overarching web interface functionality. Logging out.
+     *  Main Controller: overarching web interface functionality.
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -17,12 +16,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
     })
 
     /**
-     *  Login Controller
-     *  @summary Provides all functionality for the login screen of the web interface.
+     *  Login Controller: provides all functionality for the login screen of the web interface
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('loginCtrl', function ($scope, $meteor, $state) {
+    .controller('loginCtrl', function ($scope, $meteor, $state, $modal) {
 
         /**
          *  Filled in credentials by the user
@@ -58,7 +56,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 if (err.error == 400 || err.error == 403) {
                     $scope.error = 'Incorrect credentials'
                 } else {
-                    $scope.error = err.reason;                    
+                    $scope.error = err.reason;
                 }
                 // Define whether error message is shown.
                 $scope.errorVisible = true;
@@ -72,9 +70,27 @@ angular.module('web.controllers', ['ui.bootstrap'])
         /**
          * @summary Function to redirect user to forgot password page
          */
-        $scope.goToRemindPassword = function() {
-            $state.go('forgotPassword');
-        }
+        // Open the delete modal
+        $scope.forgotPass = function () {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'client/web/views/forgotPasswordModal.ng.html',
+                controller: 'ForgotPassModalInstanceCtrl',
+                size: '',
+                resolve: {
+                    selectedUser: function () {
+                        return $scope.selectedUser;
+                    }
+                }
+            });
+
+            // Show when modal was closed in console
+            modalInstance.result.then(function (email) {
+
+            }, function () {
+                // Modal dismissed
+            });
+        };
     })
 
     /**
@@ -85,7 +101,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
     .controller('settingsCtrl', function ($scope, $meteor, $timeout) {
 
         /**
-         * @summary Function for retrieving the club name that a logged in user is associated with.
+         * @summary Function for retrieving the club a user is logged into.
+         * @param 
          */
         $meteor.call('getClub').then(function(result){
             $scope.currentClub = result;
@@ -93,9 +110,6 @@ angular.module('web.controllers', ['ui.bootstrap'])
             console.log(err);
         });
 
-        /**
-         * @summary Function for retrieving the image URL for the club logo, which is in the database
-         */
         $meteor.call('getImage').then(function(result){
             //console.log(result);
         }, function(err){
@@ -106,10 +120,6 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         $scope.hostname = 'http://' + window.location.hostname;
 
-        /**
-         * @summary Function for retrieving the club name that a logged in user is associated with.
-         * @param event
-         */
         $scope.uploadFile = function (event) {
             var files = event.target.files;
 
@@ -283,7 +293,10 @@ angular.module('web.controllers', ['ui.bootstrap'])
             id: '',
             firstName: '',
             lastName: '',
-            email: ''
+            email: '',
+            oldPassword: '',
+            newPassword: '',
+            confirmNewPassword: ''
         }
         
         $scope.retrieveUser = function() {
@@ -295,15 +308,21 @@ angular.module('web.controllers', ['ui.bootstrap'])
         
         $scope.error = '';
         $scope.errorVisible = false;    
-        $scope.updatedVisible = false;    
+        $scope.updatedVisible = false; 
+        
+        $scope.passwordError = '';
+        $scope.passwordErrorVisible = false;    
+        $scope.passwordUpdatedVisible = false;   
         
         $scope.saveChanges = function () {
             if (!$scope.user.firstName) {
                     $scope.error = 'No first name specified';
-                    $scope.errorVisible = true;                
+                    $scope.errorVisible = true;   
+                    $scope.updatedVisible = false;             
             } else if (!$scope.user.lastName) {
                     $scope.error = 'No last name specified';
-                    $scope.errorVisible = true;                
+                    $scope.errorVisible = true;  
+                    $scope.updatedVisible = false;              
             } else {
                  var updatedProfile = {
                     firstName: $scope.user.firstName,
@@ -318,10 +337,37 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     $scope.errorVisible = false;
                 }, function(err){
                     $scope.updatedVisible = false;
-                    console.log('error');
-                    console.log(err);
                     $scope.error = err.reason;
                     $scope.errorVisible = true;
+                });
+            }
+        };
+        
+        $scope.savePasswordChanges = function () {
+            if (!$scope.user.oldPassword) {
+                $scope.passwordError = 'Old password not filled in';
+                $scope.passwordErrorVisible = true;     
+                $scope.passwordUpdatedVisible = false;           
+            } else if (!$scope.user.newPassword) {
+                $scope.passwordError = 'No new password specified';
+                $scope.passwordErrorVisible = true;          
+                $scope.passwordUpdatedVisible = false;            
+            } else if (!$scope.user.confirmNewPassword) {
+                $scope.passwordError = 'Please confirm your new password';
+                $scope.passwordErrorVisible = true;        
+                $scope.passwordUpdatedVisible = false;              
+            } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
+                $scope.passwordError = 'New passwords are do not match';
+                $scope.passwordErrorVisible = true;     
+                $scope.passwordUpdatedVisible = false; 
+            } else {
+                $meteor.changePassword($scope.user.oldPassword, $scope.user.newPassword).then(function () {
+                    $scope.passwordUpdatedVisible = true;
+                    $scope.passwordErrorVisible = false;
+                }, function (error) {
+                    $scope.passwordUpdatedVisible = false;
+                    $scope.passwordError = error.reason;
+                    $scope.passwordErrorVisible = true;
                 });
             }
         };
@@ -362,11 +408,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         // Open the delete modal
         $scope.delete = function (user) {
-            $scope.selectedUser = user
+            $scope.selectedUser = user;
             var modalInstance = $modal.open({
                 animation: false,
                 templateUrl: 'client/web/views/deleteAccountModal.ng.html',
-                controller: 'ModalInstanceCtrl',
+                controller: 'DeleteModalInstanceCtrl',
                 size: '',
                 resolve: {
                     selectedUser: function () {
@@ -394,14 +440,46 @@ angular.module('web.controllers', ['ui.bootstrap'])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, selectedUser) {
+    .controller('DeleteModalInstanceCtrl', function ($scope, $modalInstance, selectedUser) {
         
         $scope.selectedUser = selectedUser;
         
-        $scope.ok = function () {
+        $scope.delete = function () {
             $modalInstance.close($scope.selectedUser);
         };
 
+        $scope.cancel = function () {
+            $modalInstance.dismiss();
+        };
+    })
+
+    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance) {
+
+        $scope.error = '';
+        $scope.errorVisible = false;
+
+        $scope.input = {
+            email: ''
+        };
+
+        $scope.send = function () {
+            var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (!mailRegularExpression.test($scope.input.email)) {
+                $scope.errorVisible = true;
+                $scope.error = 'No valid email specified';
+            } else {
+                Accounts.forgotPassword({email: $scope.input.email}, function(err) {
+                    if (err) {
+                        $scope.errorVisible = true;
+                        $scope.error = 'No valid email specified';
+                        $scope.$apply();
+                    } else {
+                        $modalInstance.close();
+                    }
+                });
+            }
+        }
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
@@ -414,4 +492,58 @@ angular.module('web.controllers', ['ui.bootstrap'])
      */
     .controller('resetPasswordCtrl', function ($scope, $meteor, $state) {
         console.log('reset password controller');
+    })
+    
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams) {
+        $scope.token = $stateParams.token;
+        
+         $scope.user = {
+            newPassword: '',
+            confirmNewPassword: ''
+        }
+        
+        $scope.passwordError = '';
+        $scope.passwordErrorVisible = false;
+        
+        $scope.setPassword = function () {
+            if (!$scope.user.newPassword) {
+                $scope.passwordError = 'No new password specified';
+                $scope.passwordErrorVisible = true;                
+            } else if (!$scope.user.confirmNewPassword) {
+                $scope.passwordError = 'Please confirm your new password';
+                $scope.passwordErrorVisible = true;                  
+            } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
+                $scope.passwordError = 'New passwords are do not match';
+                $scope.passwordErrorVisible = true;     
+            } else {
+                $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
+                    $scope.passwordErrorVisible = false;
+
+
+                    /**
+                     *
+                     * @type {{firstName: *, lastName: *, type: string, clubID: string, teamID: string}}
+                     */
+                    var updatedProfile = {
+                        firstName: Meteor.user().profile.firstName,
+                        lastName: Meteor.user().profile.lastName,
+                        type: 'pr',
+                        clubID: 'PSV',
+                        teamID: ''
+                    };
+                    console.log('userID');
+                    console.log(Meteor.userId());
+                    $meteor.call('updateUserProfile', Meteor.userId(), updatedProfile).then(function(result){
+                    }, function(err){
+                        console.log('Profile not updated to pr');
+                        console.log(err);
+                    });
+                    
+                    $state.go('/');
+                }, function (error) {
+                    $scope.passwordError = error.reason;
+                    $scope.passwordErrorVisible = true;
+                });
+            }
+        };
     });

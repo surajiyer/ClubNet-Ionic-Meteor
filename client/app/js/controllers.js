@@ -1,5 +1,22 @@
 angular.module('app.controllers', [])
 
+//add: angular.module('somethingHere', ['infinite-scroll']); ??
+//or should it be in the app.js angular.module ?
+
+    // .controller('InfiniteScroll', function($scope) {
+    //     $scope.items = []; //get items from database here?
+    //     //use the same functionality as we are now to fetch items from the database
+    //    
+    //     $scope.loadMore = function() {
+    //         //8 is predefined, just sets how many we load each time
+    //         for (var i = 1; i <= 8; i++) {
+    //             //get new items and put them into the items array
+    //             //use the same functionality as we are now to fetch items from the database
+    //             $scope.items.push();
+    //         }
+    //     };
+    // })
+
     .controller('registerCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
             email: '',
