@@ -59,8 +59,7 @@ Meteor.startup(function () {
 
     // Publish userData
     Meteor.publish("userData", function () {
-        console.log(this.userId);
-        var userType = utils.getUserType(this.userId);
+        var userType = utils.getUserType(Meteor.userId());
         switch (userType) {
             case 'pr':
                 return Meteor.users.find({});
