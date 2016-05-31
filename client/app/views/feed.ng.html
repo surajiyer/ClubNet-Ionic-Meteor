@@ -22,6 +22,7 @@
     </div>
     <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
     <ion-content>
+        <-- Add div infinite-scroll=loadMore() here-->
         <div id="feeditems" class="main-content">
             <div ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">
                 <div class="list card {{item.sticky}}" style="margin-top: 10px; margin-bottom: 10px;">
