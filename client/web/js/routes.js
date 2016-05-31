@@ -31,6 +31,13 @@ angular.module('web.routes', [])
                 controller: 'enrollCtrl'
             })
 
+            // Reset password page
+            .state('reset', {
+                url: '/resetpassword/:token',
+                templateUrl: 'client/web/views/reset.ng.html',
+                controller: 'enrollCtrl'
+            })
+
             // Just the menu view
             .state('web', {
                 url: '/web',
@@ -112,7 +119,7 @@ angular.module('web.routes', [])
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                     , fromState, fromParams) {
                                                         
-            if(toState.name === "login" || toState.name === "enroll"){
+            if(toState.name === "login" || toState.name === "enroll" || toState.name === "reset"){
                 return; // no need to redirect
             }
 

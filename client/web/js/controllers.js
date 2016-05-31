@@ -87,11 +87,6 @@ angular.module('web.controllers', ['ui.bootstrap'])
             // Show when modal was closed in console
             modalInstance.result.then(function (email) {
 
-                Accounts.forgotPassword({email: email}, function(err) {
-                    if (err) {
-                        console.log(err);
-                    }
-                });
             }, function () {
                 // Modal dismissed
             });
@@ -460,12 +455,30 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
     .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance) {
 
+        $scope.error = '';
+        $scope.errorVisible = false;
+
         $scope.input = {
             email: ''
         };
 
         $scope.send = function () {
-            $modalInstance.close($scope.input.email);
+            var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (!mailRegularExpression.test($scope.input.email)) {
+                $scope.errorVisible = true;
+                $scope.error = 'No valid email specified';
+            } else {
+                Accounts.forgotPassword({email: $scope.input.email}, function(err) {
+                    if (err) {
+                        $scope.errorVisible = true;
+                        $scope.error = 'No valid email specified';
+                        $scope.$apply();
+                    } else {
+                        $modalInstance.close();
+                    }
+                });
+            }
         }
         $scope.cancel = function () {
             $modalInstance.dismiss();
@@ -505,7 +518,12 @@ angular.module('web.controllers', ['ui.bootstrap'])
             } else {
                 $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
                     $scope.passwordErrorVisible = false;
-                    
+
+
+                    /**
+                     *
+                     * @type {{firstName: *, lastName: *, type: string, clubID: string, teamID: string}}
+                     */
                     var updatedProfile = {
                         firstName: Meteor.user().profile.firstName,
                         lastName: Meteor.user().profile.lastName,
