@@ -34,7 +34,6 @@ angular.module('app.services', [])
         /**
          * Load chat info into passed object with given chat ID
          * @param chatID
-         * @param currentChat
          * @returns {*|any}
          */
         const getOneChat = function (chatID) {

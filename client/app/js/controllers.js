@@ -235,6 +235,9 @@ angular.module('app.controllers', [])
         });
     })
 
+    /**
+     * @summary Controller for loading chats.
+     */
     .controller('chatsCtrl', function ($scope, Chat) {
         $scope.addChat = function() {
 
@@ -245,6 +248,9 @@ angular.module('app.controllers', [])
         });
     })
 
+    /**
+     * @summary Controller for loading chat info in each chat.
+     */
     .controller('chatInfoCtrl', function ($scope, Chat) {
         $scope.helpers({
             // Load chat info
@@ -254,22 +260,12 @@ angular.module('app.controllers', [])
         });
     })
 
+    /**
+     * @summary Controller for chatting functions within chats.
+     */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
         // Load chat info
         Chat.getOneChat($stateParams.chatId);
-
-        // Meteor.subscribe('Messages', chat._id, function () {
-        //     $scope.chat.title = 'Chat';
-        //     $scope.chat.picture = 'http://www.iconsdb.com/icons/preview/green/football-2-xl.png';
-        // });
-        //
-        // $scope.changeStatus = function (newStatus) {
-        //     Chats.update({_id: chat._id}, {status: newStatus});
-        // };
-        //
-        // $scope.addMessage = function (message) {
-        //     Messages.insert({chatID: chat._id, message: message});
-        // };
 
         $scope.helpers({
             messages: function () {
