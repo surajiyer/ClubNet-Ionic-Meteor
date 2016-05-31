@@ -20,7 +20,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('loginCtrl', function ($scope, $meteor, $state) {
+    .controller('loginCtrl', function ($scope, $meteor, $state, $modal) {
 
         /**
          *  Filled in credentials by the user
@@ -56,7 +56,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                 if (err.error == 400 || err.error == 403) {
                     $scope.error = 'Incorrect credentials'
                 } else {
-                    $scope.error = err.reason;                    
+                    $scope.error = err.reason;
                 }
                 // Define whether error message is shown.
                 $scope.errorVisible = true;
@@ -70,9 +70,27 @@ angular.module('web.controllers', ['ui.bootstrap'])
         /**
          * @summary Function to redirect user to forgot password page
          */
-        $scope.goToRemindPassword = function() {
-            $state.go('forgotPassword');
-        }
+        // Open the delete modal
+        $scope.forgotPass = function () {
+            var modalInstance = $modal.open({
+                animation: true,
+                templateUrl: 'client/web/views/forgotPasswordModal.ng.html',
+                controller: 'ForgotPassModalInstanceCtrl',
+                size: '',
+                resolve: {
+                    selectedUser: function () {
+                        return $scope.selectedUser;
+                    }
+                }
+            });
+
+            // Show when modal was closed in console
+            modalInstance.result.then(function (email) {
+
+            }, function () {
+                // Modal dismissed
+            });
+        };
     })
 
     /**
@@ -390,11 +408,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
 
         // Open the delete modal
         $scope.delete = function (user) {
-            $scope.selectedUser = user
+            $scope.selectedUser = user;
             var modalInstance = $modal.open({
                 animation: false,
                 templateUrl: 'client/web/views/deleteAccountModal.ng.html',
-                controller: 'ModalInstanceCtrl',
+                controller: 'DeleteModalInstanceCtrl',
                 size: '',
                 resolve: {
                     selectedUser: function () {
@@ -422,14 +440,46 @@ angular.module('web.controllers', ['ui.bootstrap'])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('ModalInstanceCtrl', function ($scope, $modalInstance, selectedUser) {
+    .controller('DeleteModalInstanceCtrl', function ($scope, $modalInstance, selectedUser) {
         
         $scope.selectedUser = selectedUser;
         
-        $scope.ok = function () {
+        $scope.delete = function () {
             $modalInstance.close($scope.selectedUser);
         };
 
+        $scope.cancel = function () {
+            $modalInstance.dismiss();
+        };
+    })
+
+    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance) {
+
+        $scope.error = '';
+        $scope.errorVisible = false;
+
+        $scope.input = {
+            email: ''
+        };
+
+        $scope.send = function () {
+            var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (!mailRegularExpression.test($scope.input.email)) {
+                $scope.errorVisible = true;
+                $scope.error = 'No valid email specified';
+            } else {
+                Accounts.forgotPassword({email: $scope.input.email}, function(err) {
+                    if (err) {
+                        $scope.errorVisible = true;
+                        $scope.error = 'No valid email specified';
+                        $scope.$apply();
+                    } else {
+                        $modalInstance.close();
+                    }
+                });
+            }
+        }
         $scope.cancel = function () {
             $modalInstance.dismiss();
         };
@@ -468,7 +518,12 @@ angular.module('web.controllers', ['ui.bootstrap'])
             } else {
                 $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
                     $scope.passwordErrorVisible = false;
-                    
+
+
+                    /**
+                     *
+                     * @type {{firstName: *, lastName: *, type: string, clubID: string, teamID: string}}
+                     */
                     var updatedProfile = {
                         firstName: Meteor.user().profile.firstName,
                         lastName: Meteor.user().profile.lastName,

@@ -50,7 +50,10 @@ const chats = new SimpleSchema({
                 return 'notAllowed';
         }
     },
-    lastMessage: {type: messages}
+    lastMessage: {
+        type: String,
+        optional: true
+    }
 });
 
 export {chats, chatSessions, messages}

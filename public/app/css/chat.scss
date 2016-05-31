@@ -45,7 +45,7 @@
     background-color: #FFF;
   }
 
-  &.message-other::before, &.message-mine::before, {
+  &.message-other::before, &.message-mine::before {
     content: "";
     position: absolute;
     bottom: 3px;
@@ -71,7 +71,7 @@
     word-wrap: break-word;
 
     &::after {
-      content: " \00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0";
+      content: "\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0\00a0";
       display: inline;
     }
   }

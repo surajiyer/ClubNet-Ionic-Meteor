@@ -28,7 +28,6 @@ angular.module('app.directives', [])
             scope: {
                 item: "="
             }
-
         }
     })
 
@@ -40,6 +39,17 @@ angular.module('app.directives', [])
                 item: "="
             },
             controller: 'votingCtrl'
+        }
+    })
+
+    .directive('chatInfo', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'client/app/views/chatInfo.ng.html',
+            scope: {
+                chat: "="
+            },
+            controller: 'chatInfoCtrl'
         }
     })
 
