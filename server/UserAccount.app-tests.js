@@ -14,6 +14,7 @@ import './UserAccount.js';
 if (Meteor.isServer) {
     let testUser;
     let testProfile;
+    let testPr;
     userId = '1';
     describe('UserAccount', () => {
 
@@ -25,14 +26,13 @@ if (Meteor.isServer) {
          */
         it("Adding user with incomplete data throws error", () => {
             // Mock user and userId since there is no user logged in while testing
-            global.Meteor = {
-                user: sinon.stub().returns({
-                    profile : { clubID : '-', type: 'pr'}
-                }),
-                userId: sinon.stub().returns(userId)
-            };
+            // global.Meteor = {
+            //     user: sinon.stub().returns({
+            //         profile : { clubID : '-', type: 'pr'}
+            //     }),
+            //     userId: sinon.stub().returns(userId)
+            // };
             //another stub
-            Meteor.userId = sinon.stub().returns(userId);
 
             // Add schema to the users collection
             Meteor.users.attachSchema(userSchema);
@@ -43,6 +43,16 @@ if (Meteor.isServer) {
                 password: 'test',
                 profile: {lastName: 'Test', type: 'player', clubID: 'test'}
             };
+
+            testPr = {
+                email: 'pr@pr.pr',
+                password: 'pr',
+                profile: {firstName: 'Pr', lastName: 'Pr', type: 'pr', clubID: 'test'}
+            };
+
+            testPr._id = Meteor.call('addUser', testPr);
+            console.log(testPr._id);
+            Meteor.userId = sinon.stub().returns(testPr._id);
             
             // Adding the item without an required attribute
             try {
@@ -67,9 +77,11 @@ if (Meteor.isServer) {
             // Add the testUser to the collection
             try {
                 testUser._id = Meteor.call('addUser', testUser);
-                // Should succeed
+                console.log(testUser._id);
                 done();
+                // Should succeed
             } catch (err) {
+                console.log(err);
                 assert.fail();
             }
         });
@@ -110,6 +122,7 @@ if (Meteor.isServer) {
                 // Should succeed
                 done();
             } catch (err) {
+                console.log('update: ' + err);
                 assert.fail();
             }
         });
@@ -166,6 +179,7 @@ if (Meteor.isServer) {
                 // Should succeed
                 done();
             } catch (err) {
+                console.log('getting: ' + err);
                 assert.fail();
             }
         });
