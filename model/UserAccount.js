@@ -160,7 +160,9 @@ if(Meteor.isServer) {
             // TODO: should not check full user profile schema for update
             check(userID, String);
             check(newInfo, userProfileSchema);
-            check(this.userId, Match.Where(utils.isAdmin));
+            if (Meteor.userId() != userID) {
+                check(Meteor.userId(), Match.Where(utils.isAdmin));
+            }
             Meteor.users.update(
                 {_id: userID},
                 {$set: {profile: newInfo}}

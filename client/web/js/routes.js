@@ -27,7 +27,8 @@ angular.module('web.routes', [])
             // Enroll page
             .state('enroll', {
                 url: '/enroll/:token',
-                templateUrl: 'client/web/views/enroll.ng.html'
+                templateUrl: 'client/web/views/enroll.ng.html',
+                controller: 'enrollCtrl'
             })
 
             // Just the menu view
@@ -110,14 +111,8 @@ angular.module('web.routes', [])
     .run(function($rootScope, $location, $state) {
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                     , fromState, fromParams) {
-            console.log('redirect check');
-            console.log('e');
-            console.log(e);
-            console.log('toState');
-            console.log(toState);
-            console.log('fromState');
-            console.log(fromState);
-            if(toState.name === "login"){
+                                                        
+            if(toState.name === "login" || toState.name === "enroll"){
                 return; // no need to redirect
             }
 

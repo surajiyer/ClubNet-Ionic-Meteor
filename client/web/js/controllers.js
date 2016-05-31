@@ -442,4 +442,53 @@ angular.module('web.controllers', ['ui.bootstrap'])
      */
     .controller('resetPasswordCtrl', function ($scope, $meteor, $state) {
         console.log('reset password controller');
+    })
+    
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams) {
+        $scope.token = $stateParams.token;
+        
+         $scope.user = {
+            newPassword: '',
+            confirmNewPassword: ''
+        }
+        
+        $scope.passwordError = '';
+        $scope.passwordErrorVisible = false;
+        
+        $scope.setPassword = function () {
+            if (!$scope.user.newPassword) {
+                $scope.passwordError = 'No new password specified';
+                $scope.passwordErrorVisible = true;                
+            } else if (!$scope.user.confirmNewPassword) {
+                $scope.passwordError = 'Please confirm your new password';
+                $scope.passwordErrorVisible = true;                  
+            } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
+                $scope.passwordError = 'New passwords are do not match';
+                $scope.passwordErrorVisible = true;     
+            } else {
+                $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
+                    $scope.passwordErrorVisible = false;
+                    
+                    var updatedProfile = {
+                        firstName: Meteor.user().profile.firstName,
+                        lastName: Meteor.user().profile.lastName,
+                        type: 'pr',
+                        clubID: 'PSV',
+                        teamID: ''
+                    };
+                    console.log('userID');
+                    console.log(Meteor.userId());
+                    $meteor.call('updateUserProfile', Meteor.userId(), updatedProfile).then(function(result){
+                    }, function(err){
+                        console.log('Profile not updated to pr');
+                        console.log(err);
+                    });
+                    
+                    $state.go('/');
+                }, function (error) {
+                    $scope.passwordError = error.reason;
+                    $scope.passwordErrorVisible = true;
+                });
+            }
+        };
     });
