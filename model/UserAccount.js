@@ -179,7 +179,7 @@ if(Meteor.isServer) {
          */
         getUserInfo: function (userID) {
             check(userID, String);
-            check(Meteor.userId(), Match.Where(isAdmin));
+            check(Meteor.userId(), Match.Where(utils.isAdmin));
             return Meteor.users.find({_id: userID}).fetch()[0];
         },
         /**
