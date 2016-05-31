@@ -80,11 +80,19 @@ Meteor.startup(function () {
     }
     
     /**
-     *  Change the url for enrollment emails since the default includes a dash which casuses
+     *  Change the url for enrollment emails since the default includes a dash which causes
      *  some issues.
      */
     Accounts.urls.enrollAccount = function(token){
         return Meteor.absoluteUrl("#/enroll/" + token);
+    }
+
+    /**
+     *  Change the url for password reset emails since the default includes a dash which causes
+     *  some issues.
+     */
+    Accounts.urls.resetPassword = function(token){
+        return Meteor.absoluteUrl("#/resetpassword/" + token);
     }
 
     // Attach user schema
