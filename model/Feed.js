@@ -59,18 +59,24 @@ Meteor.startup(function () {
     });
 
     if (Meteor.isServer) {
-        Meteor.publish('Feed', function (itemTypes) {
+        Meteor.publish('Feed', function (itemTypes, limit) {
             if (!itemTypes) {
                 this.ready();
                 return;
             }
+            check(limit, Number);
             check(itemTypes, [String]);
-            // return Items.find({
-            //     clubID: utils.getUserClubID(this.userId), 
-            //     type: {$in: itemTypes}
-            // }, {sort: {sticky: -1, createdAt: -1}});
             var teamID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.teamID;
-            return Items.find({type: {$in: itemTypes}, teamID: teamID}, {sort: {sticky: -1, createdAt: -1}});
+            return Items.find({
+                type: {$in: itemTypes},
+                teamID: teamID
+            },{
+                sort: {
+                    sticky: -1,
+                    createdAt: -1
+                },
+                limit: limit
+            });
         });
     }
 
@@ -293,6 +299,16 @@ if (Meteor.isServer) {
             var trainings = Meteor.call("getTrainings");
             trainings = _.find(trainings, function(tr){ return tr.trId == trainingID; });
             return trainings.exercises;
-        }
+        },
+        /**
+         * @summary Function for retrieving the number of all items that could be retrieved
+         * @method getItemsCount
+         * @returns {Number} The number of feed items that could be retrieved for an user
+         */
+        getItemsCount: function() {
+            var clubID = Meteor.user().profile.clubID;
+            return Items.find({clubID: clubID}).count();
+        },
+
     })
 }

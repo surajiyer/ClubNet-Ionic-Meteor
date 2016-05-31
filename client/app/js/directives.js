@@ -1,5 +1,21 @@
 angular.module('app.directives', [])
 
+    .directive('scrolly', function () {
+        return {
+            restrict: 'A',
+            link: function (scope, element, attrs) {
+                var raw = element[0];
+                element.bind('scroll', function () {
+
+                    var top = raw.scrollTop + raw.offsetHeight + parseInt(attrs.threshold);
+                    if (top > raw.scrollHeight) {
+                        scope.$apply(attrs.scrolly);
+                    }
+                });
+            }
+        };
+    })
+
     .directive('post', function () {
         return {
             restrict: 'E',
@@ -27,7 +43,8 @@ angular.module('app.directives', [])
             templateUrl: 'client/app/views/feeditems/hero.ng.html',
             scope: {
                 item: "="
-            }
+            },
+            controller: 'heroCtrl'
         }
     })
 

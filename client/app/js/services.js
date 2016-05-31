@@ -1,8 +1,15 @@
 angular.module('app.services', [])
 
-    .factory('BlankFactory', [function () {
-
-    }])
+    .service('currentClub', function ($meteor) {
+        /**
+         * Get the current club and hold it in the service
+         */
+        return {
+            getClub : function(){
+                return  $meteor.call('getClub');
+            }
+        }
+    })
 
     .service('AccessControl', function () {
         /**
