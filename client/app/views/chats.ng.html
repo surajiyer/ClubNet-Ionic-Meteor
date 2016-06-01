@@ -10,9 +10,7 @@
     <ion-content>
         <ion-list>
             <ion-item ng-repeat="chat in chats"
-                      class="item-chat item-remove-animate item-avatar item-icon-right"
-                      type="item-text-wrap"
-                      ui-sref="menu.chat({chatId: chat._id})">
+            class="item-chat"                       ui-sref="menu.chat({chatId: chat._id})">
                 <chat-info chat="chat" ></chat-info>
             </ion-item>
         </ion-list>
