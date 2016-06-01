@@ -9,9 +9,10 @@
     </ion-nav-bar>
     <ion-content>
         <ion-list>
-            <ion-item ng-repeat="chat in chats"
-            class="item-chat"                       ui-sref="menu.chat({chatId: chat._id})">
-                <chat-info chat="chat" ></chat-info>
+            <ion-item id="chats"
+                      ng-repeat="chat in chats"
+                      ui-sref="menu.chat({chatId: chat._id})">
+                <chat-info chat="chat"></chat-info>
             </ion-item>
         </ion-list>
     </ion-content>

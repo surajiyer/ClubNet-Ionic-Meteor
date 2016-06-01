@@ -1,9 +1,25 @@
 .header-picture {
-  max-width: 50px;
-  max-height: 50px;
+  max-width: 64px;
+  max-height: 64px;
   width: 100%;
   height: 100%;
   border-radius: 50%;
+}
+
+/*.item-chat .last-message-timestamp {*/
+/*position: absolute;*/
+/*top: 16px;*/
+/*right: 38px;*/
+/*font-size: 14px;*/
+/*color: #9A9898;*/
+/*}*/
+
+#chats a:first-child {
+  padding: 8px 49px 8px 8px !important;
+}
+
+.item-chat {
+  padding-right: 0px !important;
 }
 
 .chat {
