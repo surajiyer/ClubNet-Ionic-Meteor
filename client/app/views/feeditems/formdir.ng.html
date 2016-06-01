@@ -1,6 +1,8 @@
-<div class="item item-divider" ng-controller="controlItemCtrl">
-    {{item.type}}
-    <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" aria-hidden="true"></i>
+<div class="item item-divider feed-icon" ng-controller="controlItemCtrl">
+    <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt="" />
+    {{itemType.name}}
+    <i class="icon ion-more" ng-if="showEdit" ng-click="openPopover($event)" id="icon-expand"></i>
+    <i class="icon ion-arrow-shrink show-full" ng-if="isFull" id="icon-expand"></i>
 </div>
 <div class="item item-body">
     <p>
@@ -46,3 +48,4 @@
             Withdraw your contribution
         </button>
 </div>
+<div class="gradient" ng-click="showFullItem($event, true)">Read more <i class="icon ion-android-arrow-down"></i></div>

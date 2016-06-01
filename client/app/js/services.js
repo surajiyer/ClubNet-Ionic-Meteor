@@ -6,7 +6,7 @@ angular.module('app.services', [])
 
     .service('AccessControl', function () {
         /**
-         * Check if user is permitted to get access to various aspects of the service.
+         * @summary Check if user is permitted to get access to various aspects of the service.
          * @param role the type of user eg.: coach, player...
          * @param itemType the item for which permission is being requested
          * @param permission the type of permission being requested for the item: create, view, edit or delete.

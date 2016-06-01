@@ -93,7 +93,7 @@ if(Meteor.isServer) {
             return Meteor.users.find({_id: userID}).fetch();
         },
         getUserType: function () {
-            check(this.userId, String);
+            check(Meteor.userId(), String);
             //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
             return Meteor.user().profile.type;
         },
@@ -114,5 +114,9 @@ if(Meteor.isServer) {
                 {$set: {"notes.$.text": newNote.text}}
             );
         },
+        getNrOfTeamMembers: function(teamId){
+            check(teamId, String);
+            return Meteor.users.find({"profile.teamID": teamId}).fetch().length;
+        }
     });
 }

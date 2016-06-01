@@ -159,7 +159,7 @@ angular.module('app.controllers', [])
 
         $scope.getCurrentDateISO = function(){
             var date = new Date();
-            date.setDate(date.getDate()-1);
+            date.setDate(date.getDate()+1);
             return date.toISOString().substring(0, 10);
         }
 
@@ -206,6 +206,7 @@ angular.module('app.controllers', [])
         });
         $scope.openPopover = function ($event) {
             $scope.popover.show($event);
+            $event.stopPropagation();
         };
         $scope.closePopover = function () {
             $scope.popover.hide();
@@ -395,6 +396,13 @@ angular.module('app.controllers', [])
 
         // Check if user has contributed to this item when initialising
         if ($scope.item != null) {
+            $meteor.call("getItemType", $scope.item.type).then(
+                function (result) {
+                    $scope.itemType = result;
+                },
+                function (err) {}
+            );
+
             $scope.item.hasContributed = false;
             $meteor.call('getResponse', $scope.item._id).then(
                 function (result) {
@@ -434,14 +442,30 @@ angular.module('app.controllers', [])
         }
     })
 
-    .controller('votingCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup, $http) {
+    .controller('votingCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup, AccessControl) {
         /* Voting */
         $scope.newVoting = {};
         $scope.editingItem = 0;
+        $scope.postBtn = "Post";
 
         $scope.trainings  = [];
         $scope.exercises  = [];
 
+        AccessControl.getPermission('voting', 'edit', function (result) {
+            if (result) {
+                $meteor.call('getFeedItem', $scope.item._id).then(
+                    function(res) {
+                        $scope.showEdit = res.creatorID == Meteor.userId();
+                    }
+                );
+            } else {
+                $scope.showEdit = false;
+            }
+        });
+
+        AccessControl.getPermission('voting', 'edit', function (result) {
+            $scope.isCoach = result;
+        });
 
         $meteor.call('getTrainings').then(
             function (result) {
@@ -452,26 +476,28 @@ angular.module('app.controllers', [])
             }
         );
 
-        //console.log($meteor.call("getTrainingObj", "eToCn46ZEfsgsFxXh"));
-
-        //console.log(_.find([{name: 3}, {name: 4}], function(obj){ return obj.name == 3; }));
-
         $scope.addVoting = function () {
-            $scope.newVoting.type = 'Voting';
-            $scope.newVoting.published = true;
-            $scope.newVoting.createdAt = new Date;
-            $scope.newVoting.nrVotes = 0;
-            $scope.newVoting.ended = false;
-            $scope.newVoting.teamID = Meteor.user().profile.teamID;
             if ($scope.editingItem == 0) {
+                $scope.newVoting.type = 'Voting';
+                $scope.newVoting.published = true;
+                $scope.newVoting.createdAt = new Date;
+                $scope.newVoting.nrVotes = 0;
+                $scope.newVoting.ended = false;
+                $scope.newVoting.teamID = Meteor.user().profile.teamID;
+                $scope.newVoting.nrVoters = 15;
                 $meteor.call('addFeedItem', $scope.newVoting, function (err) {
                     // TODO: do something with error (show as popup?)
                     if (err) console.log(err);
                 });
             } else {
+                $scope.newVoting.type = $scope.item.type;
+                $scope.newVoting.published = $scope.item.published;
+                $scope.newVoting.createdAt = $scope.item.createdAt;
+                $scope.newVoting.nrVotes = $scope.item.nrVotes;
+                $scope.newVoting.ended = $scope.item.ended;
+                $scope.newVoting.teamID = $scope.item.teamID;
+                $scope.newVoting.nrVoters = $scope.item.nrVoters;
                 $scope.newVoting._id = $scope.item._id;
-                console.log("We need to update the table.");
-                console.log($scope.newVoting);
                 $meteor.call('updateFeedItem', $scope.newVoting, function (err) {
                     // TODO: do something with error (show as popup?)
                     if (err) console.log(err);
@@ -485,6 +511,7 @@ angular.module('app.controllers', [])
             }
             $scope.newVoting = {};
             $scope.closeVoting();
+            $scope.postBtn = "Post";
         };
 
         $ionicModal.fromTemplateUrl('client/app/views/feeditems/newVoting.ng.html', {
@@ -500,6 +527,7 @@ angular.module('app.controllers', [])
         $scope.openVoting = function (itemId = 0) {
             $scope.editingItem = itemId;
             if (itemId != 0) {
+                $scope.postBtn = "Save";
                 getElement = Items.findOne({_id : itemId});
                 $scope.newVoting = {
                     title: getElement.title,
@@ -540,6 +568,13 @@ angular.module('app.controllers', [])
             $scope.hasVoted = false;
             $scope.hasEnded = false;
 
+            $meteor.call("getItemType", $scope.item.type).then(
+                function (result) {
+                    $scope.itemType = result;
+                },
+                function (err) {}
+            );
+
             $meteor.call("getTrainingObj", $scope.item.training_id).then(
                 function (result) {
                     $scope.item.training_date = result.date;
@@ -561,8 +596,34 @@ angular.module('app.controllers', [])
             $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
                 function (result) {
                     var today = new Date;
-                    $scope.hasEnded = result.length >= $scope.item.nrVoters
-                        || today > $scope.item.deadline;
+                    // TODO: remove nrVoters from the item collection
+                    $scope.hasEnded = today > $scope.item.deadline;
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+
+            $meteor.call('getNumberResponsesOfOneItem', $scope.item._id).then(
+                function (nr1) {
+                    $meteor.call('getNrOfTeamMembers', $scope.item.teamID).then(
+                        function (nr2) {
+                            if (nr1 == nr2) {
+                                $scope.hasEnded = true;
+                            }
+                        },
+                        function (err) {
+                            console.log(err);
+                        }
+                    );
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+            $meteor.call('getNrOfTeamMembers', "1").then(
+                function (result) {
+                    console.log(result);
                 },
                 function (err) {
                     console.log(err);
@@ -602,27 +663,46 @@ angular.module('app.controllers', [])
 
         $scope.vote = function (value) {
             if (value) {
-                $meteor.call('putResponse', $scope.item._id, $scope.item.type, value.toString()).then(
-                    function (result) {
-                        $scope.updateChartValues();
-                        $scope.hasVoted = value;
-                    },
-                    function (err) {
-                        console.log(err);
+                var confirmPopup = $ionicPopup.confirm({
+                    title: 'Are you sure you want to place your vote?'
+                });
+                confirmPopup.then(function(res) {
+                    if(res) {
+                        $meteor.call('putResponse', $scope.item._id, $scope.item.type, value.toString()).then(
+                            function (result) {
+                                $scope.updateChartValues();
+                                $scope.hasVoted = value;
+                            },
+                            function (err) {
+                                console.log(err);
+                            }
+                        );
+                        $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
+                            function (result) {
+                                if (result.length >= $scope.item.nrVoters) {
+                                    $scope.hasEnded = true;
+                                }
+                            },
+                            function (err) {
+                                console.log(err);
+                            }
+                        );
                     }
-                );
-                $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
-                    function (result) {
-                        if (result.length >= $scope.item.nrVoters) {
-                            $scope.hasEnded = true;
-                        }
-                    },
-                    function (err) {
-                        console.log(err);
-                    }
-                );
+                });
             } else {
                 console.log('Please select what are you voting for');
+            }
+        };
+
+        $scope.isFull = false;
+        $scope.showFullItem = function ($event, state) {
+            elem = angular.element($event.currentTarget);
+            if (!state && $scope.isFull) {
+                elem.parents(".list").css("max-height", "200px").find(".gradient").show();
+                $scope.isFull = false;
+            } else {
+                elem.parents(".list").css("max-height", "100%").find(".gradient").hide();
+                $scope.isFull = true;
             }
         };
     })

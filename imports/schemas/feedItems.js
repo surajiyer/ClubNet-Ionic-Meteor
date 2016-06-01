@@ -95,16 +95,16 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         type: Boolean,
         optional: true,
         autoValue: function () {
-            if (this.isInsert)
-                return true;
+            if (!this.isSet && this.isInsert)
+                return false;
         }
     },
     finalPublic: {
         type: Boolean,
         optional: true,
         autoValue: function () {
-            if (this.isInsert)
-                return true;
+            if (!this.isSet && this.isInsert)
+                return false;
         }
     },
     nrVoters: {
