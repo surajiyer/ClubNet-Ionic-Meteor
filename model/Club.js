@@ -1,5 +1,7 @@
 import clubSchema from '/imports/schemas/responses';
+
 Clubs = new Mongo.Collection("Clubs");
+
 Meteor.startup(function () {
     Clubs.allow({
         // only allow posting if you are logged in and other validations
@@ -14,16 +16,13 @@ Meteor.startup(function () {
         }
     });
 
-
-
     if (Meteor.isServer) {
-        Meteor.publish('Clubs', function () {
+        Meteor.publish('clubs', function () {
             var clubID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.clubID;
-            return Clubs.find({_id: clubID});
+            return Clubs.find({});
         });
     }
 });
-
 
 if (Meteor.isServer) {
     Meteor.methods({
@@ -35,9 +34,9 @@ if (Meteor.isServer) {
                 {$set: updatedItem}
             );
 
-            return true;
+            return updatedItem;
         },
-        getClub: function(){
+        getClub: function () {
             var clubID = Meteor.user().profile.clubID;
             return Clubs.find({_id: clubID}).fetch()[0];
         }

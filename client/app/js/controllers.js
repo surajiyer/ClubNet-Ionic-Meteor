@@ -1,9 +1,93 @@
 angular.module('app.controllers', [])
 
-    .controller('ItemCtrl', function ($scope) {
-        if (!$scope.item) {
-            throw new Error("No item object passed.");
+//add: angular.module('somethingHere', ['infinite-scroll']); ??
+//or should it be in the app.js angular.module ?
+
+// .controller('InfiniteScroll', function($scope) {
+//     $scope.items = []; //get items from database here?
+//     //use the same functionality as we are now to fetch items from the database
+//    
+//     $scope.loadMore = function() {
+//         //8 is predefined, just sets how many we load each time
+//         for (var i = 1; i <= 8; i++) {
+//             //get new items and put them into the items array
+//             //use the same functionality as we are now to fetch items from the database
+//             $scope.items.push();
+//         }
+//     };
+// })
+
+    .controller('registerCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            email: '',
+            password: ''
+        };
+        $scope.register = function () {
+            if (!$scope.user.email)
+                throw new Meteor.Error('Account registration error: e-mail is not valid');
+            var newUser = {
+                email: $scope.user.email,
+                password: $scope.user.password,
+                profile: {
+                    firstName: "p",
+                    lastName: "1",
+                    type: "player",
+                    clubID: "club",
+                    teamID: "team1"
+                }
+            };
+            Meteor.call('addUser', newUser, function (err, result) {
+                if (err || !Match.test(result, String))
+                    throw new Meteor.Error('Account registration error: ' + err.reason);
+                Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+                    if (error) throw new Meteor.Error(error.reason);
+                    $state.go('menu.feed'); // Redirect user if registration succeeds
+                });
+            });
+        };
+    })
+
+    .controller('loginCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            email: '',
+            password: ''
+        };
+
+        $scope.login = function () {
+            Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+                if (error) {
+                    throw new Meteor.Error(error.reason);
+                }
+                $state.go('menu.feed');
+            });
+        };
+
+        $scope.goToRemindPassword = function () {
+            $state.go('forgotPassword');
         }
+    })
+
+    .controller('forgotPasswordCtrl', function ($scope) {
+        $scope.forgotUser = {
+            email: '',
+            token: '',
+            newPassword: ''
+        };
+
+        $scope.resetPassword = function () {
+            Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
+                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+                console.log('Reset password success');
+            });
+        };
+
+        $scope.forgotPassword = function () {
+            if (!$scope.forgotUser.email)
+                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH');
+            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
+                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+            });
+        };
     })
 
     .controller('profileCtrl', function ($scope, $meteor, $state) {
@@ -41,97 +125,29 @@ angular.module('app.controllers', [])
         $scope.errorVisible = {'visibility': 'hidden'};
     })
 
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window) {
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window, currentClub) {
         $scope.logout = function ($event) {
             $event.stopPropagation();
             $meteor.logout();
             $state.go('login').then(function () {
                 $window.location.reload();
             });
-        }
+        };
+
+        currentClub.getClub().then(function (result) {
+            $scope.currentClub = result;
+        }, function (err) {
+            console.log(err);
+        });
     })
 
-    .controller('loginCtrl', function ($scope, $meteor, $state) {
-        $scope.user = {
-            email: '',
-            password: ''
-        };
-
-        $scope.login = function () {
-            Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-                if (error) {
-                    throw new Meteor.Error(error.reason);
-                }
-                $state.go('menu.feed');
-            });
-        };
-
-        $scope.goToRemindPassword = function () {
-            $state.go('forgotPassword');
-        }
-    })
-
-    .controller('forgotPasswordCtrl', function ($scope, $meteor, $state, $ionicHistory) {
-        $scope.forgotUser = {
-            email: '',
-            token: '',
-            newPassword: ''
-        };
-
-        $scope.resetPassword = function () {
-            Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-                console.log('Reset password success');
-            });
-        };
-
-        $scope.forgotPassword = function () {
-            if (!$scope.forgotUser.email)
-                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH');
-            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-            });
-        };
-    })
-
-    .controller('registerCtrl', function ($scope, $meteor, $state) {
-        $scope.user = {
-            email: '',
-            password: ''
-        };
-        $scope.register = function () {
-            if (!$scope.user.email)
-                throw new Meteor.Error('Account registration error: e-mail is not valid');
-            var newUser = {
-                email: $scope.user.email,
-                password: $scope.user.password,
-                profile: {
-                    firstName: "abc",
-                    lastName: "def",
-                    type: "coach",
-                    clubID: "PSV",
-                    teamID: "dadada"
-                }
-            };
-            Meteor.call('addUser', newUser, function (err, result) {
-                if (err || !Match.test(result, String))
-                    throw new Meteor.Error('Account registration error: ' + err.reason);
-                Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-                    if (error) throw new Meteor.Error(error.reason);
-                    $state.go('menu.feed'); // Redirect user if registration succeeds
-                });
-            });
-        };
-    })
-
-    .controller('feedCtrl', function ($scope, AccessControl) {
+    .controller('feedCtrl', function ($scope, AccessControl, $meteor) {
         // Display coach bar
         AccessControl.getPermission('CoachBar', 'view', function (result) {
             $scope.showCoachBar = result;
         });
 
-        // Load the filter
-        Meteor.subscribe('ItemTypes', function () {
+        $scope.updateItemTypes = function () {
             //if (err) throw new Meteor.Error(err.reason);
             var oldItemTypes = [];
             if ($scope.itemTypes) {
@@ -145,23 +161,42 @@ angular.module('app.controllers', [])
                 if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
                 else element.checked = true;
             }, this);
-        });
+        };
+
+        $scope.limit = 2;
+
+        // Load the filter
+        Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
         Tracker.autorun(function () {
             $scope.getReactively('itemTypes', true);
             $scope.itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
                 return type.checked;
             }), '_id');
-            $scope.subscribe('Feed', function () {
-                return [$scope.itemTypesFilter];
-            });
+            Meteor.subscribe('Feed', $scope.getReactively('itemTypesFilter'), $scope.getReactively('limit'));
         });
 
-        $scope.getCurrentDateISO = function(){
+        /* Call to get the number of items that could possible be retrieved.
+         *  Needed for preventing indefinite increase of limit in infiniteScroll */
+        $meteor.call('getItemsCount').then(function (result) {
+            $scope.maxItems = result;
+        }, function (err) {
+            console.log(err);
+        });
+
+        /* Function which increases the limit for rendering feed items - infinite scroll */
+        $scope.loadMore = function () {
+            if ($scope.limit > $scope.maxItems) return;
+            var len = $scope.limit;
+            $scope.limit = len + 1;
+        };
+
+        /* Function to get current date in ISO format */
+        $scope.getCurrentDateISO = function () {
             var date = new Date();
             date.setDate(date.getDate()+1);
             return date.toISOString().substring(0, 10);
-        }
+        };
 
         // Set display filter model
         $scope.showFilter = false;
@@ -197,6 +232,12 @@ angular.module('app.controllers', [])
         });
     })
 
+    .controller('ItemCtrl', function ($scope) {
+        if (!$scope.item) {
+            throw new Error("No item object passed.");
+        }
+    })
+
     .controller('controlItemCtrl', function ($scope, $ionicPopover) {
         /* POPOVER */
         $ionicPopover.fromTemplateUrl('client/app/views/itemOperations.ng.html', {
@@ -217,119 +258,103 @@ angular.module('app.controllers', [])
         });
     })
 
-    .controller('chatsCtrl', function ($scope, $state, $stateParams) {
+    /**
+     * @summary Controller for loading chats.
+     */
+    .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat) {
+        /**
+         * Show the create chat button
+         * @type {boolean}
+         */
+        $scope.canCreateChat = false;
 
-        //  $scope.helpers({
-        //       data() {
-        //         return Chats.find();
-        //       }
-        //     });
-        // }
+        // // Display create chat button
+        AccessControl.getPermission('Chat', 'create', function (result) {
+            $scope.canCreateChat = result;
+        });
 
-        //     $scope.chats = [
-        //   {
-        //     _id: 0,
-        //     name: 'Ethan Gonzalez',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg',
-        //     lastMessage: {
-        //       text: 'You on your way?',
-        //       timestamp: Moment().subtract(1, 'hours').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 1,
-        //     name: 'Bryan Wallace',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/lego/1.jpg',
-        //     lastMessage: {
-        //       text: 'Hey, it\'s me',
-        //       timestamp: Moment().subtract(2, 'hours').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 2,
-        //     name: 'Avery Stewart',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/women/1.jpg',
-        //     lastMessage: {
-        //       text: 'I should buy a boat',
-        //       timestamp: Moment().subtract(1, 'days').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 3,
-        //     name: 'Katie Peterson',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/women/2.jpg',
-        //     lastMessage: {
-        //       text: 'Look at my mukluks!',
-        //       timestamp: Moment().subtract(4, 'days').toDate()
-        //     }
-        //   },
-        //   {
-        //     _id: 4,
-        //     name: 'Ray Edwards',
-        //     picture: 'https://randomuser.me/api/portraits/thumb/men/2.jpg',
-        //     lastMessage: {
-        //       text: 'This is wicked good ice cream.',
-        //       timestamp: Moment().subtract(2, 'weeks').toDate()
-        //     }
-        //   }
-        // ];
+        $ionicModal.fromTemplateUrl('client/app/views/newChat.ng.html', {
+            scope: $scope
+        }).then(function (chatModal) {
+            $scope.chatModal = chatModal;
+        });
 
-        Meteor.subscribe('Chats');
+        /**
+         * Open the Create New Chat modal.
+         */
+        $scope.addChat = function () {
+            $scope.chatModal.show();
+        };
+
+        /**
+         * Close the Create New Chat modal.
+         */
+        $scope.closeModal = function () {
+            $scope.chatModal.hide();
+        };
+
+        /**
+         * Start a new chat with the given userId.
+         * @param userId
+         */
+        $scope.startChat = function (userId) {
+            if (!$scope.canCreateChat) return;
+            console.log(userId);
+            $scope.closeModal();
+            var chat = Chat.getChatByUserId(userId);
+            if(!chat) return;
+            $state.go('menu.chat', {chatId: chat._id});
+        };
 
         $scope.helpers({
-            chats: function () {
-                return Chats.find({});
+            /**
+             * Get a list of all chat sessions.
+             */
+            chats: Chat.getChats,
+            /**
+             * Get a list of all users you can create a chat with.
+             * @returns {*}
+             */
+            users: function () {
+                return Meteor.users.find({_id: {$ne: Meteor.userId()}});
             }
         });
     })
 
-    .controller('chatCtrl', function ($scope, $state, $stateParams) {
-
-        Meteor.subscribe('Messages');
-
-        //Messages.insert({ name: "Test", picture: "https://randomuser.me/api/portraits/thumb/men/2.jpg", chatId: "zf5jab8eKzu6ptC6s" });
-        //Messages.find({ chatId: "zf5jab8eKzu6ptC6s" }).fetch();
-        /*
-          chats.forEach((chat) =&gt; {
-            const message = Messages.findOne({ chatId: { $exists: false } });
-            chat.lastMessage = message;
-            const chatId = Chats.insert(chat);
-            Messages.update(message._id, { $set: { chatId } });
-          });
-        */
-        //Messages.update({_id : "F3Mg9KMfPFYmoxRuj"}, {$set:{chatId : "zf5jab8eKzu6ptC6s"}});
-
-
-        var chatId = $stateParams.chatId;
-        console.log(chatId);
-     
+    /**
+     * @summary Controller for loading chat info in each chat.
+     */
+    .controller('chatInfoCtrl', function ($scope, Chat) {
         $scope.helpers({
-            messages: function () {
-                return Messages.find({ chatId: chatId });
-            },
+            // Load chat info
             chat: function () {
-                return Chats.findOne(chatId);
+                return Chat.getOneChat($scope.chat._id);
             }
         });
+    })
+
+    /**
+     * @summary Controller for chatting functions within chats.
+     */
+    .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
+        // Load chat info
+        var chat = Chat.getOneChat($stateParams.chatId);
+        //    console.log($stateParams.chatId);
+        //    console.log(chat._id);
 
 
-             // $scope.sendMessage = function () {
-             //    if (_.isEmpty(this.message)) return;
+        $scope.sendMessage = function () {
+            console.log("sending message");
+        };
 
-             //    $scope.callMethod('newMessage', {
-             //      text: this.message,
-             //      type: 'text',
-             //      chatId: this.chatId
-             //    });
-             
-             //    //delete this.message;
-             //  };
-
-
-
-       
-
-
+        $scope.helpers({
+            messages: function () {
+                return Chat.getMessages(chat._id);
+            },
+            loggedinUserID: function () {
+                return Meteor.userId();
+            }
+        });
     })
 
     .controller('postCtrl', function ($scope, $ionicModal) {
@@ -339,7 +364,7 @@ angular.module('app.controllers', [])
         $scope.post = function () {
             $scope.newPost.type = 'Post';
             $scope.newPost.createdAt = new Date;
-            Items.insert($scope.newPost);
+            Meteor.call('addFeedItem', $scope.newPost);
             $scope.newPost = {};
             $scope.closePost();
         };
@@ -388,7 +413,7 @@ angular.module('app.controllers', [])
             $scope.formModal.show();
         };
 
-        $scope.showAlert = function() {
+        $scope.showAlert = function () {
             var alertPopup = $ionicPopup.alert({
                 title: 'Please select target value'
             });
@@ -420,7 +445,7 @@ angular.module('app.controllers', [])
             if (value) {
                 $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
                     function (result) {
-                        $scope.item.hasContributed = !!value;
+                        $scope.item.hasContributed = value;
                     },
                     function (err) {
                         console.log(err);
@@ -432,10 +457,10 @@ angular.module('app.controllers', [])
 
         $scope.withdrawContribution = function () {
             $meteor.call('deleteResponse', $scope.item._id).then(
-                function(result){
+                function (result) {
                     $scope.item.hasContributed = false;
                 },
-                function(err){
+                function (err) {
                     console.log(err);
                 }
             );
@@ -542,20 +567,20 @@ angular.module('app.controllers', [])
             $scope.votingModal.show();
         };
 
-        $scope.deleteItem = function(itemId) {
+        $scope.deleteItem = function (itemId) {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure you want to delete the feed item?'
             });
-            confirmPopup.then(function(res) {
-                if(res) {
+            confirmPopup.then(function (res) {
+                if (res) {
                     $meteor.call('deleteFeedItem', itemId);
                 }
             });
         };
-        
-        $scope.updateChartValues = function() {
+
+        $scope.updateChartValues = function () {
             $meteor.call('getVotingResults', $scope.item._id).then(
-                function(result){
+                function (result) {
                     $scope.chartValues = result;
                 },
                 function (err) {

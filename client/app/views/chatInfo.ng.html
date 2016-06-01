@@ -1,0 +1,13 @@
+<div class="item-chat item-avatar item-remove-animate item-icon-right"
+     type="item-text-wrap">
+    <img class="header-picture" ng-src="{{ chat.picture }}">
+    <h2>
+        <b>{{ chat.title }}</b>
+        <span class="item-note"
+              style="padding-top: 4px;">
+            {{ chat.lastMessage.createdAt | date : 'dd/MM/yy h:mm a' }}
+        </span>
+    </h2>
+    <p>{{ chat.lastMessage.message }}</p>
+    <i class="icon ion-chevron-right icon-accessory"></i>
+</div>

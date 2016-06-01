@@ -1,109 +1,73 @@
 import {chats, chatSessions, messages} from '/imports/schemas/chats';
 
 Chats = new Mongo.Collection("Chats");
-ChatSessions = new Mongo.Collection("ChatSessions");
+//ChatSessions = new Mongo.Collection("ChatSessions");
+Messages = new Mongo.Collection("Messages");
 
+if (Meteor.isServer) {
+    Meteor.publish('Chats', function () {
+        return Chats.find({users: this.userId});
+    });
+
+    Meteor.publish('Messages', function (chatId, messageId) {
+        check(chatId, String);
+        check(messageId, Match.Maybe(messageId));
+        var selector = {};
+        selector.chatID = chatId;
+        if(messageId) selector._id = messageId;
+        return Messages.find(selector);
+    });
+}
+
+/**
+ * Get the status of the chat
+ * @returns {*}
+ */
+const getChatStatus = function (chatID) {
+    return Chat.find({_id: chatID}).fetch()[0].status;
+};
 
 Meteor.startup(function () {
-    Chats.deny({
-        insert: function () {
-            return false;
+    Chats.allow({
+        insert: function (userId, doc) {
+            var isValidUser = userId == this.userId;
+            var hasPermission = Meteor.call('checkRights', 'Chat', 'create');
+            var chatIsOpen = getChatStatus(doc.chatID) == 'open';
+            return isValidUser && hasPermission && chatIsOpen;
         },
-        update: function () {
-            return false;
+        update: function (userId, doc) {
+            var isValidUser = userId == this.userId;
+            var hasPermission = Meteor.call('checkRights', 'Chat', 'edit');
+            return isValidUser && hasPermission;
         },
-        remove: function () {
-            return false;
+        remove: function (userId, doc) {
+            var isValidUser = userId == this.userId;
+            var hasPermission = Meteor.call('checkRights', 'Chat', 'delete');
+            var allowed = isValidUser && hasPermission;
+            if (allowed) {
+                Messages.remove({chatID: doc._id});
+            }
+            return allowed;
         }
     });
 
-    Chats.allow({
-        insert: function () {
-            return true;
+    Messages.allow({
+        insert: function (userId) {
+            var isValidUser = userId == this.userId;
+            return isValidUser;
         },
         update: function () {
-            return true;
+            return false;
         },
-        remove: function () {
-            return true;
+        remove: function (userId) {
+            var isValidUser = userId == this.userId;
+            var hasPermission = Meteor.call('checkRights', 'Messages', 'delete');
+            return isValidUser && hasPermission;
         }
     });
 
     // Attach the schemas
     Chats.attachSchema(chats);
-    ChatSessions.attachSchema(chatSessions);
+    //ChatSessions.attachSchema(chatSessions);
     Messages.attachSchema(messages);
-
-    //if (Chats.find().count() !== 0) return;
-
-
-    // const messages = [
-    //   {
-    //     text: 'You on your way?',
-    //     timestamp: Moment().subtract(1, 'hours').toDate()
-    //   },
-    //   {
-    //     text: 'Hey, it\'s me',
-    //     timestamp: Moment().subtract(2, 'hours').toDate()
-    //   },
-    //   {
-    //     text: 'I should buy a boat',
-    //     timestamp: Moment().subtract(1, 'days').toDate()
-    //   },
-    //   {
-    //     text: 'Look at my mukluks!',
-    //     timestamp: Moment().subtract(4, 'days').toDate()
-    //   },
-    //   {
-    //     text: 'This is wicked good ice cream.',
-    //     timestamp: Moment().subtract(2, 'weeks').toDate()
-    //   }
-    // ];
-
-    // messages.forEach((m) => {
-    //   Messages.insert(m);
-    // });
-
-    // const chats = [
-    //   {
-    //     name: 'Ethan Gonzalez',
-    //     picture: 'https://randomuser.me/api/portraits/thumb/men/1.jpg'
-    //   },
-    //   {
-    //     name: 'Bryan Wallace',
-    //     picture: 'https://randomuser.me/api/portraits/thumb/lego/1.jpg'
-    //   },
-    //   {
-    //     name: 'Avery Stewart',
-    //     picture: 'https://randomuser.me/api/portraits/thumb/women/1.jpg'
-    //   },
-    //   {
-    //     name: 'Katie Peterson',
-    //     picture: 'https://randomuser.me/api/portraits/thumb/women/2.jpg'
-    //   },
-    //   {
-    //     name: 'Ray Edwards',
-    //     picture: 'https://randomuser.me/api/portraits/thumb/men/2.jpg'
-    //   }
-    // ];
-
-    // chats.forEach((chat) => {
-    //   // const message = Messages.findOne({ chatId: { $exists: false } });
-    //   // chat.lastMessage = message;
-    //      const chatId = Chats.insert(chat);
-    //   // Messages.update(message._id, { $set: { chatId } });
-    // });
 });
-
-if (Meteor.isServer) {
-    Meteor.publish('Chats', function () {
-        return Chats.find({});
-    });
-
-
-    Meteor.methods({
-        getChats: function () {
-            return Chats.find().fetch();
-        }
-    });
-}

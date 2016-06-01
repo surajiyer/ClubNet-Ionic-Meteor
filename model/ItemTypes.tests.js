@@ -32,8 +32,7 @@ if (Meteor.isServer) {
             // Get item added in the previous test
             try {
                 var result = Meteor.call('getItemTypes');
-                console.log(testType._id);
-                console.log(result[0]._id);
+                console.log(result);
                 assert(result[0]._id == testType._id);
                 done();
             } catch (err) {

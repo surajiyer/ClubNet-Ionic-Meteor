@@ -9,7 +9,8 @@ angular.module('web', ['angular-meteor',
     'ui.router',
     'web.controllers',
     'web.routes',
-    'web.translation']);
+    'web.translation',
+    'color.picker']);
 
 function onReady() {
     angular.bootstrap(document, ['web']);

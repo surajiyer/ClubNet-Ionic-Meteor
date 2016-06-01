@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>{{ 'Add user' | translate }}</h1>
+    <h1>{{ 'Add member' | translate }}</h1>
     <h2>{{ 'Add a club member to the ClubNet system.' | translate }}</h2>
 </div>
 
@@ -19,26 +19,32 @@
             <input type="email" class="form-control" id="email" placeholder="{{ 'Email address' | translate }}" ng-model="user.email">
         </div>
 
-        <label class="item item-input item-select">
-            <div class="input-label" ng-model="temp_account.playerTeam">
-                Team
+        <div class="form-group" uib-popover="I appeared on mouse enter!" popover-trigger="mouseenter">
+            <label class="item item-input item-select" uib-popover="I appeared on mouse enter!" popover-trigger="mouseenter">
+                <div class="input-label" ng-model="temp_account.playerTeam">
+                    Team
+                </div>
+                <select class="form-control" ng-model="user.team" uib-popover="I appeared on mouse enter!" popover-trigger="mouseenter">
+                    <option value="" selected>None</option>
+                    <option value="A1">A1</option>
+                    <option value="A2">A2</option>
+                    <option value="A3">A3</option>
+                    <option value="A4">A4</option>
+                    <option value="A5">A5</option>
+                </select>
+            </label>
+            <div>
+                The member will be of the type player if a team is selected, otherwise they will be of type general.
             </div>
-            <select ng-model="user.team">
-                <option value="" selected>None</option>
-                <option value="A1">A1</option>
-                <option value="A2">A2</option>
-                <option value="A3">A3</option>
-                <option value="A4">A4</option>
-                <option value="A5">A5</option>
-            </select>
-        </label>
+        </div>
         
         <div ng-if="errorVisible" class="alert alert-warning">
             {{ error }}
         </div>
-
-        <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="button button-positive  button-block">{{ 'Add user' | translate }}</a>
-
+        
+        <div class="form-group">
+            <a ng-click="addAccount()" id="login-button" style="font-size:18px;" class="btn btn-primary">{{ 'Add member' | translate }}</a>
+        </div>
 
 
     </form>

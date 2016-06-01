@@ -1,5 +1,3 @@
-@import "app/css/chat.scss";
-
 .main-content {
     max-width: 480px;
     margin-left: auto;
@@ -9,6 +7,10 @@
 
 ion-view.pane {
     background: #eee;
+}
+
+.settings-club-logo {
+    max-width: 350px;
 }
 
 .saved-notification {
@@ -53,9 +55,9 @@ ion-view.pane {
     margin-left: -75px;
     margin-top: 30px;
     margin-bottom: 20px;
-    -webkit-box-shadow: 0 0 54px 0 rgba(66,86,97,1);
-    -moz-box-shadow: 0 0 54px 0 rgba(66,86,97,1);
-    box-shadow: 0 0 54px 0 rgba(66,86,97,1);
+    -webkit-box-shadow: 0 0 54px 0 rgba(66, 86, 97, 1);
+    -moz-box-shadow: 0 0 54px 0 rgba(66, 86, 97, 1);
+    box-shadow: 0 0 54px 0 rgba(66, 86, 97, 1);
 }
 
 .card {
@@ -142,7 +144,7 @@ p.decision {
 }
 
 .button {
-    font-size:18px;
+    font-size: 18px;
 }
 
 .bg.white {

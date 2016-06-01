@@ -20,6 +20,11 @@ const feedItemTypesSchema = new SimpleSchema({
 const baseFeedItemSchema = new SimpleSchema({
     creatorID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.userId();
+            }
+        },
         denyUpdate: true
     },
     type: {
@@ -28,8 +33,7 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     sticky: {
         type: Boolean,
-        optional: true,
-        autoValue: function(){
+        autoValue: function () {
             if (this.isInsert) {
                 return false;
             }
@@ -37,6 +41,11 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     clubID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.clubID;
+            }
+        },
         denyUpdate: true
     },
     published: {
@@ -45,7 +54,6 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     createdAt: {
         type: Date,
-        optional: true,
         autoValue: function () {
             if (this.isInsert) {
                 return new Date;
@@ -55,7 +63,6 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     modifiedAt: {
         type: Date,
-        optional: true,
         autoValue: function () {
             return new Date;
         }
@@ -80,7 +87,10 @@ const exerciseSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     deadline: {
         type: Date,
         custom: function () {
@@ -134,6 +144,11 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
     },
     teamID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.teamID;
+            }
+        },
         denyUpdate: true
     }
 }]);
@@ -143,10 +158,18 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
  * @type {SimpleSchema}
  */
 const formSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     description: {type: String},
     teamID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.teamID;
+            }
+        },
         denyUpdate: true
     },
     repeatInterval: {
@@ -162,7 +185,7 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
         type: Number,
         optional: true,
         min: 0,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert)
                 return 0;
         }
@@ -181,7 +204,10 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
  * @type {SimpleSchema}
  */
 const heroesSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     text: {type: String},
     image: {type: String}
 }]);
@@ -215,7 +241,10 @@ const bettingRoundSchema = new SimpleSchema({
  * @type {SimpleSchema}
  */
 const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
-    title: {type: String},
+    title: {
+        type: String,
+        min: 1
+    },
     description: {type: String},
     targetAmount: {type: Number},
     raisedAmount: {type: Number}
@@ -228,6 +257,11 @@ const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
 const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema, {
     teamID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.teamID;
+            }
+        },
         denyUpdate: true
     },
     playerID: {type: String},

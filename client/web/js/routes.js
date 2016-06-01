@@ -6,9 +6,9 @@ angular.module('web.routes', [])
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
 
-        /*
-        *       Routes for the web interface
-        */
+        /**
+         *       Routes for the web interface
+         */
 
         $stateProvider
             .state('/', {
@@ -22,6 +22,20 @@ angular.module('web.routes', [])
                         $state.go('login');
                     }
                 }
+            })
+
+            // Enroll page
+            .state('enroll', {
+                url: '/enroll/:token',
+                templateUrl: 'client/web/views/enroll.ng.html',
+                controller: 'enrollCtrl'
+            })
+
+            // Reset password page
+            .state('reset', {
+                url: '/resetpassword/:token',
+                templateUrl: 'client/web/views/reset.ng.html',
+                controller: 'enrollCtrl'
             })
 
             // Just the menu view
@@ -51,6 +65,13 @@ angular.module('web.routes', [])
                 templateUrl: 'client/web/views/addAccount.ng.html',
                 controller: 'addAccountCtrl'
             })
+            
+            // Editing members
+            .state('web.editAccount', {
+                url: '/editAccount/:userID',
+                templateUrl: 'client/web/views/editAccount.ng.html',
+                controller: 'editAccountCtrl'
+            })
 
             // Member management
             .state('web.members', {
@@ -69,7 +90,8 @@ angular.module('web.routes', [])
             // User profile
             .state('web.profile', {
                 url: '/profile',
-                templateUrl: 'client/web/views/profile.ng.html'
+                templateUrl: 'client/web/views/profile.ng.html',
+                controller: 'profileCtrl'
             })
 
             // Feed
@@ -90,21 +112,21 @@ angular.module('web.routes', [])
                 url: '/sepquotes',
                 templateUrl: 'client/web/views/sepquotes.ng.html'
             });
+
         $urlRouterProvider.otherwise('/');
     })
     .run(function($rootScope, $location, $state) {
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                     , fromState, fromParams) {
-
-            var isLogin = toState.name === "login";
-            if(isLogin){
-                return; // no need to redirect 
+                                                        
+            if(toState.name === "login" || toState.name === "enroll" || toState.name === "reset"){
+                return; // no need to redirect
             }
 
             // now, redirect only not authenticated
             if (!Meteor.userId()) {
                 e.preventDefault(); // stop current execution
                 $state.go('login');
-            }   
+            }
         });
     });

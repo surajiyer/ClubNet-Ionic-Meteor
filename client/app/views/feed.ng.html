@@ -21,7 +21,9 @@
         </ion-list>
     </div>
     <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
-    <ion-content>
+    <ion-content scrolly='loadMore()' threshold="50">
+        <!-- Memorial comment for koen's first commit-->
+        <!-- Add div infinite-scroll=loadMore() here-->
         <div id="feeditems" class="main-content">
             <div ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">
                 <div class="list card {{item.sticky}}" style="margin-top: 10px; margin-bottom: 10px;">

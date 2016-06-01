@@ -1,19 +1,27 @@
-const userTypes = ['coach', 'player', 'general', 'pr'];
+export let userTypes = ['coach', 'player', 'pr', 'general'];
+import {Meteor} from 'meteor/meteor';
 
-/**
- * Check if user is a PR user.
- * @returns {boolean}
- */
-const isAdmin = function (userId) {
-    // TODO: check if PR user
+export const getUserType = function (userId) {
     check(userId, String);
-    return true;
+    return Meteor.users.find({_id: userId}).fetch()[0].profile.type;
 };
 
-const isValidType = function (itemType) {
+export const getUserClubID = function (userId) {
+    check(userId, String);
+    return Meteor.users.find({_id: userId}).fetch()[0].profile.clubID;
+};
+
+export const getUserTeamID = function (userId) {
+    check(userId, String);
+    return Meteor.users.find({_id: userId}).fetch()[0].profile.teamID;
+};
+
+export const isAdmin = function (userId) {
+    return getUserType(userId) == 'pr';
+};
+
+export const isValidType = function (itemType) {
     check(itemType, String);
     var validTypes = _.pluck(Meteor.call('getItemTypes'), '_id');
     return _.contains(validTypes, itemType);
 };
-
-export {userTypes, isAdmin, isValidType};
