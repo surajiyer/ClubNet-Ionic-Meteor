@@ -17,11 +17,22 @@ angular.module('app.controllers', [])
 //     };
 // })
 
+    /**
+     *  Register Controller: provides all functionality for the register screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('registerCtrl', function ($scope, $meteor, $state) {
+        /**
+         * Credentials of the user
+         */
         $scope.user = {
             email: '',
             password: ''
         };
+        /**
+         * @summary Function to register a new user
+         */
         $scope.register = function () {
             if (!$scope.user.email)
                 throw new Meteor.Error('Account registration error: e-mail is not valid');
@@ -47,12 +58,22 @@ angular.module('app.controllers', [])
         };
     })
 
+    /**
+     *  Login Controller: provides all functionality for the login screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('loginCtrl', function ($scope, $meteor, $state) {
+        /**
+         * Credentials of the user
+         */
         $scope.user = {
             email: '',
             password: ''
         };
-
+        /**
+         * @summary Function for a user to login
+         */
         $scope.login = function () {
             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                 if (error) {
@@ -61,51 +82,85 @@ angular.module('app.controllers', [])
                 $state.go('menu.feed');
             });
         };
-
+        
+        /**
+         * @summary Function to show the forgot password page
+         */
         $scope.goToRemindPassword = function () {
             $state.go('forgotPassword');
         }
     })
 
+    /**
+     *  Forgot Password Controller: provides all functionality for the forgot password screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('forgotPasswordCtrl', function ($scope) {
+        /**
+         * Information of the user who forgot his password
+         */
         $scope.forgotUser = {
             email: '',
             token: '',
             newPassword: ''
         };
-
+        
+        /**
+         * @summary Function to reset the users password
+         */
         $scope.resetPassword = function () {
             Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
                 if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
                 console.log('Reset password success');
             });
         };
-
+        
+        /**
+         * @summary Function to send email to user to reset password
+         */
         $scope.forgotPassword = function () {
             if (!$scope.forgotUser.email)
-                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH');
+                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH'); // Nice error +1
             Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
                 if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
             });
         };
     })
 
+    /**
+     *  Profile Controller: provides all functionality for the Profile screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('profileCtrl', function ($scope, $meteor, $state) {
+        /**
+         * Profile information
+         */
         $scope.temp_user = {
             email: '',
             fullName: ''
         };
 
+        /**
+         * Password information
+         */
         $scope.temp_pass = {
             oldPass: '',
             newPass: '',
             newPassCheck: ''
         };
-
+        
+        /**
+         * @summary Function to change the profile information
+         */
         $scope.changeGeneralProfileInfo = function () {
             var email = $scope.temp_user.email;
         };
 
+        /**
+         * @summary Function to change the password information
+         */
         $scope.changePassword = function () {
             if ($scope.temp_pass.newPass == $scope.temp_pass.newPassCheck) {
                 $meteor.changePassword($scope.temp_pass.oldPass, $scope.temp_pass.newPass).then(function () {
@@ -120,12 +175,23 @@ angular.module('app.controllers', [])
                 $scope.error = "The passwords don't match.";
             }
         };
-
+        
+        /**
+         * Data for error message
+         */
         $scope.error = '';
         $scope.errorVisible = {'visibility': 'hidden'};
     })
 
+    /**
+     *  Menu Controller: provides all functionality for the menu of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('menuCtrl', function ($scope, $meteor, $state, $window, currentClub) {
+        /**
+         * @summary Function to logout
+         */
         $scope.logout = function ($event) {
             $event.stopPropagation();
             $meteor.logout();
@@ -133,7 +199,10 @@ angular.module('app.controllers', [])
                 $window.location.reload();
             });
         };
-
+        
+        /**
+         * Loading the current club for styling
+         */
         currentClub.getClub().then(function (result) {
             $scope.currentClub = result;
         }, function (err) {
@@ -141,12 +210,22 @@ angular.module('app.controllers', [])
         });
     })
 
+    /**
+     *  Feed Controller: provides all functionality for the feed screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('feedCtrl', function ($scope, AccessControl, $meteor) {
-        // Display coach bar
+        /**
+         * Show coach bar if needed
+         */
         AccessControl.getPermission('CoachBar', 'view', function (result) {
             $scope.showCoachBar = result;
         });
-
+        
+        /**
+         * @summary Function to update the item types
+         */
         $scope.updateItemTypes = function () {
             //if (err) throw new Meteor.Error(err.reason);
             var oldItemTypes = [];
@@ -213,6 +292,11 @@ angular.module('app.controllers', [])
         });
     })
 
+    /**
+     *  Popover Controller: provides all functionality for the popover screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('popoverCtrl', function ($scope, $ionicPopover) {
         /* POPOVER */
         $ionicPopover.fromTemplateUrl('client/app/views/popover.ng.html', {
@@ -232,12 +316,22 @@ angular.module('app.controllers', [])
         });
     })
 
+    /**
+     *  Item Controller: provides all functionality for a item of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('ItemCtrl', function ($scope) {
         if (!$scope.item) {
             throw new Error("No item object passed.");
         }
     })
-
+    
+    /**
+     *  Control Item Controller: provides all functionality for the item operations popover of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('controlItemCtrl', function ($scope, $ionicPopover) {
         /* POPOVER */
         $ionicPopover.fromTemplateUrl('client/app/views/itemOperations.ng.html', {
@@ -259,7 +353,9 @@ angular.module('app.controllers', [])
     })
 
     /**
-     * @summary Controller for loading chats.
+     *  Chats Controller: provides all functionality for the chats screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
      */
     .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat) {
         /**
@@ -322,7 +418,9 @@ angular.module('app.controllers', [])
     })
 
     /**
-     * @summary Controller for loading chat info in each chat.
+     *  Chat Info Controller: provides all functionality for the chat info of each chat of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
      */
     .controller('chatInfoCtrl', function ($scope, Chat) {
         $scope.helpers({
@@ -336,17 +434,27 @@ angular.module('app.controllers', [])
     /**
      * @summary Controller for chatting functions within chats.
      */
+    /**
+     *  Chat Controller: provides all functionality for the chat screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
         // Load chat info
         var chat = Chat.getOneChat($stateParams.chatId);
         //    console.log($stateParams.chatId);
         //    console.log(chat._id);
 
-
+        /**
+         * @summary Function to send a message
+         */
         $scope.sendMessage = function () {
             console.log("sending message");
         };
-
+        
+        /**
+         * Helper functions
+         */
         $scope.helpers({
             messages: function () {
                 return Chat.getMessages(chat._id);
@@ -357,6 +465,11 @@ angular.module('app.controllers', [])
         });
     })
 
+    /**
+     *  Post Controller: provides all functionality for the new post screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('postCtrl', function ($scope, $ionicModal) {
         /* Post */
         $scope.newPost = {};
@@ -368,22 +481,35 @@ angular.module('app.controllers', [])
             $scope.newPost = {};
             $scope.closePost();
         };
-
+        /**
+         * Load new post template
+         */
         $ionicModal.fromTemplateUrl('client/app/views/feeditems/newPost.ng.html', {
             scope: $scope
         }).then(function (postmodal) {
             $scope.postmodal = postmodal;
         });
-
+        
+        /**
+         * @summary Function close the post modal
+         */
         $scope.closePost = function () {
             $scope.postmodal.hide();
         };
 
+        /**
+         * @summary Function to open the post modal
+         */
         $scope.openPost = function () {
             $scope.postmodal.show();
         };
     })
-
+    
+    /**
+     *  Form Controller: provides all functionality for the form feed item of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup) {
         /* Practicality*/
         $scope.newForm = {};
@@ -399,20 +525,32 @@ angular.module('app.controllers', [])
             $scope.closeForm();
         };
 
+        /**
+         * @summary Load the new form template
+         */
         $ionicModal.fromTemplateUrl('client/app/views/feeditems/newForm.ng.html', {
             scope: $scope
         }).then(function (formModal) {
             $scope.formModal = formModal;
         });
 
+        /**
+         * @summary Function to close the form modal
+         */
         $scope.closeForm = function () {
             $scope.formModal.hide();
         };
 
+        /**
+         * @summary Function to show the form modal
+         */
         $scope.openForm = function () {
             $scope.formModal.show();
         };
-
+        
+        /**
+         * @summary Function to show the select target value alert
+         */
         $scope.showAlert = function () {
             var alertPopup = $ionicPopup.alert({
                 title: 'Please select target value'
@@ -440,7 +578,10 @@ angular.module('app.controllers', [])
                 }
             );
         }
-
+        
+        /**
+         * @summary Function to sign up
+         */
         $scope.signUp = function (value) {
             if (value) {
                 $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
@@ -454,7 +595,10 @@ angular.module('app.controllers', [])
             }
 
         };
-
+        
+        /**
+         * @summary Function to withdraw contribution
+         */
         $scope.withdrawContribution = function () {
             $meteor.call('deleteResponse', $scope.item._id).then(
                 function (result) {
@@ -466,7 +610,12 @@ angular.module('app.controllers', [])
             );
         }
     })
-
+    
+    /**
+     *  Voting Controller: provides all functionality for the voting feed item of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('votingCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup, AccessControl) {
         /* Voting */
         $scope.newVoting = {};
@@ -475,7 +624,10 @@ angular.module('app.controllers', [])
 
         $scope.trainings  = [];
         $scope.exercises  = [];
-
+        
+        /**
+         * Check whether the user has permission to add the item
+         */
         AccessControl.getPermission('voting', 'edit', function (result) {
             if (result) {
                 $meteor.call('getFeedItem', $scope.item._id).then(
@@ -488,10 +640,16 @@ angular.module('app.controllers', [])
             }
         });
 
+        /**
+         * Check whether the user is a coach
+         */
         AccessControl.getPermission('voting', 'edit', function (result) {
             $scope.isCoach = result;
         });
 
+        /**
+         * @summary Function to retrieve trainings
+         */
         $meteor.call('getTrainings').then(
             function (result) {
                 $scope.trainings = result;
@@ -501,6 +659,9 @@ angular.module('app.controllers', [])
             }
         );
 
+        /**
+         * @summary Function to add a new voting feed item
+         */
         $scope.addVoting = function () {
             if ($scope.editingItem == 0) {
                 $scope.newVoting.type = 'Voting';
@@ -539,16 +700,25 @@ angular.module('app.controllers', [])
             $scope.postBtn = "Post";
         };
 
+        /**
+         * Get new voting template
+         */
         $ionicModal.fromTemplateUrl('client/app/views/feeditems/newVoting.ng.html', {
             scope: $scope
         }).then(function (votingModal) {
             $scope.votingModal = votingModal;
         });
 
+        /**
+         * @summary Function to close the voting
+         */
         $scope.closeVoting = function () {
             $scope.votingModal.hide();
         };
 
+        /**
+         * @summary Function to open the voting
+         */
         $scope.openVoting = function (itemId = 0) {
             $scope.editingItem = itemId;
             if (itemId != 0) {
@@ -567,6 +737,9 @@ angular.module('app.controllers', [])
             $scope.votingModal.show();
         };
 
+        /**
+         * @summary Function to delete the voting
+         */
         $scope.deleteItem = function (itemId) {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure you want to delete the feed item?'
@@ -578,6 +751,9 @@ angular.module('app.controllers', [])
             });
         };
 
+        /**
+         * @summary Function to retrieve and update the voting results
+         */
         $scope.updateChartValues = function () {
             $meteor.call('getVotingResults', $scope.item._id).then(
                 function (result) {
@@ -588,7 +764,7 @@ angular.module('app.controllers', [])
                 }
             );
         };
-
+        
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
@@ -685,7 +861,10 @@ angular.module('app.controllers', [])
                 $scope.item.selectedValue = index;
             }
         };
-
+        
+        /**
+         * @summary Function to post a vote
+         */
         $scope.vote = function (value) {
             if (value) {
                 var confirmPopup = $ionicPopup.confirm({
@@ -718,8 +897,11 @@ angular.module('app.controllers', [])
                 console.log('Please select what are you voting for');
             }
         };
-
+        
         $scope.isFull = false;
+        /**
+         * @summary Function to enlarge the feed item
+         */
         $scope.showFullItem = function ($event, state) {
             elem = angular.element($event.currentTarget);
             if (!state && $scope.isFull) {
@@ -731,7 +913,12 @@ angular.module('app.controllers', [])
             }
         };
     })
-
+    
+    /**
+     *  Hero Controller: provides all functionality for the heroes feed item of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('heroCtrl', function ($scope, $ionicModal) {
         /* Post */
         $scope.newHero = {};
@@ -763,7 +950,12 @@ angular.module('app.controllers', [])
             $scope.heromodal.show();
         };
     })
-
+    
+    /**
+     *  Settings Controller: provides all functionality for the settings screen of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
     .controller('settingsCtrl', function ($scope, $http) {
 
     });
