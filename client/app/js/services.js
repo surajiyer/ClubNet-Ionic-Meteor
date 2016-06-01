@@ -63,7 +63,10 @@ angular.module('app.services', [])
          * Get messages of a given chat
          */
         const getMessages = function (chatID) {
-            return Messages.find({chatId: chatID});
+            console.log("chatID = ", chatID);
+            Meteor.subscribe('Messages', chatID);
+            console.log(Messages.find({chatID: chatID}).count());
+            return Messages.find({chatID: chatID});
         };
 
         /**
@@ -80,6 +83,7 @@ angular.module('app.services', [])
 
         return {
             getChats: getChats,
-            getOneChat: getOneChat
+            getOneChat: getOneChat,
+            getMessages: getMessages
         }
     })

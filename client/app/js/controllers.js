@@ -287,14 +287,23 @@ angular.module('app.controllers', [])
      */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
         // Load chat info
-        Chat.getOneChat($stateParams.chatId);
+       var chat = Chat.getOneChat($stateParams.chatId);
+   //    console.log($stateParams.chatId);
+   //    console.log(chat._id);
+        
+
+        $scope.sendMessage = function () {
+             console.log("sending message");
+        };
+
+
 
         $scope.helpers({
-            messages: function () {
-                return Messages.find({chatId: chat._id});
+            messages: function() {
+                return Chat.getMessages(chat._id);
             },
-            chat: function () {
-                return Chats.find({_id: chat._id});
+            loggedinUserID: function() {
+                return Meteor.userId();
             }
         });
     })

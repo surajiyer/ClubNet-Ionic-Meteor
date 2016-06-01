@@ -4,10 +4,11 @@
     </ion-nav-buttons>
     <ion-content class="chat" delegate-handle="chatScroll">
         <div class="message-list">
-            <div ng-repeat="message in chat.messages" class="message-wrapper">
-                <div class="message" ng-class-even="'message-mine'" ng-class-odd="'message-other'">
-                    <div class="message-text">{{ message.text }}</div>
-                    <span class="message-timestamp">{{ message.createdAt | amDateFormat: 'HH:MM' }}</span>
+            <div ng-repeat="message in messages" class="message-wrapper">
+                <div class="message" 
+                ng-class="message.senderID==loggedinUserID ? 'message-mine' : 'message-other'">
+                    <div class="message-text">{{ message.message }}</div>
+                    <span class="message-timestamp">{{ message.createdAt | date: 'HH:MM' }}</span>
                 </div>
             </div>
         </div>
@@ -20,7 +21,7 @@
                    type="text"/>
         </label>
         <span ng-if="chat.message.length > 0">
-            <button ng-click="chat.sendMessage()" class="button button-clear button-positive">Send</button>
+            <button ng-click="sendMessage()" class="button button-clear button-positive">Send</button>
         </span>
         <span ng-if="!chat.message || chat.message.length === 0"></span>
     </ion-footer-bar>
