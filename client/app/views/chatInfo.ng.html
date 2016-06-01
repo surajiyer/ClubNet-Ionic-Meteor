@@ -5,7 +5,7 @@
         <b>{{ chat.title }}</b>
         <span class="item-note"
               style="padding-top: 4px;">
-            {{ chat.lastMessage.createdAt | date : 'dd/MM/yy' }}
+            {{ chat.lastMessage.createdAt | date : 'dd/MM/yy h:mm a' }}
         </span>
     </h2>
     <p>{{ chat.lastMessage.message }}</p>

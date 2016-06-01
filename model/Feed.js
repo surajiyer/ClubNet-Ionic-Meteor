@@ -102,9 +102,7 @@ if (Meteor.isServer) {
          * @returns {WriteResult} The result of the insert action
          */
         addFeedItem: function (newItem) {
-            newItem.creatorID = Meteor.userId();
-            newItem.clubID = Meteor.user().profile.clubID;
-            check(newItem, Items.simpleSchema({type: newItem.type}));
+            check(newItem, Object);
             return Items.insert(newItem);
         },
         /**

@@ -20,6 +20,11 @@ const feedItemTypesSchema = new SimpleSchema({
 const baseFeedItemSchema = new SimpleSchema({
     creatorID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.userId();
+            }
+        },
         denyUpdate: true
     },
     type: {
@@ -28,8 +33,7 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     sticky: {
         type: Boolean,
-        optional: true,
-        autoValue: function(){
+        autoValue: function () {
             if (this.isInsert) {
                 return false;
             }
@@ -37,6 +41,11 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     clubID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.clubID;
+            }
+        },
         denyUpdate: true
     },
     published: {
@@ -45,7 +54,6 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     createdAt: {
         type: Date,
-        optional: true,
         autoValue: function () {
             if (this.isInsert) {
                 return new Date;
@@ -55,7 +63,6 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     modifiedAt: {
         type: Date,
-        optional: true,
         autoValue: function () {
             return new Date;
         }
@@ -90,11 +97,6 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
             // if deadline is before current time, give Invalid deadline error
             if (this.value < new Date) return "invalidDeadline";
         }
-    },
-    exercises: {
-        type: [exerciseSchema],
-        minCount: 3,
-        maxCount: 3
     },
     training_id: {
         type: String
@@ -142,6 +144,11 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
     },
     teamID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.teamID;
+            }
+        },
         denyUpdate: true
     }
 }]);
@@ -158,6 +165,11 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
     description: {type: String},
     teamID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.teamID;
+            }
+        },
         denyUpdate: true
     },
     repeatInterval: {
@@ -173,7 +185,7 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
         type: Number,
         optional: true,
         min: 0,
-        autoValue: function() {
+        autoValue: function () {
             if (this.isInsert)
                 return 0;
         }
@@ -245,6 +257,11 @@ const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
 const exerciseSuggestionSchema = new SimpleSchema([baseFeedItemSchema, {
     teamID: {
         type: String,
+        autoValue: function () {
+            if (this.isInsert) {
+                return Meteor.user().profile.teamID;
+            }
+        },
         denyUpdate: true
     },
     playerID: {type: String},

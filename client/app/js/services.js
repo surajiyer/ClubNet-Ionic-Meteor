@@ -5,8 +5,8 @@ angular.module('app.services', [])
          * Get the current club and hold it in the service
          */
         return {
-            getClub : function(){
-                return  $meteor.call('getClub');
+            getClub: function () {
+                return $meteor.call('getClub');
             }
         }
     })
@@ -36,6 +36,10 @@ angular.module('app.services', [])
          */
         const getChats = function () {
             return Chats.find({}, {sort: {lastMessage: -1}});
+        };
+
+        const getChatByUserId = function (userId) {
+            return Chats.find({users: userId}).fetch()[0];
         };
 
         /**
@@ -84,6 +88,7 @@ angular.module('app.services', [])
         return {
             getChats: getChats,
             getOneChat: getOneChat,
-            getMessages: getMessages
+            getMessages: getMessages,
+            getChatByUserId: getChatByUserId
         }
     })

@@ -3,19 +3,19 @@ angular.module('app.controllers', [])
 //add: angular.module('somethingHere', ['infinite-scroll']); ??
 //or should it be in the app.js angular.module ?
 
-    // .controller('InfiniteScroll', function($scope) {
-    //     $scope.items = []; //get items from database here?
-    //     //use the same functionality as we are now to fetch items from the database
-    //    
-    //     $scope.loadMore = function() {
-    //         //8 is predefined, just sets how many we load each time
-    //         for (var i = 1; i <= 8; i++) {
-    //             //get new items and put them into the items array
-    //             //use the same functionality as we are now to fetch items from the database
-    //             $scope.items.push();
-    //         }
-    //     };
-    // })
+// .controller('InfiniteScroll', function($scope) {
+//     $scope.items = []; //get items from database here?
+//     //use the same functionality as we are now to fetch items from the database
+//    
+//     $scope.loadMore = function() {
+//         //8 is predefined, just sets how many we load each time
+//         for (var i = 1; i <= 8; i++) {
+//             //get new items and put them into the items array
+//             //use the same functionality as we are now to fetch items from the database
+//             $scope.items.push();
+//         }
+//     };
+// })
 
     .controller('registerCtrl', function ($scope, $meteor, $state) {
         $scope.user = {
@@ -134,9 +134,9 @@ angular.module('app.controllers', [])
             });
         };
 
-        currentClub.getClub().then(function(result){
-             $scope.currentClub = result;
-        }, function(err){
+        currentClub.getClub().then(function (result) {
+            $scope.currentClub = result;
+        }, function (err) {
             console.log(err);
         });
     })
@@ -146,8 +146,8 @@ angular.module('app.controllers', [])
         AccessControl.getPermission('CoachBar', 'view', function (result) {
             $scope.showCoachBar = result;
         });
-        
-        $scope.updateItemTypes = function() {
+
+        $scope.updateItemTypes = function () {
             //if (err) throw new Meteor.Error(err.reason);
             var oldItemTypes = [];
             if ($scope.itemTypes) {
@@ -175,26 +175,26 @@ angular.module('app.controllers', [])
             }), '_id');
             Meteor.subscribe('Feed', $scope.getReactively('itemTypesFilter'), $scope.getReactively('limit'));
         });
-        
+
         /* Call to get the number of items that could possible be retrieved.
-        *  Needed for preventing indefinite increase of limit in infiniteScroll */
-        $meteor.call('getItemsCount').then(function(result){
+         *  Needed for preventing indefinite increase of limit in infiniteScroll */
+        $meteor.call('getItemsCount').then(function (result) {
             $scope.maxItems = result;
-        }, function(err){
+        }, function (err) {
             console.log(err);
         });
-        
+
         /* Function which increases the limit for rendering feed items - infinite scroll */
-        $scope.loadMore = function() {
+        $scope.loadMore = function () {
             if ($scope.limit > $scope.maxItems) return;
             var len = $scope.limit;
             $scope.limit = len + 1;
         };
 
         /* Function to get current date in ISO format */
-        $scope.getCurrentDateISO = function(){
+        $scope.getCurrentDateISO = function () {
             var date = new Date();
-            date.setDate(date.getDate()-1);
+            date.setDate(date.getDate() - 1);
             return date.toISOString().substring(0, 10);
         };
 
@@ -260,13 +260,63 @@ angular.module('app.controllers', [])
     /**
      * @summary Controller for loading chats.
      */
-    .controller('chatsCtrl', function ($scope, Chat) {
-        $scope.addChat = function() {
+    .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat) {
+        /**
+         * Show the create chat button
+         * @type {boolean}
+         */
+        $scope.canCreateChat = false;
 
+        // // Display create chat button
+        AccessControl.getPermission('Chat', 'create', function (result) {
+            $scope.canCreateChat = result;
+        });
+
+        $ionicModal.fromTemplateUrl('client/app/views/newChat.ng.html', {
+            scope: $scope
+        }).then(function (chatModal) {
+            $scope.chatModal = chatModal;
+        });
+
+        /**
+         * Open the Create New Chat modal.
+         */
+        $scope.addChat = function () {
+            $scope.chatModal.show();
+        };
+
+        /**
+         * Close the Create New Chat modal.
+         */
+        $scope.closeModal = function () {
+            $scope.chatModal.hide();
+        };
+
+        /**
+         * Start a new chat with the given userId.
+         * @param userId
+         */
+        $scope.startChat = function (userId) {
+            if (!$scope.canCreateChat) return;
+            console.log(userId);
+            $scope.closeModal();
+            var chat = Chat.getChatByUserId(userId);
+            if(!chat) return;
+            $state.go('menu.chat', {chatId: chat._id});
         };
 
         $scope.helpers({
-            chats: Chat.getChats
+            /**
+             * Get a list of all chat sessions.
+             */
+            chats: Chat.getChats,
+            /**
+             * Get a list of all users you can create a chat with.
+             * @returns {*}
+             */
+            users: function () {
+                return Meteor.users.find({_id: {$ne: Meteor.userId()}});
+            }
         });
     })
 
@@ -276,7 +326,7 @@ angular.module('app.controllers', [])
     .controller('chatInfoCtrl', function ($scope, Chat) {
         $scope.helpers({
             // Load chat info
-            chat: function() {
+            chat: function () {
                 return Chat.getOneChat($scope.chat._id);
             }
         });
@@ -287,22 +337,20 @@ angular.module('app.controllers', [])
      */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
         // Load chat info
-       var chat = Chat.getOneChat($stateParams.chatId);
-   //    console.log($stateParams.chatId);
-   //    console.log(chat._id);
-        
+        var chat = Chat.getOneChat($stateParams.chatId);
+        //    console.log($stateParams.chatId);
+        //    console.log(chat._id);
+
 
         $scope.sendMessage = function () {
-             console.log("sending message");
+            console.log("sending message");
         };
 
-
-
         $scope.helpers({
-            messages: function() {
+            messages: function () {
                 return Chat.getMessages(chat._id);
             },
-            loggedinUserID: function() {
+            loggedinUserID: function () {
                 return Meteor.userId();
             }
         });
@@ -458,7 +506,8 @@ angular.module('app.controllers', [])
                     function (result) {
                         $scope.item.training_date = result.date;
                     },
-                    function (err) {}
+                    function (err) {
+                    }
                 );
             }
             $scope.newVoting = {};
@@ -522,7 +571,8 @@ angular.module('app.controllers', [])
                 function (result) {
                     $scope.item.training_date = result.date;
                 },
-                function (err) {}
+                function (err) {
+                }
             );
 
             $meteor.call('getExercises', $scope.item.training_id).then(

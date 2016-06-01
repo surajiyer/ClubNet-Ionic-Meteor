@@ -4,7 +4,7 @@
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
         </ion-nav-buttons>
         <ion-nav-buttons side="right">
-            <button class="button button-icon icon ion-plus" ng-click="addChat()"></button>
+            <button ng-if='canCreateChat' class="button button-icon icon ion-plus" ng-click="addChat()"></button>
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content>
