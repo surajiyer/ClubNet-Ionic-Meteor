@@ -40,12 +40,12 @@
             <img src="{{hostname + currentClub.logo}}" alt="logo" class="settings-club-logo" />
         </div>
     </div>
-    <h2 class="content-subhead">Feed</h2>
-    <div class="row">
-        <label class="col-md-4" for="clubname">Maximum amount of heroes per month</label>
-        <div class="col-md-6">
-            <input class="form-control" type="text" id="heroesMax" name="heroesMax" ng-model="currentClub.heroesMax">
-        </div>
-    </div>
-    <button ng-click="save()">Save</button> <div class="saved-notification" ng-if="saved">Saved!</div>
+        <!--<h2 class="content-subhead">Feed</h2>-->
+        <!--<div class="row">-->
+            <!--<label class="col-md-4" for="clubname">Maximum amount of heroes per month</label>-->
+            <!--<div class="col-md-6">-->
+                <!--<input class="form-control" type="text" id="heroesMax" name="heroesMax" ng-model="currentClub.heroesMax">-->
+            <!--</div>-->
+        <!--</div>-->
+    <button class="btn btn-primary" ng-click="save()">Save</button> <div class="saved-notification" ng-if="saved">Saved!</div>
 </div>

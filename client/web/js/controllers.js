@@ -14,6 +14,16 @@ angular.module('web.controllers', ['ui.bootstrap'])
             $state.go('login');
         };
         $scope.hostname = 'http://' + window.location.hostname + ':3000';
+
+        /**
+         * @summary Function for retrieving the club a user is logged into.
+         * @param
+         */
+        $meteor.call('getClub').then(function(result){
+            $scope.currentClub = result;
+        }, function(err){
+            console.log(err);
+        });
        
     })
 
@@ -102,15 +112,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
      */
     .controller('settingsCtrl', function ($scope, $meteor, $timeout) {
 
-        /**
-         * @summary Function for retrieving the club a user is logged into.
-         * @param 
-         */
-        $meteor.call('getClub').then(function(result){
-            $scope.currentClub = result;
-        }, function(err){
-            console.log(err);
-        });
+
 
         /**
          * @summary Function for retrieving the image URL for the club logo, which is in the database
@@ -244,11 +246,11 @@ angular.module('web.controllers', ['ui.bootstrap'])
                         firstName: $scope.user.firstName,
                         lastName: $scope.user.lastName,
                         type: $scope.user.team != '' ? 'player' : 'general',
-                        clubID: "PSV",
+                        clubID: Meteor.user().profile.clubID,
                         teamID: $scope.user.team
                     }
                 };
-                
+
                 $meteor.call('addUser', newUser).then(function(result){
                     $state.go('web.members'); // Redirect user if registration succeeds
                 }, function(err){
@@ -280,6 +282,8 @@ angular.module('web.controllers', ['ui.bootstrap'])
             $scope.user.lastName = result.profile.lastName;
             $scope.user.email = result.emails[0].address;
             $scope.user.team = result.profile.teamID;
+            $scope.user.clubID = result.profile.clubID;
+
         }, function(err){
             console.log('error');
             console.log(err);
@@ -302,7 +306,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                     firstName: $scope.user.firstName,
                     lastName: $scope.user.lastName,
                     type: $scope.user.team != '' ? 'player' : 'general',
-                    clubID: "PSV",
+                    clubID: $scope.user.clubID,
                     teamID: $scope.user.team
                 };
                 
@@ -563,7 +567,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
                         firstName: Meteor.user().profile.firstName,
                         lastName: Meteor.user().profile.lastName,
                         type: 'pr',
-                        clubID: 'PSV',
+                        clubID: Meteor.user().profile.clubID,
                         teamID: ''
                     };
                     $meteor.call('updateUserProfile', Meteor.userId(), updatedProfile).then(function(result){
