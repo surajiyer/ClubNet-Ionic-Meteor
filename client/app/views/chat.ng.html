@@ -9,23 +9,24 @@
         <div class="message-list">
             <div ng-repeat="message in messages" class="message-wrapper">
                 <div class="message"
-                     ng-class="message.senderID == Meteor.userId() ? 'message-mine' : 'message-other'">
+                     ng-class="isMe(message.senderID) ? 'message-mine' : 'message-other'">
                     <div class="message-text">{{ message.message }}</div>
-                    <span class="message-timestamp">{{ message.createdAt | date: 'HH:MM' }}</span>
+                    <span class="message-timestamp">{{ message.createdAt | date: 'h:mm a' }}</span>
                 </div>
             </div>
         </div>
     </ion-content>
     <ion-footer-bar keyboard-attach class="bar-stable footer-chat item-input-inset">
-        <button class="button button-clear button-icon button-positive icon ion-ios-upload-outline"></button>
+        <!--<button class="button button-clear button-icon button-positive icon ion-ios-upload-outline"></button>-->
         <label class="item-input-wrapper">
-            <input ng-model="chat.message"
+            <input ng-model="message"
                    dir="auto"
                    type="text"/>
         </label>
-        <span ng-if="chat.message.length > 0">
-            <button ng-click="sendMessage()" class="button button-clear button-positive">Send</button>
-        </span>
-        <span ng-if="!chat.message || chat.message.length === 0"></span>
+        <button ng-disabled="!message || message.length <= 0"
+                ng-click="sendMessage()"
+                class="button button-clear button-positive icon-left ion-paper-airplane">
+            Send
+        </button>
     </ion-footer-bar>
 </ion-view>

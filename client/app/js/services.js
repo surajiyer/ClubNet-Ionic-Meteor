@@ -38,32 +38,45 @@ angular.module('app.services', [])
             return Chats.find({}, {sort: {lastMessage: -1}});
         };
 
+        /**
+         * Get chats associated with the given recipient userId
+         * @param userId String id of the recipient user
+         * @returns {any}
+         */
         const getChatByUserId = function (userId) {
             return Chats.find({users: userId}).fetch()[0];
         };
 
         /**
          * Load chat info into passed object with given chat ID
-         * @param chatID
+         * @param chatID String id of the chat
          * @returns {*|any}
          */
         const getOneChat = function (chatID) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
-            console.log('getOneChat() lastMessage: '+currentChat.lastMessage);
-            Meteor.subscribe('Messages', currentChat._id, currentChat.lastMessage, function () {
-                // Get recipient user
-                var recipient = currentChat.users[0];
-                if (recipient == Meteor.userId()) recipient = currentChat.users[1];
-                recipient = Meteor.users.find({_id: recipient}).fetch()[0];
 
-                // Load the chat title to the recipient name
-                currentChat.title = recipient.profile.firstName + " " + recipient.profile.lastName;
-                currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
+            // Get recipient user
+            var recipient = currentChat.users[0];
+            if (recipient == Meteor.userId()) recipient = currentChat.users[1];
+            recipient = Meteor.users.find({_id: recipient}).fetch()[0];
+
+            // Load the chat title to the recipient name
+            currentChat.title = recipient.profile.firstName + " " + recipient.profile.lastName;currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
+            currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
+
+            Meteor.subscribe('Messages', currentChat._id, currentChat.lastMessage, function () {
                 currentChat.lastMessage = Messages.find({_id: currentChat.lastMessage}).fetch()[0];
             });
+
             return currentChat;
         };
-        
+
+        /**
+         * @summary Creates a chat between the currently logged-in user
+         * and another recipient user
+         * @param userId String id of the recipient user
+         * @returns {any}
+         */
         const createChat = function(userId) {
             return Chats.insert({
                 users: [Meteor.userId(), userId]
@@ -71,25 +84,24 @@ angular.module('app.services', [])
         };
 
         /**
-         * Get messages of a given chat
+         * @summary Get messages of a given chat
+         * @param chatID String id of the chat
          */
         const getMessages = function (chatID) {
-            console.log("chatID = ", chatID);
-            Meteor.subscribe('Messages', chatID);
-            console.log('Number of messages: ' + Messages.find({chatID: chatID}).count());
             return Messages.find({chatID: chatID});
         };
 
         /**
          * Change the status of the chat
-         * @param newStatus
+         * @param chatId String id of chat
+         * @param newStatus String status message
          */
-        const changeStatus = function (newStatus) {
-            Chats.update({_id: chat._id}, {status: newStatus});
+        const changeStatus = function (chatId, newStatus) {
+            Chats.update({_id: chatId}, {$set: {status: newStatus}});
         };
 
-        const sendMessage = function (message) {
-            Messages.insert({chatID: chat._id, message: message});
+        const sendMessage = function (chatId, message) {
+            return Messages.insert({chatID: chatId, message: message});
         };
 
         return {
@@ -97,6 +109,8 @@ angular.module('app.services', [])
             getChats: getChats,
             getOneChat: getOneChat,
             getChatByUserId: getChatByUserId,
+            updateChatStatus: changeStatus,
+            sendMessage: sendMessage,
             getMessages: getMessages,
         }
     })

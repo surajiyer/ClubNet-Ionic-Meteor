@@ -29,11 +29,9 @@ const getChatStatus = function (chatID) {
 Meteor.startup(function () {
     Chats.allow({
         insert: function (userId, doc) {
-            var isValidUser = userId == Meteor.userId();
+            var isValidUser = userId == Meteor.userId() && _.contains(doc.users, userId);
             var hasPermission = Meteor.call('checkRights', 'Chat', 'create');
-            var chatContainsValidUser = _.contains(doc.users, Meteor.userId());
-            console.log('Chat insert allowed: '+(isValidUser && hasPermission && chatContainsValidUser));
-            return isValidUser && hasPermission && chatContainsValidUser;
+            return isValidUser && hasPermission;
         },
         update: function (userId, doc, fields) {
             var isValidUser = userId == Meteor.userId() && _.contains(doc.users, userId);
@@ -55,17 +53,22 @@ Meteor.startup(function () {
 
     Messages.allow({
         insert: function (userId, doc) {
-            var chat = Chats.find({_id: doc.chatID});
+            var chat = Chats.find({_id: doc.chatID}).fetch()[0];
             var isValidUser = userId == Meteor.userId() && _.contains(chat.users, userId);
             var hasPermission = Meteor.call('checkRights', 'Messages', 'create');
             var chatIsOpen = chat.status == 'open';
-            return isValidUser && hasPermission && chatIsOpen;
+            var allowed = isValidUser && hasPermission && chatIsOpen;
+            if (allowed) {
+                Chats.update({_id: doc.chatID}, {$set: {lastMessage: doc.message}});
+            }
+            return allowed;
         },
         update: function () {
             return false;
         },
-        remove: function (userId) {
-            var isValidUser = userId == Meteor.userId();
+        remove: function (userId, doc) {
+            var chat = Chats.find({_id: doc.chatID}).fetch()[0];
+            var isValidUser = userId == Meteor.userId() && _.contains(chat.users, userId);
             var hasPermission = Meteor.call('checkRights', 'Messages', 'delete');
             return isValidUser && hasPermission;
         }

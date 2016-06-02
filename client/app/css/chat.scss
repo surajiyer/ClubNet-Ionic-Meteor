@@ -1,4 +1,4 @@
-.header-picture {
+.list-item-picture, .header-picture {
   max-width: 64px !important;
   max-height: 64px !important;
   top: 12px !important;
@@ -6,6 +6,11 @@
   width: 100% !important;
   height: 100% !important;
   border-radius: 50% !important;
+}
+
+.header-picture {
+  max-width: 33px !important;
+  max-height: 33px !important;
 }
 
 #chats a:first-child {
@@ -17,7 +22,7 @@ chat-info div:first-child {
 }
 
 .item-chat {
-  padding-right: 0px !important;
+  padding-right: 0 !important;
 }
 
 .chat {

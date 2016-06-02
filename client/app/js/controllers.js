@@ -194,9 +194,10 @@ angular.module('app.controllers', [])
          */
         $scope.logout = function ($event) {
             $event.stopPropagation();
-            $meteor.logout();
-            $state.go('login').then(function () {
-                $window.location.reload();
+            $meteor.logout(function() {
+                $state.go('login').then(function () {
+                    $window.location.reload();
+                });
             });
         };
 
@@ -396,7 +397,7 @@ angular.module('app.controllers', [])
             $scope.closeModal();
             var chat = Chat.getChatByUserId(userId);
             if (chat) {
-                Chats.update({_id: chat._id}, {$set: {status: "open"}});
+                Chat.updateChatStatus(chat._id, "open");
                 $state.go('menu.chat', {chatId: chat._id});
             } else {
                 var chatID = Chat.createChat(userId);
@@ -436,14 +437,30 @@ angular.module('app.controllers', [])
      *  @summary Controller for chatting functions within chats
      */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
+        /**
+         * Initialize messages
+         * @type {*|any}
+         */
         var chatID = $stateParams.chatId;
-        console.log('Entered chat ' + chatID);
+        Meteor.subscribe('Messages', chatID);
+        
+        $scope.isMe = function(senderID) {
+            return senderID == Meteor.userId();
+        }
 
         /**
          * @summary Function to send a message
          */
         $scope.sendMessage = function () {
-            console.log("sending message");
+            // Send the message and get the new message id
+            var messageID = Chat.sendMessage(chatID, $scope.message);
+
+            // If message was sent successfully, clear the message field
+            if(messageID) {
+                $scope.message = "";
+            }
+            
+            console.log("sendMessage() message: "+$scope.message);
         };
 
         /**
@@ -457,8 +474,6 @@ angular.module('app.controllers', [])
                 return Chat.getMessages(chatID);
             }
         });
-
-        console.log($scope.messages);
     })
 
     /**
