@@ -1,6 +1,8 @@
-<div class="item item-divider" ng-controller="controlItemCtrl">
-    {{item.type}}
-    <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" aria-hidden="true"></i>
+<div class="item item-divider feed-icon" ng-controller="controlItemCtrl" ng-click="showFullItem($event, false)">
+    <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt="" />
+    {{itemType.name}} <span ng-if="hasEnded">(completed)</span>
+    <i class="icon ion-more" ng-if="showEdit" ng-click="openPopover($event)" id="icon-expand"></i>
+    <i class="icon ion-arrow-shrink show-full" ng-if="isFull" id="icon-expand"></i>
 </div>
 <div class="item item-body">
     <p>
@@ -21,14 +23,14 @@
 <form class="list">
     <div class="variants">
         <div ng-repeat="exercise in exercises"
-             ng-click="select($event, $index+1)"
+             ng-click="!isCoach ? select($event, $index+1) : ''"
              ng-class="(($index + 1) == hasVoted) ? 'selected' : ''" >
             <img src="/exercise_images/{{ exercise.exId }}.jpg" width="100" alt="" />
             <br />{{exercise.item}}
         </div>
     </div>
 </form>
-<div class="item item-body image-placeholder-div " ng-if="!hasEnded">
+<div class="item item-body image-placeholder-div " ng-if="!isCoach">
     <img src="http://placehold.it/300x300" class="image-placeholder" alt="" width="100%" />
     <b>{{ exercises[item.selectedValue-1].item }}</b><br />
     {{ exercises[item.selectedValue-1].description }}<br /><br />
@@ -40,6 +42,7 @@
         </button>
     </div>
 </div>
-<div class="item item-body" ng-if="(!hasEnded && item.intermediatePublic) || (hasEnded && item.finalPublic)">
+<div class="item item-body" ng-if="(item.intermediatePublic) || (hasEnded && item.finalPublic) || isCoach">
     <canvas id="bar" class="chart chart-bar" chart-data="chartValues" chart-labels="chartLabels"></canvas>
 </div>
+<div class="gradient" ng-click="showFullItem($event, true)">Read more <i class="icon ion-android-arrow-down"></i></div>

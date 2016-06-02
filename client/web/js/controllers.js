@@ -13,7 +13,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             $meteor.logout();
             $state.go('login');
         };
-        $scope.hostname = 'http://' + window.location.hostname + ':3000';
+        $scope.hostname = 'http://' + window.location.hostname;
 
         /**
          * @summary Function for retrieving the club a user is logged into.
@@ -126,7 +126,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $meteor.subscribe('images');
         $meteor.subscribe('clubs');
 
-        $scope.hostname = 'http://' + window.location.hostname + ':3000';
+        $scope.hostname = 'http://' + window.location.hostname;
 
         /**
          * @summary Function for uploading a file.
@@ -366,9 +366,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
                  var updatedProfile = {
                     firstName: $scope.user.firstName,
                     lastName: $scope.user.lastName,
-                    type: 'pr',
-                    clubID: "PSV",
-                    teamID: ''
+                    type: Meteor.user().profile.type,
+                    clubID: Meteor.user().profile.clubID,
+                    teamID: Meteor.user().profile.teamID
                 };
                 
                 $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function(result){

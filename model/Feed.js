@@ -179,6 +179,10 @@ if (Meteor.isServer) {
             check(itemID, String);
             return Responses.find({itemID: itemID}).fetch();
         },
+        getNumberResponsesOfOneItem: function (itemID) {
+            check(itemID, String);
+            return Responses.find({itemID: itemID}).fetch().length;
+        },
         /**
          * @summary Function for retrieving the response of the currently logged in user to a feed item.
          * It will first check whether the parameters are valid.

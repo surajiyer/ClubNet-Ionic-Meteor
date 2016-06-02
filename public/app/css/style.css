@@ -2,7 +2,7 @@
     max-width: 480px;
     margin-left: auto;
     margin-right: auto;
-    margin-bottom: 100px;
+    margin-bottom: 70px;
 }
 
 ion-view.pane {
@@ -155,6 +155,7 @@ p.decision {
 #icon-expand {
     float: right !important;
     font-size: 20px;
+    padding-left: 15px;
 }
 
 .image-placeholder-div {
@@ -174,8 +175,7 @@ p.decision {
     display: table-cell;
     vertical-align: top;
     width: 20%;
-    padding-top: 20px;
-    padding-bottom: 10px;
+    padding: 20px 5px 10px 5px;
     text-align: center;
     font-size: 12px;
 }
@@ -199,4 +199,74 @@ form.list {
 
 #icon-back {
     padding-right: 16px;
+}
+
+.item-chat .last-message-timestamp {
+    position: absolute;
+    top: 16px;
+    right: 38px;
+    font-size: 14px;
+    color: #9A9898;
+}
+
+.bar-stable .button.button-icon {
+    display: block !important;
+}
+
+.item.item-divider.ng-binding span {
+    color: #149A14;
+    font-size: 11px;
+}
+
+.item-body h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.feed-icon {
+    line-height: 34px;
+    height: 50px;
+    padding-left: 50px;
+    position: relative;
+}
+
+.feed-icon img {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+}
+
+.item-body, .card label.item {
+    padding: 10px;
+    font-size: 13px;
+}
+
+.input-label {
+    padding: 0;
+}
+
+.item h2 {
+    font-size: 14px;
+}
+
+.gradient {
+    position: absolute;
+    bottom: 0;
+    z-index: 1000;
+    text-align: center;
+    width: 100%;
+    padding-top: 122px;
+    padding-bottom: 8px;
+    /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#ffffff+0,ffffff+100&0+39,1+76 */
+    background: -moz-linear-gradient(top, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 39%, rgba(255,255,255,1) 76%, rgba(255,255,255,1) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 39%,rgba(255,255,255,1) 76%,rgba(255,255,255,1) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255,255,255,0) 0%,rgba(255,255,255,0) 39%,rgba(255,255,255,1) 76%,rgba(255,255,255,1) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#ffffff',GradientType=0 ); /* IE6-9 */
+    color: #848484;
+    font-size: 12px;
+}
+
+#feeditems .card.list {
+    position: relative;
+    max-height: 200px;
 }

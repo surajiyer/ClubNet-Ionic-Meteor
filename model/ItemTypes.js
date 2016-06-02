@@ -45,6 +45,14 @@ if (Meteor.isServer) {
          */
         getItemTypes: function () {
             return TypesCollection.find().fetch();
-        }
+        },
+        getItemType: function (typeID) {
+            check(typeID, String);
+            try {
+                return TypesCollection.find({_id: typeID}).fetch()[0];
+            } catch (err) {
+                throw new Meteor.Error(err.message);
+            }
+        },
     });
 }

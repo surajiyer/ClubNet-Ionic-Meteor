@@ -106,7 +106,7 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         optional: true,
         autoValue: function () {
             if (!this.isSet && this.isInsert)
-                return true;
+                return false;
         }
     },
     finalPublic: {
@@ -114,7 +114,7 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         optional: true,
         autoValue: function () {
             if (!this.isSet && this.isInsert)
-                return true;
+                return false;
         }
     },
     nrVoters: {
