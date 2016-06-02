@@ -49,7 +49,7 @@ angular.module('app.services', [])
          */
         const getOneChat = function (chatID) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
-            console.log('Hi '+currentChat.lastMessage);
+            console.log('getOneChat() lastMessage: '+currentChat.lastMessage);
             Meteor.subscribe('Messages', currentChat._id, currentChat.lastMessage, function () {
                 // Get recipient user
                 var recipient = currentChat.users[0];
@@ -65,7 +65,9 @@ angular.module('app.services', [])
         };
         
         const createChat = function(userId) {
-            return Chats.insert([Meteor.userId(), userId]);
+            return Chats.insert({
+                users: [Meteor.userId(), userId]
+            });
         };
 
         /**

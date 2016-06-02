@@ -17,11 +17,11 @@ angular.module('app.controllers', [])
 //     };
 // })
 
-    /**
-     *  Register Controller: provides all functionality for the register screen of the app
-     *  @param {String} Name of the controller
-     *  @param {Function}
-     */
+/**
+ *  Register Controller: provides all functionality for the register screen of the app
+ *  @param {String} Name of the controller
+ *  @param {Function}
+ */
     .controller('registerCtrl', function ($scope, $meteor, $state) {
         /**
          * Credentials of the user
@@ -82,7 +82,7 @@ angular.module('app.controllers', [])
                 $state.go('menu.feed');
             });
         };
-        
+
         /**
          * @summary Function to show the forgot password page
          */
@@ -105,7 +105,7 @@ angular.module('app.controllers', [])
             token: '',
             newPassword: ''
         };
-        
+
         /**
          * @summary Function to reset the users password
          */
@@ -115,7 +115,7 @@ angular.module('app.controllers', [])
                 console.log('Reset password success');
             });
         };
-        
+
         /**
          * @summary Function to send email to user to reset password
          */
@@ -150,7 +150,7 @@ angular.module('app.controllers', [])
             newPass: '',
             newPassCheck: ''
         };
-        
+
         /**
          * @summary Function to change the profile information
          */
@@ -175,7 +175,7 @@ angular.module('app.controllers', [])
                 $scope.error = "The passwords don't match.";
             }
         };
-        
+
         /**
          * Data for error message
          */
@@ -199,7 +199,7 @@ angular.module('app.controllers', [])
                 $window.location.reload();
             });
         };
-        
+
         /**
          * Loading the current club for styling
          */
@@ -222,7 +222,7 @@ angular.module('app.controllers', [])
         AccessControl.getPermission('CoachBar', 'view', function (result) {
             $scope.showCoachBar = result;
         });
-        
+
         /**
          * @summary Function to update the item types
          */
@@ -273,7 +273,7 @@ angular.module('app.controllers', [])
         /* Function to get current date in ISO format */
         $scope.getCurrentDateISO = function () {
             var date = new Date();
-            date.setDate(date.getDate()+1);
+            date.setDate(date.getDate() + 1);
             return date.toISOString().substring(0, 10);
         };
 
@@ -326,7 +326,7 @@ angular.module('app.controllers', [])
             throw new Error("No item object passed.");
         }
     })
-    
+
     /**
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      *  @param {String} Name of the controller
@@ -353,9 +353,7 @@ angular.module('app.controllers', [])
     })
 
     /**
-     *  Chats Controller: provides all functionality for the chats screen of the app
-     *  @param {String} Name of the controller
-     *  @param {Function}
+     *  @summary Controller for loading chats
      */
     .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat) {
         /**
@@ -364,7 +362,7 @@ angular.module('app.controllers', [])
          */
         $scope.canCreateChat = false;
 
-        // // Display create chat button
+        // Display create chat button
         AccessControl.getPermission('Chat', 'create', function (result) {
             $scope.canCreateChat = result;
         });
@@ -395,14 +393,14 @@ angular.module('app.controllers', [])
          */
         $scope.startChat = function (userId) {
             if (!$scope.canCreateChat) return;
-            console.log(userId);
             $scope.closeModal();
             var chat = Chat.getChatByUserId(userId);
-            if(chat) {
+            if (chat) {
                 Chats.update({_id: chat._id}, {$set: {status: "open"}});
                 $state.go('menu.chat', {chatId: chat._id});
             } else {
                 var chatID = Chat.createChat(userId);
+                console.log('createChat() chatId: '+chatID);
                 $state.go('menu.chat', {chatId: chatID});
             }
         };
@@ -423,9 +421,7 @@ angular.module('app.controllers', [])
     })
 
     /**
-     *  Chat Info Controller: provides all functionality for the chat info of each chat of the app
-     *  @param {String} Name of the controller
-     *  @param {Function}
+     *  @summary Controller for loading information of each chat
      */
     .controller('chatInfoCtrl', function ($scope, Chat) {
         $scope.helpers({
@@ -437,19 +433,11 @@ angular.module('app.controllers', [])
     })
 
     /**
-     * @summary Controller for chatting functions within chats.
-     */
-    /**
-     *  Chat Controller: provides all functionality for the chat screen of the app
-     *  @param {String} Name of the controller
-     *  @param {Function}
+     *  @summary Controller for chatting functions within chats
      */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
-        /**
-         * @summary Function to send a message
-         */
         var chatID = $stateParams.chatId;
-        console.log('Entered chat '+chatID);
+        console.log('Entered chat ' + chatID);
 
         /**
          * @summary Function to send a message
@@ -457,7 +445,7 @@ angular.module('app.controllers', [])
         $scope.sendMessage = function () {
             console.log("sending message");
         };
-        
+
         /**
          * Helper functions
          */
@@ -497,7 +485,7 @@ angular.module('app.controllers', [])
         }).then(function (postmodal) {
             $scope.postmodal = postmodal;
         });
-        
+
         /**
          * @summary Function close the post modal
          */
@@ -512,7 +500,7 @@ angular.module('app.controllers', [])
             $scope.postmodal.show();
         };
     })
-    
+
     /**
      *  Form Controller: provides all functionality for the form feed item of the app
      *  @param {String} Name of the controller
@@ -555,7 +543,7 @@ angular.module('app.controllers', [])
         $scope.openForm = function () {
             $scope.formModal.show();
         };
-        
+
         /**
          * @summary Function to show the select target value alert
          */
@@ -571,7 +559,8 @@ angular.module('app.controllers', [])
                 function (result) {
                     $scope.itemType = result;
                 },
-                function (err) {}
+                function (err) {
+                }
             );
 
             $scope.item.hasContributed = false;
@@ -586,7 +575,7 @@ angular.module('app.controllers', [])
                 }
             );
         }
-        
+
         /**
          * @summary Function to sign up
          */
@@ -603,7 +592,7 @@ angular.module('app.controllers', [])
             }
 
         };
-        
+
         /**
          * @summary Function to withdraw contribution
          */
@@ -618,7 +607,7 @@ angular.module('app.controllers', [])
             );
         }
     })
-    
+
     /**
      *  Voting Controller: provides all functionality for the voting feed item of the app
      *  @param {String} Name of the controller
@@ -630,28 +619,13 @@ angular.module('app.controllers', [])
         $scope.editingItem = 0;
         $scope.postBtn = "Post";
 
-        $scope.trainings  = [];
-        $scope.exercises  = [];
-        
-        /**
-         * Check whether the user has permission to add the item
-         */
-        AccessControl.getPermission('voting', 'edit', function (result) {
-            if (result) {
-                $meteor.call('getFeedItem', $scope.item._id).then(
-                    function(res) {
-                        $scope.showEdit = res.creatorID == Meteor.userId();
-                    }
-                );
-            } else {
-                $scope.showEdit = false;
-            }
-        });
+        $scope.trainings = [];
+        $scope.exercises = [];
 
         /**
          * Check whether the user is a coach
          */
-        AccessControl.getPermission('voting', 'edit', function (result) {
+        AccessControl.getPermission('Voting', 'edit', function (result) {
             $scope.isCoach = result;
         });
 
@@ -700,7 +674,8 @@ angular.module('app.controllers', [])
                     function (result) {
                         $scope.item.training_date = result.date;
                     },
-                    function (err) {}
+                    function (err) {
+                    }
                 );
             }
             $scope.newVoting = {};
@@ -731,7 +706,7 @@ angular.module('app.controllers', [])
             $scope.editingItem = itemId;
             if (itemId != 0) {
                 $scope.postBtn = "Save";
-                getElement = Items.findOne({_id : itemId});
+                getElement = Items.findOne({_id: itemId});
                 $scope.newVoting = {
                     title: getElement.title,
                     deadline: getElement.deadline,
@@ -772,23 +747,40 @@ angular.module('app.controllers', [])
                 }
             );
         };
-        
+
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
+
+            /**
+             * Check whether the user has permission to add the item
+             */
+            AccessControl.getPermission('Voting', 'edit', function (result) {
+                if (result) {
+                    $meteor.call('getFeedItem', $scope.item._id).then(
+                        function (res) {
+                            $scope.showEdit = res.creatorID == Meteor.userId();
+                        }
+                    );
+                } else {
+                    $scope.showEdit = false;
+                }
+            });
 
             $meteor.call("getItemType", $scope.item.type).then(
                 function (result) {
                     $scope.itemType = result;
                 },
-                function (err) {}
+                function (err) {
+                }
             );
 
             $meteor.call("getTrainingObj", $scope.item.training_id).then(
                 function (result) {
                     $scope.item.training_date = result.date;
                 },
-                function (err) {}
+                function (err) {
+                }
             );
 
             $meteor.call('getExercises', $scope.item.training_id).then(
@@ -815,7 +807,7 @@ angular.module('app.controllers', [])
 
             $meteor.call('getNumberResponsesOfOneItem', $scope.item._id).then(
                 function (nr1) {
-                    $meteor.call('getNrOfTeamMembers', $scope.item.teamID).then(
+                    $meteor.call('getTeamSize').then(
                         function (nr2) {
                             if (nr1 == nr2) {
                                 $scope.hasEnded = true;
@@ -830,7 +822,7 @@ angular.module('app.controllers', [])
                     console.log(err);
                 }
             );
-            $meteor.call('getNrOfTeamMembers', "1").then(
+            $meteor.call('getTeamSize').then(
                 function (result) {
                     console.log(result);
                 },
@@ -869,7 +861,7 @@ angular.module('app.controllers', [])
                 $scope.item.selectedValue = index;
             }
         };
-        
+
         /**
          * @summary Function to post a vote
          */
@@ -878,8 +870,8 @@ angular.module('app.controllers', [])
                 var confirmPopup = $ionicPopup.confirm({
                     title: 'Are you sure you want to place your vote?'
                 });
-                confirmPopup.then(function(res) {
-                    if(res) {
+                confirmPopup.then(function (res) {
+                    if (res) {
                         $meteor.call('putResponse', $scope.item._id, $scope.item.type, value.toString()).then(
                             function (result) {
                                 $scope.updateChartValues();
@@ -905,7 +897,7 @@ angular.module('app.controllers', [])
                 console.log('Please select what are you voting for');
             }
         };
-        
+
         $scope.isFull = false;
         /**
          * @summary Function to enlarge the feed item
@@ -921,7 +913,7 @@ angular.module('app.controllers', [])
             }
         };
     })
-    
+
     /**
      *  Hero Controller: provides all functionality for the heroes feed item of the app
      *  @param {String} Name of the controller
@@ -958,7 +950,7 @@ angular.module('app.controllers', [])
             $scope.heromodal.show();
         };
     })
-    
+
     /**
      *  Settings Controller: provides all functionality for the settings screen of the app
      *  @param {String} Name of the controller

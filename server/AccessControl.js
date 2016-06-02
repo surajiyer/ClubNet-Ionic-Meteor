@@ -30,7 +30,7 @@ Meteor.methods({
         return doc.items[0].permissions[permission];
     },
     setPermissions: function (newAccess) {
-        check(this.userId, Match.Where(isAdmin));
+        check(Meteor.userId(), Match.Where(isAdmin));
         check(newAccess, accessControlSchema);
         AMx.insert(newAccess, function (err) {
             if (err) throw new Meteor.Error(err.error);

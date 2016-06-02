@@ -28,10 +28,12 @@ const getChatStatus = function (chatID) {
 
 Meteor.startup(function () {
     Chats.allow({
-        insert: function (userId) {
+        insert: function (userId, doc) {
             var isValidUser = userId == Meteor.userId();
             var hasPermission = Meteor.call('checkRights', 'Chat', 'create');
-            return isValidUser && hasPermission;
+            var chatContainsValidUser = _.contains(doc.users, Meteor.userId());
+            console.log('Chat insert allowed: '+(isValidUser && hasPermission && chatContainsValidUser));
+            return isValidUser && hasPermission && chatContainsValidUser;
         },
         update: function (userId, doc, fields) {
             var isValidUser = userId == Meteor.userId() && _.contains(doc.users, userId);
