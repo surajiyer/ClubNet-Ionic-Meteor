@@ -66,10 +66,15 @@ Meteor.startup(function () {
             }
             check(limit, Number);
             check(itemTypes, [String]);
-            var teamID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.teamID;
+            var teamID = utils.getUserTeamID(this.userId);
+            var clubID = utils.getUserClubID(this.userId);
             return Items.find({
                 type: {$in: itemTypes},
-                teamID: teamID
+                clubID: clubID,
+                $or: [
+                    {teamID: {$exists: false}},
+                    {teamID: {$exists: true, $eq: teamID}}
+                ]
             },{
                 sort: {
                     sticky: -1,
@@ -176,7 +181,7 @@ if (Meteor.isServer) {
         },
         getNumberResponsesOfOneItem: function (itemID) {
             check(itemID, String);
-            return Responses.find({itemID: itemID}).fetch().length;
+            return Responses.find({itemID: itemID}).count();
         },
         /**
          * @summary Function for retrieving the response of the currently logged in user to a feed item.
@@ -311,6 +316,5 @@ if (Meteor.isServer) {
             var clubID = Meteor.user().profile.clubID;
             return Items.find({clubID: clubID}).count();
         },
-
     })
 }

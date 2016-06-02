@@ -1,12 +1,15 @@
-<ion-view title="{{ chat.title }}">
-    <ion-nav-buttons side="right">
-        <button class="button button-clear"><img class="header-picture" ng-src="{{ chat.picture }}"></button>
-    </ion-nav-buttons>
+<ion-view view-title="{{ chat.title }}">
+    <ion-nav-bar>
+        <ion-nav-back-button class="button-positive"></ion-nav-back-button>
+        <ion-nav-buttons side="right">
+            <button class="button button-clear"><img class="header-picture" ng-src="{{ chat.picture }}"></button>
+        </ion-nav-buttons>
+    </ion-nav-bar>
     <ion-content class="chat" delegate-handle="chatScroll">
         <div class="message-list">
             <div ng-repeat="message in messages" class="message-wrapper">
-                <div class="message" 
-                ng-class="message.senderID==loggedinUserID ? 'message-mine' : 'message-other'">
+                <div class="message"
+                     ng-class="message.senderID == Meteor.userId() ? 'message-mine' : 'message-other'">
                     <div class="message-text">{{ message.message }}</div>
                     <span class="message-timestamp">{{ message.createdAt | date: 'HH:MM' }}</span>
                 </div>
@@ -26,6 +29,3 @@
         <span ng-if="!chat.message || chat.message.length === 0"></span>
     </ion-footer-bar>
 </ion-view>
-
-
-

@@ -191,8 +191,12 @@ Meteor.methods({
      */
     getUserType: function () {
         check(Meteor.userId(), String);
-        //return Meteor.users.find({_id: this.userId}).fetch()[0].profile.type;
         return Meteor.user().profile.type;
+    },
+    getTeamSize: function() {
+        check(Meteor.userId(), String);
+        var teamID = utils.getUserTeamID(Meteor.userId());
+        return Meteor.users.find({type: 'player', 'profile.teamID': teamID}).count();
     },
     /**
      * @summary Function for adding a note.
