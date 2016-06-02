@@ -13,7 +13,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
             $meteor.logout();
             $state.go('login');
         };
-        $scope.hostname = 'http://' + window.location.hostname + ':3000';
+        $scope.hostname = 'http://' + window.location.hostname;
 
         /**
          * @summary Function for retrieving the club a user is logged into.
@@ -126,7 +126,7 @@ angular.module('web.controllers', ['ui.bootstrap'])
         $meteor.subscribe('images');
         $meteor.subscribe('clubs');
 
-        $scope.hostname = 'http://' + window.location.hostname + ':3000';
+        $scope.hostname = 'http://' + window.location.hostname;
 
         /**
          * @summary Function for uploading a file.
