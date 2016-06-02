@@ -66,10 +66,15 @@ Meteor.startup(function () {
             }
             check(limit, Number);
             check(itemTypes, [String]);
-            var teamID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.teamID;
+            var teamID = utils.getUserTeamID(this.userId);
+            var clubID = utils.getUserClubID(this.userId);
             return Items.find({
                 type: {$in: itemTypes},
-                teamID: teamID
+                clubID: clubID,
+                $or: [
+                    {teamID: {$exists: false}},
+                    {teamID: {$exists: true, $eq: teamID}}
+                ]
             },{
                 sort: {
                     sticky: -1,

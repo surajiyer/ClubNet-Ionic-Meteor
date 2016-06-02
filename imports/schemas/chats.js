@@ -1,8 +1,3 @@
-const chatSessions = new SimpleSchema({
-    userID: {type: String},
-    chatID: {type: String}
-});
-
 const messages = new SimpleSchema({
     senderID: {
         type: String,
@@ -40,15 +35,6 @@ const chats = new SimpleSchema({
         autoValue: function () {
             if (this.isInsert)
                 return "open";
-        },
-        custom: function () {
-            var hasPermission = Meteor.call('checkRights', 'ChatStatus', 'edit');
-            var users = this.siblingField('users').value;
-            // TODO: remove this
-            console.log(users);
-            var userBelongsToChat = _.contains(users, Meteor.userId());
-            if (!hasPermission && !userBelongsToChat)
-                return 'notAllowed';
         }
     },
     lastMessage: {
@@ -57,4 +43,4 @@ const chats = new SimpleSchema({
     }
 });
 
-export {chats, chatSessions, messages}
+export {chats, messages}

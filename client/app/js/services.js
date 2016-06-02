@@ -2,7 +2,7 @@ angular.module('app.services', [])
 
     .service('currentClub', function ($meteor) {
         /**
-         * Get the current club and hold it in the service
+         * @summary Get the current club and hold it in the service
          */
         return {
             getClub: function () {
@@ -13,7 +13,7 @@ angular.module('app.services', [])
 
     .service('AccessControl', function () {
         /**
-         * Check if user is permitted to get access to various aspects of the service.
+         * @summary Check if user is permitted to get access to various aspects of the service.
          * @param itemType the item for which permission is being requested
          * @param permission the type of permission being requested for the item: create, view, edit or delete.
          * @param callback function to call with the result as argument
@@ -49,6 +49,7 @@ angular.module('app.services', [])
          */
         const getOneChat = function (chatID) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
+            console.log('Hi '+currentChat.lastMessage);
             Meteor.subscribe('Messages', currentChat._id, currentChat.lastMessage, function () {
                 // Get recipient user
                 var recipient = currentChat.users[0];
@@ -62,6 +63,10 @@ angular.module('app.services', [])
             });
             return currentChat;
         };
+        
+        const createChat = function(userId) {
+            return Chats.insert([Meteor.userId(), userId]);
+        };
 
         /**
          * Get messages of a given chat
@@ -69,7 +74,7 @@ angular.module('app.services', [])
         const getMessages = function (chatID) {
             console.log("chatID = ", chatID);
             Meteor.subscribe('Messages', chatID);
-            console.log(Messages.find({chatID: chatID}).count());
+            console.log('Number of messages: ' + Messages.find({chatID: chatID}).count());
             return Messages.find({chatID: chatID});
         };
 
@@ -86,9 +91,10 @@ angular.module('app.services', [])
         };
 
         return {
+            createChat: createChat,
             getChats: getChats,
             getOneChat: getOneChat,
+            getChatByUserId: getChatByUserId,
             getMessages: getMessages,
-            getChatByUserId: getChatByUserId
         }
     })

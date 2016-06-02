@@ -301,8 +301,13 @@ angular.module('app.controllers', [])
             console.log(userId);
             $scope.closeModal();
             var chat = Chat.getChatByUserId(userId);
-            if(!chat) return;
-            $state.go('menu.chat', {chatId: chat._id});
+            if(chat) {
+                Chats.update({_id: chat._id}, {$set: {status: "open"}});
+                $state.go('menu.chat', {chatId: chat._id});
+            } else {
+                var chatID = Chat.createChat(userId);
+                $state.go('menu.chat', {chatId: chatID});
+            }
         };
 
         $scope.helpers({
@@ -336,24 +341,23 @@ angular.module('app.controllers', [])
      * @summary Controller for chatting functions within chats.
      */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
-        // Load chat info
-        var chat = Chat.getOneChat($stateParams.chatId);
-        //    console.log($stateParams.chatId);
-        //    console.log(chat._id);
-
+        var chatID = $stateParams.chatId;
+        console.log('Entered chat '+chatID);
 
         $scope.sendMessage = function () {
             console.log("sending message");
         };
 
         $scope.helpers({
-            messages: function () {
-                return Chat.getMessages(chat._id);
+            chat: function () {
+                return Chat.getOneChat(chatID);
             },
-            loggedinUserID: function () {
-                return Meteor.userId();
+            messages: function () {
+                return Chat.getMessages(chatID);
             }
         });
+
+        console.log($scope.messages);
     })
 
     .controller('postCtrl', function ($scope, $ionicModal) {
