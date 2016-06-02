@@ -366,9 +366,9 @@ angular.module('web.controllers', ['ui.bootstrap'])
                  var updatedProfile = {
                     firstName: $scope.user.firstName,
                     lastName: $scope.user.lastName,
-                    type: 'pr',
-                    clubID: "PSV",
-                    teamID: ''
+                    type: Meteor.user().profile.type,
+                    clubID: Meteor.user().profile.clubID,
+                    teamID: Meteor.user().profile.teamID
                 };
                 
                 $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function(result){
