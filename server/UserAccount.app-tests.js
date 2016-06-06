@@ -118,7 +118,8 @@ if (Meteor.isServer) {
             testUser.profile = testProfile;
             // Update the profile of the previous created user with the new testProfile
             try {
-                Meteor.call('updateUserProfile',testUser._id, testProfile);
+                var printing = Meteor.call('updateUserProfile',testUser._id, testProfile);
+                console.log('Hai '+printing);
                 // Should succeed
                 done();
             } catch (err) {
@@ -213,6 +214,21 @@ if (Meteor.isServer) {
                 assert.fail();
             } catch (err) {}
 
+        });
+        /**
+         * @summary Deleting the PR user.
+         * It tries to remove the previously created PR user.
+         * This should succeed.
+         */
+        it("Reset the database", (done) => {
+            // Remove the user from the collection
+            try {
+                Meteor.users.remove(testPr._id);
+                // Should succeed
+                done();
+            } catch (err) {
+                assert.fail();
+            }
         });
     });
 }
