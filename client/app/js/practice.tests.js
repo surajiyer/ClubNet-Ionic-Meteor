@@ -1,8 +1,13 @@
+ import 'angular-mocks';
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
-import 'controllers/controllers';
-import 'services/services';
-import 'routes';
+import {Meteor} from 'meteor/meteor';
+import {Accounts} from 'meteor/accounts-base';
+import {Tracker} from 'meteor/tracker';
+
+import './controllers';
+import './services';
+import './routes';
 import '/model/Feed';
 
 import { feedItemTypesSchema } from '/imports/schemas/feedItems';
@@ -72,7 +77,7 @@ describe('feedCtrl', () => {
         scope.itemTypes = '';
         scope.updateItemTypes();
         setTimeout(() => {
-            console.log('afterUpdate')
+            console.log('afterUpdate');
             console.log(scope.itemTypes);
             done();
         }, 500);
