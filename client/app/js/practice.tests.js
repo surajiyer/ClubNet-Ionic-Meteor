@@ -1,16 +1,13 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
-import {Meteor} from 'meteor/meteor';
-import {Accounts} from 'meteor/accounts-base';
-import {Tracker} from 'meteor/tracker';
-import './controllers.js';
-import './services.js';
-import './routes.js';
-import '/model/Feed.js';
+import 'controllers/controllers';
+import 'services/services';
+import 'routes';
+import '/model/Feed';
 
 import { feedItemTypesSchema } from '/imports/schemas/feedItems';
 
-import '/model/ItemTypes.js'
+import '/model/ItemTypes'
 
 var scope, meteor, state, ctrl;
 //van 3 tot 5

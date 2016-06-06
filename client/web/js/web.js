@@ -6,11 +6,11 @@
 // 'web.controllers' is found in controllers.js
 angular.module('web', ['angular-meteor',
 	'ui.bootstrap',
+    'color.picker',
     'ui.router',
     'web.controllers',
     'web.routes',
-    'web.translation',
-    'color.picker']);
+    'web.translation']);
 
 function onReady() {
     angular.bootstrap(document, ['web']);

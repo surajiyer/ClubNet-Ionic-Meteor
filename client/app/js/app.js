@@ -6,13 +6,13 @@
 // 'app.services' is found in services.js
 // 'app.controllers' is found in controllers.js
 angular.module('app', ['angular-meteor',
-    'ionic',
     'ngCordova',
-    'app.controllers',
-    'app.routes',
-    'app.services',
+    'ionic',
+    'app.config',
     'app.directives',
-    'app.config'])
+    'app.services',
+    'app.controllers',
+    'app.routes'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {
@@ -28,8 +28,6 @@ angular.module('app', ['angular-meteor',
             }
         });
     });
-
-
 
 function onReady() {
     angular.bootstrap(document, ['app']);

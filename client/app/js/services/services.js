@@ -20,7 +20,7 @@ angular.module('app.services', [])
          */
         this.getPermission = function (itemType, permission, callback) {
             Meteor.call('checkRights', itemType, permission, function (err, result) {
-                if (err) throw new Meteor.Error(err.error);
+                if (err) throw new Meteor.Error(err.reason);
                 if (typeof result !== 'boolean')
                     throw new Meteor.Error('Unexpected result type');
                 callback(result);
@@ -29,7 +29,7 @@ angular.module('app.services', [])
     })
 
     .service('Chat', function () {
-        var handle = Meteor.subscribe('Chats');
+        Meteor.subscribe('Chats');
 
         /**
          * Get all chats sorted on most recently used.
@@ -39,20 +39,12 @@ angular.module('app.services', [])
         };
 
         /**
-         * Get chats associated with the given recipient userId
-         * @param userId String id of the recipient user
-         * @returns {any}
-         */
-        const getChatByUserId = function (userId) {
-            return Chats.find({users: userId}).fetch()[0];
-        };
-
-        /**
          * Load chat info into passed object with given chat ID
          * @param chatID String id of the chat
+         * @param done callback to call upon retrieving chat
          * @returns {*|any}
          */
-        const getOneChat = function (chatID) {
+        const getOneChat = function (chatID, done) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
 
             // Get recipient user
@@ -61,26 +53,21 @@ angular.module('app.services', [])
             recipient = Meteor.users.find({_id: recipient}).fetch()[0];
 
             // Load the chat title to the recipient name
-            currentChat.title = recipient.profile.firstName + " " + recipient.profile.lastName;currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
+            currentChat.title = recipient.profile.firstName + " " + recipient.profile.lastName;
+
+            // Load the chat picture
             currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
 
-            Meteor.subscribe('Messages', currentChat._id, currentChat.lastMessage, function () {
-                currentChat.lastMessage = Messages.find({_id: currentChat.lastMessage}).fetch()[0];
+            // Get the last message
+            Meteor.call('getMessage', currentChat.lastMessage, function (err, result) {
+                console.log('getMessage(): result ' + result);
+                if (result) {
+                    currentChat.lastMessage = result;
+                    done();
+                }
             });
 
             return currentChat;
-        };
-
-        /**
-         * @summary Creates a chat between the currently logged-in user
-         * and another recipient user
-         * @param userId String id of the recipient user
-         * @returns {any}
-         */
-        const createChat = function(userId) {
-            return Chats.insert({
-                users: [Meteor.userId(), userId]
-            });
         };
 
         /**
@@ -91,26 +78,9 @@ angular.module('app.services', [])
             return Messages.find({chatID: chatID});
         };
 
-        /**
-         * Change the status of the chat
-         * @param chatId String id of chat
-         * @param newStatus String status message
-         */
-        const changeStatus = function (chatId, newStatus) {
-            Chats.update({_id: chatId}, {$set: {status: newStatus}});
-        };
-
-        const sendMessage = function (chatId, message) {
-            return Messages.insert({chatID: chatId, message: message});
-        };
-
         return {
-            createChat: createChat,
             getChats: getChats,
             getOneChat: getOneChat,
-            getChatByUserId: getChatByUserId,
-            updateChatStatus: changeStatus,
-            sendMessage: sendMessage,
             getMessages: getMessages,
         }
     })

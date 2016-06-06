@@ -1,6 +1,5 @@
 import * as utils from '/imports/common';
 import {userSchema, userProfileSchema} from '/imports/schemas/users';
-import {notesSchema} from '/imports/schemas/misc';
 import {Meteor} from 'meteor/meteor';
 
 process.env.MAIL_URL = "smtp://clubnet.noreply%40gmail.com:y4VP3Hq2Lvbs@smtp.gmail.com:587/";
@@ -197,36 +196,5 @@ Meteor.methods({
         check(Meteor.userId(), String);
         var teamID = utils.getUserTeamID(Meteor.userId());
         return Meteor.users.find({type: 'player', 'profile.teamID': teamID}).count();
-    },
-    /**
-     * @summary Function for adding a note.
-     * It will first check whether the parameters adhere to the schema.
-     * If so, it will store the note as a part of the user.
-     * @method addNote
-     * @param newNote The note that needs to be added.
-     */
-    addNote: function (newNote) {
-        check(newNote, notesSchema);
-        Meteor.users.update(
-            {_id: Meteor.userId()},
-            {$push: {'notes': newNote}}
-        );
-    },
-    /**
-     * @summary Function for updating a note.
-     * It will first check whether the parameters adhere to the schema.
-     * If so, it will find the note and update the text.
-     * @method updateNote
-     * @param newNote The note that needs to be updated, but with different text.
-     */
-    updateNote: function (newNote) {
-        check(newNote, notesSchema);
-        Meteor.users.update(
-            {
-                _id: Meteor.userId(),
-                notes: {$elemMatch: {itemID: newNote.itemID}}
-            },
-            {$set: {"notes.$.text": newNote.text}}
-        );
     }
 });

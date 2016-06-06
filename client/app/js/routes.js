@@ -78,7 +78,7 @@ angular.module('app.routes', [])
                 url: '/chats',
                 views: {
                     'side-menu-content': {
-                        templateUrl: 'client/app/views/chats.ng.html',
+                        templateUrl: 'client/app/views/chats/chats.ng.html',
                         controller: 'chatsCtrl'
                     }
                 }
@@ -88,7 +88,7 @@ angular.module('app.routes', [])
                 url: '/chats/:chatId',
                 views: {
                     'side-menu-content': {
-                        templateUrl: 'client/app/views/chat.ng.html',
+                        templateUrl: 'client/app/views/chats/chat.ng.html',
                         controller: 'chatCtrl'
                     }
                 }

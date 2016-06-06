@@ -1,15 +1,8 @@
 angular.module('web.routes', [])
     .config(function ($stateProvider, $urlRouterProvider) {
-
-        // Ionic uses AngularUI Router which uses the concept of states
-        // Learn more here: https://github.com/angular-ui/ui-router
-        // Set up the various states which the app can be in.
-        // Each state's controller can be found in controllers.js
-
         /**
-         *       Routes for the web interface
+         * Routes for the web interface. Uses AngularUI Router.
          */
-
         $stateProvider
             .state('/', {
                 url: '/',
@@ -115,10 +108,10 @@ angular.module('web.routes', [])
 
         $urlRouterProvider.otherwise('/');
     })
+
     .run(function($rootScope, $location, $state) {
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                     , fromState, fromParams) {
-                                                        
             if(toState.name === "login" || toState.name === "enroll" || toState.name === "reset"){
                 return; // no need to redirect
             }

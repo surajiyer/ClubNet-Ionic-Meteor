@@ -1,7 +1,8 @@
 import * as utils from '/imports/common';
 import feedItemSchemas from '/imports/schemas/feedItems';
 import responseSchemas from '/imports/schemas/responses';
-import { HTTP } from 'meteor/http'
+import {notesSchema} from '/imports/schemas/misc';
+import {HTTP} from 'meteor/http'
 
 Items = new Mongo.Collection("Items");
 Responses = new Mongo.Collection("FeedResponses");
@@ -66,16 +67,17 @@ Meteor.startup(function () {
             }
             check(limit, Number);
             check(itemTypes, [String]);
+            var teamLevelSelector = [{teamID: {$exists: false}}];
             var teamID = utils.getUserTeamID(this.userId);
+            if (teamID) {
+                teamLevelSelector.push({teamID: {$exists: true, $eq: teamID}});
+            }
             var clubID = utils.getUserClubID(this.userId);
             return Items.find({
                 type: {$in: itemTypes},
                 clubID: clubID,
-                $or: [
-                    {teamID: {$exists: false}},
-                    {teamID: {$exists: true, $eq: teamID}}
-                ]
-            },{
+                $or: teamLevelSelector
+            }, {
                 sort: {
                     sticky: -1,
                     createdAt: -1
@@ -104,7 +106,7 @@ if (Meteor.isServer) {
          * If so, it will add the feed item to the collection.
          * @method addFeedItem
          * @param {Object} newItem The feed item to add.
-         * @returns {WriteResult} The result of the insert action
+         * @returns {String} The ObjectID of the inserted feed item
          */
         addFeedItem: function (newItem) {
             check(newItem, Object);
@@ -112,22 +114,16 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for retrieving a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method getFeedItem
-         * @param {String} id The id of the feed item for which the information needs to be retrieved.
+         * @param {String} id The String Id of the feed item for which the information needs to be retrieved.
          * @returns {Object} The retrieved feed item
          */
         getFeedItem: function (id) {
             check(id, String);
-            return result = Items.find({_id: id}).fetch()[0];
+            return Items.find({_id: id}).fetch()[0];
         },
         /**
          * @summary Function for updating the information of a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will update the feed item with the new information.
-         * @method updateFeedItem
-         * @param {Object} updatedItem The new data of the feed item.
+         * @param {Object} updatedItem The updated fields of an existing feed item.
          */
         updateFeedItem: function (updatedItem) {
             // updatedItem.creatorID = Meteor.userId();
@@ -142,14 +138,12 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for deleting a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will delete the feed item.
-         * @method deleteFeedItem
-         * @param {String} itemID The feed item that should be deleted.
+         * @param {String} itemID The String Id of the feed item that should be deleted.
+         * @returns {Object} The deleted feed item
          */
         deleteFeedItem: function (itemID) {
             check(itemID, String);
-            Items.remove({_id: itemID});
+            return Items.remove({_id: itemID});
         },
         /**
          * @summary Function for retrieving a the type of a feed item.
@@ -169,9 +163,6 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for retrieving responses of a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method getResponsesOfOnItem
          * @param {String} itemID The id of the feed item for which the responses need to be retrieved.
          * @returns {Array} The responses of the feed item
          */
@@ -185,9 +176,6 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for retrieving the response of the currently logged in user to a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method getResponse
          * @param {String} itemID The id of the feed item for which the response needs to be retrieved.
          * @returns {Object} The response
          */
@@ -198,9 +186,6 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for deleting a response of the currently logged in user to a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method deleteResponse
          * @param {String} itemID The id of the feed item for which response needs to be deleted.
          */
         deleteResponse: function (itemID) {
@@ -210,9 +195,6 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for retrieving the responses to feed items of a certain type.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method getResponsesOfItemType
          * @param {String} itemType The type of the feed items for which the responses needs to be retrieved.
          * @returns {Array} The responses
          */
@@ -222,13 +204,10 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for posting a response to a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method putResponse
-         * @param {String} itemID The id of the feed item for which the response needs to be added.
+         * @param {String} itemID The String Id of the feed item for which the response needs to be added.
          * @param {String} itemType The type of the feed item for which the response needs to be added.
          * @param {String} value The value of the response.
-         * @returns {WriteResult} The result of the insert action
+         * @returns {String} The Id of the inserted response
          */
         putResponse: function (itemID, itemType, value) {
             check(itemID, String);
@@ -257,64 +236,97 @@ if (Meteor.isServer) {
             votes = Meteor.call('getResponsesOfOneItem', itemID);
             result = [[0, 0, 0]];
             votes.forEach(function (vote) {
-                result[0][Number(vote.value)-1]++;
+                result[0][Number(vote.value) - 1]++;
             });
             return result;
         },
-        getBettingResults: function (itemID) {
-        },
         /**
          * @summary Function for retrieving a list of trainings.
-         * @method getTrainings
          * @returns {Array} The trainings
          */
-        getTrainings: function() {
+        getTrainings: function () {
             try {
                 var obj = HTTP.call("GET", Meteor.absoluteUrl("trainings.json"));
                 obj = obj.data;
                 for (var training in obj) {
-                    obj[training] = obj[training]['training'+(parseInt(training)+1)];
+                    obj[training] = obj[training]['training' + (parseInt(training) + 1)];
                 }
                 return obj;
-            } catch(err) {
+            } catch (err) {
                 throw new Meteor.Error(err.message);
             }
         },
         /**
          * @summary Function for retrieving a training.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method getTrainingObj
-         * @param {String} trainingID The id of the training which needs to be retrieved.
+         * @param {String} trainingID The String Id of the training which needs to be retrieved.
          * @returns {Object} The training
          */
-        getTrainingObj: function(trainingID) {
+        getTrainingObj: function (trainingID) {
             check(trainingID, String);
             var trainings = Meteor.call("getTrainings");
-            return _.find(trainings, function(obj){ return obj.trId == trainingID; });
+            return _.find(trainings, function (obj) {
+                return obj.trId == trainingID;
+            });
         },
         /**
          * @summary Function for retrieving the exercises of a training.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method getExercises
-         * @param {String} trainingID The id of the training for which the exercises need to be retrieved.
+         * @param {String} trainingID The String Id of the training for which the exercises need to be retrieved.
          * @returns {Array} The exercises of a training
          */
-        getExercises: function(trainingID) {
+        getExercises: function (trainingID) {
             check(trainingID, String);
             var trainings = Meteor.call("getTrainings");
-            trainings = _.find(trainings, function(tr){ return tr.trId == trainingID; });
+            trainings = _.find(trainings, function (tr) {
+                return tr.trId == trainingID;
+            });
             return trainings.exercises;
         },
         /**
          * @summary Function for retrieving the number of all items that could be retrieved
-         * @method getItemsCount
          * @returns {Number} The number of feed items that could be retrieved for an user
          */
-        getItemsCount: function() {
+        getItemsCount: function () {
             var clubID = Meteor.user().profile.clubID;
-            return Items.find({clubID: clubID}).count();
+            var teamID = Meteor.user().profile.teamID;
+            var teamLevelSelector = [{teamID: {$exists: false}}];
+            if (teamID) {
+                teamLevelSelector.push({teamID: {$exists: true, $eq: teamID}});
+            }
+            return Items.find({clubID: clubID, $or: teamLevelSelector}).count();
         },
-    })
+        /**
+         * @summary Function for adding a note.
+         * It will first check whether the parameters adhere to the schema.
+         * If so, it will store the note as a part of the user.
+         * @method addNote
+         * @param newNote The note that needs to be added.
+         */
+        addNote: function (newNote) {
+            check(newNote, notesSchema);
+            Meteor.users.update(
+                {_id: Meteor.userId()},
+                {$push: {'notes': newNote}}
+            );
+        },
+        /**
+         * @summary Function for updating a note.
+         * It will first check whether the parameters adhere to the schema.
+         * If so, it will find the note and update the text.
+         * @method updateNote
+         * @param newNote The note that needs to be updated, but with different text.
+         */
+        updateNote: function (newNote) {
+            check(newNote, notesSchema);
+            Meteor.users.update(
+                {
+                    _id: Meteor.userId(),
+                    notes: {$elemMatch: {itemID: newNote.itemID}}
+                },
+                {$set: {"notes.$.text": newNote.text}}
+            );
+        },
+        makeItemSticky: function(itemID) {
+            check(itemID, String);
+        }
+    });
 }

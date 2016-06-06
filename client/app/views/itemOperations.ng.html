@@ -1,10 +1,10 @@
-<ion-popover-view>
+<ion-popover-view style="height: 163px !important;">
     <ion-content>
         <div class="list">
-            <a class="item" ng-click="openVoting(item._id); closePopover()">
+            <a class="item" ng-if="showEdit" ng-click="editItem(item._id); closePopover()">
                 <i class="icon ion-edit"></i> Edit
             </a>
-            <a class="item" ng-click="deleteItem(item._id); closePopover()">
+            <a class="item" ng-if="showDelete" ng-click="deleteItem(item._id); closePopover()">
                 <i class="icon ion-ios-trash"></i> Delete
             </a>
             <a class="item">

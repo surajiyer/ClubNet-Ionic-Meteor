@@ -9,7 +9,7 @@
         <div class="message-list">
             <div ng-repeat="message in messages" class="message-wrapper">
                 <div class="message"
-                     ng-class="isMe(message.senderID) ? 'message-mine' : 'message-other'">
+                     ng-class="isMyMessage(message.senderID) ? 'message-mine' : 'message-other'">
                     <div class="message-text">{{ message.message }}</div>
                     <span class="message-timestamp">{{ message.createdAt | date: 'h:mm a' }}</span>
                 </div>
@@ -21,7 +21,10 @@
         <label class="item-input-wrapper">
             <input ng-model="message"
                    dir="auto"
-                   type="text"/>
+                   type="text"
+                   on-return="sendMessage(); closeKeyboard()"
+                   on-focus="inputUp()"
+                   on-blur="inputDown()"/>
         </label>
         <button ng-disabled="!message || message.length <= 0"
                 ng-click="sendMessage()"

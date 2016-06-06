@@ -1,9 +1,3 @@
-<div class="item item-divider feed-icon" ng-controller="controlItemCtrl" ng-click="showFullItem($event, false)">
-    <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt="" />
-    {{itemType.name}} <span ng-if="hasEnded">(completed)</span>
-    <i class="icon ion-more" ng-if="showEdit" ng-click="openPopover($event)" id="icon-expand"></i>
-    <i class="icon ion-arrow-shrink show-full" ng-if="isFull" id="icon-expand"></i>
-</div>
 <div class="item item-body">
     <p>
         Training: {{item.training_date | date:'MM/dd/yyyy @ h:mma'}}
@@ -45,4 +39,3 @@
 <div class="item item-body" ng-if="(item.intermediatePublic) || (hasEnded && item.finalPublic) || isCoach">
     <canvas id="bar" class="chart chart-bar" chart-data="chartValues" chart-labels="chartLabels"></canvas>
 </div>
-<div class="gradient" ng-click="showFullItem($event, true)">Read more <i class="icon ion-android-arrow-down"></i></div>

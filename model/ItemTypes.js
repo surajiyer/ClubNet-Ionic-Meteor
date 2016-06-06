@@ -1,13 +1,16 @@
 import {feedItemTypesSchema} from '/imports/schemas/feedItems';
+
 /**
- * @summary Rules and Methods for the TypesCollection collection.
- * On startup it will set the deny rules and attach the feedItemTypesSchema
- * This collection holds all the possible types of items that can be created.
- * @instancename TypesCollection
- * @param {Function} Function to execute on startup.
+ * This collection holds all the possible types of feed items that can be created
+ * @type {Mongo.Collection}
  */
 TypesCollection = new Mongo.Collection("ItemTypes");
 
+/**
+ * @summary Rules and Methods for the TypesCollection collection.
+ * On startup it will set the deny rules and attach the feedItemTypesSchema
+ * @param {Function} Function to execute on startup.
+ */
 Meteor.startup(function () {
     // Attach item types schema
     TypesCollection.attachSchema(feedItemTypesSchema);
@@ -25,18 +28,26 @@ Meteor.startup(function () {
             return true;
         }
     });
+
+    if (Meteor.isServer) {
+        /**
+         * @summary Publish method for subscribers to get the items in the collection
+         * @method ItemTypes
+         * @returns {Object} The item types in the collection.
+         */
+        Meteor.publish('ItemTypes', function () {
+            // Check if you have the right to view this type
+            var types = TypesCollection.find().fetch();
+            types = _.pluck(types, '_id');
+            // types = _.filter(types, function (type) {
+            //     return Meteor.call('checkRights', type, 'view');
+            // });
+            return TypesCollection.find({_id: {$in: types}});
+        });
+    }
 });
 
 if (Meteor.isServer) {
-    /**
-     * @summary Publish method for subscribers to get the items in the collection
-     * @method ItemTypes
-     * @returns {Object} The item types in the collection.
-     */
-    Meteor.publish('ItemTypes', function () {
-        return TypesCollection.find({});
-    });
-
     Meteor.methods({
         /**
          * @summary Function for getting all the item types in the collection

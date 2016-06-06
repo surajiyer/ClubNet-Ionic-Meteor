@@ -117,10 +117,6 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
                 return false;
         }
     },
-    nrVoters: {
-        type: Number,
-        min: 1
-    },
     nrVotes: {
         type: Number,
         min: 0,
@@ -128,11 +124,6 @@ const votingPollSchema = new SimpleSchema([baseFeedItemSchema, {
         autoValue: function () {
             if (this.isInsert)
                 return 0;
-        },
-        custom: function () {
-            // Set nrVoters field as a custom max value for nrVotes
-            if (this.value > this.siblingField('nrVoters').value)
-                return "maxVotes";
         }
     },
     ended: {

@@ -1,7 +1,6 @@
 const messages = new SimpleSchema({
     senderID: {
         type: String,
-        optional: true,
         autoValue: function () {
             return Meteor.userId();
         },
@@ -14,7 +13,6 @@ const messages = new SimpleSchema({
     },
     createdAt: {
         type: Date,
-        optional: true,
         autoValue: function () {
             if (this.isInsert)
                 return new Date;
@@ -39,7 +37,7 @@ const chats = new SimpleSchema({
     },
     lastMessage: {
         type: String,
-        optional: true
+        defaultValue: ''
     }
 });
 

@@ -25,22 +25,28 @@
         <!-- Memorial comment for koen's first commit-->
         <!-- Add div infinite-scroll=loadMore() here-->
         <div id="feeditems" class="main-content">
-            <div ng-repeat="item in items" ng-switch="item.type" ng-controller="ItemCtrl">
+            <div ng-repeat="item in items" ng-switch="item.type" ng-if="item">
                 <div class="list card {{item.sticky}}" style="margin-top: 10px; margin-bottom: 10px;">
+                    <div class="item item-divider feed-icon" ng-controller="controlItemCtrl"
+                         ng-click="showFullItem($event, false)">
+                        <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt=""/>
+                        {{itemType.name}} <span ng-if="itemType._id == 'Voting' && hasEnded">(completed)</span>
+                        <i class="icon ion-more" ng-if="showEdit" ng-click="openPopover($event)" id="icon-expand"></i>
+                        <i class="icon ion-arrow-shrink show-full" ng-if="isFull" id="icon-expand"></i>
+                    </div>
                     <post item="item" ng-switch-when="Post"></post>
                     <formdir item="item" ng-switch-when="Form"></formdir>
                     <voting item="item" ng-switch-when="Voting"></voting>
                     <hero item="item" ng-switch-when="Heroes"></hero>
+                    <div class="gradient" ng-click="showFullItem($event, true)">Read more <i
+                            class="icon ion-android-arrow-down"></i></div>
                 </div>
             </div>
         </div>
     </ion-content>
 
     <div class="tabs tabs-icon-only" ng-if="showCoachBar">
-        <a class="tab-item" ui-sref="menu.polls">
-            <i class="icon ion-chatbubbles"></i>
-        </a>
-        <a class="tab-item" ng-controller="popoverCtrl">
+        <a class="tab-item" ng-controller="newItemCtrl">
             <i class="icon ion-plus" ng-click="openPopover($event)"></i>
         </a>
     </div>
