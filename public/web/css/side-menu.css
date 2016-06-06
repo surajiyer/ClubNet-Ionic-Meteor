@@ -63,8 +63,17 @@ This styles the menu heading.
     font-weight: bold;
     text-decoration: none;
     text-align: center;
-    height: 50px;
+    height: 40px;
     font-size: 1.2em;
+    color: #fff;
+    margin: 0;
+}
+
+#menu .pure-menu-subheading {
+    text-decoration: none;
+    text-align: center;
+    height: 30px;
+    font-size: 1.0em;
     color: #fff;
     margin: 0;
 }
@@ -72,6 +81,11 @@ This styles the menu heading.
 #menu .pure-menu-heading a {
     text-decoration: none;
 }
+
+#menu .pure-menu-subheading a {
+    text-decoration: none;
+}
+
 
 /* -- Dynamic Button For Responsive Menu -------------------------------------*/
 
