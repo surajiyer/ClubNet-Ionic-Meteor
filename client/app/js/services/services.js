@@ -41,11 +41,12 @@ angular.module('app.services', [])
 
         /**
          * Get message of given message Id
+         * @param chatId String Id of chat to which the message belongs
          * @param messageId String Id of requested message
          * @param callback method to execute with retrieved message as a parameter
          * @returns {any}
          */
-        const getMessage = function (messageId, callback) {
+        const getMessage = function (chatId, messageId, callback) {
             check(messageId, String);
 
             // Check if user has permission to view messages
@@ -53,15 +54,18 @@ angular.module('app.services', [])
                 if (!hasPermission) throw new Meteor.Error('Insufficient permissions');
 
                 // Get message
-                var message = Messages.find({_id: messageId}).fetch()[0];
-                if(!message) return;
+                Meteor.subscribe('Messages', chatId, messageId, function () {
+                    console.log(Messages.find().fetch());
+                    var message = Messages.find({_id: messageId}).fetch()[0];
+                    if (!message) return;
 
-                // Check if logged-in user is part of the chat
-                var chat = Chats.find({_id: message.chatID}).fetch()[0];
-                var isPartOfChat = _.contains(chat.users, Meteor.userId());
-                if (!isPartOfChat) throw new Meteor.Error('Insufficient permissions');
+                    // Check if logged-in user is part of the chat
+                    var chat = Chats.find({_id: message.chatID}).fetch()[0];
+                    var isPartOfChat = _.contains(chat.users, Meteor.userId());
+                    if (!isPartOfChat) throw new Meteor.Error('Insufficient permissions');
 
-                callback(message);
+                    callback(message);
+                });
             });
         };
 
@@ -105,7 +109,7 @@ angular.module('app.services', [])
             currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
 
             // Get the last message
-            getMessage(currentChat.lastMessage, function(message) {
+            getMessage(currentChat._id, currentChat.lastMessage, function (message) {
                 currentChat.lastMessage = message;
                 if (done) done();
             });
