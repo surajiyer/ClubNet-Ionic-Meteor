@@ -4,6 +4,7 @@ import { clubSchema } from '/imports/schemas/misc';
 Clubs = new Mongo.Collection("Clubs");
 
 Meteor.startup(function () {
+
     Clubs.allow({
         // only allow posting if you are logged in and other validations
         insert: function (userId, doc) {
