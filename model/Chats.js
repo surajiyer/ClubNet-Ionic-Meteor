@@ -15,7 +15,7 @@ if (Meteor.isServer) {
         var selector = {};
         selector.chatID = chatId;
         if (messageId) selector._id = messageId;
-        return Messages.find(selector);
+        return Messages.find(selector, {sort: {createdAt: 1}});
     });
 }
 
@@ -70,7 +70,6 @@ Meteor.startup(function () {
             var hasPermission = Meteor.call('checkRights', 'Messages', 'create');
             // Allow update only if chat status is 'open'
             var chatIsOpen = chat.status == 'open';
-            console.log('allowed: '+isValidUser && hasPermission && chatIsOpen);
             return isValidUser && hasPermission && chatIsOpen;
         },
         update: function () {
@@ -91,85 +90,68 @@ Meteor.startup(function () {
     Messages.attachSchema(messages);
 });
 
-Meteor.methods({
-    /**
-     * Get chats associated with the given recipient userId
-     * @param userId String id of the recipient user
-     * @returns {any}
-     */
-    getChatByUserId: function (userId) {
-        return Chats.find({users: userId}).fetch()[0];
-    },
-    /**
-     * @summary Creates a chat between the currently logged-in user
-     * and another recipient user
-     * @param userId String id of the recipient user
-     * @returns {any}
-     */
-    createChat: function (userId) {
-        return Chats.insert({
-            users: [Meteor.userId(), userId]
-        });
-    },
-    /**
-     * Adds a message to the chat with the given chatId
-     * @param chatId String Id of the chat
-     * @param message String message
-     * @returns {any}
-     */
-    sendMessage: function (chatId, message) {
-        check(chatId, String);
-        check(message, String);
-
-        if(!this.isSimulation) {
-            // Check if user has permission to view messages
-            var hasPermission = Meteor.call('checkRights', 'Messages', 'insert');
-            if (!hasPermission) throw new Meteor.Error(401, 'Insufficient permissions');
-        }
-
-        // Add the message to the database
-        var messageID = Messages.insert({chatID: chatId, message: message});
-        // If added correctly, update last message of chat
-        if(messageID) {
-            Chats.update(chatId, {$set: {lastMessage: messageID}});
-        }
-
-        return messageID;
-    },
-    /**
-     * Get message of given message Id
-     * @param messageId String Id of requested message
-     * @returns {any}
-     */
-    getMessage: function (messageId) {
-        check(messageId, String);
-
-        if(!this.isSimulation) {
-            // Check if user has permission to view messages
-            var hasPermission = Meteor.call('checkRights', 'Messages', 'view');
-            if (!hasPermission) throw new Meteor.Error(401, 'Insufficient permissions');
-        }
-
-        // Get message
-        var message = Messages.find({_id: messageId}).fetch()[0];
-        console.log('getMessage(): messageId '+ messageId);
-        console.log('getMessage(): message ' + message);
-        
-        // Check if logged-in user is part of the chat
-        if(!this.isSimulation) {
-            var chat = Chats.find({_id: message.chatID}).fetch()[0];
-            var isPartOfChat = _.contains(chat.users, Meteor.userId());
-            if (!isPartOfChat) throw new Meteor.Error(401, 'Insufficient permissions');
-        }
-
-        return message;
-    },
-    /**
-     * Change the status of the chat
-     * @param chatId String id of chat
-     * @param newStatus String status message
-     */
-    changeStatus: function (chatId, newStatus) {
-        Chats.update({_id: chatId}, {$set: {status: newStatus}});
-    },
-});
+// Meteor.methods({
+//     /**
+//      * Get chats associated with the given recipient userId
+//      * @param userId String id of the recipient user
+//      * @returns {any}
+//      */
+//     getChatByUserId: function (userId) {
+//         return Chats.find({users: userId}).fetch()[0];
+//     },
+//     /**
+//      * @summary Creates a chat between the currently logged-in user
+//      * and another recipient user
+//      * @param userId String id of the recipient user
+//      * @returns {any}
+//      */
+//     createChat: function (userId) {
+//         return Chats.insert({
+//             users: [Meteor.userId(), userId]
+//         });
+//     },
+//     /**
+//      * Adds a message to the chat with the given chatId
+//      * @param chatId String Id of the chat
+//      * @param message String message
+//      * @returns {any}
+//      */
+//     sendMessage: function (chatId, message) {
+//         check(chatId, String);
+//         check(message, String);
+//
+//         if (!this.isSimulation) {
+//             var chat = Chats.find({_id: chatId}).fetch()[0];
+//             // Checks if user who is inserting is the logged in user and if they are part of the chat
+//             var isValidUser = _.contains(chat.users, Meteor.userId());
+//             // Checks if user has permission to send messages in a chat
+//             var hasPermission = Meteor.call('checkRights', 'Messages', 'create');
+//             // Allow update only if chat status is 'open'
+//             var chatIsOpen = chat.status == 'open';
+//
+//             var allowed = hasPermission && isValidUser && chatIsOpen;
+//             if(!allowed) {
+//                 throw new Meteor.Error(401, 'Insufficient permissions');
+//             }
+//         }
+//
+//         // Add the message to the database
+//         var messageId = Messages.insert({chatID: chatId, message: message});
+//         // If added correctly, update last message of chat
+//         if (messageId) {
+//             Chats.update(chatId, {$set: {lastMessage: messageId}});
+//         }
+//
+//         console.log('sendMessage(): messageId ' + messageId);
+//
+//         return messageId;
+//     },
+//     /**
+//      * Change the status of the chat
+//      * @param chatId String id of chat
+//      * @param newStatus String status message
+//      */
+//     updateChatStatus: function (chatId, newStatus) {
+//         Chats.update({_id: chatId}, {$set: {status: newStatus}});
+//     },
+// });

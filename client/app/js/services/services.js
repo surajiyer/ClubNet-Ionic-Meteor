@@ -25,11 +25,57 @@ angular.module('app.services', [])
                     throw new Meteor.Error('Unexpected result type');
                 callback(result);
             });
-        };
+        }
     })
 
-    .service('Chat', function () {
+    .service('Chat', function (AccessControl) {
         Meteor.subscribe('Chats');
+
+        /**
+         * @summary Get messages of a given chat
+         * @param chatID String id of the chat
+         */
+        const getMessages = function (chatID) {
+            return Messages.find({chatID: chatID}, {sort: {createdAt: 1}});
+        };
+
+        /**
+         * Get message of given message Id
+         * @param messageId String Id of requested message
+         * @param callback method to execute with retrieved message as a parameter
+         * @returns {any}
+         */
+        const getMessage = function (messageId, callback) {
+            check(messageId, String);
+
+            // Check if user has permission to view messages
+            AccessControl.getPermission('Messages', 'view', function (hasPermission) {
+                if (!hasPermission) throw new Meteor.Error('Insufficient permissions');
+
+                // Get message
+                var message = Messages.find({_id: messageId}).fetch()[0];
+                if(!message) return;
+
+                // Check if logged-in user is part of the chat
+                var chat = Chats.find({_id: message.chatID}).fetch()[0];
+                var isPartOfChat = _.contains(chat.users, Meteor.userId());
+                if (!isPartOfChat) throw new Meteor.Error('Insufficient permissions');
+
+                callback(message);
+            });
+        };
+
+        /**
+         * @summary Creates a chat between the currently logged-in user
+         * and another recipient user
+         * @param userId String id of the recipient user
+         * @returns {any}
+         */
+        const createChat = function (userId) {
+            return Chats.insert({
+                users: [Meteor.userId(), userId]
+            });
+        };
 
         /**
          * Get all chats sorted on most recently used.
@@ -44,7 +90,7 @@ angular.module('app.services', [])
          * @param done callback to call upon retrieving chat
          * @returns {*|any}
          */
-        const getOneChat = function (chatID, done) {
+        const getChat = function (chatID, done) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
 
             // Get recipient user
@@ -59,28 +105,60 @@ angular.module('app.services', [])
             currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
 
             // Get the last message
-            Meteor.call('getMessage', currentChat.lastMessage, function (err, result) {
-                console.log('getMessage(): result ' + result);
-                if (result) {
-                    currentChat.lastMessage = result;
-                    done();
-                }
+            getMessage(currentChat.lastMessage, function(message) {
+                currentChat.lastMessage = message;
+                if (done) done();
             });
 
             return currentChat;
         };
 
         /**
-         * @summary Get messages of a given chat
-         * @param chatID String id of the chat
+         * Get chats associated with the given recipient userId
+         * @param userId String id of the recipient user
+         * @returns {any}
          */
-        const getMessages = function (chatID) {
-            return Messages.find({chatID: chatID});
+        const getChatByUserId = function (userId) {
+            return Chats.find({users: userId}).fetch()[0];
+        };
+
+        /**
+         * Adds a message to the chat with the given chatId
+         * @param chatId String Id of the chat
+         * @param message String message
+         * @returns {any}
+         */
+        const sendMessage = function (chatId, message) {
+            check(chatId, String);
+            check(message, String);
+
+            // Add the message to the database
+            var messageId = Messages.insert({chatID: chatId, message: message});
+            // If added correctly, update last message of chat
+            if (messageId) {
+                Chats.update(chatId, {$set: {lastMessage: messageId}});
+            }
+
+            return messageId;
+        };
+
+        /**
+         * Change the status of the chat
+         * @param chatId String id of chat
+         * @param newStatus String status message
+         */
+        const updateChatStatus = function (chatId, newStatus) {
+            Chats.update({_id: chatId}, {$set: {status: newStatus}});
         };
 
         return {
-            getChats: getChats,
-            getOneChat: getOneChat,
             getMessages: getMessages,
+            getOneMessage: getMessage,
+            createChat: createChat,
+            getChats: getChats,
+            getChatByUserId: getChatByUserId,
+            getOneChat: getChat,
+            sendMessage: sendMessage,
+            updateChatStatus: updateChatStatus,
         }
     })
