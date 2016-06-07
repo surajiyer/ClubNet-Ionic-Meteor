@@ -19,24 +19,10 @@
 </head>
 
 <body>
-    <!--TODO: change condition in production-->
-    <!-- If Meteor is running in application -->
-    <div ng-if="!Meteor.isCordova">
+
         <link rel="stylesheet" href="/app/css/ionic.min.css"/>
         <link rel="stylesheet" href="/app/css/style.css"/>
         <ion-nav-bar class="bar-stable"></ion-nav-bar>
         <ion-nav-view animation="slide-left-right-ios7"></ion-nav-view>
-    </div>
-    <!-- If Meteor is running as web interface -->
-    <div ng-if="Meteor.isCordova">
-        <!-- Scripts -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-        <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" href="/web/css/custom.css"/>
 
-        <!-- View for all content (menu + content) -->
-        <div id="layout">
-            <div ui-view style="overflow: auto; height: 100vh;"></div>
-        </div>
-    </div>
 </body>
