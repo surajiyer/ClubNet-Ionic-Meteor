@@ -10,7 +10,7 @@ let testControl;
 let userId = '1';
 let testPr;
 if (Meteor.isServer) {
-    describe('ItemTypes', () => {
+    describe('Access Control', () => {
         
         it("Add Permissions", (done) => {
             // Add schema to Items
@@ -57,11 +57,9 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'testType', 'create');
-                console.log(permission);
                 // Should succeed
                 done();
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
         });
