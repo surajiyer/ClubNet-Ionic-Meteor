@@ -1,7 +1,21 @@
 {
+    "apn": {
+        "passphrase": "WHATEVER_PASSWORD_YOU_SET_ON_YOUR_P12_KEY",
+        "key": "ios/apn-production/PushChatKey.pem",
+        "cert": "ios/apn-production/PushChatCert.pem"
+    },
+    "apn-dev": {
+        "passphrase": "WHATEVER_PASSWORD_YOU_SET_ON_YOUR_P12_KEY",
+        "key": "iosGp/apn-dev/PushChatKey.pem",
+        "cert": "iosGp/apn-dev/PushChatCert.pem"
+    },
     "gcm": {
-    "apiKey": "AIzaSyBXn0mN0Ql8Vudz1aCDkbIcyZv3doTnMRE",
+        "apiKey": "AIzaSyBXn0mN0Ql8Vudz1aCDkbIcyZv3doTnMRE",
         "projectNumber": 360411831675
-},
-    "production": true
+    },
+    "production":true,
+    "badge": true,
+    "sound": true,
+    "alert": true,
+    "vibrate": true
 }
