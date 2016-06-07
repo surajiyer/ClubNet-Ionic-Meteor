@@ -116,7 +116,7 @@ body {
     color: #dadada;
 }
 
-.pure-menu-link, .pure-menu-heading {
+.pure-menu-link, .pure-menu-heading, .pure-menu-subheading {
     display: block;
     text-decoration: none;
     white-space: nowrap;
