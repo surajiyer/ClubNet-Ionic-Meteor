@@ -150,13 +150,9 @@ angular.module('app.controllers', [
          */
         $scope.showEdit = false;
         AccessControl.getPermission($scope.item.type, 'edit', function (result) {
-            if (result) $scope.showEdit = result;
-            // NOT REQUIRED SINCE CREATOR ID CHECK IS DONE ON SERVER
-            // $meteor.call('getFeedItem', $scope.item._id).then(
-            //     function (res) {
-            //         $scope.showEdit = res.creatorID == Meteor.userId();
-            //     }
-            // );
+            if (result) {
+                $scope.showEdit = $scope.item.creatorID == Meteor.userId();
+            }
         });
 
         /**
@@ -177,9 +173,6 @@ angular.module('app.controllers', [
         $scope.openPopover = function ($event) {
             $event.stopPropagation();
             $scope.popover.show($event);
-            var element = angular.element('ion-popover-view');
-            var positionTop = parseInt(element.css('top')) + 40;
-            element.css('top', positionTop+'px');
         };
 
         $scope.closePopover = function () {

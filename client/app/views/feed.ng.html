@@ -26,9 +26,9 @@
         <!-- Add div infinite-scroll=loadMore() here-->
         <div id="feeditems" class="main-content">
             <div ng-repeat="item in items" ng-switch="item.type" ng-if="item">
-                <div class="list card {{item.sticky}}" style="margin-top: 10px; margin-bottom: 10px;">
-                    <div class="item item-divider feed-icon" ng-controller="controlItemCtrl"
-                         ng-click="showFullItem($event, false)">
+                <div class="list card {{item.sticky}}" style="margin-top: 10px; margin-bottom: 10px;"
+                     ng-controller="controlItemCtrl">
+                    <div class="item item-divider feed-icon" ng-click="showFullItem($event, false)">
                         <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt=""/>
                         {{itemType.name}} <span ng-if="itemType._id == 'Voting' && hasEnded">(completed)</span>
                         <i class="icon ion-more" ng-if="showEdit" ng-click="openPopover($event)" id="icon-expand"></i>

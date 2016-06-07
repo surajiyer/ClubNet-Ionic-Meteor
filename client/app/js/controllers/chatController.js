@@ -44,6 +44,7 @@ angular.module('chatControllers', [])
             $scope.closeModal();
             var chat = Chat.getChatByUserId(userId);
             if (chat) {
+                //Meteor.call('updateChatStatus', chat._id, "open");
                 Chat.updateChatStatus(chat._id, "open");
                 $state.go('menu.chat', {chatId: chat._id});
             } else {
@@ -72,6 +73,9 @@ angular.module('chatControllers', [])
      *  @summary Controller for loading information of each chat
      */
     .controller('chatInfoCtrl', function ($scope, Chat) {
+        // Get last message
+        Meteor.subscribe('Messages', $scope.chat._id, $scope.chat.lastMessage);
+
         $scope.helpers({
             // Load chat info
             chat: function () {
@@ -108,13 +112,16 @@ angular.module('chatControllers', [])
             $scope.message.trim();
 
             // Send the message and get the new message Id
-            Meteor.call('sendMessage', chatID, $scope.message, function (e, messageId) {
-                // If message was sent successfully, clear the message field
-                console.log("sendMessage() messageId: " + messageId);
-                if (messageId) {
-                    $scope.message = "";
-                }
-            });
+            var messageId = Chat.sendMessage(chatID, $scope.message);
+            if(messageId) {
+                $scope.message = "";
+            }
+            // Meteor.call('sendMessage', chatID, $scope.message, function (e, messageId) {
+            //     // If message was sent successfully, clear the message field
+            //     if (messageId) {
+            //         $scope.message = "";
+            //     }
+            // });
         };
 
         /**
