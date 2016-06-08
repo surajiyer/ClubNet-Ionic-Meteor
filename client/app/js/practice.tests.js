@@ -4,19 +4,19 @@
 // import {Meteor} from 'meteor/meteor';
 // import {Accounts} from 'meteor/accounts-base';
 // import {Tracker} from 'meteor/tracker';
-
+//
 // import './controllers';
 // import './services';
 // import './routes';
 // import '/model/Feed';
-
+//
 // import { feedItemTypesSchema } from '/imports/schemas/feedItems';
-
+//
 // import '/model/ItemTypes'
-
+//
 // var scope, meteor, state, ctrl;
 // //van 3 tot 5
-
+//
 // function setupTesting(ctrlName) {
 //     beforeEach(angular.mock.module('angular-meteor'));
 //     beforeEach(angular.mock.module('app.services'));
@@ -27,7 +27,7 @@
 //         scope = $rootScope;
 //         meteor = $meteor;
 //         state = $state;
-
+//
 //         ctrl = $controller(ctrlName, {
 //             $scope: scope,
 //             $meteor: meteor,
@@ -35,33 +35,33 @@
 //         });
 //     }));
 // }
-
+//
 // describe('feedCtrl', () => {
 //     setupTesting('feedCtrl');
 //     var accessControl;
-
+//
 //     beforeEach(inject((AccessControl) => {
 //         accessControl = AccessControl;
 //     }));
-
+//
 //     // Add schema to Items
 //     TypesCollection.attachSchema(feedItemTypesSchema);
-    
+//    
 //     TypesCollection.deny( {
 //         insert: sinon.stub().returns(false)
 //     });
-    
+//    
 //     TypesCollection.allow( {
 //         insert: sinon.stub().returns(true)
 //     });
-
+//
 //     // Create item without type
 //     testType = {
 //         _id: '1',
 //         name: 'testType',
 //         icon: 'testType.ClubNet'
 //     };
-
+//
 //     // Adding the custom type
 //     try {
 //         //TypesCollection.remove({});
@@ -70,10 +70,10 @@
 //     } catch (err) {
 //         console.log(err);
 //     }
-
+//
 //     //Kevin
 //     it("Should print ItemTypes", (done) => {
-        
+//        
 //         scope.itemTypes = '';
 //         scope.updateItemTypes();
 //         setTimeout(() => {

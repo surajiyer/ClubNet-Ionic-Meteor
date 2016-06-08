@@ -17,7 +17,6 @@ if (Meteor.isServer) {
     let testPr;
     userId = '1';
     describe('UserAccount', () => {
-
         /**
          * @summary Adding a user with incomplete data throws error
          * This sets up the environment for all the following test cases.
@@ -25,14 +24,6 @@ if (Meteor.isServer) {
          * This should throw an error.
          */
         it("Adding user with incomplete data throws error", (done) => {
-            // Mock user and userId since there is no user logged in while testing
-            // global.Meteor = {
-            //     user: sinon.stub().returns({
-            //         profile : { clubID : '-', type: 'pr'}
-            //     }),
-            //     userId: sinon.stub().returns(userId)
-            // };
-            //another stub
 
             // Add schema to the users collection
             Meteor.users.attachSchema(userSchema);
