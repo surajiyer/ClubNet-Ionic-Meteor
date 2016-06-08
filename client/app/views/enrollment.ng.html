@@ -1,0 +1,19 @@
+<ion-view title="Enrollment">
+    <ion-nav-bar class="bar-stable">
+        <ion-nav-back-button class="button-clear">
+            <i class="ion-arrow-left-c"></i>
+        </ion-nav-back-button>
+    </ion-nav-bar>
+    <ion-content padding="true" class="has-header main-content">
+        <label class="item item-input">
+            <span class="input-label">New password</span>
+            <input type="text" name="newPassword" ng-model="forgotUser.newPassword"/>
+        </label>
+        <label class="item item-input">
+            <span class="input-label">Repeat new password</span>
+            <input type="text" name="confirmNewPassword" ng-model="forgotUser.confirmNewPassword"/>
+        </label>
+        <a ng-click="resetPassword()" id="reset-password" class="button button-positive  button-block">Set
+            Password</a>
+    </ion-content>
+</ion-view>

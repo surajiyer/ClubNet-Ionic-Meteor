@@ -36,6 +36,18 @@ angular.module('app.routes', [])
                 templateUrl: 'client/app/views/forgotPassword.ng.html',
                 controller: 'forgotPasswordCtrl'
             })
+            
+            .state('enrollment', {
+                url: '/enrollment',
+                templateUrl: 'client/app/views/enrollment.ng.html',
+                controller: 'resetPasswordCtrl'
+            })
+            
+            .state('resetPassword', {
+                url: '/resetPassword',
+                templateUrl: 'client/app/views/resetPassword.ng.html',
+                controller: 'resetPasswordCtrl'
+            })
 
             .state('menu', {
                 url: '/side-menu',
