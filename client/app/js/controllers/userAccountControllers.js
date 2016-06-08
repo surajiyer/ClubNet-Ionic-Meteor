@@ -68,6 +68,14 @@ angular.module('userAccountControllers', [])
         $scope.goToRemindPassword = function () {
             $state.go('forgotPassword');
         }
+        
+        // $scope.goToResetPassword = function () {
+        //     $state.go("resetPassword");
+        // }
+        
+        // $scope.goToEnroll = function () {
+        //     $state.go("enrollment");
+        // }
     })
 
     /**
@@ -124,7 +132,6 @@ angular.module('userAccountControllers', [])
         };
     })
     
-
     /**
      *  Profile Controller: provides all functionality for the Profile screen of the app
      */
