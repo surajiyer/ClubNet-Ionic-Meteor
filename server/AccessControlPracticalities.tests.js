@@ -12,10 +12,10 @@ let testPr;
 let testPlayer;
 let testCoach;
 let testG;
-let voting;
-let practicalities;
+let Voting;
+let Form;
 if (Meteor.isServer) {
-    describe('Access Control Practicalities', () => {
+    describe('Access Control Form', () => {
 
 
         it("Set permissions for PR user", (done) => {
@@ -47,20 +47,20 @@ if (Meteor.isServer) {
             };
 
             testPr._id = Accounts.createUser(testPr);
-            console.log("pr added: "+testPr._id);
+            // console.log("pr added: "+testPr._id);
             testPlayer._id = Accounts.createUser(testPlayer);
-            console.log("p added: " + testPlayer._id);
+            // console.log("p added: " + testPlayer._id);
             testCoach._id = Accounts.createUser(testCoach);
-            console.log("c added: " + testCoach._id);
+            // console.log("c added: " + testCoach._id);
             testG._id = Accounts.createUser(testG);
-            console.log("g added: " + testG._id);
+            // console.log("g added: " + testG._id);
 
             // Create item without type
             testControlPr = {
                 _id: 'pr',
-                items: [{_id: 'voting', permissions: {create: true,
+                items: [{_id: 'Voting', permissions: {create: true,
                     edit: true, view: true, delete: true}},
-                    {_id: 'practicalities', permissions: {create: true,
+                    {_id: 'Form', permissions: {create: true,
                         edit: true, view: true, delete: true}}
                 ]
             };
@@ -68,9 +68,9 @@ if (Meteor.isServer) {
             // Create item without type
             testControlP = {
                 _id: 'player',
-                items: [{_id: 'voting', permissions: {create: false,
+                items: [{_id: 'Voting', permissions: {create: false,
                     edit: false, view: true, delete: false}},
-                    {_id: 'practicalities', permissions: {create: true,
+                    {_id: 'Form', permissions: {create: true,
                         edit: true, view: true, delete: true}}
                 ]
             };
@@ -78,9 +78,9 @@ if (Meteor.isServer) {
             // Create item without type
             testControlC = {
                 _id: 'coach',
-                items: [{_id: 'voting', permissions: {create: true,
+                items: [{_id: 'Voting', permissions: {create: true,
                     edit: true, view: true, delete: true}},
-                    {_id: 'practicalities', permissions: {create: true,
+                    {_id: 'Form', permissions: {create: true,
                         edit: true, view: true, delete: true}}
                 ]
             };
@@ -88,34 +88,31 @@ if (Meteor.isServer) {
             // Create item without type
             testControlG = {
                 _id: 'general',
-                items: [{_id: 'voting', permissions: {create: false,
+                items: [{_id: 'Voting', permissions: {create: false,
                     edit: false, view: false, delete: false}},
-                    {_id: 'practicalities', permissions: {create: false,
+                    {_id: 'Form', permissions: {create: false,
                         edit: false, view: false, delete: false}}
                 ]
             };
 
-            voting = {
-                _id: 'voting',
-                name: 'voting',
-                icon: 'voting.ClubNet'
+            Voting = {
+                _id: 'Voting',
+                name: 'Voting',
+                icon: 'Voting.ClubNet'
             };
 
             // Create item without type
-            practicalities = {
-                _id: 'practicalities',
-                name: 'practicalities',
-                icon: 'practicalities.ClubNet'
+            Form = {
+                _id: 'Form',
+                name: 'Form',
+                icon: 'Form.ClubNet'
             };
 
             try {
-                AMx.remove(testControlPr);
-                AMx.remove(testControlP);
-                AMx.remove(testControlC);
-                AMx.remove(testControlG);
+                AMx.remove({});
                 TypesCollection.remove({});
-                TypesCollection.insert(voting);
-                TypesCollection.insert(practicalities);
+                TypesCollection.insert(Voting);
+                TypesCollection.insert(Form);
             } catch(err) {
                 console.log("before: " + err);
             }
@@ -133,11 +130,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("PR user is able to create a practicalities item", (done) => {
+        it("PR user is able to create a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'create');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'create');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -146,11 +143,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("PR user is able to edit a practicalities item", (done) => {
+        it("PR user is able to edit a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'edit');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'edit');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -158,11 +155,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("PR user is able to view a practicalities item", (done) => {
+        it("PR user is able to view a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'view');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'view');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -170,11 +167,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("PR user is able to delete a practicalities item", (done) => {
+        it("PR user is able to delete a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'delete');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'delete');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -198,11 +195,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Player user is not able to create a practicalities item", (done) => {
+        it("Player user is not able to create a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'create');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'create');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -210,11 +207,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Player user is not able to edit a practicalities item", (done) => {
+        it("Player user is not able to edit a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'edit');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'edit');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -222,11 +219,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Player user is able to view a practicalities item", (done) => {
+        it("Player user is able to view a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'view');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'view');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -234,11 +231,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Player user is not able to delete a practicalities item", (done) => {
+        it("Player user is not able to delete a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'delete');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'delete');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -262,11 +259,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Coach user is able to create a practicalities item", (done) => {
+        it("Coach user is able to create a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'create');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'create');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -274,11 +271,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Coach user is able to edit a practicalities item", (done) => {
+        it("Coach user is able to edit a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'edit');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'edit');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -286,11 +283,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Coach user is able to view a practicalities item", (done) => {
+        it("Coach user is able to view a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'view');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'view');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -298,11 +295,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Coach user is able to delete a practicalities item", (done) => {
+        it("Coach user is able to delete a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'delete');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'delete');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -325,11 +322,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("General user is not able to create a practicalities item", (done) => {
+        it("General user is not able to create a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'create');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'create');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -337,11 +334,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("General user is not able to edit a practicalities item", (done) => {
+        it("General user is not able to edit a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'edit');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'edit');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -349,11 +346,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("General user is not able to view a practicalities item", (done) => {
+        it("General user is not able to view a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'view');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'view');
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -361,11 +358,11 @@ if (Meteor.isServer) {
             }
         });
 
-        it("General user is not able to delete a practicalities item", (done) => {
+        it("General user is not able to delete a Form item", (done) => {
             // Remove the user from the collection
             try {
-                var permission = Meteor.call('checkRights', 'practicalities', 'delete');
-                console.log(permission);
+                var permission = Meteor.call('checkRights', 'Form', 'delete');
+                
                 // Should succeed
                 done();
             } catch (err) {
