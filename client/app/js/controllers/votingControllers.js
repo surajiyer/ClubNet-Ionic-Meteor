@@ -1,107 +1,16 @@
 angular.module('votingControllers', [])
 
-    /**
-     *  Voting Controller: provides all functionality for the voting feed item of the app
-     *  @param {String} Name of the controller
-     *  @param {Function}
-     */
+/**
+ *  Voting Controller: provides all functionality for the voting feed item of the app
+ *  @param {String} Name of the controller
+ *  @param {Function}
+ */
     .controller('votingCtrl', function ($scope, $meteor, $ionicModal, $ionicPopup) {
         /* Voting */
-        $scope.newVoting = {};
         $scope.editingItem = 0;
         $scope.postBtn = "Post";
 
-        $scope.trainings = [];
         $scope.exercises = [];
-
-        /**
-         * @summary Function to retrieve trainings
-         */
-        $meteor.call('getTrainings').then(
-            function (result) {
-                $scope.trainings = result;
-            },
-            function (err) {
-                console.log(err);
-            }
-        );
-
-        /**
-         * @summary Function to add a new voting feed item
-         */
-        $scope.addVoting = function () {
-            if ($scope.editingItem == 0) {
-                $scope.newVoting.type = 'Voting';
-                Meteor.call('addFeedItem', $scope.newVoting, function (err) {
-                    // TODO: do something with error (show as popup?)
-                    if (err) throw new Meteor.Error(err.reason);
-                });
-            } else {
-                $scope.newVoting.type = $scope.item.type;
-                $scope.newVoting.published = $scope.item.published;
-                $scope.newVoting.nrVotes = $scope.item.nrVotes;
-                $scope.newVoting.ended = $scope.item.ended;
-                $scope.newVoting.teamID = $scope.item.teamID;
-                $meteor.call('updateFeedItem', $scope.newVoting).then(
-                    function (result) {
-                        $meteor.call("getTrainingObj", $scope.newVoting.training_id).then(
-                            function (result) {
-                                $scope.item.training_date = result.date;
-                            },
-                            function (err) {
-                                throw new Meteor.Error(err.reason);
-                            }
-                        );
-                    },
-                    function (err) {}
-                );
-            }
-            $scope.newVoting = {};
-            $scope.closeVoting();
-            $scope.postBtn = "Post";
-        };
-
-        /**
-         * Get new voting template
-         */
-        $ionicModal.fromTemplateUrl('client/app/views/feedItems/newVoting.ng.html', {
-            scope: $scope
-        }).then(function (votingModal) {
-            $scope.votingModal = votingModal;
-        });
-
-        /**
-         * @summary Function to close the voting
-         */
-        $scope.closeVoting = function () {
-            $scope.votingModal.hide();
-        };
-
-        $scope.$on('editVoting', function(e, itemId) {
-            console.log('hi');
-            $scope.openVoting(itemId);
-        });
-
-        /**
-         * @summary Function to open the voting
-         */
-        $scope.openVoting = function (itemId = 0) {
-            $scope.editingItem = itemId;
-            if (itemId != 0) {
-                $scope.postBtn = "Save";
-                var getElement = Items.findOne({_id: itemId});
-                $scope.newVoting = {
-                    title: getElement.title,
-                    deadline: getElement.deadline,
-                    description: getElement.description,
-                    intermediatePublic: getElement.intermediatePublic,
-                    finalPublic: getElement.finalPublic,
-                    nrVoters: getElement.nrVoters,
-                    training_id: getElement.training_id,
-                };
-            }
-            $scope.votingModal.show();
-        };
 
         /**
          * @summary Function to retrieve and update the voting results
@@ -117,6 +26,26 @@ angular.module('votingControllers', [])
             );
         };
 
+        $scope.$on("loadEditData", function () {
+            $scope.$parent.newItem.deadline = $scope.item.deadline;
+            $scope.$parent.newItem.intermediatePublic = $scope.item.intermediatePublic;
+            $scope.$parent.newItem.finalPublic = $scope.item.finalPublic;
+            $scope.$parent.newItem.nrVoters = $scope.item.nrVoters;
+            $scope.$parent.newItem.training_id = $scope.item.training_id;
+        });
+
+        $scope.$on("successEdit", function (e, res) {
+            $meteor.call("getTrainingObj", res.training_id).then(
+                function (result) {
+                    $scope.item.training_date = result.date;
+                },
+                function (err) {
+                    throw new Meteor.Error(err.reason);
+                }
+            );
+            console.log(res);
+        });
+
         if ($scope.item != null) {
             $scope.hasVoted = false;
             $scope.hasEnded = false;
@@ -125,7 +54,9 @@ angular.module('votingControllers', [])
                 function (result) {
                     $scope.item.training_date = result.date;
                 },
-                function (err) {}
+                function (err) {
+                    throw new Meteor.Error(err.reason);
+                }
             );
 
             $meteor.call('getExercises', $scope.item.training_id).then(
@@ -167,14 +98,6 @@ angular.module('votingControllers', [])
                     console.log(err);
                 }
             );
-            $meteor.call('getTeamSize').then(
-                function (result) {
-                    console.log(result);
-                },
-                function (err) {
-                    console.log(err);
-                }
-            );
 
             // Check if already voted
             $meteor.call('getResponse', $scope.item._id).then(
@@ -189,7 +112,7 @@ angular.module('votingControllers', [])
             // Load results chart
             $scope.chartValues = [[0, 0, 0]];
             $scope.updateChartValues();
-            $scope.chartLabels = [1, 2, 3];
+            $scope.chartLabels = ["", "", ""];
         }
 
         $scope.select = function ($event, index) {
