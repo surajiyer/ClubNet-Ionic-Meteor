@@ -6,7 +6,7 @@ angular.module('app.controllers', [])
 // .controller('InfiniteScroll', function($scope) {
 //     $scope.items = []; //get items from database here?
 //     //use the same functionality as we are now to fetch items from the database
-//    
+//
 //     $scope.loadMore = function() {
 //         //8 is predefined, just sets how many we load each time
 //         for (var i = 1; i <= 8; i++) {
@@ -235,6 +235,9 @@ angular.module('app.controllers', [])
             console.log('Token: ' + JSON.stringify(token));
             alert('Token: ' + JSON.stringify(token));
         });
+        Push.addListener('message', function() {
+            console.log('hi');
+        });
         console.log('Push.id(): ' + Push.id());
         console.log('testas');
         /**
@@ -306,7 +309,7 @@ angular.module('app.controllers', [])
         $scope.openFilter = function () {
             $scope.showFilter = !$scope.showFilter;
         };
-        
+
         $scope.helpers({
             items: function () {
                 return Items.find({}, {sort: {sticky: -1, createdAt: -1}});
@@ -464,7 +467,7 @@ angular.module('app.controllers', [])
          */
         var chatID = $stateParams.chatId;
         Meteor.subscribe('Messages', chatID);
-        
+
         $scope.isMe = function(senderID) {
             return senderID == Meteor.userId();
         }
@@ -480,7 +483,7 @@ angular.module('app.controllers', [])
             if(messageID) {
                 $scope.message = "";
             }
-            
+
             console.log("sendMessage() message: "+$scope.message);
         };
 
