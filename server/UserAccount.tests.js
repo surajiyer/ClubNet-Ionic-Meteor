@@ -17,22 +17,13 @@ if (Meteor.isServer) {
     let testPr;
     userId = '1';
     describe('UserAccount', () => {
-
         /**
          * @summary Adding a user with incomplete data throws error
          * This sets up the environment for all the following test cases.
          * It makes a testUser without a firstName and then tries to add it to the users collection.
          * This should throw an error.
          */
-        it("Adding user with incomplete data throws error", () => {
-            // Mock user and userId since there is no user logged in while testing
-            // global.Meteor = {
-            //     user: sinon.stub().returns({
-            //         profile : { clubID : '-', type: 'pr'}
-            //     }),
-            //     userId: sinon.stub().returns(userId)
-            // };
-            //another stub
+        it("Adding user with incomplete data throws error", (done) => {
 
             // Add schema to the users collection
             Meteor.users.attachSchema(userSchema);
@@ -51,7 +42,6 @@ if (Meteor.isServer) {
             };
 
             testPr._id = Meteor.call('addUser', testPr);
-            console.log(testPr._id);
             Meteor.userId = sinon.stub().returns(testPr._id);
             
             // Adding the item without an required attribute
@@ -60,6 +50,7 @@ if (Meteor.isServer) {
                 // It should throw an error, if it does not, the test fails.
                 assert.fail();
             } catch (err) {
+                done();
             }
 
         });
@@ -77,11 +68,9 @@ if (Meteor.isServer) {
             // Add the testUser to the collection
             try {
                 testUser._id = Meteor.call('addUser', testUser);
-                console.log(testUser._id);
                 done();
                 // Should succeed
             } catch (err) {
-                console.log(err);
                 assert.fail();
             }
         });
@@ -119,11 +108,9 @@ if (Meteor.isServer) {
             // Update the profile of the previous created user with the new testProfile
             try {
                 var printing = Meteor.call('updateUserProfile',testUser._id, testProfile);
-                console.log('Hai '+printing);
                 // Should succeed
                 done();
             } catch (err) {
-                console.log('update: ' + err);
                 assert.fail();
             }
         });
@@ -180,7 +167,6 @@ if (Meteor.isServer) {
                 // Should succeed
                 done();
             } catch (err) {
-                console.log('getting: ' + err);
                 assert.fail();
             }
         });

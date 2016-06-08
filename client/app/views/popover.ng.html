@@ -1,29 +1,29 @@
 <style>.popover { min-width: 240px; }</style>
-<ion-popover-view style="height: 253px;">
+<ion-popover-view style="height: 253px;margin-top: -10px;">
     <ion-header-bar>
         <h1 class="title">Create new</h1>
-        <button class="button button-icon icon ion-minus-round" ng-click="closePopover($event)"> </button>
+        <button class="button button-icon icon ion-minus-round" ng-click="closePopover()"> </button>
     </ion-header-bar>
     <ion-content>
-        <div ng-controller="postCtrl">
-            <span class="item" ng-click="openPost(); closePopover()">
-                Post
+        <div ng-repeat="type in itemTypes" ng-controller="addNewItemCtrl">
+            <span class="item" ng-click="openModal(); closePopover()">
+                {{ type.name }}
             </span>
         </div>
-        <div ng-controller="formCtrl">
-            <span class="item" ng-click="openForm(); closePopover()">
-                Form
-            </span>
-        </div>
-        <div ng-controller="votingCtrl">
-            <span class="item" ng-click="openVoting(); closePopover()">
-                Voting
-            </span>
-        </div>
-        <div ng-controller="heroCtrl">
-            <span class="item" ng-click="openHero(); closePopover()">
-                Heroes
-            </span>
-        </div>
+        <!--<div ng-controller="formCtrl">-->
+            <!--<span class="item" ng-click="openForm(); closePopover()">-->
+                <!--Form-->
+            <!--</span>-->
+        <!--</div>-->
+        <!--<div ng-controller="votingCtrl">-->
+            <!--<span class="item" ng-click="openVoting(); closePopover()">-->
+                <!--Voting-->
+            <!--</span>-->
+        <!--</div>-->
+        <!--<div ng-controller="heroCtrl">-->
+            <!--<span class="item" ng-click="openHero(); closePopover()">-->
+                <!--Heroes-->
+            <!--</span>-->
+        <!--</div>-->
     </ion-content>
 </ion-popover-view>

@@ -153,7 +153,10 @@ const formSchema = new SimpleSchema([baseFeedItemSchema, {
         type: String,
         min: 1
     },
-    description: {type: String},
+    description: {
+        type: String,
+        optional: true
+    },
     teamID: {
         type: String,
         autoValue: function () {
@@ -199,7 +202,6 @@ const heroesSchema = new SimpleSchema([baseFeedItemSchema, {
         type: String,
         min: 1
     },
-    text: {type: String},
     image: {type: String}
 }]);
 

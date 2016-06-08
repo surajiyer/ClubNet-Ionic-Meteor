@@ -8,7 +8,7 @@ angular.module('web.userAccountControllers', [])
 
         $scope.helpers({
             userAccounts: function () {
-                return Meteor.users.find({}, {sort: [['profile.lastName', 'asc']]});
+                return Meteor.users.find({}, {sort: {'profile.lastName': 1}});
             }
         });
 
@@ -251,7 +251,7 @@ angular.module('web.userAccountControllers', [])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('profileCtrl', function ($scope, $meteor, $state) {
+    .controller('profileCtrl', function ($scope, $meteor, $state, checkPassword) {
         $scope.user = {
             id: '',
             firstName: '',
@@ -323,6 +323,10 @@ angular.module('web.userAccountControllers', [])
                 $scope.passwordError = 'New passwords are do not match';
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
+            } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
+                $scope.passwordError = 'Password not strong enough. It should contain at least 8 characters of which one alphabetical and one numeric.';
+                $scope.passwordErrorVisible = true;
+                $scope.passwordUpdatedVisible = false;
             } else {
                 $meteor.changePassword($scope.user.oldPassword, $scope.user.newPassword).then(function () {
                     $scope.passwordUpdatedVisible = true;
@@ -380,16 +384,7 @@ angular.module('web.userAccountControllers', [])
         };
     })
 
-    /**
-     *  Login Controller: provides all functionality for the login screen of the web interface
-     *  @param {String} Name of the controller
-     *  @param {Function}
-     */
-    .controller('resetPasswordCtrl', function ($scope, $meteor, $state) {
-        console.log('reset password controller');
-    })
-
-    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams) {
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, checkPassword) {
         $scope.token = $stateParams.token;
 
         $scope.user = {
@@ -410,6 +405,10 @@ angular.module('web.userAccountControllers', [])
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
                 $scope.passwordError = 'New passwords are do not match';
                 $scope.passwordErrorVisible = true;
+            } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
+                $scope.passwordError = 'Password not strong enough. It should contain at least 8 characters of which one alphabetical and one numeric.';
+                $scope.passwordErrorVisible = true;
+                $scope.passwordUpdatedVisible = false;
             } else {
                 $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
                     $scope.passwordErrorVisible = false;

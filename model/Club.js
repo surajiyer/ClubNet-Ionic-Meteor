@@ -1,6 +1,7 @@
 import * as utils from '/imports/common';
 import { clubSchema } from '/imports/schemas/misc';
 
+
 Clubs = new Mongo.Collection("Clubs");
 
 Meteor.startup(function () {
@@ -33,7 +34,7 @@ if (Meteor.isServer) {
     Meteor.methods({
         updateClub: function (updatedItem) {
             check(updatedItem, Object);
-            var clubID = utils.getUserClubID(Meteor.userId());
+            var clubID = Meteor.user().profile.clubID;
             Clubs.update(
                 {_id: clubID},
                 {$set: updatedItem}
@@ -42,7 +43,7 @@ if (Meteor.isServer) {
             return updatedItem;
         },
         getClub: function () {
-            var clubID = utils.getUserClubID(Meteor.userId());
+            var clubID = Meteor.user().profile.clubID;
             return Clubs.find({_id: clubID}).fetch()[0];
         }
     })

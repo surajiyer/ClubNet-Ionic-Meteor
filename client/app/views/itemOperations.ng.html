@@ -1,13 +1,13 @@
-<ion-popover-view style="height: 163px !important;">
+<ion-popover-view style="height: 163px !important; margin-top: 0px;">
     <ion-content>
         <div class="list">
-            <a class="item" ng-if="showEdit" ng-click="editItem(item._id); closePopover()">
+            <a class="item" ng-if="showEdit" ng-click="editItem(); closePopover()">
                 <i class="icon ion-edit"></i> Edit
             </a>
             <a class="item" ng-if="showDelete" ng-click="deleteItem(item._id); closePopover()">
                 <i class="icon ion-ios-trash"></i> Delete
             </a>
-            <a class="item">
+            <a class="item" ng-click="sticky()">
                 <i class="icon ion-compose"></i> Leave a note
             </a>
         </div>

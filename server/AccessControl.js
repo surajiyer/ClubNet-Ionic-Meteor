@@ -1,5 +1,6 @@
 import {isAdmin} from '/imports/common';
 import {accessControlSchema} from '/imports/schemas/misc';
+import {Meteor} from 'meteor/meteor';
 
 AMx = new Mongo.Collection("AccessControl");
 
@@ -20,14 +21,14 @@ if(Meteor.isServer) {
             check(permission, String);
 
             var doc = AMx.findOne(
-                {'_id': Meteor.call('getUserType')},
+                {'_id': Meteor.user().profile.type},
                 {fields: {'items': {$elemMatch: {'_id': itemType}}}}
             );
 
             if (!doc.items) {
                 throw new Meteor.Error('No such permission defined');
             }
-
+            
             return doc.items[0].permissions[permission];
         },
         setPermissions: function (newAccess) {
