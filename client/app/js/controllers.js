@@ -202,6 +202,18 @@ angular.module('app.controllers', [])
             });
         };
 
+        $scope.pushy = function(){
+            console.log('will-send-push-noti');
+            Push.send({
+                from: 'Test',
+                title: 'Hello',
+                text: 'World',
+                badge: 12,
+                query: {}
+            });
+
+        };
+
         /**
          * Loading the current club for styling
          */
@@ -218,6 +230,13 @@ angular.module('app.controllers', [])
      *  @param {Function}
      */
     .controller('feedCtrl', function ($scope, AccessControl, $meteor) {
+
+        Push.addListener('token', function(token) {
+            console.log('Token: ' + JSON.stringify(token));
+            alert('Token: ' + JSON.stringify(token));
+        });
+        console.log('Push.id(): ' + Push.id());
+        console.log('testas');
         /**
          * Show coach bar if needed
          */
