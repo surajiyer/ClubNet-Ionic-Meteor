@@ -47,13 +47,13 @@ if (Meteor.isServer) {
             };
 
             testPr._id = Accounts.createUser(testPr);
-            console.log("pr added: "+testPr._id);
+            // console.log("pr added: "+testPr._id);
             testPlayer._id = Accounts.createUser(testPlayer);
-            console.log("p added: " + testPlayer._id);
+            // console.log("p added: " + testPlayer._id);
             testCoach._id = Accounts.createUser(testCoach);
-            console.log("c added: " + testCoach._id);
+            // console.log("c added: " + testCoach._id);
             testG._id = Accounts.createUser(testG);
-            console.log("g added: " + testG._id);
+            // console.log("g added: " + testG._id);
 
             // Create item without type
             testControlPr = {
@@ -109,10 +109,7 @@ if (Meteor.isServer) {
             };
 
             try {
-                AMx.remove(testControlPr);
-                AMx.remove(testControlP);
-                AMx.remove(testControlC);
-                AMx.remove(testControlG);
+                AMx.remove({});
                 TypesCollection.remove({});
                 TypesCollection.insert(voting);
                 TypesCollection.insert(practicalities);
@@ -137,7 +134,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'create');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -150,7 +147,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'edit');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -162,7 +159,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'view');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -174,7 +171,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'delete');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -202,7 +199,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'create');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -214,7 +211,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'edit');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -226,7 +223,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'view');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -238,7 +235,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'delete');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -266,7 +263,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'create');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -278,7 +275,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'edit');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -290,7 +287,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'view');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -302,7 +299,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'delete');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -329,7 +326,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'create');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -341,7 +338,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'edit');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -353,7 +350,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'view');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
@@ -365,7 +362,7 @@ if (Meteor.isServer) {
             // Remove the user from the collection
             try {
                 var permission = Meteor.call('checkRights', 'voting', 'delete');
-                console.log(permission);
+                
                 // Should succeed
                 done();
             } catch (err) {
