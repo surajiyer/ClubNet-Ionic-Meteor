@@ -1,20 +1,22 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
+import * as utils from '/imports/common';
 import './Chats';
 
 var ChatsAllowSpy = sinon.spy(Chats, 'allow');
 
 if (Meteor.isClient) {
     describe('Chat', function () {
-        var allow, chatRightsStub;
+        var allow, chatRightsStub, sameClub, sameTeam;
 
         beforeEach(function () {
             allow = ChatsAllowSpy.getCall(0).args[0];
         });
 
         describe('insert', function () {
-            beforeEach(function () {
                 // Give chat create permission
+
+            before(function () {
                 chatRightsStub = sinon.stub(Meteor, 'call');
                 chatRightsStub
                     .withArgs('checkRights', 'Chat', 'create')
@@ -25,6 +27,54 @@ if (Meteor.isClient) {
                 var response = allow.insert(null, {});
                 assert.equal(response, false);
             });
+
+            it("deny access to non-participating user", function () {
+                global.Meteor.userId = sinon.stub().returns('1');
+                var response = allow.insert('1', {});
+                assert.equal(response, false);
+            });
+
+            it("deny access to non-participating user", function () {
+                global.Meteor.userId = sinon.stub().returns('1');
+                sameClub = sinon.stub(utils, 'getUserClubID');
+                sameClub.withArgs('1').returns(true);
+                sameClub.withArgs('2').returns(false);
+                sameTeam = sinon.stub(utils, 'getUserTeamID');
+                sameTeam.returns(false);
+                var response = allow.insert('1', {users: ['1', '2']});
+                assert.equal(response, false);
+            });
+
+            it("deny access to non-same club users", function () {
+                global.Meteor.userId = sinon.stub().returns('1');
+                sameClub.withArgs('1').returns(true);
+                sameClub.withArgs('2').returns(false);
+                sameTeam.returns(false);
+                var response = allow.insert('1', {users: ['1', '2']});
+                assert.equal(response, false);
+            });
+
+            it("deny access to non-same team, but same club, users", function () {
+                global.Meteor.userId = sinon.stub().returns('1');
+                sameClub.returns(true);
+                sameTeam.withArgs('1').returns(true);
+                sameTeam.withArgs('2').returns(false);
+                var response = allow.insert('1', {users: ['1', '2']});
+                assert.equal(response, false);
+            });
+
+            it("allow access to same team, but same club, users", function () {
+                global.Meteor.userId = sinon.stub().returns('1');
+                sameClub.withArgs('1').returns(true);
+                sameClub.withArgs('2').returns(true);
+                sameTeam.withArgs('1').returns(true);
+                sameTeam.withArgs('2').returns(true);
+                var response = allow.insert('1', {users: ['1', '2']});
+                assert.equal(response, true);
+            });
+
+
+            
         });
 
         // // Fake user data
