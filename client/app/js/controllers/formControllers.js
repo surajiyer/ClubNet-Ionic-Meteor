@@ -170,4 +170,15 @@ angular.module('formControllers', [])
                $scope.reloadResponses();
            },
         });
+
+        $scope.$on("loadEditData", function () {
+            $scope.$parent.newItem.target = $scope.item.target;
+            $scope.$parent.newItem.repeatInterval = $scope.item.repeatInterval;
+            $scope.$parent.newItem.description = $scope.item.description;
+            $scope.$parent.newItem.targetValue = $scope.item.targetValue;
+        });
+
+        $scope.$on("successEdit", function (e, res) {
+            console.log(res);
+        });
     })
