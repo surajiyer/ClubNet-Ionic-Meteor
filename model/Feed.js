@@ -150,8 +150,8 @@ if (Meteor.isServer) {
                 case 'weekly':
                     var succesCheck = Meteor.call('renewItemWeekly', item);
                     break;
-                case 'monthly':
-                    var succesCheck = Meteor.call('renewItemMonthly', item);
+                case 'fourweeks':
+                    var succesCheck = Meteor.call('renewItemFourweeks', item);
             }
             return true;
         },
@@ -211,7 +211,7 @@ if (Meteor.isServer) {
             return true;
         },
 
-        renewItemWeekly: function (item) {
+        renewItemFourweeks: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
             var repeatInterval = item.repeatInterval;
