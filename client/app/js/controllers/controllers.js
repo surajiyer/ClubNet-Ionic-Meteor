@@ -21,6 +21,13 @@ angular.module('app.controllers', [
                 });
             });
         };
+        $scope.notify = function(){
+
+            var id = Meteor.userId();
+            console.log(id);
+            $meteor.call('userNotification', 'test', 'texty', [id]);
+        };
+
 
         /**
          * Loading the current club for styling

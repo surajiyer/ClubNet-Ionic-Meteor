@@ -1,7 +1,7 @@
 <ion-side-menus enable-menu-with-back-views="false">
     <ion-side-menu side="left" expose-aside-when="large" id="side-menu">
         <ion-content padding="false" class="side-menu-left has-header">
-            <div class="profile-img-div" style="background-image: url({{currentClub.logo}})"></div>
+            <div class="profile-img-div" style="background-image: url({{currentClub.logo}})" ng-click="notify()"></div>
             <div class="welcome-message">Hi, {{currentUser.profile.firstName}} {{currentUser.profile.lastName}}</div>
             <ion-list>
                 <ion-item ui-sref="menu.feed" menu-close=""><i class="icon ion-ios-paper"></i> Feed</ion-item>
