@@ -19,7 +19,7 @@
             Contribution:
         </div>
         <select ng-model="item.currentContribution">
-            <option value="1" ng-selected="true" disabled selected>Select your option</option>
+            <option value="" ng-selected="true" disabled selected>Select your option</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -48,12 +48,14 @@
             ng-click="signUp('1')">
         Contribute
     </button>
-   <span ng-if="item.myContribution > 0">You are contributing: {{item.myContribution}} <br></span>
+   
         <button class="button button-outline button-assertive"
                 ng-if="item.myContribution > 0"
                 ng-click="withdrawContribution()">
             Withdraw your contribution
         </button>
+        <br>
+        <span ng-if="item.myContribution > 0">You are contributing: {{item.myContribution}} <br></span>
 </div>
 <div class="gradient" ng-click="showFullItem($event, true)">Read more <i class="icon ion-android-arrow-down"></i></div>
 
