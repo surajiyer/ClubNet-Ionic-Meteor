@@ -1,44 +1,47 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">New list</h1>
+        <h1 class="title">New Practicality</h1>
         <div class="buttons">
             <button class="button button-clear" ng-click="closeForm()">Close</button>
         </div>
     </ion-header-bar>
     <ion-content>
         <div class="list">
-            <label class="item item-input item-select">
+            <label class="item item-input item-label">
                 <span class="input-label">
                     Select type:
                 </span>
                 <select ng-model="newForm.target">
+                    <option ng-selected="true" disabled selected>Select your option</option>
                     <option value="laundry" selected>Laundry</option>
                     <option value="driving">Driving</option>
                     <option value="presence">Presence</option>
                     <option value="other">Other</option>
                 </select>
             </label>
-            <label class="item item-input item-select">
+            <label class="item item-input item-label">
                 <span class="input-label">
                     Repeat interval:
                 </span>
-                <select ng-model="newForm.repeatInterval">
+                <select ng-model="newForm.repeatInterval" >
+                    <option ng-selected="true" disabled selected>Select your option</option>
                     <option value="daily" selected>Daily</option>
                     <option value="weekly">Weekly</option>
                     <option value="monthly">Monthly</option>
                 </select>
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-label">
                 <span class="input-label">Title</span>
                 <input ng-model="newForm.title" type="text" placeholder="Title">
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-label">
                 <span class="input-label">Description:</span>
                 <input ng-model="newForm.description" type="text" placeholder="Description">
             </label>
-            <label class="item item-input item-floating-label">
+            <label class="item item-input item-label">
                 <span class="input-label">Target value:</span>
-                <input ng-model="newForm.targetValue" type="number" placeholder="Target value">
+                <input ng-model="newForm.targetValue" type="number" placeholder="Target value"><br>
+                <span class="input-label">*the amounf of people</span>
             </label>
             <ion-checkbox ng-model="newForm.sticky">Sticky?</ion-checkbox>
             <button ng-disabled="!newForm.target && !newForm.title" ng-click="form()" class="button button-block button-positive">

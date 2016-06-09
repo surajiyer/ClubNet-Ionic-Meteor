@@ -4,17 +4,22 @@
     </p>
 </div>
 <div class="item item-body" ng-switch="item.formType">
-        We need {{(item.targetValue - item.raisedValue) | number}}! <br/>
-        Already registered: {{item.raisedValue | number}}
+       
+        <span ng-if="item.targetValue-item.raisedValue > 0">We still need {{(item.targetValue - item.raisedValue) | number}}! <br/></span> 
+        <span ng-if="item.targetValue-item.raisedValue <= 0">We have enough people contributing<br/></span> 
+
 </div>
-<div ng-init="item.currentContribution = '-1'">
+
+<div class="item item-body">
+
+<div ng-init="item.currentContribution = '1'">
     <label class="item item-input item-select"
-           ng-if="(item.target == 'driving' || item.target == 'other') && item.hasContributed == false" >
+           ng-if="(item.target == 'driving' || item.target == 'other') && item.hasContributed == false && item.targetValue-item.raisedValue > 0" >
         <div class="input-label">
             Contribution:
         </div>
         <select ng-model="item.currentContribution">
-            <option value="0">Please select value</option>
+            <option value="1" ng-selected="true" disabled selected>Select your option</option>
             <option value="1">1</option>
             <option value="2">2</option>
             <option value="3">3</option>
@@ -22,24 +27,35 @@
             <option value="5">5</option>
             <option value="6">6</option>
             <option value="7">7</option>
+            <option value="8">8</option>
+            <option value="9">9</option>
+            <option value="10">10</option>
+            <option value="11">11</option>
         </select>
     </label>
 </div>
-<div class="item item-body">
-        <button class="button button-outline button-balanced"
-                ng-if="item.hasContributed == false && (item.target == 'driving' || item.target == 'other')"
-                ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
-            Contribute
-        </button>
+
+  <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'presence'" type="hidden" value="1">
+<br>
+
+
+
     <button class="button button-outline button-balanced"
-            ng-if="item.hasContributed == false && (item.target == 'laundry' || item.target == 'presence')"
-            ng-click="signUp(item.currentContribution)">
+            ng-if="item.hasContributed == false && (item.target == 'driving' || item.target == 'other') && item.hasContributed == false"
+            ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
         Contribute
     </button>
+    <button class="button button-outline button-balanced"
+            ng-if="item.hasContributed == false && (item.target == 'laundry' || item.target == 'presence') && item.hasContributed == false"
+            ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
+        Contribute
+    </button>
+   <span ng-if="item.myContribution > 0">You are contributing: {{item.myContribution}} <br></span>
         <button class="button button-outline button-assertive"
-                ng-if="item.hasContributed != false"
+                ng-if="item.myContribution > 0"
                 ng-click="withdrawContribution()">
             Withdraw your contribution
         </button>
 </div>
 <div class="gradient" ng-click="showFullItem($event, true)">Read more <i class="icon ion-android-arrow-down"></i></div>
+
