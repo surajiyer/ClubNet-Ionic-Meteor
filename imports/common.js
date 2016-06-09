@@ -1,19 +1,23 @@
 export let userTypes = ['coach', 'player', 'pr', 'general'];
-import {Meteor} from 'meteor/meteor';
+
+export const getUserById = function (userId) {
+    check(userId, String);
+    return Meteor.users.find({_id: userId}).fetch()[0];
+};
 
 export const getUserType = function (userId) {
-    check(userId, String);
-    return Meteor.users.find({_id: userId}).fetch()[0].profile.type;
+    var user = getUserById(userId);
+    return user.profile.type;
 };
 
 export const getUserClubID = function (userId) {
-    check(userId, String);
-    return Meteor.users.find({_id: userId}).fetch()[0].profile.clubID;
+    var user = getUserById(userId);
+    return user.profile.clubID;
 };
 
 export const getUserTeamID = function (userId) {
-    check(userId, String);
-    return Meteor.users.find({_id: userId}).fetch()[0].profile.teamID;
+    var user = getUserById(userId);
+    return user.profile.teamID;
 };
 
 export const isAdmin = function (userId) {

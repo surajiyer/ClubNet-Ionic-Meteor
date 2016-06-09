@@ -26,7 +26,7 @@ if (Meteor.isServer) {
                 // Create item without type
                 testItem = {
                     clubID: '1',
-                    published: false,
+                    status: 'published',
                     createdAt: new Date
                 };
 
@@ -34,9 +34,7 @@ if (Meteor.isServer) {
                 try {
                     Meteor.call('addFeedItem', testItem);
                     assert.fail();
-                } catch (err) {
-                }
-
+                } catch (err) {}
             });
 
             it("Add FeedItem succeed", (done) => {
@@ -109,7 +107,7 @@ if (Meteor.isServer) {
                 // Create updated item with different clubID
                 newTestItem = {
                     _id: testItem._id,
-                    published: testItem.published,
+                    status: testItem.status,
                     createdAt: testItem.createdAt,
                     type: testItem.type,
                     clubID: '2',
@@ -121,8 +119,7 @@ if (Meteor.isServer) {
                 try {
                     Meteor.call('updateFeedItem', false);
                     assert.fail();
-                } catch (err) {
-                }
+                } catch (err) {}
 
             });
 

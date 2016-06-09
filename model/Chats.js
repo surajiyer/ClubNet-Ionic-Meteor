@@ -31,14 +31,18 @@ Meteor.startup(function () {
     Chats.allow({
         insert: function (userId, doc) {
             // Checks if user who is inserting is the logged in user and if they are part of the chat
-            var isValidUser = userId == Meteor.userId() && _.contains(doc.users, userId);
+            var isValidUser = !!userId && userId == Meteor.userId() && _.contains(doc.users, userId);
+            // Check if all recipients within chat belong to the same team
+            var belongToSameTeam = doc.users
+                && utils.getUserClubID(doc.users[0]) == utils.getUserClubID(doc.users[1])
+                && utils.getUserTeamID(doc.users[0]) == utils.getUserTeamID(doc.users[1]);
             // Checks if user has permission to create a chat
             var hasPermission = Meteor.call('checkRights', 'Chat', 'create');
-            return isValidUser && hasPermission;
+            return isValidUser && belongToSameTeam && hasPermission;
         },
         update: function (userId, doc, fields) {
             // Checks if user who is inserting is the logged in user and if they are part of the chat
-            var isValidUser = userId == Meteor.userId() && _.contains(doc.users, userId);
+            var isValidUser = !!userId && userId == Meteor.userId() && _.contains(doc.users, userId);
             // Player has permission if only lastMessage is updated, otherwise checks if user has permission
             var hasPermission = utils.getUserType(userId) == 'player' ?
                 (fields[0] == 'lastMessage' && fields.length == 1) : Meteor.call('checkRights', 'Chat', 'edit');
@@ -49,7 +53,7 @@ Meteor.startup(function () {
         },
         remove: function (userId, doc) {
             // Checks if user who is inserting is the logged in user and if they are part of the chat
-            var isValidUser = userId == Meteor.userId() && _.contains(doc.users, userId);
+            var isValidUser = !!userId && userId == Meteor.userId() && _.contains(doc.users, userId);
             // Checks if user has permission to delete a chat
             var hasPermission = Meteor.call('checkRights', 'Chat', 'delete');
             var allowed = isValidUser && hasPermission;
@@ -65,7 +69,7 @@ Meteor.startup(function () {
         insert: function (userId, doc) {
             var chat = Chats.find({_id: doc.chatID}).fetch()[0];
             // Checks if user who is inserting is the logged in user and if they are part of the chat
-            var isValidUser = userId == Meteor.userId() && _.contains(chat.users, userId);
+            var isValidUser = !!userId && userId == Meteor.userId() && _.contains(chat.users, userId);
             // Checks if user has permission to send messages in a chat
             var hasPermission = Meteor.call('checkRights', 'Messages', 'create');
             // Allow update only if chat status is 'open'
@@ -78,13 +82,13 @@ Meteor.startup(function () {
         remove: function (userId, doc) {
             var chat = Chats.find({_id: doc.chatID}).fetch()[0];
             // Checks if user who is inserting is the logged in user and if they are part of the chat
-            var isValidUser = userId == Meteor.userId() && _.contains(chat.users, userId);
+            var isValidUser = !!userId && userId == Meteor.userId() && _.contains(chat.users, userId);
             // Checks if user has permission to delete messages in a chat
             var hasPermission = Meteor.call('checkRights', 'Messages', 'delete');
             return isValidUser && hasPermission;
         }
     });
-
+    
     // Attach the schemas
     Chats.attachSchema(chats);
     Messages.attachSchema(messages);

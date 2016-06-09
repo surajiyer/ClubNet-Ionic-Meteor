@@ -2,7 +2,7 @@ import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
 import {accessControlSchema} from '/imports/schemas/misc';
-import './AccessControl.js';
+import './AccessControl';
 
 let testPermissions;
 let testPr;
@@ -12,13 +12,12 @@ let testG;
 let testType;
 if (Meteor.isServer) {
     describe('Access Control Set Permissions', () => {
-
-
-        it("PR user can set permissions", (done) => {
-
+        before(function() {
             // Add schema to Items
             AMx.attachSchema(accessControlSchema);
+        });
 
+        it("PR user can set permissions", (done) => {
             testPr = {
                 email: 'pr@pr.pr',
                 password: 'pr',
@@ -55,8 +54,12 @@ if (Meteor.isServer) {
             // Create item without type
             testPermissions = {
                 _id: 'pr',
-                items: [{_id: 'testType', permissions: {create: true,
-                    edit: true, view: true, delete: true}}
+                items: [{
+                    _id: 'testType', permissions: {
+                        create: true,
+                        edit: true, view: true, delete: true
+                    }
+                }
                 ]
             };
 
@@ -71,7 +74,7 @@ if (Meteor.isServer) {
                 AMx.remove({});
                 TypesCollection.remove({});
                 TypesCollection.insert(testType);
-            } catch(err) {
+            } catch (err) {
                 console.log("before: " + err);
             }
 
@@ -89,7 +92,6 @@ if (Meteor.isServer) {
         });
 
         it("Player user cannot set permissions", (done) => {
-
             Meteor.userId = sinon.stub().returns(testPlayer._id);
             Meteor.user = sinon.stub().returns(testPlayer);
 
@@ -103,7 +105,6 @@ if (Meteor.isServer) {
         });
 
         it("Coach user cannot set permissions", (done) => {
-
             Meteor.userId = sinon.stub().returns(testCoach._id);
             Meteor.user = sinon.stub().returns(testCoach);
             // Adding the custom type
@@ -116,7 +117,6 @@ if (Meteor.isServer) {
         });
 
         it("General user cannot set permissions", (done) => {
-
             Meteor.userId = sinon.stub().returns(testG._id);
             Meteor.user = sinon.stub().returns(testG);
             // Adding the custom type
@@ -128,26 +128,8 @@ if (Meteor.isServer) {
             }
         });
 
-
-        /**
-         * @summary Deleting the PR user.
-         * It tries to remove the previously created PR user.
-         * This should succeed.
-         */
-        it("Reset the database", (done) => {
-            // Remove the user from the collection
-            try {
-                AMx.remove(testPermissions);
-                Meteor.users.remove(testPr._id);
-                Meteor.users.remove(testPlayer._id);
-                Meteor.users.remove(testCoach._id);
-                Meteor.users.remove(testG._id);
-                // Should succeed
-                done();
-            } catch (err) {
-                assert.fail();
-            }
+        after(function() {
+           Meteor.users.remove({});
         });
-
     });
 }

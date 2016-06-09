@@ -146,11 +146,7 @@ if (Meteor.isServer) {
                 {_id: id},
                 {$set: updatedItem}
             );
-            if (success) {
-                return updatedItem;
-            } else {
-                return null;
-            }
+            if(success) return updatedItem;
         },
         /**
          * @summary Function for deleting a feed item.

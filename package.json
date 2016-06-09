@@ -4,16 +4,15 @@
   "scripts": {
     "start": "meteor run",
     "test": "meteor test --driver-package practicalmeteor:mocha --port 3100",
+    "testfull": "meteor test --full-app --driver-package practicalmeteor:mocha --port 3100",
     "jenkinstest": "meteor test --driver-package practicalmeteor:mocha --reporter xunit > report.xml"
   },
   "dependencies": {
     "angular": "^1.5.5",
     "angular-ecmascript": "0.0.3",
     "angular-mocks": "^1.5.6",
-    "angular-moment": "^1.0.0-beta.6",
     "angularjs-color-picker": "^1.1.2",
-    "meteor-node-stubs": "~0.2.0",
-    "moment": "^2.13.0"
+    "meteor-node-stubs": "~0.2.0"
   },
   "devDependencies": {
     "angular-mocks": "^1.5.5",
