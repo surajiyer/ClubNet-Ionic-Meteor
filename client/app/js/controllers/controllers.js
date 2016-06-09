@@ -21,13 +21,6 @@ angular.module('app.controllers', [
                 });
             });
         };
-        $scope.notify = function(){
-
-            var id = Meteor.userId();
-            console.log(id);
-            $meteor.call('userNotification', 'test', 'texty', [id]);
-        };
-
 
         /**
          * Loading the current club for styling
@@ -187,8 +180,28 @@ angular.module('app.controllers', [
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
-            Meteor.call('addFeedItem', $scope.newItem, function (err) {
-                // TODO: do something with error (show as popup?)
+            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
+                Meteor.call('getFeedItemType', result, function(err, result){
+                    if (result == 'Voting') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Vote for the exercise you like.';
+                            var title = 'New voting!';
+                            Meteor.call('userNotification', text, title, result);
+                        });
+                    } else if (result == 'Form') {
+                        Meteor.call('getTeamUsers', function(err, result){
+                            var text = 'React on new practicality.';
+                            var title = 'New practicality!';
+                            Meteor.call('userNotification', text, title, result);
+                        });
+                    } else if (result == 'Heroes') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Check out a new hero of the week.';
+                            var title = 'New Hero!';
+                            Meteor.call('userNotification', text, title, result);
+                        });
+                    }
+                });
                 if (err) {
                     throw new Meteor.Error(err.reason);
                 }

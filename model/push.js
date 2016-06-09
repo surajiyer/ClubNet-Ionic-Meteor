@@ -22,7 +22,11 @@ if (Meteor.isServer) {
             });
         },
         userNotification: function(text,title,users) {
+            check(text, String);
+            check(title, String);
+            check(users, [String]);
             var badge = 1;
+            var logo = Meteor.call('getClub').logo;
             Push.send({
                 from: 'push',
                 title: title,
@@ -30,7 +34,10 @@ if (Meteor.isServer) {
                 badge: badge,
                 sound: 'airhorn.caf',
                 query: {
-                    userId: {$in : users} //this will send to a specific Meteor.user()._id
+                    userId: {$in : users}
+                },
+                gcm: {
+                    image: logo
                 }
             });
         },

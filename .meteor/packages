@@ -41,3 +41,5 @@ cfs:filesystem
 cfs:gridfs
 thospaeth:angular-color-picker
 raix:push
+email
+blaze

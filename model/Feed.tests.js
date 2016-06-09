@@ -12,7 +12,7 @@ if (Meteor.isServer) {
     describe('FeedItems', () => {
 
         describe('addFeedItem()', () => {
-            it("Add FeedItem fail and setup", () => {
+            it("Add FeedItem fail", () => {
 
                 // Mock user and userId since there is no user logged in while testing
                 global.Meteor.user = sinon.stub().returns({
@@ -104,7 +104,7 @@ if (Meteor.isServer) {
         });
 
         describe('updateFeedItem()', () => {
-            it("Update FeedItem", () => {
+            it("Update FeedItem fail", () => {
 
                 // Create updated item with different clubID
                 newTestItem = {
@@ -126,7 +126,7 @@ if (Meteor.isServer) {
 
             });
 
-            it("Update FeedItem", (done) => {
+            it("Update FeedItem succeed", (done) => {
 
                 // Update testItem to newTestItem
                 try {
