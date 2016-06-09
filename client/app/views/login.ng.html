@@ -3,13 +3,11 @@
         <img src="/app/img/logo-front.png" class="login-logo" alt="" />
         <form class="list login-form" ng-submit="login()">
             <ion-list>
-                <label class="item item-input">
-                    <span class="input-label">Email</span>
-                    <input type="email" name="email" ng-model="user.email">
+                <label class="item item-input">             
+                    <input type="email" name="email" placeholder="{{'Email Adress'}}" ng-model="user.email">
                 </label>
                 <label class="item item-input">
-                    <span class="input-label">Password</span>
-                    <input type="password" name="password" ng-model="user.password">
+                    <input type="password" name="password" placeholder="{{'Password'}}" ng-model="user.password">
                 </label>
             </ion-list>
             <div class="spacer" style="width: 300px; height: 22px;"></div>
@@ -18,7 +16,7 @@
             <div class="forgot-pw">
                 <button class="button button-stable" ng-click="goToRemindPassword()">Forgot password?</button>
             </div>
-             <!-- <div class="reset-pw">
+            <!-- <div class="reset-pw">
                 <button class="button button-stable" ng-click="goToResetPassword()">Reset Password</button>
             </div>
             <div class="enroll">

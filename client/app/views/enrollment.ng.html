@@ -7,12 +7,10 @@
         </div>
         <div class="spacer" style="width: 300px; height: 22px;"></div>
         <label class="item item-input">
-            <span class="input-label">Password</span>
-            <input type="text" name="newPassword" ng-model="forgotUser.newPassword"/>
+            <input type="password" name="newPassword" placeholder="{{'Password'}}" ng-model="forgotUser.newPassword"/>
         </label>
         <label class="item item-input">
-            <span class="input-label">Repeat password</span>
-            <input type="text" name="confirmNewPassword" ng-model="forgotUser.confirmNewPassword"/>
+            <input type="password" name="confirmNewPassword" placeholder="{{'Confirm Password'}}" ng-model="forgotUser.confirmNewPassword"/>
         </label>
         <a ng-click="resetPassword()" id="reset-password" class="button button-positive  button-block">Set
             Password</a>
