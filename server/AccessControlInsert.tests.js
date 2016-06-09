@@ -42,6 +42,7 @@ if (Meteor.isServer) {
                 profile: {firstName: 'g', lastName: 'g', type: 'general', clubID: 'test'}
             };
 
+            Meteor.users.remove({});
             testPr._id = Accounts.createUser(testPr);
             // console.log("pr added: "+testPr._id);
             testPlayer._id = Accounts.createUser(testPlayer);
