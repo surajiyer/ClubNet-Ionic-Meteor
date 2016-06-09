@@ -38,8 +38,6 @@
   <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'presence'" type="hidden" value="1">
 <br>
 
-
-
     <button class="button button-outline button-balanced"
             ng-if="item.hasContributed == false && (item.target == 'driving' || item.target == 'other') && item.hasContributed == false"
             ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
@@ -47,7 +45,7 @@
     </button>
     <button class="button button-outline button-balanced"
             ng-if="item.hasContributed == false && (item.target == 'laundry' || item.target == 'presence') && item.hasContributed == false"
-            ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
+            ng-click="signUp('1')">
         Contribute
     </button>
    <span ng-if="item.myContribution > 0">You are contributing: {{item.myContribution}} <br></span>
