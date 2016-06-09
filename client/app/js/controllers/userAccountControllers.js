@@ -1,5 +1,5 @@
+import { Template } from 'meteor/templating';
 angular.module('userAccountControllers', [])
-
     /**
      *  Register Controller: provides all functionality for the register screen of the app
      */
@@ -93,20 +93,38 @@ angular.module('userAccountControllers', [])
          * @summary Function to send email to user to reset password
          */
         $scope.forgotPassword = function () {
-            console.log('Email Sent');
-            if (!$scope.forgotUser.email)
-                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS'); // Nice error +1
-            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-            });
+            // if (!$scope.forgotUser.email)
+            //     throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS'); // Nice error +1
+            // Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
+            //     if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+            // });
+            
+            // var emailData = {
+            //     message: "Reset your ClubNet password by clicking",
+            //     url: "clubnet://",
+            //     title: "here"
+            // };
+            
+            //var html = Blaze.toHTML(Blaze.With(emailData, function() {return Template.foo;}));
+            //var html = Blaze.toHTMLWithData(Template.myTemplate, emailData);
+            //var test = Blaze.isTemplate(Template.myTemplate);
+            //console.log(test);
+            var options = {
+                from: '"Clubnet" <clubnet.noreply@gmail.com>',
+                to: $scope.forgotUser.email,
+                subject: "Reset your ClubNet password",
+                html:'<a href="clubnet://">Click here to reset your password</a>'
+            }
+            Meteor.call("sendShareEmail", options);
             $state.go('login');
+            console.log("worked");
         };
     })
     
     /**
      *  Reset Password Controller: provides all functionality for the reset password screen of the app
      */
-    .controller('resetPasswordCtrl', function ($scope, $state) {
+    .controller('resetPasswordCtrl', function ($scope, $stateParams) {
         /**
          * Information of the user who forgot his password
          */
@@ -122,7 +140,7 @@ angular.module('userAccountControllers', [])
          */
         $scope.resetPassword = function () {
             if($scope.forgotUser.newPassword == $scope.forgotUser.confirmNewPassword) {
-                Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
+                Accounts.resetPassword($stateParams.token, $scope.forgotUser.newPassword, function (err) {
                     if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
                     console.log('Reset password success');
                 });

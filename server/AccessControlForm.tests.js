@@ -15,7 +15,7 @@ let testG;
 let Voting;
 let Form;
 if (Meteor.isServer) {
-    describe('Access Control Voting', () => {
+    describe('Access Control Form', () => {
 
         describe('PR user', () => {
             it("Set permissions for PR user", (done) => {
@@ -45,7 +45,7 @@ if (Meteor.isServer) {
                     password: 'gg',
                     profile: {firstName: 'g', lastName: 'g', type: 'general', clubID: 'test'}
                 };
-
+                
                 Meteor.users.remove({});
                 testPr._id = Accounts.createUser(testPr);
                 // console.log("pr added: "+testPr._id);
@@ -163,10 +163,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("PR user is able to create a Voting item", (done) => {
+            it("PR user is able to create a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'create');
+                    var permission = Meteor.call('checkRights', 'Form', 'create');
 
                     // Should succeed
                     done();
@@ -176,10 +176,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("PR user is able to edit a Voting item", (done) => {
+            it("PR user is able to edit a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'edit');
+                    var permission = Meteor.call('checkRights', 'Form', 'edit');
 
                     // Should succeed
                     done();
@@ -188,10 +188,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("PR user is able to view a Voting item", (done) => {
+            it("PR user is able to view a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'view');
+                    var permission = Meteor.call('checkRights', 'Form', 'view');
 
                     // Should succeed
                     done();
@@ -200,10 +200,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("PR user is able to delete a Voting item", (done) => {
+            it("PR user is able to delete a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'delete');
+                    var permission = Meteor.call('checkRights', 'Form', 'delete');
 
                     // Should succeed
                     done();
@@ -230,10 +230,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Player user is not able to create a Voting item", (done) => {
+            it("Player user is not able to create a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'create');
+                    var permission = Meteor.call('checkRights', 'Form', 'create');
 
                     // Should succeed
                     done();
@@ -242,10 +242,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Player user is not able to edit a Voting item", (done) => {
+            it("Player user is not able to edit a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'edit');
+                    var permission = Meteor.call('checkRights', 'Form', 'edit');
 
                     // Should succeed
                     done();
@@ -254,10 +254,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Player user is able to view a Voting item", (done) => {
+            it("Player user is able to view a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'view');
+                    var permission = Meteor.call('checkRights', 'Form', 'view');
 
                     // Should succeed
                     done();
@@ -266,10 +266,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Player user is not able to delete a Voting item", (done) => {
+            it("Player user is not able to delete a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'delete');
+                    var permission = Meteor.call('checkRights', 'Form', 'delete');
 
                     // Should succeed
                     done();
@@ -280,7 +280,7 @@ if (Meteor.isServer) {
         });
 
         describe('Coach user', () => {
-            it("Set permissions for Coach user a Voting item", (done) => {
+            it("Set permissions for Coach user", (done) => {
 
                 Meteor.userId = sinon.stub().returns(testPr._id);
                 Meteor.user = sinon.stub().returns(testPr);
@@ -295,10 +295,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Coach user is able to create a Voting item", (done) => {
+            it("Coach user is able to create a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'create');
+                    var permission = Meteor.call('checkRights', 'Form', 'create');
 
                     // Should succeed
                     done();
@@ -307,10 +307,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Coach user is able to edit a Voting item", (done) => {
+            it("Coach user is able to edit a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'edit');
+                    var permission = Meteor.call('checkRights', 'Form', 'edit');
 
                     // Should succeed
                     done();
@@ -319,10 +319,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Coach user is able to view a Voting item", (done) => {
+            it("Coach user is able to view a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'view');
+                    var permission = Meteor.call('checkRights', 'Form', 'view');
 
                     // Should succeed
                     done();
@@ -331,10 +331,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Coach user is able to delete a Voting item", (done) => {
+            it("Coach user is able to delete a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'delete');
+                    var permission = Meteor.call('checkRights', 'Form', 'delete');
 
                     // Should succeed
                     done();
@@ -345,7 +345,8 @@ if (Meteor.isServer) {
         });
 
         describe('General user', () => {
-            it("Set permissions for General user a Voting item", (done) => {
+
+            it("Set permissions for General user", (done) => {
 
                 Meteor.userId = sinon.stub().returns(testPr._id);
                 Meteor.user = sinon.stub().returns(testPr);
@@ -360,10 +361,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("General user is not able to create a Voting item", (done) => {
+            it("General user is not able to create a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'create');
+                    var permission = Meteor.call('checkRights', 'Form', 'create');
 
                     // Should succeed
                     done();
@@ -372,10 +373,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("General user is not able to edit a Voting item", (done) => {
+            it("General user is not able to edit a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'edit');
+                    var permission = Meteor.call('checkRights', 'Form', 'edit');
 
                     // Should succeed
                     done();
@@ -384,10 +385,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("General user is not able to view a Voting item", (done) => {
+            it("General user is not able to view a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'view');
+                    var permission = Meteor.call('checkRights', 'Form', 'view');
 
                     // Should succeed
                     done();
@@ -396,10 +397,10 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("General user is not able to delete a Voting item", (done) => {
+            it("General user is not able to delete a Form item", (done) => {
                 // Remove the user from the collection
                 try {
-                    var permission = Meteor.call('checkRights', 'Voting', 'delete');
+                    var permission = Meteor.call('checkRights', 'Form', 'delete');
 
                     // Should succeed
                     done();
@@ -407,7 +408,7 @@ if (Meteor.isServer) {
                     assert.fail();
                 }
             });
-            
+
             /**
              * @summary Deleting the PR user.
              * It tries to remove the previously created PR user.
@@ -427,5 +428,6 @@ if (Meteor.isServer) {
                 }
             });
         });
+
     });
 }

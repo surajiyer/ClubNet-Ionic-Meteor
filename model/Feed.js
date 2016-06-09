@@ -65,8 +65,8 @@ Meteor.startup(function () {
                 this.ready();
                 return;
             }
-            check(limit, Number);
             check(itemTypes, [String]);
+            check(limit, Number);
             var teamLevelSelector = [{teamID: {$exists: false}}];
             var teamID = utils.getUserTeamID(this.userId);
             if (teamID) {
@@ -83,6 +83,17 @@ Meteor.startup(function () {
                     createdAt: -1
                 },
                 limit: limit
+            });
+        });
+
+        Meteor.publish('Responses', function (itemTypes) {
+            if (!itemTypes) {
+                this.ready();
+                return;
+            }
+            check(itemTypes, [String]);
+            return Responses.find({
+
             });
         });
     }
@@ -190,6 +201,35 @@ if (Meteor.isServer) {
             return Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0];
         },
         /**
+         * @summary Function for retrieving the response to a feed item.
+         * @param {String} itemID The id of the feed item
+         * @returns {Object} The response
+         */
+        getRaisedValue: function (itemID) {
+            check(itemID, String);
+            // return Responses.find({itemID: itemID}).fetch();
+
+            var total = 0;
+            Responses.find({itemID: itemID}).map(function (doc) {
+                var value = parseInt(doc.value);
+                if(_.isNaN(value)) return;
+                total += value;
+            });
+
+            return total;
+        },
+        getContributing: function (itemID) {
+            check(itemID, String);
+            var responses = Responses.find({itemID: itemID}).fetch();
+
+            var peopleThatResponded = _.map(responses, function (response) {
+                console.log(peopleThatResponded);
+                var userProfile = Meteor.users.find({_id: response.userID}).fetch()[0].profile;
+                return userProfile.firstName + " " + userProfile.lastName;
+            });
+            return peopleThatResponded;
+        },
+        /**
          * @summary Function for deleting a response of the currently logged in user to a feed item.
          * @param {String} itemID The id of the feed item for which response needs to be deleted.
          */
@@ -227,6 +267,49 @@ if (Meteor.isServer) {
             check(response, Responses.simpleSchema({itemType: itemType}));
             return Responses.insert(response);
         },
+
+
+        
+
+        increaseValue: function (itemID, itemType, value) {
+            check(itemID, String);
+            check(itemType, String);
+            check(value, String);
+
+
+            var item = Meteor.call('getFeedItem', itemID);
+            var raisedValue = item.raisedValue;
+            var newRaisedValue = parseInt(raisedValue)+parseInt(value);
+
+            console.log("raised value: "+raisedValue);
+            console.log("New raised value: "+newRaisedValue);
+            return     Items.update({ _id: itemID, type: itemType}, 
+                        { $set: { raisedValue: newRaisedValue }});
+        },
+
+
+
+        decreaseValue: function (itemID, itemType, value) {
+            check(itemID, String);
+            check(itemType, String);
+            check(value, String);
+
+
+            var item = Meteor.call('getFeedItem', itemID);
+            var raisedValue = item.raisedValue;
+            var newRaisedValue = parseInt(raisedValue)-parseInt(value);
+
+            console.log("raised value: "+raisedValue);
+            console.log("New raised value: "+newRaisedValue);
+            return     Items.update({ _id: itemID, type: itemType}, 
+                        { $set: { raisedValue: newRaisedValue }});
+        },
+
+
+
+
+
+
         /**
          * @summary Function for retrieving the voting results of a voting feed item.
          * It will first check whether the parameters are valid.
@@ -330,7 +413,7 @@ if (Meteor.isServer) {
                 {$set: {"notes.$.text": newNote.text}}
             );
         },
-        makeItemSticky: function(itemID) {
+        makeItemSticky: function (itemID) {
             check(itemID, String);
         }
     });
