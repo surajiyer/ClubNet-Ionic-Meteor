@@ -26,7 +26,7 @@ if (Meteor.isServer) {
                 // Create item without type
                 testItem = {
                     clubID: '1',
-                    published: false,
+                    status: 'published',
                     createdAt: new Date
                 };
 
@@ -109,7 +109,7 @@ if (Meteor.isServer) {
                 // Create updated item with different clubID
                 newTestItem = {
                     _id: testItem._id,
-                    published: testItem.published,
+                    status: testItem.status,
                     createdAt: testItem.createdAt,
                     type: testItem.type,
                     clubID: '2',
