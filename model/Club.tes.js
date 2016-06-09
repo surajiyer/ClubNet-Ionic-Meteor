@@ -2,10 +2,12 @@ import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import './Club.js';
 
-testClub = {};
+let testClub = {};
 if (Meteor.isServer) {
     describe('Club', () => {
-        it("Get Club", (done) => {
+
+        it("Get nonexisting Club should fail", (done) => {
+            
             // Create a test club
             testClub = {
                 name: 'Name1',
@@ -17,12 +19,29 @@ if (Meteor.isServer) {
             };
             testClubID = Clubs.insert(testClub);
             testClub._id = testClubID;
+
+            // Mock user to include the clubID of the test club we just added
+            global.Meteor.user = sinon.stub().returns({
+                profile : { clubID : 'test'}
+            });
+            
+            // Retrieving the club
+            try {
+                result = Meteor.call('getClub');
+                assert.fail();
+                done();
+            } catch (err) {
+                done();
+            }
+        });
+
+        it("Get Club should succeed", (done) => {
             
             // Mock user to include the clubID of the test club we just added
             global.Meteor.user = sinon.stub().returns({
                 profile : { clubID : testClub._id}
             });
-            
+
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');

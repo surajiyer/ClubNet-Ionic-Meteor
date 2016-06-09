@@ -1,5 +1,5 @@
+import { Template } from 'meteor/templating';
 angular.module('userAccountControllers', [])
-
     /**
      *  Register Controller: provides all functionality for the register screen of the app
      */
@@ -70,11 +70,11 @@ angular.module('userAccountControllers', [])
         }
         
         // $scope.goToResetPassword = function () {
-        //     $state.go("resetPassword");
+        //     $state.go("resetpassword");
         // }
         
         // $scope.goToEnroll = function () {
-        //     $state.go("enrollment");
+        //     $state.go("enroll");
         // }
     })
 
@@ -92,21 +92,43 @@ angular.module('userAccountControllers', [])
          /**
          * @summary Function to send email to user to reset password
          */
-        $scope.forgotPassword = function () {
-            console.log('Email Sent');
-            if (!$scope.forgotUser.email)
-                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS'); // Nice error +1
-            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-            });
-            $state.go('login');
+        $scope.forgotPassword = function () {          
+            var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+            if (!mailRegularExpression.test($scope.forgotUser.email)) {
+                //show error message
+                console.log("That is not a valid email address");
+            } else {
+                Accounts.forgotPassword({email: $scope.forgotUser.email});
+                console.log("Email sent");
+                $state.go('login');
+            }
+                    
+            // var emailData = {
+            //     message: "Reset your ClubNet password by clicking",
+            //     url: "clubnet://",
+            //     title: "here"
+            // };
+            
+            //var html = Blaze.toHTML(Blaze.With(emailData, function() {return Template.foo;}));
+            //var html = Blaze.toHTMLWithData(Template.myTemplate, emailData);
+            //var test = Blaze.isTemplate(Template.myTemplate);
+            //console.log(test);
+            // var options = {
+            //     from: '"Clubnet" <clubnet.noreply@gmail.com>',
+            //     to: $scope.forgotUser.email,
+            //     subject: "Reset your ClubNet password",
+            //     //todo: create beautiful template
+            //     html:'<a href="clubnet://">Click here to reset your password</a>'
+            // }
+            // Meteor.call("sendShareEmail", options);
         };
     })
     
     /**
      *  Reset Password Controller: provides all functionality for the reset password screen of the app
      */
-    .controller('resetPasswordCtrl', function ($scope, $stateParams) {
+    .controller('resetPasswordCtrl', function ($scope, $meteor, $state, $stateParams, checkPassword) {
         /**
          * Information of the user who forgot his password
          */
@@ -121,15 +143,19 @@ angular.module('userAccountControllers', [])
          * @summary Function to reset the users password
          */
         $scope.resetPassword = function () {
-            if($scope.forgotUser.newPassword == $scope.forgotUser.confirmNewPassword) {
-                Accounts.resetPassword($stateParams.token, $scope.forgotUser.newPassword, function (err) {
-                    if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-                    console.log('Reset password success');
-                });
+            if (!$scope.forgotUser.newPassword) {
+                console.log('No new password specified');               
+            } else if (!$scope.forgotUser.confirmNewPassword) {
+                console.log('Please confirm your new password');                
+            } else if ($scope.forgotUser.newPassword != $scope.forgotUser.confirmNewPassword) {
+                console.log('New passwords do not match');
+            } else if (!checkPassword.checkPassword($scope.forgotUser.newPassword)) {
+                console.log('Password not strong enough. It should contain at least 8 characters of which at least one alphabetical and one numeric.');
             } else {
-                console.log("Passwords do not match");
-            }
-        };
+                $meteor.resetPassword($stateParams.token, $scope.forgotUser.newPassword);
+                $state.go('login');
+            };
+        }
     })
     
     /**

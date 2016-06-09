@@ -82,7 +82,7 @@ Meteor.startup(function () {
      *  some issues.
      */
     Accounts.urls.enrollAccount = function (token) {
-        return Meteor.absoluteUrl("#/enroll/" + token);
+        return Meteor.absoluteUrl("#/redirect/enroll/" + token);
     };
 
     /**
@@ -90,7 +90,7 @@ Meteor.startup(function () {
      *  some issues.
      */
     Accounts.urls.resetPassword = function (token) {
-        return Meteor.absoluteUrl("#/resetpassword/" + token);
+        return Meteor.absoluteUrl("#/redirect/resetpassword/" + token);
     };
 
     // Attach user schema
@@ -99,6 +99,12 @@ Meteor.startup(function () {
 
 // TODO: remove Meteor.isServer for latency compensation
 Meteor.methods({
+    
+    sendShareEmail: function (options) {
+        Email.send(options);
+    },
+   
+        
     /**
      * @summary Function for adding a new user to the collection.
      * It will check whether or not the new user adheres to the schema.
@@ -127,7 +133,7 @@ Meteor.methods({
         //     path: '/enroll'
         // });
         Accounts.emailTemplates.siteName = "ClubNet";
-        Accounts.emailTemplates.from = "ClubNet <accounts@example.com>";
+        Accounts.emailTemplates.from = "ClubNet <clubnet.noreply@gmail.com>";
         Accounts.emailTemplates.enrollAccount.subject = function (newUser) {
             return "Welcome to ClubNet, " + newUser.profile.firstName;
         };

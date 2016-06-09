@@ -19,36 +19,42 @@ angular.module('app.routes', [])
                 }
             })
 
+            //login page
             .state('login', {
                 url: '/login',
                 templateUrl: 'client/app/views/login.ng.html',
                 controller: 'loginCtrl'
             })
-
+            
+            //register page
             .state('register', {
                 url: '/register',
                 templateUrl: 'client/app/views/register.ng.html',
                 controller: 'registerCtrl'
             })
 
+            //forgot password page
             .state('forgotPassword', {
                 url: '/forgotpassword',
                 templateUrl: 'client/app/views/forgotPassword.ng.html',
                 controller: 'forgotPasswordCtrl'
             })
             
-            .state('enrollment', {
-                url: '/enrollment',
+            //enrollment page
+            .state('enroll', {
+                url: '/enroll/:token',
                 templateUrl: 'client/app/views/enrollment.ng.html',
                 controller: 'resetPasswordCtrl'
             })
             
-            .state('resetPassword', {
-                url: '/resetPassword',
+            //reset password page
+            .state('resetpassword', {
+                url: '/resetpassword/:token',
                 templateUrl: 'client/app/views/resetPassword.ng.html',
                 controller: 'resetPasswordCtrl'
             })
 
+            //menu
             .state('menu', {
                 url: '/side-menu',
                 templateUrl: 'client/app/views/menu.ng.html',
@@ -56,6 +62,7 @@ angular.module('app.routes', [])
                 controller: 'menuCtrl'
             })
 
+            //feed
             .state('menu.feed', {
                 url: '/feed',
                 views: {
@@ -66,6 +73,7 @@ angular.module('app.routes', [])
                 }
             })
 
+            //settings
             .state('menu.settings', {
                 url: '/settings',
                 views: {
@@ -76,6 +84,7 @@ angular.module('app.routes', [])
                 }
             })
 
+            //profile 
             .state('menu.profile', {
                 url: '/profile',
                 views: {
@@ -86,6 +95,7 @@ angular.module('app.routes', [])
                 }
             })
 
+            //chats
             .state('menu.chats', {
                 url: '/chats',
                 views: {
@@ -96,6 +106,7 @@ angular.module('app.routes', [])
                 }
             })
 
+            //chat
             .state('menu.chat', {
                 url: '/chats/:chatId',
                 views: {

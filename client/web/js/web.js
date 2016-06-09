@@ -10,7 +10,8 @@ angular.module('web', ['angular-meteor',
     'ui.router',
     'web.controllers',
     'web.routes',
-    'web.translation']);
+    'web.translation',
+    'web.services']);
 
 function onReady() {
     angular.bootstrap(document, ['web']);

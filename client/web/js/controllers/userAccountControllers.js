@@ -320,11 +320,11 @@ angular.module('web.userAccountControllers', [])
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                $scope.passwordError = 'New passwords are do not match';
+                $scope.passwordError = 'New passwords do not match';
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
-                $scope.passwordError = 'Password not strong enough. It should contain at least 8 characters of which one alphabetical and one numeric.';
+                $scope.passwordError = 'Password not strong enough. It should contain at least 8 characters of which at least one alphabetical and one numeric.';
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else {
@@ -414,27 +414,27 @@ angular.module('web.userAccountControllers', [])
                     $scope.passwordErrorVisible = false;
 
 
-                    /**
-                     *
-                     * @type {{firstName: *, lastName: *, type: string, clubID: string, teamID: string}}
-                     */
-                    var updatedProfile = {
-                        firstName: Meteor.user().profile.firstName,
-                        lastName: Meteor.user().profile.lastName,
-                        type: 'pr',
-                        clubID: Meteor.user().profile.clubID,
-                        teamID: ''
-                    };
-                    $meteor.call('updateUserProfile', Meteor.userId(), updatedProfile).then(function (result) {
-                    }, function (err) {
-                        console.log('Profile not updated to pr');
-                        console.log(err);
-                    });
+                //     /**
+                //      *
+                //      * @type {{firstName: *, lastName: *, type: string, clubID: string, teamID: string}}
+                //      */
+                //     var updatedProfile = {
+                //         firstName: Meteor.user().profile.firstName,
+                //         lastName: Meteor.user().profile.lastName,
+                //         type: 'pr',
+                //         clubID: Meteor.user().profile.clubID,
+                //         teamID: ''
+                //     };
+                //     $meteor.call('updateUserProfile', Meteor.userId(), updatedProfile).then(function (result) {
+                //     }, function (err) {
+                //         console.log('Profile not updated to pr');
+                //         console.log(err);
+                //     });
 
-                    $state.go('/');
-                }, function (error) {
-                    $scope.passwordError = error.reason;
-                    $scope.passwordErrorVisible = true;
+                //     $state.go('/');
+                // }, function (error) {
+                //     $scope.passwordError = error.reason;
+                //     $scope.passwordErrorVisible = true;
                 });
             }
         };

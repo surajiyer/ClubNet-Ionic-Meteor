@@ -130,8 +130,139 @@ if (Meteor.isServer) {
          */
         getFeedItem: function (id) {
             check(id, String);
+
+            var succesCheck = Meteor.call('checkRepeatInterval', id);
+
             return Items.find({_id: id}).fetch()[0];
         },
+
+
+        checkRepeatInterval: function (id) {
+            check(id, String);
+            
+            var item = Items.find({_id: id}).fetch()[0];
+            var repeatInterval = item.repeatInterval;
+            //*********what kind of interval are we dealing with? Do some method accordinlgy ***********/
+            switch (repeatInterval) {
+                case 'daily':
+                    var succesCheck = Meteor.call('renewItemDaily', item);
+                    break;
+                case 'weekly':
+                    var succesCheck = Meteor.call('renewItemWeekly', item);
+                    break;
+                case 'fourweeks':
+                    var succesCheck = Meteor.call('renewItemFourweeks', item);
+            }
+            return true;
+        },
+
+
+        calculateTimeDifference: function (createdAt) {
+            check(createdAt, Date);
+            //get the current time (server sided ofc)
+            var date = new Date(); 
+
+            // time difference in ms
+            var timeDiff = date-createdAt;
+  
+            // strip the ms
+            timeDiff /= 1000;
+            // get seconds (Original had 'round' which incorrectly counts 0:28, 0:29, 1:30 ... 1:59, 1:0)
+            var seconds = Math.round(timeDiff % 60);
+            // remove seconds from the date
+            timeDiff = Math.floor(timeDiff / 60);
+            // get minutes
+            var minutes = Math.round(timeDiff % 60);
+            // remove minutes from the date
+            timeDiff = Math.floor(timeDiff / 60);
+            // get hours
+            var hours = Math.round(timeDiff % 24);
+            // remove hours from the date
+            timeDiff = Math.floor(timeDiff / 24);
+            // the rest of timeDiff is number of days
+            var days = timeDiff;
+
+            return days;
+        },
+
+        renewItemDaily: function (item) {
+            check(item, Object);
+            var createdAt = item.createdAt;
+            var repeatInterval = item.repeatInterval;
+
+            var days = Meteor.call('calculateTimeDifference', createdAt);
+
+            //console.log('Elapsed time in hours in function: '+hours);
+            console.log('Elapsed time in days in function: '+days);
+
+            if(days>=1 && item.status == 'published'){
+                console.log('its me!');
+
+                item.status = 'expired';
+                var succesCheck = Meteor.call('updateFeedItem', item);
+
+                var newItem = item;
+                newItem.createdAt = new Date();
+                newItem._id = null;
+                newItem.status = 'published';
+                var succesCheck = Meteor.call('addFeedItem', newItem);   
+            }
+
+            return true;
+        },
+
+        renewItemFourweeks: function (item) {
+            check(item, Object);
+            var createdAt = item.createdAt;
+            var repeatInterval = item.repeatInterval;
+
+            var days = Meteor.call('calculateTimeDifference', createdAt);
+
+            //console.log('Elapsed time in hours in function: '+hours);
+            console.log('Elapsed time in days in function: '+days);
+
+            if(days>=7 && item.status == 'published'){
+                console.log('its me!');
+
+                item.status = 'expired';
+                var succesCheck = Meteor.call('updateFeedItem', item);
+
+                var newItem = item;
+                newItem.createdAt = new Date();
+                newItem._id = null;
+                newItem.status = 'published';
+                var succesCheck = Meteor.call('addFeedItem', newItem);   
+            }
+
+            return true;
+        },
+
+        renewItemMonthly: function (item) {
+            check(item, Object);
+            var createdAt = item.createdAt;
+            var repeatInterval = item.repeatInterval;
+
+            var days = Meteor.call('calculateTimeDifference', createdAt);
+
+            //console.log('Elapsed time in hours in function: '+hours);
+            console.log('Elapsed time in days in function: '+days);
+
+            if(days>=28 && item.status == 'published'){
+                console.log('its me!');
+
+                item.status = 'expired';
+                var succesCheck = Meteor.call('updateFeedItem', item);
+
+                var newItem = item;
+                newItem.createdAt = new Date();
+                newItem._id = null;
+                newItem.status = 'published';
+                var succesCheck = Meteor.call('addFeedItem', newItem);   
+            }
+
+            return true;
+        },
+
         /**
          * @summary Function for updating the information of a feed item.
          * @param {Object} updatedItem The updated fields of an existing feed item.

@@ -11,7 +11,7 @@
                 <img src="{{hostname + currentClub.logo}}">
             </div>
             <a class="pure-menu-heading" style="background: {{currentClub.colorSecondary}}">{{currentClub.name}}</a>
-            <a class="pure-menu-subheading" style="background: {{currentClub.colorSecondary}}">Hi, Jarno Verhagen</a>
+            <a class="pure-menu-subheading" style="background: {{currentClub.colorSecondary}}">Hi, {{user.profile.firstName}}</a>
             <ul>
                 <li class="pure-menu-item"><a href="#" ui-sref="web.feed" class="pure-menu-link">{{ 'Feed' | translate }}</a></li>
 
