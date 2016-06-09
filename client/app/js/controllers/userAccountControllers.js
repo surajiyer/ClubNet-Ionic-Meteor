@@ -152,10 +152,10 @@ angular.module('userAccountControllers', [])
             } else if (!checkPassword.checkPassword($scope.forgotUser.newPassword)) {
                 console.log('Password not strong enough. It should contain at least 8 characters of which at least one alphabetical and one numeric.');
             } else {
-                $meteor.resetPassword($stateParams.token, $scope.forgotUser.newPassword)
+                $meteor.resetPassword($stateParams.token, $scope.forgotUser.newPassword);
+                $state.go('login');
             };
         }
-        $state.go('login');
     })
     
     /**
