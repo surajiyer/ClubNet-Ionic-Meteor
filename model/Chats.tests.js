@@ -15,7 +15,27 @@ if (Meteor.isClient) {
 
         describe('insert', function () {
                 // Give chat create permission
-
+            /** \[T]/
+             * F
+             * U
+             * C
+             * K
+             * I
+             * N
+             * G
+             *
+             * M
+             * I
+             * N
+             * D
+             * B
+             * L
+             * O
+             * W
+             * I
+             * N
+             * G
+             */
             before(function () {
                 chatRightsStub = sinon.stub(Meteor, 'call');
                 chatRightsStub
@@ -72,6 +92,19 @@ if (Meteor.isClient) {
                 var response = allow.insert('1', {users: ['1', '2']});
                 assert.equal(response, true);
             });
+
+            /**
+             * Obligatory:
+             *
+             * Y
+             * O
+             * U
+             * R
+             *
+             * M
+             * O
+             * M
+             */
 
 
             
