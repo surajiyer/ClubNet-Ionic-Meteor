@@ -50,7 +50,7 @@ if (Meteor.isServer) {
         it("Get ItemType with wrong parameter", (done) => {
             // Get item added in the previous test
             try {
-                var result = Meteor.call('getItemType', 1);
+                var result = Meteor.call('getItemType', false);
                 assert.fail();
             } catch (err) {
                 done();
