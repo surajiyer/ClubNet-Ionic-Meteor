@@ -1,8 +1,16 @@
 import * as utils from '/imports/common';
 import { clubSchema } from '/imports/schemas/misc';
 
-
 Clubs = new Mongo.Collection("Clubs");
+
+// Clubs.insert({
+//     name: 'cluby',
+//     logo: 'http://media1.santabanta.com/full1/Miscellaneous/Logos/logos-135a.jpg',
+//     colorPrimary: '#000',
+//     colorSecondary: '#fff',
+//     colorAccent: '#aaa',
+//     heroesMax: 5
+// });
 
 Meteor.startup(function () {
 
