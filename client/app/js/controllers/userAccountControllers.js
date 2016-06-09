@@ -106,7 +106,7 @@ angular.module('userAccountControllers', [])
     /**
      *  Reset Password Controller: provides all functionality for the reset password screen of the app
      */
-    .controller('resetPasswordCtrl', function ($scope, $state) {
+    .controller('resetPasswordCtrl', function ($scope, $stateParams) {
         /**
          * Information of the user who forgot his password
          */
@@ -122,7 +122,7 @@ angular.module('userAccountControllers', [])
          */
         $scope.resetPassword = function () {
             if($scope.forgotUser.newPassword == $scope.forgotUser.confirmNewPassword) {
-                Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
+                Accounts.resetPassword($stateParams.token, $scope.forgotUser.newPassword, function (err) {
                     if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
                     console.log('Reset password success');
                 });
