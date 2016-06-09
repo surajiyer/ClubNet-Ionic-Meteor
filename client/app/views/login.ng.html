@@ -1,7 +1,7 @@
-<ion-view title="Login"
-          style="background: url(/app/img/football-bg.jpg) no-repeat center;background-size:cover;">
-    <ion-content padding="true" class="has-header main-content">
-        <form class="list" ng-submit="login()">
+<ion-view title="Log In">
+    <ion-content padding="true" class="has-header main-content ">
+        <img src="/app/img/logo-front.png" class="login-logo" alt="" />
+        <form class="list login-form" ng-submit="login()">
             <ion-list>
                 <label class="item item-input">
                     <span class="input-label">Email</span>
@@ -14,12 +14,16 @@
             </ion-list>
             <div class="spacer" style="width: 300px; height: 22px;"></div>
             <a ng-click="login()" id="login-button" style="font-size:18px;"
-               class="button button-positive  button-block">Log in</a>
-            <a ui-sref="register" id="register-button" style="font-size:18px;"
-               class="button button-positive  button-block">Register</a>
+               class="button button-positive  button-block">Log In</a>
+            <div class="forgot-pw">
+                <button class="button button-stable" ng-click="goToRemindPassword()">Forgot password?</button>
+            </div>
+            <!-- <div class="reset-pw">
+                <button class="button button-stable" ng-click="goToResetPassword()">Reset Password</button>
+            </div>
+            <div class="enroll">
+                <button class="button button-stable" ng-click="goToEnroll()">Enroll</button>
+            </div> -->
         </form>
-        <div class="forgot-pw">
-            <button class="button button-stable" ng-click="goToRemindPassword()">Forgot password?</button>
-        </div>
     </ion-content>
 </ion-view>

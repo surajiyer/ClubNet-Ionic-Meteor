@@ -2,7 +2,7 @@
     <ion-header-bar>
         <h1 class="title">New Practicality</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeForm()">Close</button>
+            <button class="button button-clear" ng-click="closeModal()">Close</button>
         </div>
     </ion-header-bar>
     <ion-content>
@@ -32,11 +32,15 @@
             </label>
             <label class="item item-input item-label">
                 <span class="input-label">Title</span>
+
                 <input ng-model="newForm.title" type="text" placeholder="Title">
             </label>
             <label class="item item-input item-label">
                 <span class="input-label">Description:</span>
                 <input ng-model="newForm.description" type="text" placeholder="Description">
+
+                <textarea ng-model="newForm.title" rows="3" placeholder="Title"></textarea>
+
             </label>
             <label class="item item-input item-label">
                 <span class="input-label">Target value:</span>

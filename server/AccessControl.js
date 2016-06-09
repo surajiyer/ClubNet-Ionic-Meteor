@@ -28,7 +28,7 @@ if(Meteor.isServer) {
             if (!doc.items) {
                 throw new Meteor.Error('No such permission defined');
             }
-
+            
             return doc.items[0].permissions[permission];
         },
         setPermissions: function (newAccess) {

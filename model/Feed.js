@@ -142,10 +142,15 @@ if (Meteor.isServer) {
             check(updatedItem, Object);
             var id = updatedItem._id;
             delete updatedItem._id;
-            Items.update(
+            var success = Items.update(
                 {_id: id},
                 {$set: updatedItem}
             );
+            if (success) {
+                return updatedItem;
+            } else {
+                return null;
+            }
         },
         /**
          * @summary Function for deleting a feed item.

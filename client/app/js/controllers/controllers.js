@@ -21,6 +21,13 @@ angular.module('app.controllers', [
                 });
             });
         };
+        $scope.notify = function(){
+
+            var id = Meteor.userId();
+            console.log(id);
+            $meteor.call('userNotification', 'test', 'texty', [id]);
+        };
+
 
         /**
          * Loading the current club for styling
@@ -64,7 +71,7 @@ angular.module('app.controllers', [
         Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
         // Limit on number of feed item to display
-        $scope.limit = 2;
+        $scope.limit = 3;
         /* Get the number of items that can be retrieved.
          * Needed for preventing indefinite increase of limit in infiniteScroll */
         $meteor.call('getItemsCount').then(function (result) {
@@ -87,7 +94,7 @@ angular.module('app.controllers', [
          */
         $scope.loadMore = function () {
             if ($scope.limit > $scope.maxItems) return;
-            $scope.limit = $scope.limit + 4;
+            $scope.limit = $scope.limit + 2;
         };
 
         /**
@@ -112,6 +119,7 @@ angular.module('app.controllers', [
                 return Items.find({}, {sort: {sticky: -1, createdAt: -1}});
             }
         });
+
     })
 
     /**
@@ -136,23 +144,87 @@ angular.module('app.controllers', [
         $scope.$on('$destroy', function () {
             $scope.popover.remove();
         });
+
+    })
+
+    /**
+     *  New Item Controller: provides all functionality for the popover screen of the app
+     */
+    .controller('addNewItemCtrl', function ($scope, $meteor, $ionicModal) {
+
+        $scope.newItem = {};
+        $scope.trainings = [];
+
+        /**
+         * @summary Function to retrieve trainings
+         */
+        $meteor.call('getTrainings').then(
+            function (result) {
+                $scope.trainings = result;
+            },
+            function (err) {
+                console.log(err);
+            }
+        );
+
+        $ionicModal.fromTemplateUrl('client/app/views/feedItems/new' + $scope.type._id + '.ng.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.modal = modal;
+        });
+
+        $scope.openModal = function () {
+            $scope.modal.show();
+            $scope.postBtn = "Post";
+        };
+
+        /**
+         * @summary Function to close the voting
+         */
+        $scope.closeModal = function () {
+            $scope.modal.hide();
+        };
+
+        $scope.addItem = function () {
+            $scope.newItem.type = $scope.type._id;
+            Meteor.call('addFeedItem', $scope.newItem, function (err) {
+                // TODO: do something with error (show as popup?)
+                if (err) {
+                    throw new Meteor.Error(err.reason);
+                }
+            });
+            $scope.newItem = {};
+            $scope.closeModal();
+        };
     })
 
     /**
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      */
-    .controller('controlItemCtrl', function ($scope, $meteor, AccessControl, $ionicPopover, $ionicPopup) {
+    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl, $ionicPopover, $ionicPopup, $ionicModal) {
         // Get item type
+        $scope.newItem = {};
         $scope.itemType = TypesCollection.find({_id: $scope.item.type}).fetch()[0];
+        $scope.trainings = [];
+
+        /**
+         * @summary Function to retrieve trainings
+         */
+        $meteor.call('getTrainings').then(
+            function (result) {
+                $scope.trainings = result;
+            },
+            function (err) {
+                console.log(err);
+            }
+        );
 
         /**
          * Check whether the user has permission to edit the item
          */
         $scope.showEdit = false;
         AccessControl.getPermission($scope.item.type, 'edit', function (result) {
-            if (result) {
-                $scope.showEdit = $scope.item.creatorID == Meteor.userId();
-            }
+            $scope.showEdit = result && $scope.item.creatorID == Meteor.userId();
         });
 
         /**
@@ -160,7 +232,7 @@ angular.module('app.controllers', [
          */
         $scope.showDelete = false;
         AccessControl.getPermission($scope.item.type, 'delete', function (result) {
-            if (result) $scope.showDelete = result;
+            $scope.showDelete = result;
         });
 
         /* POPOVER */
@@ -192,48 +264,74 @@ angular.module('app.controllers', [
         /**
          * @summary Function to enlarge the feed item
          */
-        $scope.showFullItem = function ($event, state) {
+        $scope.showFullItem = function ($event) {
             var elem = angular.element($event.currentTarget);
-            if (!state && $scope.isFull) {
+            if ($scope.isFull) {
                 elem.parents(".list").css("max-height", "200px").find(".gradient").show();
-                $scope.isFull = false;
             } else {
                 elem.parents(".list").css("max-height", "100%").find(".gradient").hide();
-                $scope.isFull = true;
             }
+            $scope.isFull = !$scope.isFull;
         };
 
-        $scope.editItem = function() {
-            if(!$scope.showEdit) return;
-            switch ($scope.item.type) {
-                case 'Voting':
-                    $scope.$emit('editVoting', $scope.item._id);
-                    break;
-                case 'Form':
-                    $scope.$emit('editForm', $scope.item._id);
-                    break;
-                case 'Post':
-                    $scope.$emit('editPost', $scope.item._id);
-                    break;
-                case 'Heroes':
-                    $scope.$emit('editHeroes', $scope.item._id);
-                    break;
-            }
+        /**
+         * Get new voting template
+         */
+        $ionicModal.fromTemplateUrl('client/app/views/feedItems/new' + $scope.item.type + '.ng.html', {
+            scope: $scope
+        }).then(function (modal) {
+            $scope.modal = modal;
+        });
+
+        /**
+         * @summary Function to open the voting
+         */
+        $scope.editItem = function () {
+            $scope.newItem._id = $scope.item._id;
+            $scope.newItem.title = $scope.item.title;
+            $scope.$broadcast("loadEditData");
+            $scope.postBtn = "Save";
+            $scope.modal.show();
+        };
+
+        /**
+         * @summary Function to close the voting
+         */
+        $scope.closeModal = function () {
+            $scope.modal.hide();
+        };
+
+        /**
+         * @summary Function to add a new voting feed item
+         */
+        $scope.edit = function () {
+            $scope.newItem.type = $scope.item.type;
+            $meteor.call('updateFeedItem', $scope.newItem).then(
+                function (result) {
+                    $scope.$broadcast("successEdit", result);
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+            $scope.newItem = {};
+            $scope.closeModal();
         };
 
         /**
          * @summary Function to delete a feed item
          */
-        $scope.deleteItem = function (itemId) {
+        $scope.deleteItem = function () {
             var confirmPopup = $ionicPopup.confirm({
                 title: 'Are you sure you want to delete the feed item?'
             });
             confirmPopup.then(function (res) {
                 if (res) {
-                    $meteor.call('deleteFeedItem', itemId);
+                    $meteor.call('deleteFeedItem', $scope.item._id);
                 }
             });
         };
+
     })
 
     /**

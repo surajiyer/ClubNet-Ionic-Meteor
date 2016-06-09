@@ -16,17 +16,12 @@ if (Meteor.isServer) {
                 text: text,
                 badge: badge,
                 sound: 'airhorn.caf',
-                payload: {
-                    title: title,
-                    text:text,
-                    historyId: result
-                },
                 query: {
                     // this will send to all users
                 }
             });
         },
-        userNotification: function(text,title,userId) {
+        userNotification: function(text,title,users) {
             var badge = 1;
             Push.send({
                 from: 'push',
@@ -34,12 +29,8 @@ if (Meteor.isServer) {
                 text: text,
                 badge: badge,
                 sound: 'airhorn.caf',
-                payload: {
-                    title: title,
-                    historyId: result
-                },
                 query: {
-                    userId: userId //this will send to a specific Meteor.user()._id
+                    userId: {$in : users} //this will send to a specific Meteor.user()._id
                 }
             });
         },

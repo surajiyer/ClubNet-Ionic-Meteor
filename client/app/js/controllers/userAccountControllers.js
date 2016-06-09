@@ -68,43 +68,70 @@ angular.module('userAccountControllers', [])
         $scope.goToRemindPassword = function () {
             $state.go('forgotPassword');
         }
+        
+        // $scope.goToResetPassword = function () {
+        //     $state.go("resetPassword");
+        // }
+        
+        // $scope.goToEnroll = function () {
+        //     $state.go("enrollment");
+        // }
     })
 
     /**
      *  Forgot Password Controller: provides all functionality for the forgot password screen of the app
      */
-    .controller('forgotPasswordCtrl', function ($scope) {
+    .controller('forgotPasswordCtrl', function ($scope, $state) {
+        /**
+         * Information of the user who forgot his password
+         */
+        $scope.forgotUser = {
+            email: '',
+        };
+
+         /**
+         * @summary Function to send email to user to reset password
+         */
+        $scope.forgotPassword = function () {
+            console.log('Email Sent');
+            if (!$scope.forgotUser.email)
+                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS'); // Nice error +1
+            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
+                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+            });
+            $state.go('login');
+        };
+    })
+    
+    /**
+     *  Reset Password Controller: provides all functionality for the reset password screen of the app
+     */
+    .controller('resetPasswordCtrl', function ($scope, $stateParams) {
         /**
          * Information of the user who forgot his password
          */
         $scope.forgotUser = {
             email: '',
             token: '',
-            newPassword: ''
+            newPassword: '',
+            confirmNewPassword: ''
         };
 
         /**
          * @summary Function to reset the users password
          */
         $scope.resetPassword = function () {
-            Accounts.resetPassword($scope.forgotUser.token, $scope.forgotUser.newPassword, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-                console.log('Reset password success');
-            });
-        };
-
-        /**
-         * @summary Function to send email to user to reset password
-         */
-        $scope.forgotPassword = function () {
-            if (!$scope.forgotUser.email)
-                throw new Meteor.Error('PLEASE ENTER EMAIL ADDRESS U BITCH'); // Nice error +1
-            Accounts.forgotPassword({email: $scope.forgotUser.email}, function (err) {
-                if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
-            });
+            if($scope.forgotUser.newPassword == $scope.forgotUser.confirmNewPassword) {
+                Accounts.resetPassword($stateParams.token, $scope.forgotUser.newPassword, function (err) {
+                    if (err) throw new Meteor.Error('Forgot password error: ' + err.reason);
+                    console.log('Reset password success');
+                });
+            } else {
+                console.log("Passwords do not match");
+            }
         };
     })
-
+    
     /**
      *  Profile Controller: provides all functionality for the Profile screen of the app
      */
