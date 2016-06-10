@@ -43,6 +43,35 @@ angular.module('web.controllers', [
     })
 
     /**
+     *  Redirect to application controller: Everything needed to redirect link to the mobile application
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
+    .controller('redirectCtrl', function ($location, $window, $scope) {
+        // Get url
+        var url = $location.url();
+            console.log(url);
+
+        // Get redirect token
+        var token = url.substr(url.lastIndexOf('/'));
+            console.log("Token: " + url.substr(url.lastIndexOf('/')));
+
+        // Fix url for retrieving format
+        var lastIndex = url.lastIndexOf("/");
+        url = url.substring(0, lastIndex)
+
+        // Get redirect sort
+        var sort = url.substr(url.lastIndexOf('/') + 1);
+            console.log("Sort: " + url.substr(url.lastIndexOf('/') + 1));
+
+        $scope.redirectURL = 'clubnet://' + sort + token;
+            console.log($scope.redirectURL);
+
+        $window.close()
+
+    })
+
+    /**
      *  Settings: provides the functionality for the settings page of the web interface
      *  @param {String} Name of the controller
      *  @param {Function}

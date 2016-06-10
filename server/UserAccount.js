@@ -82,7 +82,7 @@ Meteor.startup(function () {
      *  some issues.
      */
     Accounts.urls.enrollAccount = function (token) {
-        return Meteor.absoluteUrl("#/enroll/" + token);
+        return Meteor.absoluteUrl("#/redirect/enroll/" + token);
     };
 
     /**
@@ -90,7 +90,7 @@ Meteor.startup(function () {
      *  some issues.
      */
     Accounts.urls.resetPassword = function (token) {
-        return Meteor.absoluteUrl("#/resetpassword/" + token);
+        return Meteor.absoluteUrl("#/redirect/resetpassword/" + token);
     };
 
     // Attach user schema

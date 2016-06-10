@@ -55,7 +55,6 @@ angular.module('app.services', [])
 
                 // Get message
                 Meteor.subscribe('Messages', chatId, messageId, function () {
-                    console.log(Messages.find().fetch());
                     var message = Messages.find({_id: messageId}).fetch()[0];
                     if (!message) return;
 

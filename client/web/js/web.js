@@ -18,7 +18,6 @@ function onReady() {
 }
 
 // TODO: Change condition in production
-if (!Meteor.isCordova) {
-    angular.element(document).ready(onReady);
-}
-
+// if (Meteor.isCordova) {
+//     angular.element(document).ready(onReady);
+// }

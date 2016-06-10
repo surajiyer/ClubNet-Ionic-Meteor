@@ -34,9 +34,7 @@ if (Meteor.isServer) {
                 try {
                     Meteor.call('addFeedItem', testItem);
                     assert.fail();
-                } catch (err) {
-                }
-
+                } catch (err) {}
             });
 
             it("Add FeedItem succeed", (done) => {
@@ -121,8 +119,7 @@ if (Meteor.isServer) {
                 try {
                     Meteor.call('updateFeedItem', false);
                     assert.fail();
-                } catch (err) {
-                }
+                } catch (err) {}
 
             });
 

@@ -37,12 +37,7 @@ Meteor.startup(function () {
          */
         Meteor.publish('ItemTypes', function () {
             // Check if you have the right to view this type
-            var types = TypesCollection.find().fetch();
-            types = _.pluck(types, '_id');
-            // types = _.filter(types, function (type) {
-            //     return Meteor.call('checkRights', type, 'view');
-            // });
-            return TypesCollection.find({_id: {$in: types}});
+            return TypesCollection.find();
         });
     }
 });

@@ -11,7 +11,6 @@ angular.module('formControllers', [])
 
         $scope.form = function () {
             $scope.newForm.type = 'Form';
-            $scope.newForm.published = true;
             $scope.newForm.createdAt = new Date;
             $scope.newForm.locked = false;
             $scope.newForm.teamID = Meteor.user().profile.teamID;

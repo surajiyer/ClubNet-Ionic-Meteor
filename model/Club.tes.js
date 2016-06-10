@@ -1,8 +1,5 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
-
-// import {Meteor} from 'meteor/meteor';
-
 import './Club.js';
 
 let testClub = {};
@@ -56,7 +53,6 @@ if (Meteor.isServer) {
         });
         
         it("Update Club", (done) => {
-            
             // Changing the test club
             testClub.name = 'Name2';
             
@@ -72,7 +68,6 @@ if (Meteor.isServer) {
         });
         
         it("Update Club Invalid Parameter", (done) => {
-            
             // Retrieving the club
             try {
                 Meteor.call('updateClub', false);

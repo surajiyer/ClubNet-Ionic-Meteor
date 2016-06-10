@@ -50,7 +50,7 @@ const baseFeedItemSchema = new SimpleSchema({
     },
     status: {
         type: String,
-        allowedValues: ['published', 'unpublished', 'expired'],
+        allowedValues: ['published', 'unpublished'],
         defaultValue: 'published'
     },
     createdAt: {

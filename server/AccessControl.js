@@ -19,6 +19,7 @@ if(Meteor.isServer) {
         checkRights: function (itemType, permission) {
             check(itemType, String);
             check(permission, String);
+            check(Meteor.user(), Object);
 
             var doc = AMx.findOne(
                 {'_id': Meteor.user().profile.type},
@@ -34,7 +35,7 @@ if(Meteor.isServer) {
         setPermissions: function (newAccess) {
             check(Meteor.userId(), Match.Where(isAdmin));
             check(newAccess, accessControlSchema);
-            AMx.insert(newAccess, function (err) {
+            return AMx.insert(newAccess, function (err) {
                 if (err) throw new Meteor.Error(err.error);
             });
         }
