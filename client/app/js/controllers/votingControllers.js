@@ -44,10 +44,9 @@ angular.module('votingControllers', [])
                     $scope.item.training_date = result.date;
                 },
                 function (err) {
-                    throw new Meteor.Error(err.reason);
+                    return CommonServices.showAlert(err.reason, 'Failed to get Trainings list');
                 }
             );
-            console.log(res);
         });
 
         if ($scope.item != null) {

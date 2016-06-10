@@ -36,7 +36,7 @@ angular.module('app.controllers', [
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
         }, function (err) {
-            CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
+            return CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
     })
 
@@ -85,8 +85,6 @@ angular.module('app.controllers', [
                 _.each($scope.itemTypes, function (element) {
                     element.checked = true;
                 });
-
-                console.log($scope.itemTypes);
             }
         });
 
@@ -173,7 +171,7 @@ angular.module('app.controllers', [
     /**
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
-    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl) {
+    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices) {
 
         $scope.newItem = {};
         $scope.trainings = [];
@@ -191,7 +189,6 @@ angular.module('app.controllers', [
         );
 
         $scope.showCreate = false;
-
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
             $scope.showCreate = result;
             if (result) {
@@ -220,9 +217,8 @@ angular.module('app.controllers', [
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             Meteor.call('addFeedItem', $scope.newItem, function (err) {
-                // TODO: do something with error (show as popup?)
                 if (err) {
-                    throw new Meteor.Error(err.reason);
+                    return CommonServices.showAlert('Failed to add item', err.reason);
                 }
             });
             $scope.newItem = {};

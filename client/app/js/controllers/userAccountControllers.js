@@ -57,8 +57,7 @@ angular.module('userAccountControllers', [])
             try {
                 check($scope.user.email, String);
             } catch (e) {
-                CommonServices.showAlert('Invalid E-mail', 'Please provide a valid e-mail address');
-                return;
+                return CommonServices.showAlert('Invalid E-mail', 'Please provide a valid e-mail address');
             }
 
             try {
@@ -67,26 +66,23 @@ angular.module('userAccountControllers', [])
                     return x.length > 0;
                 }));
             } catch (e) {
-                CommonServices.showAlert('Invalid password', 'Please enter a valid password');
-                return;
+                return CommonServices.showAlert('Invalid password', 'Please enter a valid password');
             }
 
             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                 if (error) {
                     // Show error message
                     if (error.error == 400 || error.error == 403) {
-                        CommonServices.showAlert('Incorrect Credentials', 'Username or Password does not match.');
+                        return CommonServices.showAlert('Incorrect Credentials', 'Username or Password does not match.');
                     } else {
-                        CommonServices.showAlert(error.error + ' ' + error.reason, error.message);
+                        return CommonServices.showAlert(error.error + ' ' + error.reason, error.message);
                     }
-                    return;
                 }
 
                 // Check if user is a PR user
                 if (Meteor.user().profile.type == 'pr') {
                     Meteor.logout();
-                    CommonServices.showAlert('Not Authorized', 'Please use the Web interface to login.');
-                    return;
+                    return CommonServices.showAlert('Not Authorized', 'Please use the Web interface to login.');
                 }
 
                 // Go to feed
@@ -118,8 +114,7 @@ angular.module('userAccountControllers', [])
          */
         $scope.forgotPassword = function () {
             if (!SimpleSchema.RegEx.Email.test($scope.email)) {
-                CommonServices.showAlert('Invalid E-mail', 'Please provide a valid e-mail address');
-                return;
+                return CommonServices.showAlert('Invalid E-mail', 'Please provide a valid e-mail address');
             }
 
             Accounts.forgotPassword({email: $scope.email}, function () {
@@ -191,8 +186,7 @@ angular.module('userAccountControllers', [])
          */
         $scope.changePassword = function () {
             if ($scope.password.newPass != $scope.password.newPassCheck) {
-                CommonServices.showAlert("Error", "Passwords don't match.");
-                return;
+                return CommonServices.showAlert("Error", "Passwords don't match.");
             }
             
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
@@ -201,7 +195,7 @@ angular.module('userAccountControllers', [])
                     $state.go('login');
                 });
             }, function (error) {
-                CommonServices.showAlert('Error', error.reason);
+                return CommonServices.showAlert('Error', error.reason);
             });
         };
     })
