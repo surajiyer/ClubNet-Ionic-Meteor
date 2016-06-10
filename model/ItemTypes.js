@@ -64,5 +64,9 @@ if (Meteor.isServer) {
                 throw new Meteor.Error(err.message);
             }
         },
+        getItemTypesToCreate: function (types) {
+            check(types, [String]);
+            return TypesCollection.find({_id: {$in: types}});
+        }
     });
 }

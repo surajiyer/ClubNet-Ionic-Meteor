@@ -22,7 +22,7 @@ if (Meteor.isServer) {
             global.Meteor.user = sinon.stub().returns({
                 profile : { clubID : 'test'}
             });
-            
+
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');
@@ -48,11 +48,11 @@ if (Meteor.isServer) {
                 assert.fail();
             }
         });
-        
+
         it("Update Club", (done) => {
             // Changing the test club
             testClub.name = 'Name2';
-            
+
             // Updating the club
             try {
                 Meteor.call('updateClub', testClub);
@@ -63,7 +63,7 @@ if (Meteor.isServer) {
                 assert.fail();
             }
         });
-        
+
         it("Update Club Invalid Parameter", (done) => {
             // Retrieving the club
             try {

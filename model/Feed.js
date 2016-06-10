@@ -211,7 +211,7 @@ if (Meteor.isServer) {
             return true;
         },
 
-        renewItemFourweeks: function (item) {
+        renewItemWeekly: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
             var repeatInterval = item.repeatInterval;
@@ -237,7 +237,7 @@ if (Meteor.isServer) {
             return true;
         },
 
-        renewItemMonthly: function (item) {
+        renewItemFourweeks: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
             var repeatInterval = item.repeatInterval;

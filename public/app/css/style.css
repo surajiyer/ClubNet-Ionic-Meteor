@@ -304,16 +304,31 @@ form.list {
     background-color: transparent;
 }
 
-form.login-form {
-    position: relative;
-    top: 50%;
-    margin-top: -20px;
+.login-logo {
+    width: 200px;
+    margin: 50px 0;
 }
 
-.login-logo {
-    position: absolute;
-    width: 200px;
-    left: 50%;
-    margin-left: -100px;
-    margin-top: 40px;
+.list.card.sticky .item {
+    background-color: rgb(255, 251, 219);
+}
+
+.list.card.sticky .item-divider {
+    background-color: #FFF8A6;
+}
+
+.list.card.sticky .item-select select {
+    background-color: rgb(255, 251, 219);
+}
+
+.list.card.sticky .gradient {
+    background: -moz-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 39%, rgb(255, 250, 192) 76%, rgb(247, 239, 148) 100%); /* FF3.6-15 */
+    background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 39%, rgb(255, 250, 192) 76%, rgb(247, 239, 148) 100%); /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 39%, rgb(255, 250, 192) 76%, rgb(247, 239, 148) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
+
+}
+
+.sticky .variants {
+    background: #FFFBDB;
 }

@@ -3,12 +3,11 @@ angular.module('app.controllers', [
     'chatControllers',
     'votingControllers',
     'formControllers',
-    'heroControllers',
-    'postControllers'])
+    'heroControllers'])
 
-/**
- * Menu Controller: provides all functionality for the menu of the app
- */
+    /**
+     * Menu Controller: provides all functionality for the menu of the app
+     */
     .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat, CommonServices) {
         /**
          * To check if user has permission to view chat option
@@ -44,10 +43,12 @@ angular.module('app.controllers', [
     /**
      * Feed Controller: provides all functionality for the feed screen of the app
      */
-    .controller('feedCtrl', function ($scope, $meteor, AccessControl) {
-        // Show coach bar if needed
-        AccessControl.getPermission('CoachBar', 'view', (result) => {
-            $scope.showCoachBar = result;
+    .controller('feedCtrl', function ($scope, $meteor) {
+        /**
+         * @summary Show the plus button if user has rights to add at least any kind of item
+         */
+        $scope.$on("showAddItem", function() {
+            $scope.showAddItem = true;
         });
 
         /**
@@ -89,8 +90,11 @@ angular.module('app.controllers', [
             }
         });
 
+        // Load the plus button types
+        // Meteor.subscribe('createItemTypes');
+
         // Limit on number of feed item to display
-        $scope.limit = 3;
+        $scope.limit = 7;
         /* Get the number of items that can be retrieved.
          * Needed for preventing indefinite increase of limit in infiniteScroll */
         $meteor.call('getItemsCount').then(function (result) {
@@ -144,7 +148,7 @@ angular.module('app.controllers', [
     /**
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
-    .controller('newItemCtrl', function ($scope, $ionicPopover) {
+    .controller('addNewItemCtrl', function ($scope, $ionicPopover) {
         $ionicPopover.fromTemplateUrl('client/app/views/popover.ng.html', {
             scope: $scope
         }).then(function (popover) {
@@ -169,7 +173,8 @@ angular.module('app.controllers', [
     /**
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
-    .controller('addNewItemCtrl', function ($scope, $meteor, $ionicModal) {
+    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl) {
+
         $scope.newItem = {};
         $scope.trainings = [];
 
@@ -184,6 +189,15 @@ angular.module('app.controllers', [
                 console.log(err);
             }
         );
+
+        $scope.showCreate = false;
+
+        AccessControl.getPermission($scope.type._id, 'create', function (result) {
+            $scope.showCreate = result;
+            if (result) {
+                $scope.$emit("showAddItem");
+            }
+        });
 
         $ionicModal.fromTemplateUrl('client/app/views/feedItems/new' + $scope.type._id + '.ng.html', {
             scope: $scope
@@ -205,28 +219,8 @@ angular.module('app.controllers', [
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
-            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                Meteor.call('getFeedItemType', result, function (err, result) {
-                    if (result == 'Voting') {
-                        Meteor.call('getClubUsers', function (err, result) {
-                            var text = 'Vote for the exercise you like.';
-                            var title = 'New voting!';
-                            Meteor.call('userNotification', text, title, result);
-                        });
-                    } else if (result == 'Form') {
-                        Meteor.call('getTeamUsers', function (err, result) {
-                            var text = 'React on new practicality.';
-                            var title = 'New practicality!';
-                            Meteor.call('userNotification', text, title, result);
-                        });
-                    } else if (result == 'Heroes') {
-                        Meteor.call('getClubUsers', function (err, result) {
-                            var text = 'Check out a new hero of the week.';
-                            var title = 'New Hero!';
-                            Meteor.call('userNotification', text, title, result);
-                        });
-                    }
-                });
+            Meteor.call('addFeedItem', $scope.newItem, function (err) {
+                // TODO: do something with error (show as popup?)
                 if (err) {
                     throw new Meteor.Error(err.reason);
                 }
@@ -248,6 +242,16 @@ angular.module('app.controllers', [
             }
         });
         $scope.trainings = [];
+        $scope.hasEnded = false;
+
+        $scope.showItem = false;
+        AccessControl.getPermission($scope.item.type, 'view', function (result) {
+            $scope.showItem = result;
+        });
+
+        $scope.$on("hasEnded", function () {
+            $scope.hasEnded = true;
+        });
 
         /**
          * @summary Function to retrieve trainings
@@ -274,7 +278,7 @@ angular.module('app.controllers', [
          */
         $scope.showDelete = false;
         AccessControl.getPermission($scope.item.type, 'delete', function (result) {
-            $scope.showDelete = result;
+            $scope.showDelete = result && $scope.item.creatorID == Meteor.userId();
         });
 
         /* POPOVER */
@@ -373,6 +377,25 @@ angular.module('app.controllers', [
                 }
             });
         };
+
+        /**
+         * @summary Sticky/Unsticky a feed item
+         */
+        $scope.stickyItem = function () {
+            var obj = {
+                _id: $scope.item._id,
+                type: $scope.item.type,
+                sticky: !$scope.item.sticky
+            };
+            $meteor.call("updateFeedItem", obj).then(
+                function (result) {
+                    console.log("Success");
+                },
+                function (err) {
+                    console.log(err);
+                }
+            );
+        }
 
     })
 

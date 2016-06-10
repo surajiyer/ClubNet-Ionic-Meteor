@@ -5,12 +5,16 @@ angular.module('votingControllers', [])
  *  @param {String} Name of the controller
  *  @param {Function}
  */
-    .controller('votingCtrl', function ($scope, $meteor, $ionicModal, $ionicPopup) {
+    .controller('votingCtrl', function ($scope, $meteor, $ionicModal, $ionicPopup, AccessControl) {
         /* Voting */
         $scope.editingItem = 0;
         $scope.postBtn = "Post";
 
         $scope.exercises = [];
+
+        AccessControl.getPermission($scope.item.type, 'edit', function (result) {
+            $scope.isCoach = result;
+        });
 
         /**
          * @summary Function to retrieve and update the voting results
@@ -48,7 +52,7 @@ angular.module('votingControllers', [])
 
         if ($scope.item != null) {
             $scope.hasVoted = false;
-            $scope.hasEnded = false;
+            $scope.$parent.hasEnded = false;
 
             $meteor.call("getTrainingObj", $scope.item.training_id).then(
                 function (result) {
@@ -74,7 +78,10 @@ angular.module('votingControllers', [])
                 function (result) {
                     var today = new Date;
                     // TODO: remove nrVoters from the item collection
-                    $scope.hasEnded = today > $scope.item.deadline;
+                    $scope.$parent.hasEnded = today > $scope.item.deadline;
+                    if ($scope.$parent.hasEnded) {
+                        $scope.$emit("hasEnded");
+                    }
                 },
                 function (err) {
                     console.log(err);
@@ -86,7 +93,8 @@ angular.module('votingControllers', [])
                     $meteor.call('getTeamSize').then(
                         function (nr2) {
                             if (nr1 == nr2) {
-                                $scope.hasEnded = true;
+                                $scope.$parent.hasEnded = true;
+                                $scope.$emit("hasEnded");
                             }
                         },
                         function (err) {
@@ -152,7 +160,8 @@ angular.module('votingControllers', [])
                         $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
                             function (result) {
                                 if (result.length >= $scope.item.nrVoters) {
-                                    $scope.hasEnded = true;
+                                    $scope.$parent.hasEnded = true;
+                                    $scope.$emit("hasEnded");
                                 }
                             },
                             function (err) {
