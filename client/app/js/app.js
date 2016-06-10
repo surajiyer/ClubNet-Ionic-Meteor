@@ -14,7 +14,19 @@ angular.module('app', ['angular-meteor',
     'app.controllers',
     'app.routes'])
 
-    .run(function ($ionicPlatform) {
+    .run(function ($ionicPlatform, $state) {
+        handleOpenURL = function handleOpenURL(url) {
+            if (url.startsWith('clubnet://enroll')) {
+                var token = url.substr(url.lastIndexOf('/') + 1);
+                $state.go('enrollment', {"token": token});
+            } else if (url.startsWith('clubnet://resetpassword')) {
+                var token = url.substr(url.lastIndexOf('/') + 1);
+                $state.go('resetPassword', {"token": token});
+            } else {
+                $state.go('login');
+            }
+        };
+
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
             // for form inputs)
@@ -29,6 +41,8 @@ angular.module('app', ['angular-meteor',
         });
     });
 
+isPhone = Meteor.isCordova;
+
 function onReady() {
     angular.bootstrap(document, ['app']);
 }
@@ -36,3 +50,6 @@ function onReady() {
 if(Meteor.isCordova) {
     angular.element(document).on("deviceready", onReady);
 }
+// else {
+//     angular.element(document).ready(onReady);
+// }

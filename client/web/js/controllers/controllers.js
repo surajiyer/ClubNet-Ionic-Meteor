@@ -2,6 +2,28 @@ angular.module('web.controllers', [
     'ui.bootstrap',
     'web.userAccountControllers'])
 
+    .controller('bodyCtrl', function ($scope, $meteor) {
+
+        /**
+         * @summary Function to check if we run in Cordova environment
+         */
+        $scope.isPhone = function() {
+            return Meteor.isCordova;
+        };
+
+        $scope.hostname = 'http://' + window.location.hostname;
+
+        /**
+         * @summary Function for retrieving the club a user is logged into.
+         * @param
+         */
+        $meteor.call('getClub').then(function (result) {
+            $scope.currentClub = result;
+        }, function (err) {
+            console.log(err);
+        });
+    })
+
     /**
      *  Custom on change Controller: puts a listener on file input change
      */
@@ -28,17 +50,7 @@ angular.module('web.controllers', [
             $meteor.logout();
             $state.go('login');
         };
-        $scope.hostname = 'http://' + window.location.hostname;
 
-        /**
-         * @summary Function for retrieving the club a user is logged into.
-         * @param
-         */
-        $meteor.call('getClub').then(function (result) {
-            $scope.currentClub = result;
-        }, function (err) {
-            console.log(err);
-        });
 
     })
 
@@ -48,14 +60,7 @@ angular.module('web.controllers', [
      *  @param {Function}
      */
     .controller('settingsCtrl', function ($scope, $meteor, $timeout) {
-        /**
-         * @summary Function for retrieving the image URL for the club logo, which is in the database
-         */
-        $meteor.call('getImage').then(function (result) {
-            //console.log(result);
-        }, function (err) {
-            console.log(err);
-        });
+       
 
         $meteor.subscribe('images');
         $meteor.subscribe('clubs');

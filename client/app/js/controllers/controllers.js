@@ -6,6 +6,17 @@ angular.module('app.controllers', [
     'heroControllers',
     'postControllers'])
 
+
+    .controller('bodyCtrl', function ($scope) {
+        
+        /**
+         * @summary Function to check if we run in Cordova environment
+         */
+        $scope.isPhone = function() {
+            return Meteor.isCordova;
+        }
+    })
+
     /**
      * Menu Controller: provides all functionality for the menu of the app
      */
