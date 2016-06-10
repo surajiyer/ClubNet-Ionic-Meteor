@@ -16,16 +16,6 @@ angular.module('app.directives', [])
         };
     })
 
-    .directive('post', function () {
-        return {
-            restrict: 'E',
-            templateUrl: 'client/app/views/feedItems/post.ng.html',
-            scope: {
-                item: "="
-            }
-        }
-    })
-
     .directive('formdir', function () {
         return {
             restrict: 'E',

@@ -22,17 +22,18 @@
     </div>
     <div ng-show="showFilter" ng-click="openFilter()" class="black-bg"></div>
     <ion-content scrolly='loadMore()' threshold="50">
+        <!-- Memorial comment for koen's first commit-->
+        <!-- Add div infinite-scroll=loadMore() here-->
         <div id="feeditems" class="main-content">
-            <div ng-repeat="item in items" ng-switch="item.type" ng-if="item">
-                <div class="list card" ng-controller="generalItemCtrl">
+            <div ng-repeat="item in items" ng-switch="item.type" ng-if="item" ng-controller="generalItemCtrl">
+                <div class="list card{{item.sticky ? ' sticky' : ''}}" ng-show="showItem">
                     <div class="item item-divider feed-icon"
                          ng-click="showFullItem($event)">
                         <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt=""/>
-                        {{itemType.name}} <span ng-if="itemType._id == 'Voting' && hasEnded">(completed)</span>
-                        <i class="icon ion-more" ng-if="showEdit" ng-click="openPopover($event)" id="icon-expand"></i>
+                        {{itemType.name}} <span ng-if="item.type == 'Voting' && hasEnded">(completed)</span>
+                        <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" ng-if="showEdit || showDelete"></i>
                         <i class="icon ion-arrow-shrink show-full" ng-if="isFull" id="icon-expand"></i>
                     </div>
-                    <post item="item" ng-switch-when="Post"></post>
                     <formdir item="item" ng-switch-when="Form"></formdir>
                     <voting item="item" ng-switch-when="Voting"></voting>
                     <hero item="item" ng-switch-when="Heroes"></hero>
@@ -41,9 +42,16 @@
                     </div>
                 </div>
             </div>
+            <div class="list card" ng-show="!items.length">
+                <div class="item item-body">
+                    <p>
+                        No items have been found.
+                    </p>
+                </div>
+            </div>
         </div>
     </ion-content>
-    <a class="tab-item coachBar" ng-controller="newItemCtrl" ng-if="showCoachBar">
+    <a class="tab-item coachBar" ng-controller="addNewItemCtrl" ng-show="showAddItem">
         <i class="icon ion-plus" ng-click="openPopover($event)"></i>
     </a>
 </ion-view>

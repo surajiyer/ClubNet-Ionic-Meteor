@@ -7,7 +7,7 @@ if (Meteor.isServer) {
     describe('Club', () => {
 
         it("Get nonexisting Club should fail", (done) => {
-            
+
             // Create a test club
             testClub = {
                 name: 'Name1',
@@ -24,7 +24,7 @@ if (Meteor.isServer) {
             global.Meteor.user = sinon.stub().returns({
                 profile : { clubID : 'test'}
             });
-            
+
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');
@@ -36,7 +36,7 @@ if (Meteor.isServer) {
         });
 
         it("Get Club should succeed", (done) => {
-            
+
             // Mock user to include the clubID of the test club we just added
             global.Meteor.user = sinon.stub().returns({
                 profile : { clubID : testClub._id}
@@ -51,11 +51,11 @@ if (Meteor.isServer) {
                 assert.fail();
             }
         });
-        
+
         it("Update Club", (done) => {
             // Changing the test club
             testClub.name = 'Name2';
-            
+
             // Updating the club
             try {
                 Meteor.call('updateClub', testClub);
@@ -66,7 +66,7 @@ if (Meteor.isServer) {
                 assert.fail();
             }
         });
-        
+
         it("Update Club Invalid Parameter", (done) => {
             // Retrieving the club
             try {
