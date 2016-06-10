@@ -44,7 +44,6 @@ angular.module('chatControllers', [])
             $scope.closeModal();
             var chat = Chat.getChatByUserId(userId);
             if (chat) {
-                //Meteor.call('updateChatStatus', chat._id, "open");
                 Chat.updateChatStatus(chat._id, "open");
                 $state.go('menu.chat', {chatId: chat._id});
             } else {
@@ -116,12 +115,6 @@ angular.module('chatControllers', [])
             if(messageId) {
                 $scope.message = "";
             }
-            // Meteor.call('sendMessage', chatID, $scope.message, function (e, messageId) {
-            //     // If message was sent successfully, clear the message field
-            //     if (messageId) {
-            //         $scope.message = "";
-            //     }
-            // });
         };
 
         /**

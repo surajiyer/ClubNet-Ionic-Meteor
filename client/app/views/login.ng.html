@@ -1,20 +1,20 @@
 <ion-view title="Log In">
     <ion-content padding="true" class="has-header main-content ">
         <img src="/app/img/logo-front.png" class="login-logo" alt="" />
-        <form class="list login-form" ng-submit="login()">
+        <form class="list login-form">
             <ion-list>
                 <label class="item item-input">             
-                    <input type="email" name="email" placeholder="{{'Email Adress'}}" ng-model="user.email">
+                    <input type="email" ng-model="user.email" placeholder="Email Address">
                 </label>
                 <label class="item item-input">
-                    <input type="password" name="password" placeholder="{{'Password'}}" ng-model="user.password">
+                    <input type="password" ng-model="user.password" placeholder="Password">
                 </label>
             </ion-list>
             <div class="spacer" style="width: 300px; height: 22px;"></div>
             <a ng-click="login()" id="login-button" style="font-size:18px;"
                class="button button-positive  button-block">Log In</a>
             <div class="forgot-pw">
-                <button class="button button-stable" ng-click="goToRemindPassword()">Forgot password?</button>
+                <button class="button button-stable" ng-click="forgotPassword()">Forgot password?</button>
             </div>
             <!-- <div class="reset-pw">
                 <button class="button button-stable" ng-click="goToResetPassword()">Reset Password</button>

@@ -6,10 +6,19 @@ angular.module('app.controllers', [
     'heroControllers',
     'postControllers'])
 
-    /**
-     * Menu Controller: provides all functionality for the menu of the app
-     */
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window, currentClub) {
+/**
+ * Menu Controller: provides all functionality for the menu of the app
+ */
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat, CommonServices) {
+        /**
+         * To check if user has permission to view chat option
+         * @type {boolean}
+         */
+        $scope.showChat = false;
+        Tracker.autorun(function () {
+            $scope.showChat = Chat.canViewChat();
+        });
+
         /**
          * @summary Function to logout
          */
@@ -25,10 +34,10 @@ angular.module('app.controllers', [
         /**
          * Loading the current club for styling
          */
-        currentClub.getClub().then(function (result) {
+        $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
         }, function (err) {
-            console.log(err);
+            CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
     })
 
@@ -37,31 +46,48 @@ angular.module('app.controllers', [
      */
     .controller('feedCtrl', function ($scope, $meteor, AccessControl) {
         // Show coach bar if needed
-        AccessControl.getPermission('CoachBar', 'view', function (result) {
+        AccessControl.getPermission('CoachBar', 'view', (result) => {
             $scope.showCoachBar = result;
         });
 
         /**
          * @summary Function to update the item types
          */
-        $scope.updateItemTypes = function () {
-            //if (err) throw new Meteor.Error(err.reason);
-            var oldItemTypes = [];
-            if ($scope.itemTypes) {
-                oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
-                    result[id] = {name: name, checked: checked};
-                    return result;
-                }, {})
-            }
-            $scope.itemTypes = TypesCollection.find().fetch();
-            _.each($scope.itemTypes, function (element) {
-                if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
-                else element.checked = true;
-            }, this);
-        };
+        // $scope.updateItemTypes = function () {
+        //     // If itemTypes already exists, use its existing checked values
+        //     var oldItemTypes = [];
+        //     if ($scope.itemTypes) {
+        //         oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
+        //             result[id] = {name: name, checked: checked};
+        //             return result;
+        //         }, {});
+        //     }
+        //
+        //     // Get new item types from database
+        //     $scope.itemTypes = TypesCollection.find().fetch();
+        //
+        //     // Load filter from item types
+        //     _.each($scope.itemTypes, function (element) {
+        //         if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
+        //         else element.checked = true;
+        //     }, this);
+        // };
+        //
+        // // Load the filter
+        // Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
-        // Load the filter
-        Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
+        Meteor.call('getItemTypes', function (err, result) {
+            if (!err && result) {
+                $scope.itemTypes = result;
+
+                // Load filter from item types
+                _.each($scope.itemTypes, function (element) {
+                    element.checked = true;
+                });
+
+                console.log($scope.itemTypes);
+            }
+        });
 
         // Limit on number of feed item to display
         $scope.limit = 3;
@@ -144,7 +170,6 @@ angular.module('app.controllers', [
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
     .controller('addNewItemCtrl', function ($scope, $meteor, $ionicModal) {
-
         $scope.newItem = {};
         $scope.trainings = [];
 
@@ -181,21 +206,21 @@ angular.module('app.controllers', [
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                Meteor.call('getFeedItemType', result, function(err, result){
+                Meteor.call('getFeedItemType', result, function (err, result) {
                     if (result == 'Voting') {
-                        Meteor.call('getClubUsers', function(err, result){
+                        Meteor.call('getClubUsers', function (err, result) {
                             var text = 'Vote for the exercise you like.';
                             var title = 'New voting!';
                             Meteor.call('userNotification', text, title, result);
                         });
                     } else if (result == 'Form') {
-                        Meteor.call('getTeamUsers', function(err, result){
+                        Meteor.call('getTeamUsers', function (err, result) {
                             var text = 'React on new practicality.';
                             var title = 'New practicality!';
                             Meteor.call('userNotification', text, title, result);
                         });
                     } else if (result == 'Heroes') {
-                        Meteor.call('getClubUsers', function(err, result){
+                        Meteor.call('getClubUsers', function (err, result) {
                             var text = 'Check out a new hero of the week.';
                             var title = 'New Hero!';
                             Meteor.call('userNotification', text, title, result);
@@ -217,7 +242,11 @@ angular.module('app.controllers', [
     .controller('generalItemCtrl', function ($scope, $meteor, AccessControl, $ionicPopover, $ionicPopup, $ionicModal) {
         // Get item type
         $scope.newItem = {};
-        $scope.itemType = TypesCollection.find({_id: $scope.item.type}).fetch()[0];
+        Meteor.call('getItemType', $scope.item.type, function (err, result) {
+            if (!err && result) {
+                $scope.itemType = result;
+            }
+        });
         $scope.trainings = [];
 
         /**

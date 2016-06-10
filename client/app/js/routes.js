@@ -8,15 +8,7 @@ angular.module('app.routes', [])
 
         $stateProvider
             .state('/', {
-                url: '/',
-                controller: function ($scope, $state) {
-                    // If user is already logged in, go directly to feed
-                    if (Meteor.userId()) {
-                        $state.go('menu.feed');
-                    } else {
-                        $state.go('login');
-                    }
-                }
+                url: '/'
             })
 
             //login page
@@ -25,13 +17,13 @@ angular.module('app.routes', [])
                 templateUrl: 'client/app/views/login.ng.html',
                 controller: 'loginCtrl'
             })
-            
+
             //register page
-            .state('register', {
-                url: '/register',
-                templateUrl: 'client/app/views/register.ng.html',
-                controller: 'registerCtrl'
-            })
+            // .state('register', {
+            //     url: '/register',
+            //     templateUrl: 'client/app/views/register.ng.html',
+            //     controller: 'registerCtrl'
+            // })
 
             //forgot password page
             .state('forgotPassword', {
@@ -39,14 +31,14 @@ angular.module('app.routes', [])
                 templateUrl: 'client/app/views/forgotPassword.ng.html',
                 controller: 'forgotPasswordCtrl'
             })
-            
+
             //enrollment page
             .state('enroll', {
                 url: '/enroll/:token',
                 templateUrl: 'client/app/views/enrollment.ng.html',
                 controller: 'resetPasswordCtrl'
             })
-            
+
             //reset password page
             .state('resetpassword', {
                 url: '/resetpassword/:token',
@@ -118,4 +110,32 @@ angular.module('app.routes', [])
             })
 
         $urlRouterProvider.otherwise('/')
+    })
+
+    .run(function ($rootScope, $location, $state) {
+        handleOpenURL = function handleOpenURL(url) {
+            var token = url.substr(url.lastIndexOf('/') + 1);
+            if (url.startsWith('clubnet://enroll')) {
+                $state.go('enrollment', {"token": token});
+            } else if (url.startsWith('clubnet://resetpassword')) {
+                $state.go('resetPassword', {"token": token});
+            } else {
+                $state.go('login');
+            }
+        };
+
+        $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
+            if (toState.name === "login"
+                || toState.name === "enroll"
+                || toState.name === "resetpassword"
+                || toState.name === "forgotPassword") {
+                return; // no need to redirect, continue to toState state
+            }
+
+            // now, redirect only not authenticated
+            if (!Meteor.userId()) {
+                e.preventDefault(); // stop current execution
+                $state.go('login');
+            }
+        });
     });

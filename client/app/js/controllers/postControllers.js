@@ -11,11 +11,11 @@ angular.module('postControllers', [])
 
         $scope.post = function () {
             $scope.newPost.type = 'Post';
-            $scope.newPost.createdAt = new Date;
             Meteor.call('addFeedItem', $scope.newPost);
             $scope.newPost = {};
             $scope.closePost();
         };
+        
         /**
          * Load new post template
          */

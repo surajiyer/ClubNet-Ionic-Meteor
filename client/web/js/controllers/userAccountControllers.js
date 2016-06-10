@@ -251,7 +251,7 @@ angular.module('web.userAccountControllers', [])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('profileCtrl', function ($scope, $meteor, $state, checkPassword) {
+    .controller('profileCtrl', function ($scope, $meteor, $state, CommonServices) {
         $scope.user = {
             id: '',
             firstName: '',
@@ -384,7 +384,7 @@ angular.module('web.userAccountControllers', [])
         };
     })
 
-    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, checkPassword) {
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, CommonServices) {
         $scope.token = $stateParams.token;
 
         $scope.user = {

@@ -29,29 +29,33 @@ Meteor.startup(function () {
         }
     });
 
-    if (Meteor.isServer) {
-        /**
-         * @summary Publish method for subscribers to get the items in the collection
-         * @method ItemTypes
-         * @returns {Object} The item types in the collection.
-         */
-        Meteor.publish('ItemTypes', function () {
-            // Check if you have the right to view this type
-            return TypesCollection.find();
-        });
-    }
+    // if (Meteor.isServer) {
+    //     /**
+    //      * @summary Publish method for subscribers to get the items in the collection
+    //      * @method ItemTypes
+    //      * @returns {Object} The item types in the collection.
+    //      */
+    //     Meteor.publish('ItemTypes', function () {
+    //         // Check if you have the right to view this type
+    //         return TypesCollection.find();
+    //     });
+    // }
 });
 
 if (Meteor.isServer) {
     Meteor.methods({
         /**
          * @summary Function for getting all the item types in the collection
-         * @method getItemTypes
          * @returns {Object} The item types in the collection.
          */
         getItemTypes: function () {
             return TypesCollection.find().fetch();
         },
+        /**
+         * @summary Get information of a single item type
+         * @param typeID Voting, Form, .. etc
+         * @returns {Object} The item type info.
+         */
         getItemType: function (typeID) {
             check(typeID, String);
             try {
