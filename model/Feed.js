@@ -17,19 +17,19 @@ Meteor.startup(function () {
     // Only allow posting if the user is logged in and has the correct rights assigned in the database
     Items.allow({
         insert: function (userId, doc) {
-            var loggedIn = !!userId;
+            var loggedIn = !!userId && userId == Meteor.userId();
             var allowed = Meteor.call('checkRights', doc.type, 'create');
             var isCreator = userId == doc.creatorID;
             return loggedIn && allowed && isCreator;
         },
         update: function (userId, doc) {
-            var loggedIn = !!userId;
+            var loggedIn = !!userId && userId == Meteor.userId();
             var allowed = Meteor.call('checkRights', doc.type, 'edit');
             var isCreator = userId == doc.creatorID;
             return loggedIn && allowed && isCreator;
         },
         remove: function (userId, doc) {
-            var loggedIn = !!userId;
+            var loggedIn = !!userId && userId == Meteor.userId();
             var allowed = Meteor.call('checkRights', doc.type, 'delete');
             var isCreator = userId == doc.creatorID;
             return loggedIn && allowed && isCreator;
@@ -38,33 +38,30 @@ Meteor.startup(function () {
 
     // Set responses allow rules
     // Only allow posting if the user is logged in and has the correct rights assigned in the database
-    Responses.allow({
-        insert: function (userId, doc) {
-            var loggedIn = !!userId;
-            var allowed = Meteor.call('checkRights', doc.type, 'create');
-            var isCreator = userId == doc.creatorID;
-            return loggedIn && allowed && isCreator;
-        },
-        update: function (userId, doc) {
-            var loggedIn = !!userId;
-            var allowed = Meteor.call('checkRights', doc.type, 'edit');
-            var isCreator = userId == doc.creatorID;
-            return loggedIn && allowed && isCreator;
-        },
-        remove: function (userId, doc) {
-            var loggedIn = !!userId;
-            var allowed = Meteor.call('checkRights', doc.type, 'delete');
-            var isCreator = userId == doc.creatorID;
-            return loggedIn && allowed && isCreator;
-        }
-    });
+    // Responses.allow({
+    //     insert: function (userId, doc) {
+    //         var loggedIn = !!userId;
+    //         var allowed = Meteor.call('checkRights', doc.type, 'create');
+    //         var isCreator = userId == doc.creatorID;
+    //         return loggedIn && allowed && isCreator;
+    //     },
+    //     update: function (userId, doc) {
+    //         var loggedIn = !!userId;
+    //         var allowed = Meteor.call('checkRights', doc.type, 'edit');
+    //         var isCreator = userId == doc.creatorID;
+    //         return loggedIn && allowed && isCreator;
+    //     },
+    //     remove: function (userId, doc) {
+    //         var loggedIn = !!userId;
+    //         var allowed = Meteor.call('checkRights', doc.type, 'delete');
+    //         var isCreator = userId == doc.creatorID;
+    //         return loggedIn && allowed && isCreator;
+    //     }
+    // });
 
     if (Meteor.isServer) {
         Meteor.publish('Feed', function (itemTypes, limit) {
-            if (!itemTypes) {
-                this.ready();
-                return;
-            }
+            if (!itemTypes || !this.userId) return this.ready();
             check(itemTypes, [String]);
             check(limit, Number);
             var teamLevelSelector = [{teamID: {$exists: false}}];
@@ -83,17 +80,6 @@ Meteor.startup(function () {
                     createdAt: -1
                 },
                 limit: limit
-            });
-        });
-
-        Meteor.publish('Responses', function (itemTypes) {
-            if (!itemTypes) {
-                this.ready();
-                return;
-            }
-            check(itemTypes, [String]);
-            return Responses.find({
-
             });
         });
     }
@@ -130,19 +116,14 @@ if (Meteor.isServer) {
          */
         getFeedItem: function (id) {
             check(id, String);
-
             var succesCheck = Meteor.call('checkRepeatInterval', id);
-
             return Items.find({_id: id}).fetch()[0];
         },
-
-
         checkRepeatInterval: function (id) {
             check(id, String);
-            
             var item = Items.find({_id: id}).fetch()[0];
             var repeatInterval = item.repeatInterval;
-            //*********what kind of interval are we dealing with? Do some method accordinlgy ***********/
+            //*********what kind of interval are we dealing with? Do some method accordingly ***********/
             switch (repeatInterval) {
                 case 'daily':
                     var succesCheck = Meteor.call('renewItemDaily', item);
@@ -155,16 +136,14 @@ if (Meteor.isServer) {
             }
             return true;
         },
-
-
         calculateTimeDifference: function (createdAt) {
             check(createdAt, Date);
             //get the current time (server sided ofc)
-            var date = new Date(); 
+            var date = new Date();
 
             // time difference in ms
-            var timeDiff = date-createdAt;
-  
+            var timeDiff = date - createdAt;
+
             // strip the ms
             timeDiff /= 1000;
             // get seconds (Original had 'round' which incorrectly counts 0:28, 0:29, 1:30 ... 1:59, 1:0)
@@ -193,9 +172,9 @@ if (Meteor.isServer) {
             var days = Meteor.call('calculateTimeDifference', createdAt);
 
             //console.log('Elapsed time in hours in function: '+hours);
-            console.log('Elapsed time in days in function: '+days);
+            console.log('Elapsed time in days in function: ' + days);
 
-            if(days>=1 && item.status == 'published'){
+            if (days >= 1 && item.status == 'published') {
                 console.log('its me!');
 
                 item.status = 'expired';
@@ -205,12 +184,11 @@ if (Meteor.isServer) {
                 newItem.createdAt = new Date();
                 newItem._id = null;
                 newItem.status = 'published';
-                var succesCheck = Meteor.call('addFeedItem', newItem);   
+                var succesCheck = Meteor.call('addFeedItem', newItem);
             }
 
             return true;
         },
-
         renewItemWeekly: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
@@ -219,9 +197,9 @@ if (Meteor.isServer) {
             var days = Meteor.call('calculateTimeDifference', createdAt);
 
             //console.log('Elapsed time in hours in function: '+hours);
-            console.log('Elapsed time in days in function: '+days);
+            console.log('Elapsed time in days in function: ' + days);
 
-            if(days>=7 && item.status == 'published'){
+            if (days >= 7 && item.status == 'published') {
                 console.log('its me!');
 
                 item.status = 'expired';
@@ -231,12 +209,11 @@ if (Meteor.isServer) {
                 newItem.createdAt = new Date();
                 newItem._id = null;
                 newItem.status = 'published';
-                var succesCheck = Meteor.call('addFeedItem', newItem);   
+                var succesCheck = Meteor.call('addFeedItem', newItem);
             }
 
             return true;
         },
-
         renewItemFourweeks: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
@@ -245,9 +222,9 @@ if (Meteor.isServer) {
             var days = Meteor.call('calculateTimeDifference', createdAt);
 
             //console.log('Elapsed time in hours in function: '+hours);
-            console.log('Elapsed time in days in function: '+days);
+            console.log('Elapsed time in days in function: ' + days);
 
-            if(days>=28 && item.status == 'published'){
+            if (days >= 28 && item.status == 'published') {
                 console.log('its me!');
 
                 item.status = 'expired';
@@ -257,12 +234,11 @@ if (Meteor.isServer) {
                 newItem.createdAt = new Date();
                 newItem._id = null;
                 newItem.status = 'published';
-                var succesCheck = Meteor.call('addFeedItem', newItem);   
+                var succesCheck = Meteor.call('addFeedItem', newItem);
             }
 
             return true;
         },
-
         /**
          * @summary Function for updating the information of a feed item.
          * @param {Object} updatedItem The updated fields of an existing feed item.
@@ -277,7 +253,7 @@ if (Meteor.isServer) {
                 {_id: id},
                 {$set: updatedItem}
             );
-            if(success) return updatedItem;
+            if (success) return updatedItem;
         },
         /**
          * @summary Function for deleting a feed item.
@@ -339,7 +315,7 @@ if (Meteor.isServer) {
             var total = 0;
             Responses.find({itemID: itemID}).map(function (doc) {
                 var value = parseInt(doc.value);
-                if(_.isNaN(value)) return;
+                if (_.isNaN(value)) return;
                 total += value;
             });
 
@@ -394,49 +370,30 @@ if (Meteor.isServer) {
             check(response, Responses.simpleSchema({itemType: itemType}));
             return Responses.insert(response);
         },
-
-
-        
-
         increaseValue: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
             check(value, String);
-
-
             var item = Meteor.call('getFeedItem', itemID);
             var raisedValue = item.raisedValue;
-            var newRaisedValue = parseInt(raisedValue)+parseInt(value);
-
-            console.log("raised value: "+raisedValue);
-            console.log("New raised value: "+newRaisedValue);
-            return     Items.update({ _id: itemID, type: itemType}, 
-                        { $set: { raisedValue: newRaisedValue }});
+            var newRaisedValue = parseInt(raisedValue) + parseInt(value);
+            console.log("raised value: " + raisedValue);
+            console.log("New raised value: " + newRaisedValue);
+            return Items.update({_id: itemID, type: itemType},
+                {$set: {raisedValue: newRaisedValue}});
         },
-
-
-
         decreaseValue: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
             check(value, String);
-
-
             var item = Meteor.call('getFeedItem', itemID);
             var raisedValue = item.raisedValue;
-            var newRaisedValue = parseInt(raisedValue)-parseInt(value);
-
-            console.log("raised value: "+raisedValue);
-            console.log("New raised value: "+newRaisedValue);
-            return     Items.update({ _id: itemID, type: itemType}, 
-                        { $set: { raisedValue: newRaisedValue }});
+            var newRaisedValue = parseInt(raisedValue) - parseInt(value);
+            console.log("raised value: " + raisedValue);
+            console.log("New raised value: " + newRaisedValue);
+            return Items.update({_id: itemID, type: itemType},
+                {$set: {raisedValue: newRaisedValue}});
         },
-
-
-
-
-
-
         /**
          * @summary Function for retrieving the voting results of a voting feed item.
          * It will first check whether the parameters are valid.
@@ -539,9 +496,6 @@ if (Meteor.isServer) {
                 },
                 {$set: {"notes.$.text": newNote.text}}
             );
-        },
-        makeItemSticky: function (itemID) {
-            check(itemID, String);
         }
     });
 }

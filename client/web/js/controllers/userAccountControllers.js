@@ -3,9 +3,8 @@ angular.module('web.userAccountControllers', [])
      *  Login Controller: provides all functionality for the login screen of the web interface
      */
     .controller('accountManagementCtrl', function ($scope, $modal, $state) {
-
         $scope.subscribe('userData');
-
+        
         $scope.helpers({
             userAccounts: function () {
                 return Meteor.users.find({}, {sort: {'profile.lastName': 1}});

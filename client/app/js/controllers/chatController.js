@@ -1,9 +1,12 @@
 angular.module('chatControllers', [])
 
-    /**
-     *  @summary Controller for loading chats
-     */
+/**
+ *  @summary Controller for loading chats
+ */
     .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat) {
+        // Subscribe to user info of chat recipients
+        $scope.subscribe('userData');
+
         /**
          * Show the create chat button
          * @type {boolean}
@@ -88,14 +91,35 @@ angular.module('chatControllers', [])
     /**
      *  @summary Controller for chatting functions within chats
      */
-    .controller('chatCtrl', function ($scope, $state, $stateParams, Chat) {
+    .controller('chatCtrl', function ($scope, $state, $stateParams, Chat, $ionicScrollDelegate, $timeout) {
         /**
          * Initialize messages
          * @type {*|any}
          */
         var chatID = $stateParams.chatId;
+        var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+
         Meteor.subscribe('Messages', chatID);
 
+        /**
+         * Helper functions
+         */
+        $scope.helpers({
+            chat: function () {
+                return Chat.getOneChat(chatID, function () {
+                    $scope.$apply();
+                });
+            },
+            messages: function () {
+                return Chat.getMessages(chatID);
+            }
+        });
+
+        /**
+         * Match senderID with Id of currently logged-in user
+         * @param senderID String user Id
+         * @returns {boolean} True if logged-in user matched the senderID
+         */
         $scope.isMyMessage = function (senderID) {
             return senderID == Meteor.userId();
         };
@@ -112,22 +136,54 @@ angular.module('chatControllers', [])
 
             // Send the message and get the new message Id
             var messageId = Chat.sendMessage(chatID, $scope.message);
-            if(messageId) {
+            if (messageId) {
                 $scope.message = "";
             }
         };
 
         /**
-         * Helper functions
+         * Close the input keyboard on mobile platforms
          */
-        $scope.helpers({
-            chat: function () {
-                return Chat.getOneChat(chatID, function () {
-                    $scope.$apply();
-                });
-            },
-            messages: function () {
-                return Chat.getMessages(chatID);
+        $scope.closeKeyboard = function () {
+            if (Meteor.isCordova) {
+                ionic.keyboard.hide();
             }
-        });
+        };
+
+        /**
+         * Scroll to the bottom of the chat
+         * @param animate Boolean option to apply scroll animation
+         */
+        $scope.scrollBottom = function (animate) {
+            $timeout(() => {
+                $ionicScrollDelegate.$getByHandle('chatScroll').scrollBottom(animate);
+            }, 300);
+        };
+
+        $scope.inputUp = function () {
+            if (isIOS) {
+                ionic.keyboard.height = 216;
+            }
+            $scope.scrollBottom(true);
+        };
+
+        $scope.inputDown = function () {
+            if (isIOS) {
+                ionic.keyboard.height = 0;
+            }
+            $ionicScrollDelegate.$getByHandle('chatScroll').resize();
+        };
+
+        $scope.autoScroll = function () {
+            let recentMessagesNum = $scope.messages.length;
+            $scope.autorun(() => {
+                const currMessagesNum = $scope.getCollectionReactively('messages').length;
+                const animate = recentMessagesNum != currMessagesNum;
+                recentMessagesNum = currMessagesNum;
+                $scope.scrollBottom(animate);
+            });
+        };
+
+        console.log(ionic.keyboard.height);
+        $scope.autoScroll();
     })

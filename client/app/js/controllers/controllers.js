@@ -47,7 +47,7 @@ angular.module('app.controllers', [
         /**
          * @summary Show the plus button if user has rights to add at least any kind of item
          */
-        $scope.$on("showAddItem", function() {
+        $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
 
@@ -229,7 +229,8 @@ angular.module('app.controllers', [
     /**
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      */
-    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl, $ionicPopover, $ionicPopup, $ionicModal) {
+    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl,
+                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices) {
         // Get item type
         $scope.newItem = {};
         Meteor.call('getItemType', $scope.item.type, function (err, result) {
@@ -383,14 +384,15 @@ angular.module('app.controllers', [
                 type: $scope.item.type,
                 sticky: !$scope.item.sticky
             };
-            $meteor.call("updateFeedItem", obj).then(
-                function (result) {
-                    console.log("Success");
-                },
-                function (err) {
-                    console.log(err);
+            Meteor.call("updateFeedItem", obj, function (err, result) {
+                if (err) {
+                    return CommonServices.showAlert('Error', err.reason);
                 }
-            );
+                if (!result) {
+                    return CommonServices.showAlert('Error',
+                        'Something unexpected happened. Unable to update sticky item.');
+                }
+            });
         }
 
     })

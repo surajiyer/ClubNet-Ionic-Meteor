@@ -59,7 +59,8 @@ Meteor.startup(function () {
     });
 
     // Publish userData
-    Meteor.publish("userData", function () {
+    Meteor.publish('userData', function () {
+        if(!this.userId) return this.ready();
         var userType = utils.getUserType(this.userId);
         switch (userType) {
             case 'pr':
@@ -99,12 +100,9 @@ Meteor.startup(function () {
 
 // TODO: remove Meteor.isServer for latency compensation
 Meteor.methods({
-    
     sendShareEmail: function (options) {
         Email.send(options);
     },
-   
-        
     /**
      * @summary Function for adding a new user to the collection.
      * It will check whether or not the new user adheres to the schema.
