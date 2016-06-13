@@ -33,9 +33,9 @@ function onReady() {
     angular.bootstrap(document, ['app']);
 }
 
-if(Meteor.isCordova) {
+if(!Meteor.isCordova) {
     angular.element(document).on("deviceready", onReady);
 }
-else {
-    angular.element(document).ready(onReady);
-}
+// else {
+//     angular.element(document).ready(onReady);
+// }
