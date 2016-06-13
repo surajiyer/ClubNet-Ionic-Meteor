@@ -21,10 +21,13 @@ if (Meteor.isServer) {
                 }
             });
         },
-        userNotification: function(text,title,users) {
+        userNotification: function(type,text,title,users) {
+            check(type, String);
             check(text, String);
             check(title, String);
             check(users, [String]);
+            var userNotifications = Meteor.users.findOne({"_id": Meteor.userId()}).profile.notifications;
+            if (userNotifications[type] == false) return;
             var badge = 1;
             var logo = Meteor.call('getClub').logo;
             Push.send({

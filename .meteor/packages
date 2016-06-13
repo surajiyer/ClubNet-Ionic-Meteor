@@ -42,3 +42,6 @@ cfs:gridfs
 thospaeth:angular-color-picker
 raix:push
 email
+blaze
+lmieulet:meteor-coverage
+mdg:camera
