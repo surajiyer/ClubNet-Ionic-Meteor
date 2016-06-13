@@ -18,6 +18,8 @@ angular.module('app.controllers', [
             $scope.showChat = Chat.canViewChat();
         });
 
+
+
         /**
          * @summary Function to logout
          */
@@ -50,6 +52,8 @@ angular.module('app.controllers', [
         $scope.$on("showAddItem", function() {
             $scope.showAddItem = true;
         });
+
+
 
         /**
          * @summary Function to update the item types
@@ -214,8 +218,27 @@ angular.module('app.controllers', [
             $scope.modal.hide();
         };
 
+
+        $scope.getPicture = function ()
+        {
+            var cameraOptions = {  
+                quality: 80,
+                correctOrientation: true,
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+            }
+
+           var picture = MeteorCamera.getPicture(cameraOptions, function(error, localData){
+                console.log (localData);
+                $scope.image = localData;
+                $scope.$apply();
+            })
+
+        };
+
+
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
+            $scope.newItem.image = $scope.image;
             Meteor.call('addFeedItem', $scope.newItem, function (err) {
                 if (err) {
                     return CommonServices.showAlert('Failed to add item', err.reason);
