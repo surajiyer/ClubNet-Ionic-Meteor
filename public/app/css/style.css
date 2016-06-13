@@ -332,3 +332,10 @@ form.list {
 .sticky .variants {
     background: #FFFBDB;
 }
+
+#buttonQuestionmark{
+    position: absolute;
+    top: 5px;
+    right: 4px;
+    z-index: 9999999;
+}
