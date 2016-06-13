@@ -414,6 +414,21 @@ if (Meteor.isServer) {
                         { $set: { raisedValue: newRaisedValue }});
         },
 
+        increaseNrVotes: function (itemID, itemType, value) {
+            check(itemID, String);
+            check(itemType, String);
+            check(value, String);
+
+            var item = Meteor.call('getFeedItem', itemID);
+            var raisedValue = item.nrVotes;
+            var newRaisedValue = parseInt(raisedValue)+parseInt(value);
+
+            console.log("raised value: "+raisedValue);
+            console.log("New raised value: "+newRaisedValue);
+            return     Items.update({ _id: itemID, type: itemType}, 
+                        { $set: { nrVotes: newRaisedValue }});
+        },
+
 
 
         decreaseValue: function (itemID, itemType, value) {

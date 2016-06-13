@@ -151,6 +151,13 @@ angular.module('votingControllers', [])
                             function (result) {
                                 $scope.updateChartValues();
                                 $scope.hasVoted = value;
+                                //increase the number of votes
+                                  $meteor.call('increaseNrVotes', $scope.item._id, $scope.item.type, value.toString()).then(
+                                      function(result){
+                                      },
+                                      function (err) {
+                                      }
+                                  );
                             },
                             function (err) {
                                 console.log(err);
@@ -173,4 +180,12 @@ angular.module('votingControllers', [])
                 console.log('Please select what you are voting for');
             }
         };
+
+        Items.find().observeChanges({
+           changed: function (nrVotes) {
+               $scope.updateChartValues();
+           },
+        });
+
+
     })
