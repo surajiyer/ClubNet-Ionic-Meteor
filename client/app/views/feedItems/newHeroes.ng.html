@@ -1,6 +1,6 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">New Hero</h1>
+        <h1 class="title">New hero</h1>
         <div class="buttons">
             <button class="button button-clear" ng-click="closeModal()">Close</button>
         </div>
@@ -16,7 +16,7 @@
                 <input ng-model="newItem.image" type="text" placeholder="Image">
             </label>
             <button ng-disabled="!newItem.text && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
-                Post
+                {{ postBtn }}
             </button>
         </div>
     </ion-content>

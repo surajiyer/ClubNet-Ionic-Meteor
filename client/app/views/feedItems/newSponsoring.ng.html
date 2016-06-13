@@ -1,0 +1,33 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">New sponsor event</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeModal()">Close</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Title</span>
+                <input ng-model="newItem.title" type="text" placeholder="Title">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Description</span>
+                <textarea ng-model="newItem.description" rows="3" placeholder="Description"></textarea>
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label" style="opacity: 1;">Deadline</span>
+                <input ng-model="newItem.deadline" type="date" min="{{getCurrentDateISO()}}">
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Target value</span>
+                <input ng-model="newItem.targetValue" type="number" placeholder="Target value">
+            </label>
+            <input ng-model="newItem.raisedValue" type="hidden" ng-init="newItem.raisedValue = 0">
+            <button ng-disabled="!newItem.title || !newItem.description || !newItem.deadline || !newItem.targetValue"
+                    ng-click="edit(); addItem()" class="button button-block button-positive">
+                {{ postBtn }}
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>

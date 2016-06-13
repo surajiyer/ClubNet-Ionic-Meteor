@@ -1,0 +1,28 @@
+<div class="item item-body">
+    <h2>
+        {{item.title}}
+    </h2>
+</div>
+<div class="item item-body">
+    <p>
+        {{item.description}}
+    </p>
+</div>
+<div class="item item-body">
+    <p>
+        Deadline: {{item.deadline | date:'MM/dd/yyyy @ h:mma'}}
+    </p>
+</div>
+<div class="item item-body">
+    <label class="item item-input item-label">
+        <span class="input-label">Sponsoring amount:</span>
+        <input ng-model="raisedValue" type="number" placeholder="euro">
+        <span class="input-label">{{ item.raisedValue }} / {{ item.targetValue }}</span>
+    </label>
+</div>
+<div class="item item-body">
+    <button ng-disabled="!raisedValue"
+            class="button button-outline button-balanced">
+        Donate
+    </button>
+</div>

@@ -3,7 +3,8 @@ angular.module('app.controllers', [
     'chatControllers',
     'votingControllers',
     'formControllers',
-    'heroControllers'])
+    'heroControllers',
+    'sponsoringControllers'])
 
 /**
  * Menu Controller: provides all functionality for the menu of the app
@@ -182,7 +183,7 @@ angular.module('app.controllers', [
 
         $scope.openModal = function () {
             $scope.modal.show();
-            $scope.postBtn = "Post";
+            $scope.postBtn = "Create";
         };
 
         /**

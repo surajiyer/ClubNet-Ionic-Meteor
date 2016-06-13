@@ -38,6 +38,17 @@ angular.module('app.directives', [])
         }
     })
 
+    .directive('sponsoring', function () {
+        return {
+            restrict: 'E',
+            templateUrl: 'client/app/views/feedItems/sponsoring.ng.html',
+            scope: {
+                item: "="
+            },
+            controller: 'sponsoringCtrl'
+        }
+    })
+
     .directive('voting', function () {
         return {
             restrict: 'E',

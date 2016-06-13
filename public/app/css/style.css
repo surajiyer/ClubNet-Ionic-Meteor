@@ -87,6 +87,7 @@ p.decision {
     line-height: 100%;
     font-size: 13px;
     padding: 6px;
+    margin: 2px 0;
 }
 
 .tab-item .icon {
@@ -240,8 +241,14 @@ form.list {
     font-size: 13px;
 }
 
+.card label.item {
+    padding: 0;
+    font-size: 13px;
+}
+
 .input-label {
     padding: 0;
+    font-size: 13px;
 }
 
 .item h2 {
@@ -306,7 +313,7 @@ form.list {
 
 .login-logo {
     width: 200px;
-    margin: 50px 0;
+    margin: 30px 0;
 }
 
 .list.card.sticky .item {
@@ -331,4 +338,8 @@ form.list {
 
 .sticky .variants {
     background: #FFFBDB;
+}
+
+.menu .item.active.item-complex>.item-content {
+    background-color: #344750;
 }
