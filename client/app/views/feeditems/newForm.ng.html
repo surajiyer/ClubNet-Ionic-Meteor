@@ -1,6 +1,6 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">New Practicality</h1>
+        <h1 class="title">New practicality form</h1>
         <div class="buttons">
             <button class="button button-clear" ng-click="closeModal()">Close</button>
         </div>
@@ -43,11 +43,9 @@
             <label class="item item-input item-label">
                 <span class="input-label">Target value:</span>
                 <input ng-model="newItem.targetValue" type="number" placeholder="Target value"><br>
-                <span class="input-label">*the amounf of people</span>
             </label>
-            <ion-checkbox ng-model="newItem.sticky">Sticky?</ion-checkbox>
             <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
-                Post
+                {{ postBtn }}
             </button>
         </div>
     </ion-content>
