@@ -171,7 +171,7 @@ angular.module('app.controllers', [
     /**
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
-    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices) {
+    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices, $ionicPopup) {
 
         $scope.newItem = {};
         $scope.trainings = [];
@@ -187,6 +187,12 @@ angular.module('app.controllers', [
                 console.log(err);
             }
         );
+
+         $scope.showAlertTargetValueInfo = function() {
+           var alertPopup = $ionicPopup.alert({
+             title: 'More information',
+             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'});
+         }
 
         $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
@@ -213,9 +219,24 @@ angular.module('app.controllers', [
         $scope.closeModal = function () {
             $scope.modal.hide();
         };
+        
+        $scope.getPicture = function () {
+            var cameraOptions = {  
+                quality: 80,
+                correctOrientation: true,
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+            }
+l̥
+           var picture = MeteorCamera.getPicture(cameraOptions, function(error, localData){
+                console.log (localData);
+                $scope.image = localData;
+                $scope.$apply();
+            })
+        };
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
+            $scope.newItem.image = $scope.image;
             Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
                 if (err) {
                     return CommonServices.showAlert('Failed to add item', err.reason);

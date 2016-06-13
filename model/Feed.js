@@ -391,6 +391,20 @@ if (Meteor.isServer) {
                 return Items.find(itemID, {_id: 1, type: 1, raisedValue: 1}).fetch()[0];
             } catch (e) {}
         },
+        increaseNrVotes: function (itemID, itemType, value) {
+            check(itemID, String);
+            check(itemType, String);
+            check(value, String);
+
+            var item = Meteor.call('getFeedItem', itemID);
+            var raisedValue = item.nrVotes;
+            var newRaisedValue = parseInt(raisedValue)+parseInt(value);
+
+            console.log("raised value: "+raisedValue);
+            console.log("New raised value: "+newRaisedValue);
+            return Items.update({ _id: itemID, type: itemType}, 
+                { $set: { nrVotes: newRaisedValue }});
+        },
         decreaseValue: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
