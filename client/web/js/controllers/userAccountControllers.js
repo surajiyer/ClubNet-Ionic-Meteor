@@ -3,8 +3,9 @@ angular.module('web.userAccountControllers', [])
      *  Login Controller: provides all functionality for the login screen of the web interface
      */
     .controller('accountManagementCtrl', function ($scope, $modal, $state) {
+
         $scope.subscribe('userData');
-        
+
         $scope.helpers({
             userAccounts: function () {
                 return Meteor.users.find({}, {sort: {'profile.lastName': 1}});
@@ -170,17 +171,26 @@ angular.module('web.userAccountControllers', [])
                         lastName: $scope.user.lastName,
                         type: $scope.user.team != '' ? 'player' : 'general',
                         clubID: Meteor.user().profile.clubID,
-                        teamID: $scope.user.team
+                        teamID: $scope.user.team,
+                        notifications: {}
                     }
                 };
 
-                $meteor.call('addUser', newUser).then(function (result) {
-                    $state.go('web.members'); // Redirect user if registration succeeds
-                }, function (err) {
-                    console.log('error');
+                $meteor.call('getItemTypes').then(function(result){
+                    result.forEach(function(type){
+                        newUser.profile.notifications[type._id] = false;
+                    });
+
+                    $meteor.call('addUser', newUser).then(function (result) {
+                        $state.go('web.members'); // Redirect user if registration succeeds
+                    }, function (err) {
+                        console.log('error');
+                        console.log(err);
+                        $scope.error = err.reason;
+                        $scope.errorVisible = true;
+                    });
+                }, function(err){
                     console.log(err);
-                    $scope.error = err.reason;
-                    $scope.errorVisible = true;
                 });
             }
         };

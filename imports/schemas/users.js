@@ -61,6 +61,10 @@ const UserProfile = new SimpleSchema({
                 return 'notAllowed';
             }
         }
+    },
+    notifications: {
+        type: Object,
+        blackbox: true
     }
 });
 

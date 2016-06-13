@@ -5,19 +5,20 @@ angular.module('app.controllers', [
     'formControllers',
     'heroControllers'])
 
-    /**
-     * Menu Controller: provides all functionality for the menu of the app
-     */
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat, CommonServices) {
-        /**
-         * To check if user has permission to view chat option
-         * @type {boolean}
-         */
-        $scope.showChat = false;
-        Tracker.autorun(function () {
-            $scope.showChat = Chat.canViewChat();
-        });
+    .controller('bodyCtrl', function ($scope) {
 
+        /**
+         * @summary Function to check if we run in Cordova environment
+         */
+        $scope.isPhone = function() {
+            return Meteor.isCordova;
+        }
+    })
+
+/**
+ * Menu Controller: provides all functionality for the menu of the app
+ */
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window) {
         /**
          * @summary Function to logout
          */
@@ -238,13 +239,31 @@ l̥
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
             Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                if (err) {
-                    return CommonServices.showAlert('Failed to add item', err.reason);
-                } else if (result) {
-                    $scope.newItem = {};
-                    $scope.closeModal();
-                }
+                Meteor.call('getFeedItemType', result, function(err, type){
+                    if (type == 'Voting') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Vote for the exercise you like.';
+                            var title = 'New voting!';
+                            console.log('adding new voting');
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    } else if (type == 'Form') {
+                        Meteor.call('getTeamUsers', function(err, result){
+                            var text = 'React on new practicality.';
+                            var title = 'New practicality!';
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    } else if (type == 'Heroes') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Check out a new hero of the week.';
+                            var title = 'New Hero!';
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    }
+                });
             });
+            $scope.newItem = {};
+            $scope.closeModal();
         };
     })
 
@@ -422,6 +441,8 @@ l̥
     /**
      * Controller for settings page
      */
-    .controller('settingsCtrl', function ($scope) {
-
+    .controller('settingsCtrl', function ($scope, $meteor) {
+        $scope.toggleChange = function(key, value){
+            $meteor.call('updateUserNotificationSetting', key, value);
+        };
     })
