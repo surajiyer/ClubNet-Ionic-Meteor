@@ -216,13 +216,14 @@ angular.module('app.controllers', [
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
-            Meteor.call('addFeedItem', $scope.newItem, function (err) {
+            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
                 if (err) {
                     return CommonServices.showAlert('Failed to add item', err.reason);
+                } else if (result) {
+                    $scope.newItem = {};
+                    $scope.closeModal();
                 }
             });
-            $scope.newItem = {};
-            $scope.closeModal();
         };
     })
 

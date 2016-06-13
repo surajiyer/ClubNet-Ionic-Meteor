@@ -3,58 +3,9 @@ angular.module('chatControllers', [])
 /**
  *  @summary Controller for loading chats
  */
-    .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat) {
+    .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat, CommonServices) {
         // Subscribe to user info of chat recipients
         $scope.subscribe('userData');
-
-        /**
-         * Show the create chat button
-         * @type {boolean}
-         */
-        $scope.canCreateChat = false;
-
-        // Display create chat button
-        AccessControl.getPermission('Chat', 'create', function (result) {
-            $scope.canCreateChat = result;
-        });
-
-        $ionicModal.fromTemplateUrl('client/app/views/chats/newChat.ng.html', {
-            scope: $scope
-        }).then(function (chatModal) {
-            $scope.chatModal = chatModal;
-        });
-
-        /**
-         * Open the Create New Chat modal.
-         */
-        $scope.addChat = function () {
-            $scope.chatModal.show();
-        };
-
-        /**
-         * Close the Create New Chat modal.
-         */
-        $scope.closeModal = function () {
-            $scope.chatModal.hide();
-        };
-
-        /**
-         * Start a new chat with the given userId.
-         * @param userId
-         */
-        $scope.startChat = function (userId) {
-            if (!$scope.canCreateChat) return;
-            $scope.closeModal();
-            var chat = Chat.getChatByUserId(userId);
-            if (chat) {
-                Chat.updateChatStatus(chat._id, "open");
-                $state.go('menu.chat', {chatId: chat._id});
-            } else {
-                var chatID = Chat.createChat(userId);
-                console.log('createChat() chatId: ' + chatID);
-                $state.go('menu.chat', {chatId: chatID});
-            }
-        };
 
         $scope.helpers({
             /**
@@ -69,6 +20,75 @@ angular.module('chatControllers', [])
                 return Meteor.users.find({_id: {$ne: Meteor.userId()}});
             }
         });
+
+        /**
+         * Check if user can change the status of a chat
+         * @type {boolean}
+         */
+        $scope.canModifyStatus = false;
+        AccessControl.getPermission('Chat', 'edit', (result) => {
+            $scope.canModifyStatus = result;
+            if(result) {
+                $scope.modifyStatus = function (chatId, newStatus) {
+                    Chat.updateChatStatus(chatId, newStatus, (err) => {
+                        if(err) {
+                            CommonServices.showAlert('Error', 'Failed to update chat status.');
+                        }
+                    });
+                };
+            }
+        });
+
+        /**
+         * Show the create chat button
+         * @type {boolean}
+         */
+        $scope.canCreateChat = false;
+        AccessControl.getPermission('Chat', 'create', function (result) {
+            $scope.canCreateChat = result;
+            if(result) {
+                $ionicModal.fromTemplateUrl('client/app/views/chats/newChat.ng.html', {
+                    scope: $scope
+                }).then(function (chatModal) {
+                    $scope.chatModal = chatModal;
+                });
+
+                /**
+                 * Open the Create New Chat modal.
+                 */
+                $scope.addChat = function () {
+                    $scope.chatModal.show();
+                };
+
+                /**
+                 * Close the Create New Chat modal.
+                 */
+                $scope.closeModal = function () {
+                    $scope.chatModal.hide();
+                };
+
+                /**
+                 * Start a new chat with the given userId.
+                 * @param userId
+                 */
+                $scope.startChat = function (userId) {
+                    if (!$scope.canCreateChat) return;
+                    $scope.closeModal();
+                    var chat = Chat.getChatByUserId(userId);
+                    if (chat) {
+                        Chat.updateChatStatus(chat._id, "open", (err, result) => {
+                            if(!err && result) {
+                                $state.go('menu.chat', {chatId: chat._id});
+                            }
+                        });
+                    } else {
+                        var chatID = Chat.createChat(userId);
+                        console.log('createChat() chatId: ' + chatID);
+                        $state.go('menu.chat', {chatId: chatID});
+                    }
+                };
+            }
+        });
     })
 
     /**
@@ -76,12 +96,15 @@ angular.module('chatControllers', [])
      */
     .controller('chatInfoCtrl', function ($scope, Chat) {
         // Get last message
-        Meteor.subscribe('Messages', $scope.chat._id, $scope.chat.lastMessage);
+        var chat = $scope.chat;
+        $scope.subscribe('Messages', () => {
+            return [{chatId: chat._id, messageId: chat.lastMessage}];
+        });
 
         $scope.helpers({
             // Load chat info
             chat: function () {
-                return Chat.getOneChat($scope.chat._id, function () {
+                return Chat.getOneChat(chat._id, function () {
                     $scope.$apply();
                 });
             }
@@ -96,32 +119,67 @@ angular.module('chatControllers', [])
          * Initialize messages
          * @type {*|any}
          */
-        var chatID = $stateParams.chatId;
-        var isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-
-        Meteor.subscribe('Messages', chatID);
+        const chatId = $stateParams.chatId;
+        const isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
+        var initialLimit = 20;
+        $scope.limit = 0;
+        let preventAutoScroll = false;
 
         /**
          * Helper functions
          */
         $scope.helpers({
             chat: function () {
-                return Chat.getOneChat(chatID, function () {
+                return Chat.getOneChat(chatId, function () {
                     $scope.$apply();
                 });
             },
             messages: function () {
-                return Chat.getMessages(chatID);
+                return Chat.getMessages(chatId);
             }
         });
 
         /**
+         * Subscribes to messages
+         */
+        $scope.refresh = function (newLimit) {
+            check(newLimit, Match.Maybe(Number));
+            newLimit = newLimit || $scope.limit || initialLimit;
+            const totalNrOfMessages = MessagesCount.find(chatId).fetch()[0].count;
+            const nrOfLoadedMessages = $scope.messages.length;
+            const nrOfUnloadedMessages = totalNrOfMessages - nrOfLoadedMessages;
+            const nrOfMessagesToLoad = newLimit - $scope.limit;
+            if(totalNrOfMessages > nrOfLoadedMessages) {
+                $scope.limit = nrOfUnloadedMessages > nrOfMessagesToLoad
+                    ? newLimit : $scope.limit + nrOfUnloadedMessages;
+            } else {
+                $scope.$broadcast('scroll.refreshComplete');
+                return;
+            }
+            $scope.subscribe('Messages', () => {
+                preventAutoScroll = true;
+                return [{chatId: chatId, limit: $scope.limit}];
+            }, () => {
+                //Stop the ion-refresher from spinning
+                $scope.$broadcast('scroll.refreshComplete');
+            });
+        };
+
+        /**
+         * Update total number of messages in the chat
+         */
+        $scope.subscribe('MessagesCount', () => { return [chatId] }, () => {
+            // Subscribe to an initial set of messages
+            $scope.refresh(); 
+        });
+
+        /**
          * Match senderID with Id of currently logged-in user
-         * @param senderID String user Id
+         * @param senderId String user Id
          * @returns {boolean} True if logged-in user matched the senderID
          */
-        $scope.isMyMessage = function (senderID) {
-            return senderID == Meteor.userId();
+        $scope.isMyMessage = function (senderId) {
+            return senderId == Meteor.userId();
         };
 
         /**
@@ -135,7 +193,7 @@ angular.module('chatControllers', [])
             $scope.message.trim();
 
             // Send the message and get the new message Id
-            var messageId = Chat.sendMessage(chatID, $scope.message);
+            var messageId = Chat.sendMessage(chatId, $scope.message);
             if (messageId) {
                 $scope.message = "";
             }
@@ -180,10 +238,13 @@ angular.module('chatControllers', [])
                 const currMessagesNum = $scope.getCollectionReactively('messages').length;
                 const animate = recentMessagesNum != currMessagesNum;
                 recentMessagesNum = currMessagesNum;
+                if(preventAutoScroll) {
+                    preventAutoScroll = false;
+                    return;
+                }
                 $scope.scrollBottom(animate);
             });
         };
 
-        console.log(ionic.keyboard.height);
         $scope.autoScroll();
     })

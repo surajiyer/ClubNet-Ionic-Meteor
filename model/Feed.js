@@ -249,20 +249,26 @@ if (Meteor.isServer) {
             check(updatedItem, Object);
             var id = updatedItem._id;
             delete updatedItem._id;
-            var success = Items.update(
-                {_id: id},
-                {$set: updatedItem}
-            );
-            if (success) return updatedItem;
+            try {
+                Items.update(
+                    {_id: id},
+                    {$set: updatedItem}
+                );
+                return Items.find(id).fetch()[0];
+            } catch (e) {}
         },
         /**
          * @summary Function for deleting a feed item.
-         * @param {String} itemID The String Id of the feed item that should be deleted.
+         * @param {String} itemId The String Id of the feed item that should be deleted.
          * @returns {Object} The deleted feed item
          */
-        deleteFeedItem: function (itemID) {
-            check(itemID, String);
-            return Items.remove({_id: itemID});
+        deleteFeedItem: function (itemId) {
+            check(itemId, String);
+            var itemToRemove = Items.find(itemId).fetch()[0];
+            try {
+                Items.remove({_id: itemId});
+                return itemToRemove;
+            } catch (e) {}
         },
         /**
          * @summary Function for retrieving a the type of a feed item.
@@ -379,8 +385,11 @@ if (Meteor.isServer) {
             var newRaisedValue = parseInt(raisedValue) + parseInt(value);
             console.log("raised value: " + raisedValue);
             console.log("New raised value: " + newRaisedValue);
-            return Items.update({_id: itemID, type: itemType},
-                {$set: {raisedValue: newRaisedValue}});
+            try {
+                Items.update({_id: itemID, type: itemType},
+                    {$set: {raisedValue: newRaisedValue}});
+                return Items.find(itemID, {_id: 1, type: 1, raisedValue: 1}).fetch()[0];
+            } catch (e) {}
         },
         decreaseValue: function (itemID, itemType, value) {
             check(itemID, String);
@@ -391,8 +400,11 @@ if (Meteor.isServer) {
             var newRaisedValue = parseInt(raisedValue) - parseInt(value);
             console.log("raised value: " + raisedValue);
             console.log("New raised value: " + newRaisedValue);
-            return Items.update({_id: itemID, type: itemType},
-                {$set: {raisedValue: newRaisedValue}});
+            try {
+                Items.update({_id: itemID, type: itemType},
+                    {$set: {raisedValue: newRaisedValue}});
+                return Items.find(itemID, {_id: 1, type: 1, raisedValue: 1}).fetch()[0];
+            } catch (e) {}
         },
         /**
          * @summary Function for retrieving the voting results of a voting feed item.
@@ -405,7 +417,7 @@ if (Meteor.isServer) {
          */
         getVotingResults: function (itemID) {
             check(itemID, String);
-            votes = Meteor.call('getResponsesOfOneItem', itemID);
+            var votes = Meteor.call('getResponsesOfOneItem', itemID);
             result = [[0, 0, 0]];
             votes.forEach(function (vote) {
                 result[0][Number(vote.value) - 1]++;
