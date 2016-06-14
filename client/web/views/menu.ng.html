@@ -11,7 +11,7 @@
                 <img src="{{hostname + currentClub.logo}}">
             </div>
             <a class="pure-menu-heading" style="background: {{currentClub.colorSecondary}}">{{currentClub.name}}</a>
-            <a class="pure-menu-subheading" style="background: {{currentClub.colorSecondary}}">{{ 'WELCOME' | translate }}, {{user.profile.firstName}}</a>
+            <a class="pure-menu-subheading" style="background: {{currentClub.colorSecondary}}">{{ 'WELCOME' | translate }}, {{user.firstName}}</a>
             <ul>
                 <li class="pure-menu-item"><a href="#" ui-sref="web.members" class="pure-menu-link">{{ 'MENU_MEMBERS' | translate }}</a></li>
                 <li class="pure-menu-item"><a href="#" ui-sref="web.settings" class="pure-menu-link">{{ 'MENU_CLUB_SETTINGS' | translate }}</a></li>
