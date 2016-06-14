@@ -34,7 +34,7 @@ angular.module('web.translation', ['pascalprecht.translate'])
             ADD_MEMBER: "Voeg lid toe",
             NONE: "Geen",
             WELCOME: "Welkom",
-            SAVE: "Opslaan"
+            SAVE: "Opslaan",
 
             /* PAGE HEADERS */
             MEMBERS_TITLE: "Leden",
@@ -45,7 +45,7 @@ angular.module('web.translation', ['pascalprecht.translate'])
             PROFILE_TITLE: "Profiel",
             PROFILE_SUBTITLE: "Verander je gebruiksgegevens.",
             CLUB_SETTINGS_TITLE: "Clubinstellingen",
-            CLUB_SETTINGS_SUBTITLE: "Change club colors and modify feed settings."
+            CLUB_SETTINGS_SUBTITLE: "Change club colors and modify feed settings.",
 
             
             
