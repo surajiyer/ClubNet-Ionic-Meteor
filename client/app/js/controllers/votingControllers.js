@@ -44,10 +44,9 @@ angular.module('votingControllers', [])
                     $scope.item.training_date = result.date;
                 },
                 function (err) {
-                    throw new Meteor.Error(err.reason);
+                    return CommonServices.showAlert(err.reason, 'Failed to get Trainings list');
                 }
             );
-            console.log(res);
         });
 
         if ($scope.item != null) {
@@ -152,6 +151,13 @@ angular.module('votingControllers', [])
                             function (result) {
                                 $scope.updateChartValues();
                                 $scope.hasVoted = value;
+                                //increase the number of votes
+                                  $meteor.call('increaseNrVotes', $scope.item._id, $scope.item.type, value.toString()).then(
+                                      function(result){
+                                      },
+                                      function (err) {
+                                      }
+                                  );
                             },
                             function (err) {
                                 console.log(err);
@@ -174,4 +180,12 @@ angular.module('votingControllers', [])
                 console.log('Please select what you are voting for');
             }
         };
+
+        Items.find().observeChanges({
+           changed: function (nrVotes) {
+               $scope.updateChartValues();
+           },
+        });
+
+
     })

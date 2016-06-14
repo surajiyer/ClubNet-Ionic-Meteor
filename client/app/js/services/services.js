@@ -1,12 +1,26 @@
 angular.module('app.services', [])
 
-    .service('currentClub', function ($meteor) {
+    .service('CommonServices', function ($ionicPopup) {
         /**
-         * @summary Get the current club and hold it in the service
+         * Regular expressions for checking passwords. It should contain at least one alphabetical
+         * and numeric character. Furthermore it should have a length of at least 8.
          */
+        const passwordRegex = new RegExp("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.{8,})");
         return {
-            getClub: function () {
-                return $meteor.call('getClub');
+            /**
+             * @summary Check whether a password is strong enough
+             */
+            checkPassword: function (password) {
+                return passwordRegex.test(password);
+            },
+            showAlert: function (reason, message) {
+                var alertPopup = $ionicPopup.alert({
+                    title: reason,
+                    template: message
+                });
+
+                alertPopup.then(function (res) {
+                });
             }
         }
     })
@@ -29,7 +43,25 @@ angular.module('app.services', [])
     })
 
     .service('Chat', function (AccessControl) {
-        Meteor.subscribe('Chats');
+        /**
+         * To check if user has permission to view chats
+         * @type {ReactiveVar} Reactive boolean
+         */
+        var showChat = new ReactiveVar(false);
+        AccessControl.getPermission('Chat', 'view', (result) => {
+            showChat.set(result);
+            if(result) {
+                Meteor.subscribe('Chats');
+            }
+        });
+
+        /**
+         * Returns a reactive variable that updates
+         * @returns {66}
+         */
+        const canViewChat = function () {
+            return showChat.get();
+        };
 
         /**
          * @summary Get messages of a given chat
@@ -54,7 +86,7 @@ angular.module('app.services', [])
                 if (!hasPermission) throw new Meteor.Error('Insufficient permissions');
 
                 // Get message
-                Meteor.subscribe('Messages', chatId, messageId, function () {
+                Meteor.subscribe('Messages', {chatId: chatId, messageId: messageId}, () => {
                     var message = Messages.find({_id: messageId}).fetch()[0];
                     if (!message) return;
 
@@ -91,15 +123,17 @@ angular.module('app.services', [])
          * Load chat info into passed object with given chat ID
          * @param chatID String id of the chat
          * @param done callback to call upon retrieving chat
-         * @returns {*|any}
+         * @returns {Object|any} chat info
          */
         const getChat = function (chatID, done) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
+            if(!currentChat) return;
 
             // Get recipient user
             var recipient = currentChat.users[0];
             if (recipient == Meteor.userId()) recipient = currentChat.users[1];
             recipient = Meteor.users.find({_id: recipient}).fetch()[0];
+            if(!recipient) return;
 
             // Load the chat title to the recipient name
             currentChat.title = recipient.profile.firstName + " " + recipient.profile.lastName;
@@ -149,12 +183,14 @@ angular.module('app.services', [])
          * Change the status of the chat
          * @param chatId String id of chat
          * @param newStatus String status message
+         * @param done Optional callback with error object (if any) as first parameter
          */
-        const updateChatStatus = function (chatId, newStatus) {
-            Chats.update({_id: chatId}, {$set: {status: newStatus}});
+        const updateChatStatus = function (chatId, newStatus, done) {
+            Chats.update({_id: chatId}, {$set: {status: newStatus}}, done);
         };
 
         return {
+            canViewChat: canViewChat,
             getMessages: getMessages,
             getOneMessage: getMessage,
             createChat: createChat,
@@ -163,22 +199,5 @@ angular.module('app.services', [])
             getOneChat: getChat,
             sendMessage: sendMessage,
             updateChatStatus: updateChatStatus,
-        }
-    })
-    
-    .service('checkPassword', function ($meteor) {
-        /**
-         * @summary Check whether a password is strong enough
-         */
-        return {
-            checkPassword: function (password) {
-                /**
-                 * Regular expressions for checking passwords. It should contain at least one alphabetical
-                 * and numeric character. Furthermore it should have a length of at least 8.
-                 */
-                var passwordRegex = new RegExp("^(?=.*[a-zA-Z])(?=.*[0-9])(?=.{8,})");
-                
-                return passwordRegex.test(password);
-            }
         }
     })

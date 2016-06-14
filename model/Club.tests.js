@@ -5,9 +5,7 @@ import './Club.js';
 let testClub = {};
 if (Meteor.isServer) {
     describe('Club', () => {
-
         it("Get nonexisting Club should fail", (done) => {
-
             // Create a test club
             testClub = {
                 name: 'Name1',
@@ -36,7 +34,6 @@ if (Meteor.isServer) {
         });
 
         it("Get Club should succeed", (done) => {
-
             // Mock user to include the clubID of the test club we just added
             global.Meteor.user = sinon.stub().returns({
                 profile : { clubID : testClub._id}

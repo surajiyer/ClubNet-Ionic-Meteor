@@ -25,6 +25,33 @@ chat-info div:first-child {
   padding-right: 0 !important;
 }
 
+.chat-status {
+  color: #FFF;
+  padding: 2px 8px;
+  border-radius: 4px;
+  float: right;
+  margin-left: 4px;
+  font-size: x-small;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  &.status-open {
+    background-color: #4cd964;
+  }
+
+  &.status-closed {
+    background-color: #c9302c;
+  }
+
+  &.status-other {
+    background-color: #0a9dc7;
+  }
+}
+
+.last-message {
+  word-wrap: break-word;
+}
+
 .chat {
   background-image: url("/app/img/chat-background.jpg");
   background-color: #E0DAD6;
@@ -101,5 +128,21 @@ chat-info div:first-child {
     right: 7px;
     color: gray;
     font-size: 12px;
+  }
+}
+
+.footer-chat {
+  .item-input-wrapper {
+    background-color: #FFF;
+  }
+
+  .button.button-icon {
+    margin: 0 10px;
+  }
+
+  .buttons-seperator {
+    color: gray;
+    font-size: 18px;
+    line-height: 32px;
   }
 }

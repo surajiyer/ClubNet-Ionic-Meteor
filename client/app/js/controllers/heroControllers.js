@@ -5,8 +5,7 @@ angular.module('heroControllers', [])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('heroCtrl', function ($scope, $meteor, $ionicModal) {
-
+    .controller('heroCtrl', function ($scope, $ionicModal) {
         $ionicModal.fromTemplateUrl('client/app/views/feedItems/newHeroes.ng.html', {
             scope: $scope
         }).then(function (modal) {
@@ -24,9 +23,4 @@ angular.module('heroControllers', [])
         $scope.$on("loadEditData", function () {
             $scope.$parent.newItem.image = $scope.item.image;
         });
-
-        $scope.$on("successEdit", function (e, res) {
-            console.log(res);
-        });
-        
     })

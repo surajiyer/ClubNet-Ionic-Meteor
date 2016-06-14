@@ -6,10 +6,28 @@ angular.module('app.controllers', [
     'heroControllers',
     'sponsoringControllers'])
 
+    .controller('bodyCtrl', function ($scope) {
+
+        /**
+         * @summary Function to check if we run in Cordova environment
+         */
+        $scope.isPhone = function() {
+            return Meteor.isCordova;
+        }
+    })
+
 /**
  * Menu Controller: provides all functionality for the menu of the app
  */
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window, currentClub) {
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat) {
+        /**
+         * To check if user has permission to view chat option
+         * @type {boolean}
+         */
+        $scope.showChat = false;
+        Tracker.autorun(function () {
+            $scope.showChat = Chat.canViewChat();
+        });
         /**
          * @summary Function to logout
          */
@@ -25,10 +43,10 @@ angular.module('app.controllers', [
         /**
          * Loading the current club for styling
          */
-        currentClub.getClub().then(function (result) {
+        $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
         }, function (err) {
-            console.log(err);
+            return CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
     })
 
@@ -36,34 +54,49 @@ angular.module('app.controllers', [
      * Feed Controller: provides all functionality for the feed screen of the app
      */
     .controller('feedCtrl', function ($scope, $meteor) {
-
         /**
          * @summary Show the plus button if user has rights to add at least any kind of item
          */
-        $scope.$on("showAddItem", function() {
+        $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
 
         /**
          * @summary Function to update the item types
          */
-        $scope.updateItemTypes = function () {
-            //if (err) throw new Meteor.Error(err.reason);
-            var oldItemTypes = [];
-            if ($scope.itemTypes) {
-                oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
-                    result[id] = {name: name, checked: checked};
-                    return result;
-                }, {})
-            }
-            $scope.itemTypes = TypesCollection.find().fetch();
-            _.each($scope.itemTypes, function (element) {
-                element.checked = oldItemTypes[element._id] ? oldItemTypes[element._id].checked : true;
-            }, this);
-        };
+        // $scope.updateItemTypes = function () {
+        //     // If itemTypes already exists, use its existing checked values
+        //     var oldItemTypes = [];
+        //     if ($scope.itemTypes) {
+        //         oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
+        //             result[id] = {name: name, checked: checked};
+        //             return result;
+        //         }, {});
+        //     }
+        //
+        //     // Get new item types from database
+        //     $scope.itemTypes = TypesCollection.find().fetch();
+        //
+        //     // Load filter from item types
+        //     _.each($scope.itemTypes, function (element) {
+        //         if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
+        //         else element.checked = true;
+        //     }, this);
+        // };
+        //
+        // // Load the filter
+        // Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
-        // Load the filter
-        Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
+        Meteor.call('getItemTypes', function (err, result) {
+            if (!err && result) {
+                $scope.itemTypes = result;
+
+                // Load filter from item types
+                _.each($scope.itemTypes, function (element) {
+                    element.checked = true;
+                });
+            }
+        });
 
         // Load the plus button types
         // Meteor.subscribe('createItemTypes');
@@ -81,7 +114,6 @@ angular.module('app.controllers', [
         // Reactively (re)subscribe to feed items based on selected filters and limit
         Tracker.autorun(function () {
             $scope.getReactively('itemTypes', true);
-            console.log("ha");
             var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
                 return type.checked;
             }), '_id');
@@ -149,7 +181,7 @@ angular.module('app.controllers', [
     /**
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
-    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl) {
+    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices, $ionicPopup) {
 
         $scope.newItem = {};
         $scope.trainings = [];
@@ -166,8 +198,13 @@ angular.module('app.controllers', [
             }
         );
 
-        $scope.showCreate = false;
+         $scope.showAlertTargetValueInfo = function() {
+           var alertPopup = $ionicPopup.alert({
+             title: 'More information',
+             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'});
+         }
 
+        $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
             $scope.showCreate = result;
             if (result) {
@@ -192,14 +229,47 @@ angular.module('app.controllers', [
         $scope.closeModal = function () {
             $scope.modal.hide();
         };
+        
+        $scope.getPicture = function () {
+            var cameraOptions = {  
+                quality: 80,
+                correctOrientation: true,
+                sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+            }
+l̥
+           var picture = MeteorCamera.getPicture(cameraOptions, function(error, localData){
+                console.log (localData);
+                $scope.image = localData;
+                $scope.$apply();
+            })
+        };
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
-            Meteor.call('addFeedItem', $scope.newItem, function (err) {
-                // TODO: do something with error (show as popup?)
-                if (err) {
-                    throw new Meteor.Error(err.reason);
-                }
+            $scope.newItem.image = $scope.image;
+            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
+                Meteor.call('getFeedItemType', result, function(err, type){
+                    if (type == 'Voting') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Vote for the exercise you like.';
+                            var title = 'New voting!';
+                            console.log('adding new voting');
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    } else if (type == 'Form') {
+                        Meteor.call('getTeamUsers', function(err, result){
+                            var text = 'React on new practicality.';
+                            var title = 'New practicality!';
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    } else if (type == 'Heroes') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Check out a new hero of the week.';
+                            var title = 'New Hero!';
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    }
+                });
             });
             $scope.newItem = {};
             $scope.closeModal();
@@ -209,10 +279,15 @@ angular.module('app.controllers', [
     /**
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      */
-    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl, $ionicPopover, $ionicPopup, $ionicModal) {
+    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl,
+                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices) {
         // Get item type
         $scope.newItem = {};
-        $scope.itemType = TypesCollection.find({_id: $scope.item.type}).fetch()[0];
+        Meteor.call('getItemType', $scope.item.type, function (err, result) {
+            if (!err && result) {
+                $scope.itemType = result;
+            }
+        });
         $scope.trainings = [];
         $scope.hasEnded = false;
 
@@ -359,14 +434,15 @@ angular.module('app.controllers', [
                 type: $scope.item.type,
                 sticky: !$scope.item.sticky
             };
-            $meteor.call("updateFeedItem", obj).then(
-                function (result) {
-                    console.log("Success");
-                },
-                function (err) {
-                    console.log(err);
+            Meteor.call("updateFeedItem", obj, function (err, result) {
+                if (err) {
+                    return CommonServices.showAlert('Error', err.reason);
                 }
-            );
+                if (!result) {
+                    return CommonServices.showAlert('Error',
+                        'Something unexpected happened. Unable to update sticky item.');
+                }
+            });
         }
 
     })
@@ -374,6 +450,8 @@ angular.module('app.controllers', [
     /**
      * Controller for settings page
      */
-    .controller('settingsCtrl', function ($scope) {
-
+    .controller('settingsCtrl', function ($scope, $meteor) {
+        $scope.toggleChange = function(key, value){
+            $meteor.call('updateUserNotificationSetting', key, value);
+        };
     })

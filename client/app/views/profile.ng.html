@@ -23,15 +23,15 @@
             </div>
             <label class="item item-input">
                 <span class="input-label">Old password</span>
-                <input type="password" ng-model="temp_pass.oldPass">
+                <input type="password" ng-model="password.oldPass">
             </label>
             <label class="item item-input">
                 <span class="input-label">New password</span>
-                <input type="password" ng-model="temp_pass.newPass">
+                <input type="password" ng-model="password.newPass">
             </label>
             <label class="item item-input">
-                <span class="input-label">New password (again)</span>
-                <input type="password" ng-model="temp_pass.newPassCheck">
+                <span class="input-label">Confirm password</span>
+                <input type="password" ng-model="password.newPassCheck">
             </label>
             <button class="button button-full button-stable" style="margin-top: 0 !important;"
                     ng-click="changePassword()">

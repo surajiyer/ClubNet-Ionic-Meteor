@@ -171,17 +171,26 @@ angular.module('web.userAccountControllers', [])
                         lastName: $scope.user.lastName,
                         type: $scope.user.team != '' ? 'player' : 'general',
                         clubID: Meteor.user().profile.clubID,
-                        teamID: $scope.user.team
+                        teamID: $scope.user.team,
+                        notifications: {}
                     }
                 };
 
-                $meteor.call('addUser', newUser).then(function (result) {
-                    $state.go('web.members'); // Redirect user if registration succeeds
-                }, function (err) {
-                    console.log('error');
+                $meteor.call('getItemTypes').then(function(result){
+                    result.forEach(function(type){
+                        newUser.profile.notifications[type._id] = false;
+                    });
+
+                    $meteor.call('addUser', newUser).then(function (result) {
+                        $state.go('web.members'); // Redirect user if registration succeeds
+                    }, function (err) {
+                        console.log('error');
+                        console.log(err);
+                        $scope.error = err.reason;
+                        $scope.errorVisible = true;
+                    });
+                }, function(err){
                     console.log(err);
-                    $scope.error = err.reason;
-                    $scope.errorVisible = true;
                 });
             }
         };
@@ -251,7 +260,7 @@ angular.module('web.userAccountControllers', [])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('profileCtrl', function ($scope, $meteor, $state, checkPassword) {
+    .controller('profileCtrl', function ($scope, $meteor, $state, CommonServices) {
         $scope.user = {
             id: '',
             firstName: '',
@@ -384,7 +393,7 @@ angular.module('web.userAccountControllers', [])
         };
     })
 
-    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, checkPassword) {
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, CommonServices) {
         $scope.token = $stateParams.token;
 
         $scope.user = {

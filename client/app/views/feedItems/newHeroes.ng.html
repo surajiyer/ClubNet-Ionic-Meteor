@@ -11,10 +11,14 @@
                 <span class="input-label">Title</span>
                 <input ng-model="newItem.title" type="text" placeholder="Title">
             </label>
-            <label class="item item-input item-floating-label">
-                <span class="input-label">Image link</span>
-                <input ng-model="newItem.image" type="text" placeholder="Image">
-            </label>
+
+            <button ng-click="getPicture()" class="button button-block button-positive">
+                Get picture from gallery
+            </button>
+          <div ng-if="image" style="text-align: center; font-weight: bold; font-size: 15px; color:#404040;">Your uploaded picture:</div>
+              <div id="picture">
+                <img src={{image}} style="max-height:200px; max-width:200px; margin-left:auto; margin-right:auto; display: block; border: 3px dashed #ccc;" ng-disabled="!image">
+              </div>
             <button ng-disabled="!newItem.text && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
                 {{ postBtn }}
             </button>

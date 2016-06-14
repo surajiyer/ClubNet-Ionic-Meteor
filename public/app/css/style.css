@@ -343,3 +343,9 @@ form.list {
 .menu .item.active.item-complex>.item-content {
     background-color: #344750;
 }
+#buttonQuestionmark{
+    position: absolute;
+    top: 5px;
+    right: 4px;
+    z-index: 9999999;
+}

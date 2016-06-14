@@ -1,7 +1,12 @@
 <ion-view view-title="Settings">
     <ion-content padding="true" class="has-header main-content">
         <form class="list main-content">
-            <ion-toggle toggle-class="toggle-positive">Push Notifications</ion-toggle>
+            <ion-toggle toggle-class="toggle-positive"
+                        ng-repeat="(key, value) in currentUser.profile.notifications"
+                        ng-change="toggleChange(key, value)"
+                        ng-model="value">
+                {{key}} notification
+            </ion-toggle>
             <label class="item item-input item-select">
                 <label class="input-label">Set language</label>
                 <select>
@@ -9,8 +14,7 @@
                     <option selected>English</option>
                 </select>
             </label>
-            <ion-toggle checked="true">Some setting over here here</ion-toggle>
-            <ion-toggle toggle-class="toggle-positive">Push Notifications</ion-toggle>
+
         </form>
     </ion-content>
 </ion-view>

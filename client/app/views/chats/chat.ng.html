@@ -6,6 +6,7 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content class="chat" delegate-handle="chatScroll">
+        <ion-refresher on-refresh="refresh(limit+20)"></ion-refresher>
         <div class="message-list">
             <div ng-repeat="message in messages" class="message-wrapper">
                 <div class="message"
@@ -16,7 +17,9 @@
             </div>
         </div>
     </ion-content>
-    <ion-footer-bar keyboard-attach class="bar-stable footer-chat item-input-inset">
+    <ion-footer-bar keyboard-attach
+                    class="bar-stable footer-chat item-input-inset"
+                    ng-disabled="chat.status == 'closed'">
         <!--<button class="button button-clear button-icon button-positive icon ion-ios-upload-outline"></button>-->
         <label class="item-input-wrapper">
             <input ng-model="message"
