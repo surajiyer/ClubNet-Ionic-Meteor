@@ -1,5 +1,13 @@
 if(Meteor.isServer) {
     Meteor.methods({
+
+         /*
+         * @summary Check what kind of repeatInterval we are dealing with
+         * @param {Integer} item id
+         * @after forwarded to corresponding function (daily, weekly, fourweeks are all being handled in seperate functions)
+         */
+         
+
         checkRepeatInterval: function (id) {
             check(id, String);
             var item = Items.find({_id: id}).fetch()[0];
@@ -17,6 +25,11 @@ if(Meteor.isServer) {
             }
             return true;
         },
+
+        /*
+         * @summary Calculates the time difference between the current time and the time that was passed as parameter
+         * @param {String} timestamp that states the time at which the item was created
+         */
         calculateTimeDifference: function (createdAt) {
             check(createdAt, Date);
             //get the current time (server sided ofc)
@@ -44,6 +57,11 @@ if(Meteor.isServer) {
 
             return days;
         },
+
+        /*
+         * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
+         * @param {Object} item that was created.
+         */
         renewItemDaily: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
@@ -69,6 +87,11 @@ if(Meteor.isServer) {
 
             return true;
         },
+
+        /*
+         * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
+         * @param {Object} item that was created.
+         */
         renewItemWeekly: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
@@ -94,6 +117,11 @@ if(Meteor.isServer) {
 
             return true;
         },
+
+        /*
+         * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
+         * @param {Object} item that was created.
+         */
         renewItemFourweeks: function (item) {
             check(item, Object);
             var createdAt = item.createdAt;
