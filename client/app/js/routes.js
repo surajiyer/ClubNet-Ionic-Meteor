@@ -125,6 +125,12 @@ angular.module('app.routes', [])
         };
 
         $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
+            // If already logged in, go directly to feed
+            if((toState.name === "login" || toState.name === "/") && Meteor.userId()) {
+                e.preventDefault(); // stop current execution
+                return $state.go('menu.feed');
+            }
+
             if (toState.name === "login"
                 || toState.name === "enroll"
                 || toState.name === "resetpassword"

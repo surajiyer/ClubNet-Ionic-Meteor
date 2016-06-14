@@ -42,6 +42,9 @@ cfs:gridfs
 thospaeth:angular-color-picker
 raix:push
 email
+<<<<<<< HEAD
 blaze
 lmieulet:meteor-coverage
 mdg:camera
+=======
+>>>>>>> 983fe073d76c5ebc3342e8394b5a5529b3fb506e

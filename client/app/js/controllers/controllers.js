@@ -18,8 +18,6 @@ angular.module('app.controllers', [
             $scope.showChat = Chat.canViewChat();
         });
 
-
-
         /**
          * @summary Function to logout
          */
@@ -49,11 +47,9 @@ angular.module('app.controllers', [
         /**
          * @summary Show the plus button if user has rights to add at least any kind of item
          */
-        $scope.$on("showAddItem", function() {
+        $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
-
-
 
         /**
          * @summary Function to update the item types
@@ -198,7 +194,6 @@ angular.module('app.controllers', [
              template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'});
          }
 
-
         $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
             $scope.showCreate = result;
@@ -224,41 +219,40 @@ angular.module('app.controllers', [
         $scope.closeModal = function () {
             $scope.modal.hide();
         };
-
-
-        $scope.getPicture = function ()
-        {
+        
+        $scope.getPicture = function () {
             var cameraOptions = {  
                 quality: 80,
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             }
-
+l̥
            var picture = MeteorCamera.getPicture(cameraOptions, function(error, localData){
                 console.log (localData);
                 $scope.image = localData;
                 $scope.$apply();
             })
-
         };
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
-            Meteor.call('addFeedItem', $scope.newItem, function (err) {
+            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
                 if (err) {
                     return CommonServices.showAlert('Failed to add item', err.reason);
+                } else if (result) {
+                    $scope.newItem = {};
+                    $scope.closeModal();
                 }
             });
-            $scope.newItem = {};
-            $scope.closeModal();
         };
     })
 
     /**
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      */
-    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl, $ionicPopover, $ionicPopup, $ionicModal) {
+    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl,
+                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices) {
         // Get item type
         $scope.newItem = {};
         Meteor.call('getItemType', $scope.item.type, function (err, result) {
@@ -412,14 +406,15 @@ angular.module('app.controllers', [
                 type: $scope.item.type,
                 sticky: !$scope.item.sticky
             };
-            $meteor.call("updateFeedItem", obj).then(
-                function (result) {
-                    console.log("Success");
-                },
-                function (err) {
-                    console.log(err);
+            Meteor.call("updateFeedItem", obj, function (err, result) {
+                if (err) {
+                    return CommonServices.showAlert('Error', err.reason);
                 }
-            );
+                if (!result) {
+                    return CommonServices.showAlert('Error',
+                        'Something unexpected happened. Unable to update sticky item.');
+                }
+            });
         }
 
     })
