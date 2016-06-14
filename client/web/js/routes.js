@@ -87,19 +87,6 @@ angular.module('web.routes', [])
                 controller: 'profileCtrl'
             })
 
-            // Feed
-            .state('web.feed', {
-                url: '/feed',
-                templateUrl: 'client/web/views/feed.ng.html'
-            })
-
-            // Club betting
-            .state('web.betting', {
-                url: '/betting',
-                templateUrl: 'client/web/views/betting.ng.html',
-                controller: 'accountManagementCtrl'
-            })
-
             // Redirect to application
             .state('redirect', {
                 url: '/redirect/:sort/:token',

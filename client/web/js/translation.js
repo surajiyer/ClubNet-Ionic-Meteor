@@ -24,7 +24,7 @@ angular.module('web.translation', ['pascalprecht.translate'])
             "Profile": "Profiel",
             "User profile": "Gebruikersprofiel",
             "Change password": "Verander wachtwoord",
-            "Successfully updated profile": "Gebruikersprofiel veranderd",
+            "Successfully updated profile": "Gebruikersprofiel aangepast",
             "Successfully updated password": "Wachtwoord veranderd",
             "Current password": "Huidige wachtwoord",
             "New password": "Nieuwe wachtwoord",
