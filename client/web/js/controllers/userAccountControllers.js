@@ -393,7 +393,7 @@ angular.module('web.userAccountControllers', [])
 
     })
 
-    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance) {
+    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance, $translate) {
 
         $scope.error = '';
         $scope.errorVisible = false;
@@ -429,7 +429,7 @@ angular.module('web.userAccountControllers', [])
         };
     })
 
-    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, CommonServices) {
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, $translate) {
         $scope.token = $stateParams.token;
 
         $scope.user = {
