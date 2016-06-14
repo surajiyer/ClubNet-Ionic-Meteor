@@ -22,16 +22,13 @@
                 Change password
             </div>
             <label class="item item-input">
-                <span class="input-label">Old password</span>
-                <input type="password" ng-model="password.oldPass">
+                <input type="password" placeholder="Old Password" ng-model="password.oldPass">
             </label>
             <label class="item item-input">
-                <span class="input-label">New password</span>
-                <input type="password" ng-model="password.newPass">
+                <input type="password" placeholder="New Password" ng-model="password.newPass">
             </label>
             <label class="item item-input">
-                <span class="input-label">Confirm password</span>
-                <input type="password" ng-model="password.newPassCheck">
+                <input type="password" placeholder="Confirmation New Password" ng-model="password.newPassCheck">
             </label>
             <button class="button button-full button-stable" style="margin-top: 0 !important;"
                     ng-click="changePassword()">
