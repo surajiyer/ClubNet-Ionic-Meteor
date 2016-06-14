@@ -13,6 +13,17 @@
                       ng-repeat="chat in chats"
                       ui-sref="menu.chat({chatId: chat._id})">
                 <chat-info chat="chat"></chat-info>
+                <ion-option-button ng-if="canModifyStatus && chat.status == 'open'"
+                                   ng-click="modifyStatus(chat._id, 'closed'); $event.stopPropagation();"
+                                   stop-event="click"
+                                   class="button-assertive">
+                    Close
+                </ion-option-button>
+                <ion-option-button ng-if="canModifyStatus && chat.status == 'closed'"
+                                   ng-click="modifyStatus(chat._id, 'open'); $event.stopPropagation();"
+                                   class="button-balanced">
+                    Open
+                </ion-option-button>
             </ion-item>
         </ion-list>
     </ion-content>

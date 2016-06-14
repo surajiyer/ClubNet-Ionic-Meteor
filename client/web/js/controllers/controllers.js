@@ -2,6 +2,17 @@ angular.module('web.controllers', [
     'ui.bootstrap',
     'web.userAccountControllers'])
 
+    .controller('bodyCtrl', function ($scope) {
+
+        /**
+         * @summary Function to check if we run in Cordova environment
+         */
+        $scope.isPhone = function() {
+            return Meteor.isCordova;
+        }
+    })
+
+
     /**
      *  Custom on change Controller: puts a listener on file input change
      */

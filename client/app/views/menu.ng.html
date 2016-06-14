@@ -4,10 +4,10 @@
             <div class="profile-img-div" style="background-image: url({{currentClub.logo}})"></div>
             <div class="welcome-message">Hi, {{currentUser.profile.firstName}} {{currentUser.profile.lastName}}</div>
             <ion-list>
-                <ion-item ui-sref="menu.feed" menu-close=""><i class="icon ion-ios-paper"></i> Feed</ion-item>
-                <ion-item ui-sref="menu.profile" menu-close=""><i class="icon ion-person"></i> Profile</ion-item>
-                <ion-item ng-if="showChat" ui-sref="menu.chats" menu-close=""><i class="icon ion-chatbubbles"></i> Chat</ion-item>
-                <ion-item ui-sref="menu.settings" menu-close=""><i class="icon ion-gear-a"></i> Settings</ion-item>
+                <ion-item ui-sref-active="active" ui-sref="menu.feed" menu-close=""><i class="icon ion-ios-paper"></i> Feed</ion-item>
+                <ion-item ui-sref-active="active" ui-sref="menu.profile" menu-close=""><i class="icon ion-person"></i> Profile</ion-item>
+                <ion-item ng-if="showChat" ui-sref-active="active" ui-sref="menu.chats" menu-close=""><i class="icon ion-chatbubbles"></i> Chat</ion-item>
+                <ion-item ui-sref-active="active" ui-sref="menu.settings" menu-close=""><i class="icon ion-gear-a"></i> Settings</ion-item>
                 <ion-item ng-click="logout($event)" menu-close="" class="item-complex">
                     <a class="item-content">
                         <i class="icon ion-log-out"></i> Log out
@@ -24,14 +24,5 @@
             </ion-nav-buttons>
         </ion-nav-bar>
         <ion-nav-view name="side-menu-content"></ion-nav-view>
-        <!--<ion-tabs class="tabs-positive tabs-icon-top">-->
-            <!--<ion-tab title="Home" icon-on="ion-ios-home" icon-off="ion-ios-home-outline" ui-sref="menu.home">-->
-                <!--<ion-nav-view name="feed-tab"></ion-nav-view>-->
-            <!--</ion-tab>-->
-
-            <!--<ion-tab title="Settings" icon-on="ion-ios-gear" icon-off="ion-ios-gear-outline" ui-sref="menu.settings">-->
-                <!--<ion-nav-view name="settings-tab"></ion-nav-view>-->
-            <!--</ion-tab>-->
-        <!--</ion-tabs>-->
     </ion-side-menu-content>
 </ion-side-menus>

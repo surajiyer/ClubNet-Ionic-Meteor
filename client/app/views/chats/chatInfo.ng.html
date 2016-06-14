@@ -8,6 +8,13 @@
             {{ chat.lastMessage.createdAt | date : 'dd/MM/yy h:mm a' }}
         </span>
     </h2>
-    <p>{{ chat.lastMessage.message }}</p>
+    <div>
+        <span class="chat-status"
+              ng-class="chat.status == 'open' ? 'status-open' :
+              (chat.status == 'closed' ? 'status-closed' : 'status-other')">
+            {{chat.status}}
+        </span>
+        <p class="last-message">{{ chat.lastMessage.message }}</p>
+    </div>
     <i class="icon ion-chevron-right icon-accessory"></i>
 </div>

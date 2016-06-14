@@ -82,7 +82,7 @@ angular.module('web.userAccountControllers', [])
                     // If PR user, log in and redirect
                 } else {
                     // Redirect user if login succeeds
-                    $state.go('web.feed');
+                    $state.go('web.members');
                 }
             }, function (err) {
                 // Show error message in console
@@ -182,7 +182,8 @@ angular.module('web.userAccountControllers', [])
                         lastName: $scope.user.lastName,
                         type: $scope.user.team != '' ? 'player' : 'general',
                         clubID: Meteor.user().profile.clubID,
-                        teamID: $scope.user.team
+                        teamID: $scope.user.team,
+                        notifications: {}
                     }
                 };
 
@@ -193,6 +194,13 @@ angular.module('web.userAccountControllers', [])
                         $scope.error = error;
                     });
                     $scope.errorVisible = true;
+                $meteor.call('getItemTypes').then(function(result){
+                    result.forEach(function(type){
+                        newUser.profile.notifications[type._id] = false;
+                    });
+                    
+                }, function(err){
+                    console.log(err);
                 });
             }
         };

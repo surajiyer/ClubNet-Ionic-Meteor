@@ -12,12 +12,3 @@ angular.module('web', ['angular-meteor',
     'web.routes',
     'web.translation',
     'web.services']);
-
-function onReady() {
-    angular.bootstrap(document, ['web']);
-}
-
-// TODO: Change condition in production
-// if (Meteor.isCordova) {
-//     angular.element(document).ready(onReady);
-// }

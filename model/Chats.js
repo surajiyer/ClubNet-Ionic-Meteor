@@ -3,19 +3,49 @@ import {chats, messages} from '/imports/schemas/chats';
 
 Chats = new Mongo.Collection("Chats");
 Messages = new Mongo.Collection("Messages");
+if (Meteor.isClient) {
+    MessagesCount = new Mongo.Collection('MessagesCount');
+}
 
 if (Meteor.isServer) {
     Meteor.publish('Chats', function () {
-        return Chats.find({users: this.userId});
+        return Chats.find({users: this.userId}, {sort: {lastMessage: -1}});
     });
 
-    Meteor.publish('Messages', function (chatId, messageId) {
-        check(chatId, String);
-        check(messageId, Match.Maybe(String));
+    Meteor.publish('Messages', function (options) {
+        check(options, Object);
+        check(options.chatId, String);
+        check(options.messageId, Match.Maybe(String));
+        check(options.limit, Match.Maybe(Number));
         var selector = {};
-        selector.chatID = chatId;
-        if (messageId) selector._id = messageId;
-        return Messages.find(selector, {sort: {createdAt: 1}});
+        selector.chatID = options.chatId;
+        if (options.messageId) selector._id = options.messageId;
+        var projection = {sort: {createdAt: -1}};
+        if (options.limit) projection.limit = options.limit;
+        return Messages.find(selector, projection);
+    });
+
+    Meteor.publish('MessagesCount', function (chatId) {
+        check(chatId, String);
+
+        // Add the messages count of given chat to collection
+        let countObject = { count: Messages.find({chatID: chatId}).count()};
+        this.added('MessagesCount', chatId, countObject);
+
+        // Function to update the count of messages of given chat
+        self = this;
+        var updateCount = function () {
+            let countObject = { count: Messages.find({chatID: chatId}).count()};
+            self.changed('MessagesCount', chatId, countObject);
+        };
+
+        // Update count by observing changes in Messages collection for given chat
+        Messages.find({chatID: chatId}).observeChanges({
+            added: updateCount, removed: updateCount
+        });
+
+        // Tell the subscriber that the subscription is ready
+        this.ready();
     });
 }
 
@@ -88,7 +118,7 @@ Meteor.startup(function () {
             return isValidUser && hasPermission;
         }
     });
-    
+
     // Attach the schemas
     Chats.attachSchema(chats);
     Messages.attachSchema(messages);

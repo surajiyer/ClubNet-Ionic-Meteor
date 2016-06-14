@@ -40,8 +40,6 @@ angular.module('formControllers', [])
          */
         $scope.openForm = function () {
             $scope.formModal.show();
-       
-
         };
 
         /**
@@ -53,55 +51,51 @@ angular.module('formControllers', [])
             });
         };
 
-
         $scope.reloadResponses = function () {
-                // Check if user has contributed to this item when initialising
-                if ($scope.item != null) {
+            // Check if user has contributed to this item when initialising
+            if ($scope.item != null) {
 
-                    var calculatedRaisedValue = "";
-                    
+                var calculatedRaisedValue = "";
 
-                      //Did someone add all repond?
-                    Meteor.call('getRaisedValue', $scope.item._id, function (err, result) {
+                // Did someone add all repond?
+                Meteor.call('getRaisedValue', $scope.item._id, function (err, result) {
+                    if (err) throw new Meteor.Error(err.reason);
+                    calculatedRaisedValue = result;
+
+                    Meteor.call('getFeedItem', $scope.item._id, function (err, result) {
                         if (err) throw new Meteor.Error(err.reason);
-                        calculatedRaisedValue = result;
+                        directRaisedValue = result.raisedValue;
 
-                            Meteor.call('getFeedItem', $scope.item._id, function (err, result) {
-                                if (err) throw new Meteor.Error(err.reason);
-                                directRaisedValue = result.raisedValue;
+                        console.log("calculatedRaisedValue: " + calculatedRaisedValue);
+                        console.log("directRaisedValue: " + directRaisedValue);
 
-                                console.log("calculatedRaisedValue: "+calculatedRaisedValue);
-                                console.log("directRaisedValue: "+directRaisedValue);
-
-                                    // there should be a check here that determines wheter the raisedValue from 
-                                    // the database is the same as the one that is calculated from all respones.
-                                    // for convinience we are only using the directRaisedValue (from the database directly)
-                                    // For this we have to assume that this will be consistent with the response items at all times.
-                                    $scope.item.raisedValue = directRaisedValue;
-                                    $scope.$apply();
-                            });
-
-                    });
-                    //Did the user respond?
-                    Meteor.call('getResponse', $scope.item._id, function (err, result) {
-                        if (err) throw new Meteor.Error(err.reason);
-                        if (!result)
-                        {
-                          $scope.item.myContribution = 0
-                          $scope.item.hasContributed = false;
-                        }
-                        console.log("RESULT IN GET RESPONSE: "+result);
-                        if(result != null){
-                          $scope.item.myContribution = result.value;
-                          $scope.item.hasContributed = true;
-                        }
+                        // there should be a check here that determines wheter the raisedValue from
+                        // the database is the same as the one that is calculated from all respones.
+                        // for convinience we are only using the directRaisedValue (from the database directly)
+                        // For this we have to assume that this will be consistent with the response items at all times.
+                        $scope.item.raisedValue = directRaisedValue;
                         $scope.$apply();
-                                console.log("myContribution: "+$scope.item.myContribution);
-                                console.log("hasContributed: "+$scope.item.hasContributed);
                     });
-                }
-                console.log("reloaded");
+                });
+                //Did the user respond?
+                Meteor.call('getResponse', $scope.item._id, function (err, result) {
+                    if (err) throw new Meteor.Error(err.reason);
+                    if (!result) {
+                        $scope.item.myContribution = 0
+                        $scope.item.hasContributed = false;
+                    }
+                    console.log("RESULT IN GET RESPONSE: " + result);
+                    if (result != null) {
+                        $scope.item.myContribution = result.value;
+                        $scope.item.hasContributed = true;
+                    }
+                    $scope.$apply();
+                    console.log("myContribution: " + $scope.item.myContribution);
+                    console.log("hasContributed: " + $scope.item.hasContributed);
+                });
             }
+            console.log("reloaded");
+        };
 
         $scope.reloadResponses();
 
@@ -111,24 +105,23 @@ angular.module('formControllers', [])
         $scope.signUp = function (value) {
             if (!value) return;
             $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
-                function(result){
+                function (result) {
                     $scope.item.hasContributed = value;
                 },
                 function (err) {
                     console.log(err);
                 }
-            ),
+            )
 
             //Increase the raisedValue of item with value=x
             $meteor.call('increaseValue', $scope.item._id, $scope.item.type, value).then(
-                function(result){
+                function (result) {
 
                 },
                 function (err) {
 
                 }
             );
-
         };
 
         /**
@@ -143,31 +136,23 @@ angular.module('formControllers', [])
                 function (err) {
                     console.log(err);
                 }
+            );
 
-            ),
             //Decrease the raisedValue of item with value=x
             $meteor.call('decreaseValue', $scope.item._id, $scope.item.type, $scope.item.myContribution).then(
-                function(result){
+                function (result) {
 
                 },
                 function (err) {
 
                 }
             );
-        }
-
-        // Tracker.autorun(function(){
-        //     console.log($scope.item);
-        //     var raisedValue = Items.find($scope.item._id).fetch()[0].raisedValue;
-        //     if(!raisedValue) return;
-        //     console.log("updated");
-        //     $scope.reloadResponses();
-        // })
+        };
 
         Items.find().observeChanges({
-           changed: function (raisedValue) {
-               $scope.reloadResponses();
-           },
+            changed: function (raisedValue) {
+                $scope.reloadResponses();
+            }
         });
 
         $scope.$on("loadEditData", function () {

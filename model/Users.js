@@ -17,6 +17,18 @@ if (Meteor.isServer) {
                 users_array.push(user._id);
             });
             return users_array;
+        },
+        /**
+         * @summary Function for updating user notification setting.
+         * @param {key} key Which item type notification setting is for
+         * @param {value} value The setting itself
+         */
+        updateUserNotificationSetting: function (key, value) {
+            check(key, String);
+            check(value, Boolean);
+            var userNotifications = Meteor.users.findOne({"_id": Meteor.userId()}).profile.notifications;
+            userNotifications[key] = value;
+            Meteor.users.update(Meteor.userId(), {$set: {"profile.notifications": userNotifications}});
         }
     })
 }

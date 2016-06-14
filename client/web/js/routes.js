@@ -10,7 +10,7 @@ angular.module('web.routes', [])
 
                     // If user logged in
                     if (Meteor.userId()) {
-                        $state.go('web.feed');
+                        $state.go('web.members');
                     } else {
                         $state.go('login');
                     }

@@ -229,14 +229,15 @@ const bettingRoundSchema = new SimpleSchema({
  * Database schema for Sponsoring
  * @type {SimpleSchema}
  */
-const sponsorEventSchema = new SimpleSchema([baseFeedItemSchema, {
+const sponsoringEventSchema = new SimpleSchema([baseFeedItemSchema, {
     title: {
         type: String,
         min: 1
     },
     description: {type: String},
-    targetAmount: {type: Number},
-    raisedAmount: {type: Number}
+    deadline: { type: Date },
+    targetValue: {type: Number},
+    raisedValue: {type: Number}
 }]);
 
 /**
@@ -265,6 +266,6 @@ export default feedItemSchemas = {
     'Form': formSchema,
     'Heroes': heroesSchema,
     'Betting': bettingRoundSchema,
-    'Sponsor': sponsorEventSchema,
+    'Sponsoring': sponsoringEventSchema,
     'Suggestion': exerciseSuggestionSchema
 };

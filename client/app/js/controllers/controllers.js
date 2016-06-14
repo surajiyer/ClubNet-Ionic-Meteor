@@ -3,12 +3,23 @@ angular.module('app.controllers', [
     'chatControllers',
     'votingControllers',
     'formControllers',
-    'heroControllers'])
+    'heroControllers',
+    'sponsoringControllers'])
 
-    /**
-     * Menu Controller: provides all functionality for the menu of the app
-     */
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat, CommonServices) {
+    .controller('bodyCtrl', function ($scope) {
+
+        /**
+         * @summary Function to check if we run in Cordova environment
+         */
+        $scope.isPhone = function() {
+            return Meteor.isCordova;
+        }
+    })
+
+/**
+ * Menu Controller: provides all functionality for the menu of the app
+ */
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat) {
         /**
          * To check if user has permission to view chat option
          * @type {boolean}
@@ -17,9 +28,6 @@ angular.module('app.controllers', [
         Tracker.autorun(function () {
             $scope.showChat = Chat.canViewChat();
         });
-
-
-
         /**
          * @summary Function to logout
          */
@@ -49,11 +57,9 @@ angular.module('app.controllers', [
         /**
          * @summary Show the plus button if user has rights to add at least any kind of item
          */
-        $scope.$on("showAddItem", function() {
+        $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
-
-
 
         /**
          * @summary Function to update the item types
@@ -175,7 +181,7 @@ angular.module('app.controllers', [
     /**
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
-    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices) {
+    .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices, $ionicPopup) {
 
         $scope.newItem = {};
         $scope.trainings = [];
@@ -191,6 +197,12 @@ angular.module('app.controllers', [
                 console.log(err);
             }
         );
+
+         $scope.showAlertTargetValueInfo = function() {
+           var alertPopup = $ionicPopup.alert({
+             title: 'More information',
+             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'});
+         }
 
         $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
@@ -208,7 +220,7 @@ angular.module('app.controllers', [
 
         $scope.openModal = function () {
             $scope.modal.show();
-            $scope.postBtn = "Post";
+            $scope.postBtn = "Create";
         };
 
         /**
@@ -217,32 +229,47 @@ angular.module('app.controllers', [
         $scope.closeModal = function () {
             $scope.modal.hide();
         };
-
-
-        $scope.getPicture = function ()
-        {
+        
+        $scope.getPicture = function () {
             var cameraOptions = {  
                 quality: 80,
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             }
-
+l̥
            var picture = MeteorCamera.getPicture(cameraOptions, function(error, localData){
                 console.log (localData);
                 $scope.image = localData;
                 $scope.$apply();
             })
-
         };
-
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
-            Meteor.call('addFeedItem', $scope.newItem, function (err) {
-                if (err) {
-                    return CommonServices.showAlert('Failed to add item', err.reason);
-                }
+            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
+                Meteor.call('getFeedItemType', result, function(err, type){
+                    if (type == 'Voting') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Vote for the exercise you like.';
+                            var title = 'New voting!';
+                            console.log('adding new voting');
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    } else if (type == 'Form') {
+                        Meteor.call('getTeamUsers', function(err, result){
+                            var text = 'React on new practicality.';
+                            var title = 'New practicality!';
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    } else if (type == 'Heroes') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            var text = 'Check out a new hero of the week.';
+                            var title = 'New Hero!';
+                            Meteor.call('userNotification', type, text, title, result);
+                        });
+                    }
+                });
             });
             $scope.newItem = {};
             $scope.closeModal();
@@ -252,7 +279,8 @@ angular.module('app.controllers', [
     /**
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      */
-    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl, $ionicPopover, $ionicPopup, $ionicModal) {
+    .controller('generalItemCtrl', function ($scope, $meteor, AccessControl,
+                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices) {
         // Get item type
         $scope.newItem = {};
         Meteor.call('getItemType', $scope.item.type, function (err, result) {
@@ -406,14 +434,15 @@ angular.module('app.controllers', [
                 type: $scope.item.type,
                 sticky: !$scope.item.sticky
             };
-            $meteor.call("updateFeedItem", obj).then(
-                function (result) {
-                    console.log("Success");
-                },
-                function (err) {
-                    console.log(err);
+            Meteor.call("updateFeedItem", obj, function (err, result) {
+                if (err) {
+                    return CommonServices.showAlert('Error', err.reason);
                 }
-            );
+                if (!result) {
+                    return CommonServices.showAlert('Error',
+                        'Something unexpected happened. Unable to update sticky item.');
+                }
+            });
         }
 
     })
@@ -421,6 +450,8 @@ angular.module('app.controllers', [
     /**
      * Controller for settings page
      */
-    .controller('settingsCtrl', function ($scope) {
-
+    .controller('settingsCtrl', function ($scope, $meteor) {
+        $scope.toggleChange = function(key, value){
+            $meteor.call('updateUserNotificationSetting', key, value);
+        };
     })
