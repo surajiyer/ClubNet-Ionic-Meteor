@@ -6,7 +6,10 @@
             <ion-list>
                 <ion-item ui-sref-active="active" ui-sref="menu.feed" menu-close=""><i class="icon ion-ios-paper"></i> Feed</ion-item>
                 <ion-item ui-sref-active="active" ui-sref="menu.profile" menu-close=""><i class="icon ion-person"></i> Profile</ion-item>
-                <ion-item ng-if="showChat" ui-sref-active="active" ui-sref="menu.chats" menu-close=""><i class="icon ion-chatbubbles"></i> Chat</ion-item>
+                <ion-item ng-if="showChat" ui-sref-active="active" ui-sref="menu.chats" menu-close="">
+                    <i class="icon ion-chatbubbles"></i> Chat
+                    <div class="menu-notification"></div>
+                </ion-item>
                 <ion-item ui-sref-active="active" ui-sref="menu.settings" menu-close=""><i class="icon ion-gear-a"></i> Settings</ion-item>
                 <ion-item ng-click="logout($event)" menu-close="" class="item-complex">
                     <a class="item-content">

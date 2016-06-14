@@ -50,7 +50,7 @@ angular.module('app.services', [])
         var showChat = new ReactiveVar(false);
         AccessControl.getPermission('Chat', 'view', (result) => {
             showChat.set(result);
-            if(result) {
+            if (result) {
                 Meteor.subscribe('Chats');
             }
         });
@@ -112,6 +112,12 @@ angular.module('app.services', [])
             });
         };
 
+        const deleteChat = function (chatId, done) {
+            Meteor.call('deleteChat', chatId, () => {
+                if (done) done();
+            });
+        };
+
         /**
          * Get all chats sorted on most recently used.
          */
@@ -127,13 +133,13 @@ angular.module('app.services', [])
          */
         const getChat = function (chatID, done) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
-            if(!currentChat) return;
+            if (!currentChat) return;
 
             // Get recipient user
             var recipient = currentChat.users[0];
             if (recipient == Meteor.userId()) recipient = currentChat.users[1];
             recipient = Meteor.users.find({_id: recipient}).fetch()[0];
-            if(!recipient) return;
+            if (!recipient) return;
 
             // Load the chat title to the recipient name
             currentChat.title = recipient.profile.firstName + " " + recipient.profile.lastName;
@@ -194,6 +200,7 @@ angular.module('app.services', [])
             getMessages: getMessages,
             getOneMessage: getMessage,
             createChat: createChat,
+            deleteChat: deleteChat,
             getChats: getChats,
             getChatByUserId: getChatByUserId,
             getOneChat: getChat,

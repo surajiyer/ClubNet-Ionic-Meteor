@@ -9,12 +9,15 @@
         </span>
     </h2>
     <div>
+        <p class="last-message">{{ chat.lastMessage.message }}</p>
         <span class="chat-status"
               ng-class="chat.status == 'open' ? 'status-open' :
               (chat.status == 'closed' ? 'status-closed' : 'status-other')">
             {{chat.status}}
         </span>
-        <p class="last-message">{{ chat.lastMessage.message }}</p>
+        <span ng-if="messagesCount[0].unreadCount != 0" class="chat-status status-unread-count">
+            {{messagesCount[0].unreadCount}}
+        </span>
     </div>
     <i class="icon ion-chevron-right icon-accessory"></i>
 </div>
