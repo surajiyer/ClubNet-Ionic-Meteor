@@ -198,11 +198,15 @@ angular.module('app.controllers', [
             }
         );
 
+
          $scope.showAlertTargetValueInfo = function() {
-           var alertPopup = $ionicPopup.alert({
-             title: 'More information',
-             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'});
+             CommonServices.showAlert('More information', 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots');
          }
+
+         $scope.showAlertRepeatInterval = function() {
+             CommonServices.showAlert('More information', 'The repeat interval defines the time after which you want the feed item to reset itself.');
+         }
+
 
         $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
