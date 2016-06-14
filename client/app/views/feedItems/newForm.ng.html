@@ -7,7 +7,7 @@
     </ion-header-bar>
     <ion-content>
         <div class="list">
-            <label class="item item-input item-label">
+            <div class="item item-input item-label">
                 <span class="input-label">
                     Select type:
                 </span>
@@ -18,8 +18,8 @@
                     <option value="presence">Presence</option>
                     <option value="other">Other</option>
                 </select>
-            </label>
-            <label class="item item-input item-label">
+            </div>
+            <div class="item item-input item-label">
                 <span class="input-label">
                     Repeat interval:
                 </span>
@@ -29,21 +29,22 @@
                     <option value="weekly">Weekly</option>
                     <option value="fourweeks">4 Weeks</option>
                 </select>
-            </label>
-            <label class="item item-input item-label">
+            </div>
+            <div class="item item-input item-label">
                 <span class="input-label">Title</span>
 
                 <input ng-model="newItem.title" type="text" placeholder="Title">
-            </label>
-            <label class="item item-input item-label">
+            </div>
+            <div class="item item-input item-label">
                 <span class="input-label">Description:</span>
                 <input ng-model="newItem.description" type="text" placeholder="Description">
 
-            </label>
-            <label class="item item-input item-label">
+            </div>
+            <div class="item item-input item-label">
                 <span class="input-label">Target value:</span>
                 <input ng-model="newItem.targetValue" type="number" placeholder="Target value"><br>
-            </label>
+                <a class="button button-icon icon ion-help" style="padding-right:15px;" ng-click="showAlertTargetValueInfo()"></a>
+            </div>
             <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
                 {{ postBtn }}
             </button>
