@@ -187,6 +187,7 @@ angular.module('web.userAccountControllers', [])
                     }
                 };
 
+
                 $meteor.call('addUser', newUser).then(function (result) {
                     $state.go('web.members'); // Redirect user if registration succeeds
                 }, function (err) {
@@ -194,17 +195,10 @@ angular.module('web.userAccountControllers', [])
                         $scope.error = error;
                     });
                     $scope.errorVisible = true;
-                $meteor.call('getItemTypes').then(function(result){
-                    result.forEach(function(type){
-                        newUser.profile.notifications[type._id] = false;
-                    });
-                    
-                }, function(err){
-                    console.log(err);
                 });
-            }
-        };
-    })
+                }
+            };
+        })
 
     /**
      *  Login Controller: provides all functionality for the login screen of the web interface
