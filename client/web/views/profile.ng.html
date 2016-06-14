@@ -1,12 +1,12 @@
 <div class="header">
-    <h1>Profile</h1>
-    <h2>Change your personal user settings.</h2>
+    <h1>{{ 'Profile' | translate }}</h1>
+    <h2>{{ 'Change your personal user settings.' | translate }}</h2>
 </div>
 
 <div class="content">
     <h2 class="content-subhead"></h2>
     <form g-submit="addAccount()">
-        <h3>User Profile</h3>
+        <h3>{{ 'User profile' | translate }}</h3>
         <div class="form-group">
             <label for="firstName">{{ 'First name' | translate }}</label>
             <input type="text" class="form-control" id="firstName" placeholder="{{ 'First name' | translate }}" ng-model="user.firstName">
@@ -23,14 +23,14 @@
             {{ error }}
         </div>
         <div ng-if="updatedVisible" class="alert alert-success">
-            Successfully updated profile
+            {{ 'Successfully updated profile' | translate }}
         </div>
         <a ng-click="saveChanges()" id="login-button" class="btn btn-primary">{{ 'Update profile' | translate }}</a>
         
-        <h3 style="padding-top:20px;" >Change Password (optional)</h3>
+        <h3 style="padding-top:20px;" >{{ 'Change password' | translate }}</h3>
         <div class="form-group">
-            <label for="email">{{ 'Old password' | translate }}</label>
-            <input type="password" class="form-control" id="oldPassword" placeholder="{{ 'Old password' | translate }}" ng-model="user.oldPassword">
+            <label for="email">{{ 'Current password' | translate }}</label>
+            <input type="password" class="form-control" id="oldPassword" placeholder="{{ 'Current password' | translate }}" ng-model="user.oldPassword">
         </div>
         <div class="form-group">
             <label for="email">{{ 'New password' | translate }}</label>
@@ -45,7 +45,7 @@
             {{ passwordError }}
         </div>
         <div ng-if="passwordUpdatedVisible" class="alert alert-success">
-            Successfully updated password
+            {{ 'Successfully updated password' | translate }}
         </div>
 
         <a ng-click="savePasswordChanges()" id="login-button" class="btn btn-primary">{{ 'Update password' | translate }}</a>
