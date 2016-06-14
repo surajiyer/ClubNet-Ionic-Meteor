@@ -192,6 +192,14 @@ angular.module('userAccountControllers', [])
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
                 CommonServices.showAlert("Success!", "Password changed successfully. Please login again.");
                 Meteor.logout(function () {
+                      //Some cleanup code
+                      Object.keys(Session.keys).forEach(function(key){
+                        Session.set(key, undefined);
+                      });
+                      Session.keys = {} // remove session keys
+                      $scope.password.oldPass = '';
+                      $scope.password.newPass = '';
+                      $scope.password.newPassCheck = '';
                     $state.go('login');
                 });
             }, function (error) {

@@ -17,26 +17,13 @@
 
 <div class="item item-body">
 
-    <div ng-init="item.currentContribution = '1'">
+    <div>
         <label class="item item-input item-select"
                ng-if="(item.target == 'driving' || item.target == 'other') && item.hasContributed == false && item.targetValue-item.raisedValue > 0" >
             <div class="input-label">
                 Contribution:
             </div>
-            <select ng-model="item.currentContribution">
-                <option value="" ng-selected="true" disabled selected>Select your option</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </select>
+              <input ng-model="item.currentContribution" type="text" placeholder="1"><br>
         </label>
     </div>
 
