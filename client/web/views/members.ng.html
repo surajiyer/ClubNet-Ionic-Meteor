@@ -1,19 +1,19 @@
 <div class="header">
-    <h1>Members</h1>
-    <h2>Add, delete and manage your club's members.</h2>
+    <h1>{{ 'MEMBERS_TITLE' | translate }}</h1>
+    <h2>{{ 'MEMBERS_SUBTITLE' | translate }}</h2>
 </div>
     <h2 class="content-subhead"></h2>
     <p>
-            <a ui-sref="web.addAccount" style="font-size:18px;" class="btn btn-primary">{{ 'Add member' | translate }}</a>
+            <a ui-sref="web.addAccount" style="font-size:18px;" class="btn btn-primary">{{ 'ADD_USER' | translate }}</a>
             <table class="table table-hover">
                 <thead>
                 <tr>
-                    <th>First name</th>
-                    <th>Last name</th>
-                    <th>Email</th>
-                    <th>Team</th>
-                    <th>Member type</th>
-                    <th>Activated</th>
+                    <th>{{ 'FIRST_NAME' | translate }}</th>
+                    <th>{{ 'LAST_NAME' | translate }}</th>
+                    <th>{{ 'EMAIL' | translate }}</th>
+                    <th>{{ 'TEAM' | translate }}</th>
+                    <th>{{ 'MEMBER_TYPE' | translate }}</th>
+                    <th>{{ 'ACTIVATED' | translate }}</th>
                     <th></th>
                 </tr>
                 </thead>
@@ -29,12 +29,12 @@
                         <span ng-if="!user.emails[0].verified" class="glyphicon glyphicon-remove" style="color:#c9302c"></span>
                     </td>
                     <td>
-                        <p ng-if="user.profile.type != 'pr' && user.profile.type != 'coach'" ng-click="delete(user)" style="float: right;" data-placement="top" data-toggle="tooltip" title="Delete">
+                        <p ng-if="user.profile.type != 'pr' && user.profile.type != 'coach'" ng-click="delete(user)" style="float: right;" data-placement="top" data-toggle="tooltip" title="{{ 'DELETE' | translate }}">
                             <button class="btn btn-danger btn-xs" data-title="Delete" data-target="#delete" >
                                 <span class="glyphicon glyphicon-trash"></span>
                             </button>
                         </p>
-                        <p ng-if="user.profile.type != 'pr' && user.profile.type != 'coach'" ng-click="edit(user)"  style="float: right; margin-right: 5px;" data-placement="top" data-toggle="tooltip" title="Edit">
+                        <p ng-if="user.profile.type != 'pr' && user.profile.type != 'coach'" ng-click="edit(user)"  style="float: right; margin-right: 5px;" data-placement="top" data-toggle="tooltip" title="{{ 'EDIT' | translate }}">
                             <button class="btn btn-warning btn-xs" data-title="Edit" data-target="#edit" >
                                 <span class="glyphicon glyphicon-edit"></span>
                             </button>
