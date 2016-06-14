@@ -12,15 +12,40 @@ angular.module('web.translation', ['pascalprecht.translate'])
     .constant('translations', function () {
         var translations = {};
         translations.nl = {
-            "Sign in": "Log in",
-            "Email address": "Email adres",
-            "Password": "Wachtwoord",
-            "Signed in": "Aangemeld",
-            "Log out": "Uitloggen",
-            "First name": "Voornaam",
-            "Last name": "Achternaam",
-            "Members": "Leden",
-            "Member type": "Gebruikerstype",
+
+            /* MENU */
+            MENU_MEMBERS: "Leden",
+            MENU_CLUB_SETTINGS: "Clubinstellingen",
+            MENU_PROFILE: "Profiel",
+            MENU_LOG_OUT: "Uitloggen",
+            
+            /* GENERAL */
+            LOG_IN: "Log in",
+            LOG_OUT: "Uitloggen",
+            EMAIL: "Email adres",
+            PASS: "Wachtwoord",
+            FIRST_NAME: "Voornaam",
+            LAST_NAME: "Achternaam",
+            MEMBER_TYPE: "Gebruikerstype",
+            ACTIVATED: "Geactiveerd",
+            TEAM: "Team",
+            DELETE: "Verwijder",
+            EDIT: "Wijzig",
+            ADD_MEMBER: "Voeg lid toe",
+            NONE: "Geen",
+            WELCOME: "Welkom",
+
+            /* PAGE HEADERS */
+            MEMBERS_TITLE: "Leden",
+            MEMBERS_SUBTITLE: "Voeg leden van je club toe aan ClubNet, wijzig informatie van leden of verwijder ze.",
+            ADD_MEMBER_TITLE: "Voeg lid toe",
+            ADD_MEMBER_SUBTITLE: "Voeg een clublid toe aan het ClubNet systeem",
+            ADD_MEMBER_TYPE_TOOLTIP: "Het lid zal het gebruikerstype speler hebben als het gekoppeld is aan een team. Zo niet, zal het lid het gebruikerstype algemeen hebben.",
+
+
+
+
+
             "Profile": "Profiel",
             "User profile": "Gebruikersprofiel",
             "Change password": "Verander wachtwoord",
@@ -30,11 +55,9 @@ angular.module('web.translation', ['pascalprecht.translate'])
             "New password": "Nieuwe wachtwoord",
             "Confirm new password": "Bevestig nieuwe wachtwoord",
             "Change your personal user settings.": "Verander je gebruikersgegevens.",
-            "Activated": "Geactiveerd",
-            "Add, delete and manage the members of your club.": "Voeg leden van je club toe aan ClubNet, wijzig informatie van leden of verwijder ze.",
-            "The member will be of the type player if a team is selected, otherwise they will be of type general.": "Het lid zal het gebruikerstype speler hebben als het gekoppeld is aan een team. Zo niet, zal het lid het gebruikerstype general hebben.",
-            "Add user": "Voeg gebruiker toe",
-            "Add a club member to the ClubNet system.": "Voeg een clublid toe aan het ClubNet systeem",
+            "The member will be of the type player if a team is selected, otherwise they will be of type general.": "",
+            ADD_USER: "Voeg gebruiker toe",
+            "Add a club member to the ClubNet system.": "",
             "Edit user": "Wijzig gebruiker",
             "Edit a club member of the ClubNet system.": "Wijzig een clublid in het ClubNet systeem.",
             "Save changes": "Opslaan",
@@ -45,24 +68,22 @@ angular.module('web.translation', ['pascalprecht.translate'])
             "Feed": "Feed",
             "Club betting": "Clubpoule",
             "Club settings": "Clubinstellingen",
-            "Forgot password": "Wachtwoord vergeten",
+            FORGOT_PASS: "Wachtwoord vergeten",
             "Update password": "Opslaan",
             "Update profile": "Opslaan",
-            "Incorrect credentials": "De gegevens zijn onjuist",
-            "No first name specified": "Geen voornaam ingevuld",
-            "No last name specified": "Geen achternaam ingevuld",
-            "No valid email specified": "Geen geldig email adres ingevuld",
-            "Match failed": "Ongeldige combinatie",
-            "Current password not specified": "Huidige wachtwoord niet ingevuld",
-            "No new password specified": "Geen nieuw wachtwoord ingevuld",
-            "Please confirm your new password": "Geen bevestiging van wachtwoord ingevuld",
-            "New passwords do not match": "Nieuwe wachtwoorden komen niet overeen",
-            "Password not strong enough. It should contain at least 8 characters of which at least one alphabetical and one numeric": "Nieuwe wachtwoord niet sterk genoeg. Het wachtwoord moet minstens acht tekens bevatten waarvan tenminste één letter en één cijfer",
-            
-            
-            
+            INCORRECT_CREDENTIALS: "De gegevens zijn onjuist",
+            MISSING_FIRST_NAME: "Geen voornaam ingevuld",
+            MISSING_LAST_NAME: "Geen achternaam ingevuld",
+            MISSING_VALID_EMAIL: "Geen geldig email adres ingevuld",
+            MISSING_CURRENT_PASS: "Huidige wachtwoord niet ingevuld",
+            MISSING_NEW_PASS: "Geen nieuw wachtwoord ingevuld",
+            MISSING_CONFIRM_PASS: "Geen bevestiging van wachtwoord ingevuld",
+            PASS_NO_MATCH: "Nieuwe wachtwoorden komen niet overeen",
+            PASS_NOT_VALID: "Nieuwe wachtwoord niet sterk genoeg. Het wachtwoord moet minstens acht tekens bevatten waarvan tenminste één letter en één cijfer",
+            "Match failed": "Ongeldige combinatie"
         };
         translations.en = {
+            MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
         };
 
         return translations;

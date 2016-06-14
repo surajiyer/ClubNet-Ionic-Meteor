@@ -74,7 +74,7 @@ angular.module('web.userAccountControllers', [])
             result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function (result) {
                 // If signed in user is not of type PR, give an error message and log them out
                 if (Meteor.user().profile.type != 'pr') {
-                    $translate('Incorrect credentials').then(function (error) {
+                    $translate('INCORRECT_CREDENTIALS').then(function (error) {
                         $scope.error = error;
                     });
                     $scope.errorVisible = true;
@@ -89,7 +89,7 @@ angular.module('web.userAccountControllers', [])
                 console.log(err);
                 // Show generic error message to user instead of specific Meteor messages giving too much information
                 if (err.error == 400 || err.error == 403) {
-                    $translate('Incorrect credentials').then(function (error) {
+                    $translate('INCORRECT_CREDENTIALS').then(function (error) {
                         $scope.error = error;
                     });
                 } else {
@@ -159,17 +159,17 @@ angular.module('web.userAccountControllers', [])
             var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
             if (!$scope.user.firstName) {
-                $translate('No first name specified').then(function (error) {
+                $translate('MISSING_FIRST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
             } else if (!$scope.user.lastName) {
-                $translate('No last name specified').then(function (error) {
+                $translate('MISSING_lAST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
             } else if (!mailRegularExpression.test($scope.user.email)) {
-                $translate('No valid email specified').then(function (error) {
+                $translate('MISSING_VALID_EMAIL').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
@@ -233,12 +233,12 @@ angular.module('web.userAccountControllers', [])
 
         $scope.saveChanges = function () {
             if (!$scope.user.firstName) {
-                $translate('No first name specified').then(function (error) {
+                $translate('MISSING_FIRST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
             } else if (!$scope.user.lastName) {
-                $translate('No last name specified').then(function (error) {
+                $translate('MISSING_LAST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
@@ -301,13 +301,13 @@ angular.module('web.userAccountControllers', [])
 
         $scope.saveChanges = function () {
             if (!$scope.user.firstName) {
-                $translate('No first name specified').then(function (error) {
+                $translate('MISSING_FIRST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
                 $scope.updatedVisible = false;
             } else if (!$scope.user.lastName) {
-                $translate('No last name specified').then(function (error) {
+                $translate('MISSING_LAST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
@@ -323,11 +323,9 @@ angular.module('web.userAccountControllers', [])
                 };
                 
                 $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function (result) {
-                    console.log('result');
                     $scope.updatedVisible = true;
                     $scope.errorVisible = false;
                 }, function (err) {
-                    console.log('error');
                     $scope.updatedVisible = false;
                     $translate(err.reason).then(function (error) {
                         $scope.error = error;
@@ -339,31 +337,31 @@ angular.module('web.userAccountControllers', [])
 
         $scope.savePasswordChanges = function () {
             if (!$scope.user.oldPassword) {
-                $translate('Current password not specified').then(function (error) {
+                $translate('MISSING_CURRENT_PASS').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if (!$scope.user.newPassword) {
-                $translate('No new password specified').then(function (error) {
+                $translate('MISSING_NEW_PASS').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if (!$scope.user.confirmNewPassword) {
-                $translate('Please confirm your new password').then(function (error) {
+                $translate('MISSING_CONFIRM_PASS').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                $translate('New passwords do not match').then(function (error) {
+                $translate('PASS_NO_MATCH').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
-                $translate('Password not strong enough. It should contain at least 8 characters of which at least one alphabetical and one numeric').then(function (error) {
+                $translate('PASS_NOT_VALID').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
@@ -407,14 +405,14 @@ angular.module('web.userAccountControllers', [])
 
             if (!mailRegularExpression.test($scope.input.email)) {
                 $scope.errorVisible = true;
-                $translate('No valid email specified').then(function (error) {
+                $translate('MISSING_VALID_EMAIL').then(function (error) {
                     $scope.error = error;
                 });
             } else {
                 Accounts.forgotPassword({email: $scope.input.email}, function (err) {
                     if (err) {
                         $scope.errorVisible = true;
-                        $translate('No valid email specified').then(function (error) {
+                        $translate('MISSING_VALID_EMAIL').then(function (error) {
                             $scope.error = error;
                         });
                         $scope.$apply();
@@ -442,22 +440,22 @@ angular.module('web.userAccountControllers', [])
 
         $scope.setPassword = function () {
             if (!$scope.user.newPassword) {
-                $translate('No new password specified').then(function (error) {
+                $translate('MISSING_NEW_PASS').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
             } else if (!$scope.user.confirmNewPassword) {
-                $translate('Please confirm your new password').then(function (error) {
+                $translate('MISSING_CONFIRM_PASS').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                $translate('New passwords do not match').then(function (error) {
+                $translate('PASS_NO_MATCH').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
             } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
-                $translate('Password not strong enough. It should contain at least 8 characters of which at least one alphabetical and one numeric').then(function (error) {
+                $translate('PASS_NOT_VALID').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
