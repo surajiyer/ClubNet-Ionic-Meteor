@@ -49,7 +49,7 @@ angular.module('web.translation', ['pascalprecht.translate'])
             ADD_MEMBER_SUBTITLE: "Voeg een clublid toe aan het ClubNet systeem.",
             ADD_MEMBER_TYPE_TOOLTIP: "Het lid zal het gebruikerstype speler hebben als het gekoppeld is aan een team. Zo niet, zal het lid het gebruikerstype algemeen hebben.",
             EDIT_MEMBER_TITLE: "Wijzig lid",
-            EDIT_MEMBER_SUBTITLE: "Wijzig een clublid in het ClubNet systeem."
+            EDIT_MEMBER_SUBTITLE: "Wijzig een clublid in het ClubNet systeem.",
 
             PROFILE_TITLE: "Profiel",
             PROFILE_SUBTITLE: "Verander je gebruiksgegevens.",
