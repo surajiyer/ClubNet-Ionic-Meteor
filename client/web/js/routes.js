@@ -10,7 +10,7 @@ angular.module('web.routes', [])
 
                     // If user logged in
                     if (Meteor.userId()) {
-                        $state.go('web.feed');
+                        $state.go('web.members');
                     } else {
                         $state.go('login');
                     }
@@ -105,12 +105,6 @@ angular.module('web.routes', [])
                 url: '/redirect/:sort/:token',
                 templateUrl: 'client/web/views/redirectToApp.ng.html',
                 controller: 'redirectCtrl'
-            })
-
-            // Extra: quotes
-            .state('web.sepquotes', {
-                url: '/sepquotes',
-                templateUrl: 'client/web/views/sepquotes.ng.html'
             });
 
         $urlRouterProvider.otherwise('/');

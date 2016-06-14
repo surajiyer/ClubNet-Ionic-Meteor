@@ -1,5 +1,5 @@
 <div class="header">
-    <h1>{{ 'Edit member' | translate }}</h1>
+    <h1>{{ 'Edit user' | translate }}</h1>
     <h2>{{ 'Edit a club member of the ClubNet system.' | translate }}</h2>
 </div>
 
@@ -25,7 +25,7 @@
                     Team
                 </div>
                 <select class="form-control" ng-model="user.team">
-                    <option value="" selected>None</option>
+                    <option value="" selected>{{ 'None' | translate }}</option>
                     <option value="A1">A1</option>
                     <option value="A2">A2</option>
                     <option value="A3">A3</option>
@@ -34,7 +34,7 @@
                 </select>
             </label>
             <div>
-                The member will be of the type player if a team is selected, otherwise they will be of type general.
+                {{ 'The member will be of the type player if a team is selected, otherwise they will be of type general.' | translate }}
             </div>
         </div>
         
