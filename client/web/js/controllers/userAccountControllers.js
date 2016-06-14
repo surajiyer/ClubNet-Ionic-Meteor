@@ -248,9 +248,14 @@ angular.module('web.userAccountControllers', [])
                     lastName: $scope.user.lastName,
                     type: $scope.user.team != '' ? 'player' : 'general',
                     clubID: $scope.user.clubID,
-                    teamID: $scope.user.team
+                    teamID: $scope.user.team,
+                    notifications: {
+                        "Voting" : true,
+                        "Heroes" : true,
+                        "Form" : true
+                    }
                 };
-
+                
                 $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function (result) {
                     $state.go('web.members'); // Redirect user if registration succeeds
                 }, function (err) {
@@ -268,7 +273,7 @@ angular.module('web.userAccountControllers', [])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('profileCtrl', function ($scope, $meteor, $state, $translate) {
+    .controller('profileCtrl', function ($scope, $meteor, $state, $translate, checkPassword) {
         $scope.user = {
             id: '',
             firstName: '',
@@ -313,13 +318,16 @@ angular.module('web.userAccountControllers', [])
                     lastName: $scope.user.lastName,
                     type: Meteor.user().profile.type,
                     clubID: Meteor.user().profile.clubID,
-                    teamID: Meteor.user().profile.teamID
+                    teamID: Meteor.user().profile.teamID,
+                    notifications: {}
                 };
-
+                
                 $meteor.call('updateUserProfile', $scope.user.id, updatedProfile).then(function (result) {
+                    console.log('result');
                     $scope.updatedVisible = true;
                     $scope.errorVisible = false;
                 }, function (err) {
+                    console.log('error');
                     $scope.updatedVisible = false;
                     $translate(err.reason).then(function (error) {
                         $scope.error = error;
@@ -385,7 +393,7 @@ angular.module('web.userAccountControllers', [])
 
     })
 
-    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance) {
+    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance, $translate) {
 
         $scope.error = '';
         $scope.errorVisible = false;
@@ -421,7 +429,7 @@ angular.module('web.userAccountControllers', [])
         };
     })
 
-    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, CommonServices) {
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, $translate) {
         $scope.token = $stateParams.token;
 
         $scope.user = {
