@@ -1,8 +1,8 @@
 angular.module('chatControllers', [])
 
-/**
- *  @summary Controller for loading chats
- */
+    /**-----------------------------------------------------------------------------------------------------------------
+     *  @summary Controller for loading chats
+     */
     .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat, CommonServices) {
         // Subscribe to user info of chat recipients
         $scope.subscribe('userData');
@@ -91,7 +91,7 @@ angular.module('chatControllers', [])
         });
     })
 
-    /**
+    /**-----------------------------------------------------------------------------------------------------------------
      *  @summary Controller for loading information of each chat
      */
     .controller('chatInfoCtrl', function ($scope, Chat) {
@@ -101,17 +101,23 @@ angular.module('chatControllers', [])
             return [{chatId: chat._id, messageId: chat.lastMessage}];
         });
 
+        // Get the number of messages in given chat
+        $scope.subscribe('MessagesCount', () => { return [chat._id] });
+
         $scope.helpers({
             // Load chat info
             chat: function () {
                 return Chat.getOneChat(chat._id, function () {
                     $scope.$apply();
                 });
+            },
+            messagesCount: function () {
+                return MessagesCount.find(chat._id);
             }
         });
     })
 
-    /**
+    /**-----------------------------------------------------------------------------------------------------------------
      *  @summary Controller for chatting functions within chats
      */
     .controller('chatCtrl', function ($scope, $state, $stateParams, Chat, $ionicScrollDelegate, $timeout) {
@@ -136,6 +142,9 @@ angular.module('chatControllers', [])
             },
             messages: function () {
                 return Chat.getMessages(chatId);
+            },
+            messagesCount: function () {
+                return MessagesCount.find(chatId);
             }
         });
 
@@ -145,7 +154,7 @@ angular.module('chatControllers', [])
         $scope.refresh = function (newLimit) {
             check(newLimit, Match.Maybe(Number));
             newLimit = newLimit || $scope.limit || initialLimit;
-            const totalNrOfMessages = MessagesCount.find(chatId).fetch()[0].count;
+            const totalNrOfMessages = $scope.messagesCount[0].count;
             const nrOfLoadedMessages = $scope.messages.length;
             const nrOfUnloadedMessages = totalNrOfMessages - nrOfLoadedMessages;
             const nrOfMessagesToLoad = newLimit - $scope.limit;
@@ -170,7 +179,25 @@ angular.module('chatControllers', [])
          */
         $scope.subscribe('MessagesCount', () => { return [chatId] }, () => {
             // Subscribe to an initial set of messages
-            $scope.refresh(); 
+            $scope.refresh();
+        });
+
+        $scope.$on("$destroy", function () {
+            // Delete the chat if it contains no messages
+            var nrOfMessages = $scope.messagesCount[0].count;
+            if(nrOfMessages == 0) {
+                Chat.deleteChat(chatId);
+            }
+        });
+
+        // Reactively update recipient messages to read as they come in
+        $scope.autorun(() => {
+            $scope.getCollectionReactively('messages');
+            Meteor.call('readMessages', chatId, function (err, result) {
+                if(!err && result) {
+                    console.log(result);
+                }
+            });
         });
 
         /**

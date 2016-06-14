@@ -18,13 +18,13 @@
         </div>
     </ion-content>
     <ion-footer-bar keyboard-attach
-                    class="bar-stable footer-chat item-input-inset"
-                    ng-disabled="chat.status == 'closed'">
+                    class="bar-stable footer-chat item-input-inset">
         <!--<button class="button button-clear button-icon button-positive icon ion-ios-upload-outline"></button>-->
         <label class="item-input-wrapper">
             <input ng-model="message"
                    dir="auto"
                    type="text"
+                   ng-disabled="chat.status == 'closed'"
                    on-return="sendMessage(); closeKeyboard()"
                    on-focus="inputUp()"
                    on-blur="inputDown()"/>

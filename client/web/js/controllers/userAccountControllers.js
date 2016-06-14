@@ -4,7 +4,11 @@ angular.module('web.userAccountControllers', [])
      */
     .controller('accountManagementCtrl', function ($scope, $modal, $state) {
 
-        $scope.subscribe('userData');
+        $scope.autorun(function () {
+            if(Meteor.userId()) {
+                $scope.subscribe('userData');
+            }
+        });
 
         $scope.helpers({
             userAccounts: function () {

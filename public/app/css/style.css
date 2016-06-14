@@ -40,6 +40,18 @@ ion-view.pane {
     border-color: #425661;
 }
 
+.menu .item.active.item-complex>.item-content {
+    background-color: #344750;
+}
+
+.menu-notification {
+    background: #ff5415;
+    float: right;
+    border-radius: 20px;
+    padding: 4px;
+    margin-top: 8px;
+}
+
 .profile-img-div {
     width: 150px;
     height: 150px;
@@ -333,16 +345,12 @@ form.list {
     background: -webkit-linear-gradient(top, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 39%, rgb(255, 250, 192) 76%, rgb(247, 239, 148) 100%); /* Chrome10-25,Safari5.1-6 */
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0) 39%, rgb(255, 250, 192) 76%, rgb(247, 239, 148) 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#00ffffff', endColorstr='#ffffff', GradientType=0); /* IE6-9 */
-
 }
 
 .sticky .variants {
     background: #FFFBDB;
 }
 
-.menu .item.active.item-complex>.item-content {
-    background-color: #344750;
-}
 #buttonQuestionmark{
     position: absolute;
     top: 5px;

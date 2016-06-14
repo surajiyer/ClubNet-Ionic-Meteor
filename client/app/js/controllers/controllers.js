@@ -6,19 +6,9 @@ angular.module('app.controllers', [
     'heroControllers',
     'sponsoringControllers'])
 
-    .controller('bodyCtrl', function ($scope) {
-
-        /**
-         * @summary Function to check if we run in Cordova environment
-         */
-        $scope.isPhone = function() {
-            return Meteor.isCordova;
-        }
-    })
-
-/**
- * Menu Controller: provides all functionality for the menu of the app
- */
+    /**
+     * Menu Controller: provides all functionality for the menu of the app
+     */
     .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat) {
         /**
          * To check if user has permission to view chat option
@@ -28,6 +18,7 @@ angular.module('app.controllers', [
         Tracker.autorun(function () {
             $scope.showChat = Chat.canViewChat();
         });
+
         /**
          * @summary Function to logout
          */
@@ -182,7 +173,6 @@ angular.module('app.controllers', [
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
     .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices, $ionicPopup) {
-
         $scope.newItem = {};
         $scope.trainings = [];
 
@@ -198,11 +188,14 @@ angular.module('app.controllers', [
             }
         );
 
-         $scope.showAlertTargetValueInfo = function() {
-           var alertPopup = $ionicPopup.alert({
-             title: 'More information',
-             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'});
-         }
+        $scope.showAlertTargetValueInfo = function () {
+            var alertPopup = $ionicPopup.alert({
+                title: 'More information',
+                template: 'The target value can be used to set the goal of the practicality. It is advised to mention ' +
+                'the measurement unit in the description. For example: You need 14 car-spots for driving, you set the ' +
+                'target-value to 11 and in the description you mention that you are searching for 11 spots'
+            });
+        };
 
         $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
@@ -229,41 +222,41 @@ angular.module('app.controllers', [
         $scope.closeModal = function () {
             $scope.modal.hide();
         };
-        
+
         $scope.getPicture = function () {
-            var cameraOptions = {  
+            var cameraOptions = {
                 quality: 80,
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-            }
-l̥
-           var picture = MeteorCamera.getPicture(cameraOptions, function(error, localData){
-                console.log (localData);
+            };
+
+            var picture = MeteorCamera.getPicture(cameraOptions, function (error, localData) {
+                console.log(localData);
                 $scope.image = localData;
                 $scope.$apply();
-            })
+            });
         };
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
             Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                Meteor.call('getFeedItemType', result, function(err, type){
+                Meteor.call('getFeedItemType', result, function (err, type) {
                     if (type == 'Voting') {
-                        Meteor.call('getClubUsers', function(err, result){
+                        Meteor.call('getClubUsers', function (err, result) {
                             var text = 'Vote for the exercise you like.';
                             var title = 'New voting!';
                             console.log('adding new voting');
                             Meteor.call('userNotification', type, text, title, result);
                         });
                     } else if (type == 'Form') {
-                        Meteor.call('getTeamUsers', function(err, result){
+                        Meteor.call('getTeamUsers', function (err, result) {
                             var text = 'React on new practicality.';
                             var title = 'New practicality!';
                             Meteor.call('userNotification', type, text, title, result);
                         });
                     } else if (type == 'Heroes') {
-                        Meteor.call('getClubUsers', function(err, result){
+                        Meteor.call('getClubUsers', function (err, result) {
                             var text = 'Check out a new hero of the week.';
                             var title = 'New Hero!';
                             Meteor.call('userNotification', type, text, title, result);
@@ -271,6 +264,7 @@ l̥
                     }
                 });
             });
+
             $scope.newItem = {};
             $scope.closeModal();
         };
@@ -451,7 +445,7 @@ l̥
      * Controller for settings page
      */
     .controller('settingsCtrl', function ($scope, $meteor) {
-        $scope.toggleChange = function(key, value){
+        $scope.toggleChange = function (key, value) {
             $meteor.call('updateUserNotificationSetting', key, value);
         };
     })

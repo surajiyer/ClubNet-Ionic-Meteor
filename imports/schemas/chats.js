@@ -1,12 +1,22 @@
+SimpleSchema.messages({
+    cannotUpdate: 'Message can only be read by recipient',
+    invalidOperator: 'Update modifier not allowed here'
+});
+
 const messages = new SimpleSchema({
     senderID: {
         type: String,
         autoValue: function () {
-            return Meteor.userId();
+            if (this.isInsert) {
+                return Meteor.userId();
+            }
         },
         denyUpdate: true
     },
-    message: {type: String},
+    message: {
+        type: String,
+        denyUpdate: true
+    },
     chatID: {
         type: String,
         denyUpdate: true
@@ -18,6 +28,10 @@ const messages = new SimpleSchema({
                 return new Date;
         },
         denyUpdate: true
+    },
+    read: {
+        type: Boolean,
+        defaultValue: false
     }
 });
 
@@ -31,8 +45,9 @@ const chats = new SimpleSchema({
         type: String,
         allowedValues: ["open", "closed"],
         autoValue: function () {
-            if (this.isInsert)
+            if (this.isInsert) {
                 return "open";
+            }
         }
     },
     lastMessage: {
