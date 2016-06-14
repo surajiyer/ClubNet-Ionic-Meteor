@@ -8,6 +8,14 @@ if (Meteor.isServer) {
     });
 
     Meteor.methods({
+
+
+        /**
+         * @summary Send a notification to everyone
+         * @method serverNotification
+         * @param {String} text The notification's content type.
+         * @param {String} title The notification's title.
+         */
         serverNotification: function(text,title) {
             var badge = 1;
             Push.send({
@@ -21,6 +29,15 @@ if (Meteor.isServer) {
                 }
             });
         },
+
+        /**
+         * @summary Send a notification to a specific user
+         * @param {String} type The notification's type.
+         * @param {String} text The notification's content type.
+         * @param {String} title The notification's title.
+         * @param {String} users The notification's target users.
+         * @method userNotification
+         */
         userNotification: function(type,text,title,users) {
             check(type, String);
             check(text, String);
@@ -44,10 +61,15 @@ if (Meteor.isServer) {
                 }
             });
         },
+
+        /**
+         * @summary Remove the notification history.
+         * @method removeHistory
+         */
         removeHistory: function() {
             NotificationHistory.remove({}, function(error) {
-                if (!error) {
-                    console.log("All history removed");
+                if (error) {
+                    console.log("Error while removing all history");
                 }
             });
         }
