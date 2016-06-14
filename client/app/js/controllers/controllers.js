@@ -41,7 +41,7 @@ angular.module('app.controllers', [
         };
 
         /**
-         * Loading the current club for styling
+         * Loading the current club for styling, return an alert when an error is thrown
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
@@ -199,10 +199,20 @@ angular.module('app.controllers', [
         );
 
 
+         /**
+         * @summary Displays an alert that serves as more information on 'the target value'.
+         * @method showAlertTargetValueInfo
+         * @after Alert is launched
+         */
          $scope.showAlertTargetValueInfo = function() {
              CommonServices.showAlert('More information', 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots');
          }
 
+         /**
+         * @summary Displays an alert that serves as more information on 'the repeat interval'.
+         * @method showAlertRepeatInterval
+         * @after Alert is launched
+         */
          $scope.showAlertRepeatInterval = function() {
              CommonServices.showAlert('More information', 'The repeat interval defines the time after which you want the feed item to reset itself.');
          }
