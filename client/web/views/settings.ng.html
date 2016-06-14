@@ -4,16 +4,16 @@
 </div>
 
 <div class="content">
-    <h2 class="content-subhead">Club</h2>
+    <h2 class="content-subhead">{{ 'CLUB' | translate }}</h2>
     <div class="row">
-        <label class="col-md-4" for="clubname">Club name</label>
+        <label class="col-md-4" for="clubname">{{ 'CLUB_NAME' | translate }}</label>
         <div class="col-md-8">
             <input class="form-control" type="text" id="clubname" name="clubname" ng-model="currentClub.name">
         </div>
     </div>
 
     <div class="row">
-        <label class="col-md-4" for="clubname">Colors:  </label>
+        <label class="col-md-4" for="clubname">{{ 'COLORS' | translate }}</label>
         <div class="col-md-8">
             <div class="inline-block"><color-picker ng-model="currentClub.colorPrimary" color-picker-alpha="false"
                                color-picker-format="'hex'"
@@ -33,7 +33,7 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            <label for="clubname">Club logo</label>
+            <label for="clubname">{{ 'CLUB_LOGO' | translate }}</label>
             <input type="file" custom-on-change="uploadFile">
         </div>
         <div class="col-md-8">
@@ -47,5 +47,5 @@
                 <!--<input class="form-control" type="text" id="heroesMax" name="heroesMax" ng-model="currentClub.heroesMax">-->
             <!--</div>-->
         <!--</div>-->
-    <button class="btn btn-primary" ng-click="save()">Save</button> <div class="saved-notification" ng-if="saved">Saved!</div>
+    <button class="btn btn-primary" ng-click="save()">{{ 'SAVE' | translate }}</button> <div class="saved-notification" ng-if="saved">{{ 'SAVED' | translate }}</div>
 </div>
