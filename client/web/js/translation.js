@@ -53,7 +53,7 @@ angular.module('web.translation', ['pascalprecht.translate'])
             "No last name specified": "Geen achternaam ingevuld",
             "No valid email specified": "Geen geldig email adres ingevuld",
             "Match failed": "Ongeldige combinatie",
-            "Current password specified": "Huidige wachtwoord niet ingevuld",
+            "Current password not specified": "Huidige wachtwoord niet ingevuld",
             "No new password specified": "Geen nieuw wachtwoord ingevuld",
             "Please confirm your new password": "Geen bevestiging van wachtwoord ingevuld",
             "New passwords do not match": "Nieuwe wachtwoorden komen niet overeen",
