@@ -41,6 +41,8 @@ angular.module('web.translation', ['pascalprecht.translate'])
             CLUB_LOGO: "Clublogo",
             COLORS: "Kleuren",
             PROFILE: "Profiel",
+            CANCEL: "Annuleer",
+            SEND: "Verstuur",
 
             /* PAGE HEADERS */
             MEMBERS_TITLE: "Leden",
@@ -55,7 +57,10 @@ angular.module('web.translation', ['pascalprecht.translate'])
             PROFILE_SUBTITLE: "Verander je gebruiksgegevens.",
             CLUB_SETTINGS_TITLE: "Clubinstellingen",
             CLUB_SETTINGS_SUBTITLE: "Verander instellingen voor de gehele club",
-
+            DELETE_TITLE: "Weet je het zeker?",
+            DELETE_MESSAGE: "Weet je zeker dat je de deze gebruiker wilt verwijderen: ",
+            FORGOT_PASS_TITLE: "Wachtwoord vergeten?",
+            FORGOT_PASS_MESSAGE: "Wachtwoord vergeten? Als je hieronder je e-mail adres invult zullen we je een link sturen om je wachtwoord opnieuw in te stellen.",
             
             
             

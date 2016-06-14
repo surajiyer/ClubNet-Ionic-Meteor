@@ -1,10 +1,10 @@
 <div class="modal-header">
-    <h3 class="modal-title">Are you sure?</h3>
+    <h3 class="modal-title">{{ 'DELETE_TITLE' | translate }}</h3>
 </div>
 <div class="modal-body" data-ng-controller="accountManagementCtrl">
-    Are you sure you want to delete {{ selectedUser.profile.firstName + ' ' + selectedUser.profile.lastName }}?
+    {{ 'DELETE_MESSAGE' | translate }} {{ selectedUser.profile.firstName + ' ' + selectedUser.profile.lastName }}?
 </div>
 <div class="modal-footer">
-    <button class="btn btn-danger" type="button" ng-click="delete()">Delete</button>
-    <button class="btn btn-default" type="button" ng-click="cancel()">Cancel</button>
+    <button class="btn btn-danger" type="button" ng-click="delete()">{{ 'DELETE' | translate }}</button>
+    <button class="btn btn-default" type="button" ng-click="cancel()">{{ 'CANCEL' | translate }}</button>
 </div>
