@@ -79,7 +79,7 @@ angular.module('web.userAccountControllers', [])
                     // If PR user, log in and redirect
                 } else {
                     // Redirect user if login succeeds
-                    $state.go('web.feed');
+                    $state.go('web.members');
                 }
             }, function (err) {
                 // Show error message in console
