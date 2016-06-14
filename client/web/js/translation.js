@@ -34,15 +34,37 @@ angular.module('web.translation', ['pascalprecht.translate'])
             ADD_MEMBER: "Voeg lid toe",
             NONE: "Geen",
             WELCOME: "Welkom",
+            SAVE: "Opslaan"
 
             /* PAGE HEADERS */
             MEMBERS_TITLE: "Leden",
             MEMBERS_SUBTITLE: "Voeg leden van je club toe aan ClubNet, wijzig informatie van leden of verwijder ze.",
             ADD_MEMBER_TITLE: "Voeg lid toe",
-            ADD_MEMBER_SUBTITLE: "Voeg een clublid toe aan het ClubNet systeem",
+            ADD_MEMBER_SUBTITLE: "Voeg een clublid toe aan het ClubNet systeem.",
             ADD_MEMBER_TYPE_TOOLTIP: "Het lid zal het gebruikerstype speler hebben als het gekoppeld is aan een team. Zo niet, zal het lid het gebruikerstype algemeen hebben.",
+            PROFILE_TITLE: "Profiel",
+            PROFILE_SUBTITLE: "Verander je gebruiksgegevens.",
+            CLUB_SETTINGS_TITLE: "Clubinstellingen",
+            CLUB_SETTINGS_SUBTITLE: "Change club colors and modify feed settings."
 
-
+            
+            
+            
+            
+            
+            
+            
+            USER_PROFILE: "Gebruikersprofiel",
+            UPDATE_PROFILE_SUCCESS: "Gebruikersprofiel aangepast",
+            
+            CHANGE_PASS: "Verander wachtwoord",
+            CURRENT_PASS: "Huidig wachtwoord",
+            NEW_PASS: "Nieuw wachtwoord",
+            CONFIRM_PASS: "Bevestig wachtwoord",
+            CHANGE_PASS_SUCCESS: "Wachtwoord aangepast",
+            
+            
+            
 
 
 
