@@ -27,9 +27,9 @@
         </label>
     </div>
 </div>
+
 <div class="item item-body" ng-switch on="item.hasContributed">
-    <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'absence'"
-           type="hidden" ng-value="1">
+    <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'absence'" type="hidden" ng-value="1">
     <button class="button button-outline button-balanced"
             ng-click="signUp()"
             ng-switch-when="false">
