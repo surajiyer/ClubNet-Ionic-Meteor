@@ -9,13 +9,13 @@ angular.module('app.controllers', [
     /**
      * Menu Controller: provides all functionality for the menu of the app
      */
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat) {
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat, $route) {
         /**
          * To check if user has permission to view chat option
          * @type {boolean}
          */
         $scope.showChat = false;
-        Tracker.autorun(function () {
+        $scope.autorun(function () {
             $scope.showChat = Chat.canViewChat();
         });
 
@@ -25,9 +25,12 @@ angular.module('app.controllers', [
         $scope.logout = function ($event) {
             $event.stopPropagation();
             $meteor.logout(function () {
-                $state.go('login').then(function () {
-                    $window.location.reload();
-                });
+                // Object.keys(Session.keys).forEach(function(key){
+                //     Session.set(key, undefined);
+                // });
+                // Session.keys = {}; // remove session keys
+                $route.reload();
+                $state.go('login');
             });
         };
 
@@ -103,12 +106,14 @@ angular.module('app.controllers', [
         });
 
         // Reactively (re)subscribe to feed items based on selected filters and limit
-        Tracker.autorun(function () {
+        $scope.autorun(function () {
             $scope.getReactively('itemTypes', true);
             var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
                 return type.checked;
             }), '_id');
-            Meteor.subscribe('Feed', itemTypesFilter, $scope.getReactively('limit'));
+            $scope.subscribe('Feed', () => {
+                return [itemTypesFilter, $scope.getReactively('limit')];
+            });
         });
 
         /**
