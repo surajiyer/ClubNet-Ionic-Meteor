@@ -12,7 +12,8 @@ angular.module('app', ['angular-meteor',
     'app.directives',
     'app.services',
     'app.controllers',
-    'app.routes'])
+    'app.routes',
+    'translation'])
 
     .run(function ($ionicPlatform) {
         $ionicPlatform.ready(function () {

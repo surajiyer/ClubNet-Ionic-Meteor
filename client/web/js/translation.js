@@ -1,4 +1,4 @@
-angular.module('web.translation', ['pascalprecht.translate'])
+angular.module('translation', ['pascalprecht.translate'])
 
     .config(['$translateProvider', 'translations', function ($translateProvider, translations) {
 
