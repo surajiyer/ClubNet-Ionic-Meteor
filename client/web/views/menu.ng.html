@@ -8,7 +8,7 @@
     <div id="menu" style="background: {{currentClub.colorPrimary}}">
         <div class="pure-menu">
             <div id="menu-logo" style="background: {{currentClub.colorSecondary}}">
-                <img src="{{hostname + currentClub.logo}}">
+                <img ng-src="{{currentClub.logo}}">
             </div>
             <a class="pure-menu-heading" style="background: {{currentClub.colorSecondary}}">{{currentClub.name}}</a>
             <a class="pure-menu-subheading" style="background: {{currentClub.colorSecondary}}">{{ 'WELCOME' | translate }}, {{user.firstName}}</a>
