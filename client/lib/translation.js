@@ -24,6 +24,7 @@ angular.module('translation', ['pascalprecht.translate'])
             
             /* GENERAL */
             LOG_IN: "Log in",
+            SUCCESS: "Gelukt!",
             LOG_OUT: "Uitloggen",
             EMAIL: "Email adres",
             PASS: "Wachtwoord",
@@ -97,12 +98,11 @@ angular.module('translation', ['pascalprecht.translate'])
             CONTRIBUTE: "Meld aan",
             BUTTON_PRESENT: "Aanwezig",
             BUTTON_WITHDRAW: "Trek terug",
+            MISSING_TARGET_VALUE: "Geel doel ingevuld",
             
             /* CHAT */
             CHAT_TITLE: "Gesprekken",
             NEW_CHAT: "Nieuw gesprek",
-            
-            
             
             /* HERO FORM */
             NEW_HERO: "Nieuwe held",
@@ -119,6 +119,7 @@ angular.module('translation', ['pascalprecht.translate'])
             SHOW_FINAL_RESULTS_MESSAGE: "Laat de resultaten zien na afloop",
             
             /* OTHER */
+            ERROR: "Foutmelding",
             ENROLL: "Aanmelden",
             ENROLL_PASS: "Vul hieronder je gewenste wachtwoord in",
             NO_ITEMS_MESSAGE: "Geen feed items gevonden",
@@ -138,17 +139,23 @@ angular.module('translation', ['pascalprecht.translate'])
             RESET_PASS: "Nieuw wachtwoord instellen",
             RESET_PASS_MESSAGE: "Vul hieronder je nieuwe wachtwoord in",
             INCORRECT_CREDENTIALS: "De gegevens zijn onjuist",
+            NOT_AUTHORIZED: "Geen toegang, U bent niet geauthoriseerd",
             MISSING_CLUB_NAME: "Geen clubnaam ingevuld",
             MISSING_FIRST_NAME: "Geen voornaam ingevuld",
+            MISSING_PASSWORD: "Vul a.u.b een geldig wachtwoord in",
             MISSING_LAST_NAME: "Geen achternaam ingevuld",
             MISSING_VALID_EMAIL: "Geen geldig email adres ingevuld",
+            MISSING_VALID_EMAIL_MESSAGE: "Vul a.u.b een geldig email adres in",
             MISSING_CURRENT_PASS: "Huidige wachtwoord niet ingevuld",
             MISSING_NEW_PASS: "Geen nieuw wachtwoord ingevuld",
             MISSING_CONFIRM_PASS: "Geen bevestiging van wachtwoord ingevuld",
             PASS_NO_MATCH: "Nieuwe wachtwoorden komen niet overeen",
+            PASS_RESET_SUCCESS: "Uw wachtwoord is succesvol veranderd, log a.u.b. opnieuw in.",
+            EMAILSENDFORPASSRESET: "Er is een mail naar u verstuury om het wachtwoord te veranderen.",
             PASS_NOT_VALID: "Nieuwe wachtwoord niet sterk genoeg. Het wachtwoord moet minstens acht tekens bevatten waarvan tenminste één letter en één cijfer",
             "Match failed": "Ongeldige combinatie",
-            PASSWORD_RECOVERY_SENT: "Mail verzonden naar"
+            PASSWORD_RECOVERY_SENT: "Mail verzonden naar",
+            PASS_INCORRECT: "Wachtwoord niet correct"
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."

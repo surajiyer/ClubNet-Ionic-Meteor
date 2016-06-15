@@ -34,13 +34,13 @@ if (Meteor.isServer) {
                 testUser = {
                     email: 'test@test.test',
                     password: 'test',
-                    profile: {lastName: 'Test', type: 'player', clubID: 'test'}
+                    profile: {lastName: 'Test', type: 'player', clubID: 'test', notifications: new Object()}
                 };
 
                 testPr = {
                     email: 'pr@pr.pr',
                     password: 'pr',
-                    profile: {firstName: 'Pr', lastName: 'Pr', type: 'pr', clubID: 'test'}
+                    profile: {firstName: 'Pr', lastName: 'Pr', type: 'pr', clubID: 'test', notifications: new Object()}
                 };
 
                 testPr._id = Meteor.call('addUser', testPr);
@@ -87,7 +87,7 @@ if (Meteor.isServer) {
              */
             it("Update User Profile with incomplete data throws error", () => {
                 // Create a testProfile with a number for lastName
-                testProfile = {firstName: 'Test', lastName: 14, type: 'player', clubID: 'test'};
+                testProfile = {firstName: 'Test', lastName: 14, type: 'player', clubID: 'test', notifications: new Object()};
                 // Update the profile of the previous created user with the new testProfile
                 try {
                     Meteor.call('updateUserProfile', testUser._id, testProfile);
