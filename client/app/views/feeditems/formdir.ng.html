@@ -10,7 +10,12 @@
 </div>
 <div class="item item-body" ng-switch="item.formType">
        
-        <span ng-if="item.targetValue-item.raisedValue > 0">We still need {{(item.targetValue - item.raisedValue) | number}}! <br/></span> 
+        <span ng-if="item.targetValue-item.raisedValue > 0 && item.target != 'presence'">We will be missing {{(item.targetValue - item.raisedValue) | number}}  <br/></span>
+        
+        <!-- special text for presence/absence -->
+        <span ng-if="item.targetValue-item.raisedValue > 0 && item.target == 'presence'">We will be with {{(item.targetValue - item.raisedValue) | number}} persons. <br/></span>  
+        <span ng-if="item.targetValue-item.raisedValue > 0 && item.target == 'presence'">{{(item.raisedValue) | number}} will be absent. <br/></span>  
+
         <span ng-if="item.targetValue-item.raisedValue <= 0">We have enough people contributing<br/></span> 
 
 </div>
@@ -23,7 +28,7 @@
             <div class="input-label">
                 Contribution:
             </div>
-              <input ng-model="item.currentContribution" type="text" placeholder="1"><br>
+              <input ng-model="item.currentContribution" type="text" placeholder="value"><br>
         </label>
     </div>
 
@@ -33,10 +38,19 @@
                 ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
             Contribute
         </button>
+
+
         <button class="button button-outline button-balanced"
-                ng-show="!item.hasContributed && (item.target == 'laundry' || item.target == 'presence')"
+                ng-show="!item.hasContributed && item.target == 'laundry'"
                 ng-click="signUp('1')">
             Contribute
+        </button>
+
+
+        <button class="button button-outline button-balanced"
+                ng-show="!item.hasContributed && item.target == 'presence'"
+                ng-click="signUp('1')">
+            I will be absent
         </button>
    
         <button class="button button-outline button-assertive"
@@ -45,6 +59,6 @@
             Withdraw your contribution
         </button>
         <br>
-        <span ng-if="item.myContribution > 0">You are contributing: {{item.myContribution}} <br></span>
+        <span ng-if="item.myContribution > 0 && item.target != 'presence'">You are contributing: {{item.myContribution}} <br></span>
 </div>
 
