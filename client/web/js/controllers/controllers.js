@@ -103,8 +103,7 @@ angular.module('web.controllers', [
         $scope.hostname = 'http://' + window.location.hostname;
 
         /**
-         * @summary Function for uploading a file.
-         * @method uploadFile
+         * @summary Function for uploading an image file.
          * @param {Object} event The file to upload.
          * @after All the images are uploaded to the server.
          */
@@ -132,7 +131,6 @@ angular.module('web.controllers', [
          * @after The new settings are saved on the server.
          */
         $scope.save = function () {
-
             $scope.saved = true;
             $timeout(function () {
                 $scope.saved = false;
@@ -142,7 +140,6 @@ angular.module('web.controllers', [
             }, function (err) {
                 console.log(err);
             });
-
         };
 
         /**

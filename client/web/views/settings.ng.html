@@ -2,7 +2,6 @@
     <h1>{{ 'CLUB_SETTINGS_TITLE' | translate }}</h1>
     <h2>{{ 'CLUB_SETTINGS_SUBTITLE' | translate }}</h2>
 </div>
-
 <div class="content">
     <h2 class="content-subhead">Club</h2>
     <div class="row">
@@ -11,24 +10,28 @@
             <input class="form-control" type="text" id="clubname" name="clubname" ng-model="currentClub.name">
         </div>
     </div>
-
     <div class="row">
-        <label class="col-md-4" for="clubname">Colors:  </label>
+        <label class="col-md-4" for="clubname">Colors: </label>
         <div class="col-md-8">
-            <div class="inline-block"><color-picker ng-model="currentClub.colorPrimary" color-picker-alpha="false"
-                               color-picker-format="'hex'"
-                               color-picker-swatch="true"
-                               color-picker-swatch-only="false"
-                               color-picker-swatch-bootstrap="false"></color-picker></div>
-
-            <div class="inline-block"><color-picker ng-model="currentClub.colorSecondary" color-picker-alpha="false"
-                          color-picker-format="'hex'"
-                          color-picker-swatch-only="false"
-                          color-picker-swatch-bootstrap="false"></color-picker></div>
-            <div class="inline-block"><color-picker ng-model="currentClub.colorAccent" color-picker-alpha="false"
-                          color-picker-format="'hex'"
-                          color-picker-swatch-only="false"
-                          color-picker-swatch-bootstrap="false"></color-picker></div>
+            <div class="inline-block">
+                <color-picker ng-model="currentClub.colorPrimary" color-picker-alpha="false"
+                              color-picker-format="'hex'"
+                              color-picker-swatch="true"
+                              color-picker-swatch-only="false"
+                              color-picker-swatch-bootstrap="false"></color-picker>
+            </div>
+            <div class="inline-block">
+                <color-picker ng-model="currentClub.colorSecondary" color-picker-alpha="false"
+                              color-picker-format="'hex'"
+                              color-picker-swatch-only="false"
+                              color-picker-swatch-bootstrap="false"></color-picker>
+            </div>
+            <div class="inline-block">
+                <color-picker ng-model="currentClub.colorAccent" color-picker-alpha="false"
+                              color-picker-format="'hex'"
+                              color-picker-swatch-only="false"
+                              color-picker-swatch-bootstrap="false"></color-picker>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -37,15 +40,16 @@
             <input type="file" custom-on-change="uploadFile">
         </div>
         <div class="col-md-8">
-            <img src="{{hostname + currentClub.logo}}" alt="logo" class="settings-club-logo" />
+            <img src="{{hostname + currentClub.logo}}" alt="logo" class="settings-club-logo"/>
         </div>
     </div>
-        <!--<h2 class="content-subhead">Feed</h2>-->
-        <!--<div class="row">-->
-            <!--<label class="col-md-4" for="clubname">Maximum amount of heroes per month</label>-->
-            <!--<div class="col-md-6">-->
-                <!--<input class="form-control" type="text" id="heroesMax" name="heroesMax" ng-model="currentClub.heroesMax">-->
-            <!--</div>-->
-        <!--</div>-->
-    <button class="btn btn-primary" ng-click="save()">Save</button> <div class="saved-notification" ng-if="saved">Saved!</div>
+    <!--<h2 class="content-subhead">Feed</h2>-->
+    <!--<div class="row">-->
+    <!--<label class="col-md-4" for="clubname">Maximum amount of heroes per month</label>-->
+    <!--<div class="col-md-6">-->
+    <!--<input class="form-control" type="text" id="heroesMax" name="heroesMax" ng-model="currentClub.heroesMax">-->
+    <!--</div>-->
+    <!--</div>-->
+    <button class="btn btn-primary" ng-click="save()">Save</button>
+    <div class="saved-notification" ng-if="saved">Saved!</div>
 </div>
