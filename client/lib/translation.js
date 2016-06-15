@@ -59,6 +59,7 @@ angular.module('translation', ['pascalprecht.translate'])
             TITLE: "Titel",
             DESCRIPTION: "Beschrijving",
             PUBLISH: "Publiceer",
+            DEADLINE: "Deadline",
             
 
 
@@ -93,6 +94,10 @@ angular.module('translation', ['pascalprecht.translate'])
             SELECT_PICTURE: "Kies foto",
             SELECTED_PICTURE: "De geselecteerde foto",
 
+            /* SPONSORING */
+            NEW_SPONSORING: "Nieuw sponsorevenement",
+            
+            
             /* OTHER */
             ENROLL: "Aanmelden",
             ENROLL_PASS: "Vul hieronder je gewenste wachtwoord in",
