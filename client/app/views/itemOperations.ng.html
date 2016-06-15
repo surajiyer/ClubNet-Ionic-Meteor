@@ -8,7 +8,9 @@
                 <i class="icon ion-ios-trash"></i> {{ 'DELETE' | translate }}
             </a>
             <a class="item" ng-if="showEdit" ng-click="stickyItem(); closePopover()">
-                <i class="icon ion-star"></i> {{ item.sticky ? "Undo sticky" : "Sticky to the top"}}
+                <i class="icon ion-star"></i>
+                <span ng-if="item.sticky">{{ 'STICKY_UNDO' | translate }}</span>
+                <span ng-if="!item.sticky">{{ 'STICKY' | translate }}</span>
             </a>
         </div>
     </ion-content>

@@ -49,6 +49,7 @@ angular.module('translation', ['pascalprecht.translate'])
             SETTINGS: "Instellingen",
             STICKY: "Plak bovenaan vast",
             STICKY_UNDO: "Losmaken",
+            HOME: "Home",
 
 
             /* PAGE HEADERS */
@@ -70,6 +71,9 @@ angular.module('translation', ['pascalprecht.translate'])
 
 
             /* OTHER */
+            ENROLL: "Aanmelden",
+            ENROLL_PASS: "Vul hieronder je gewenste wachtwoord in",
+            NO_ITEMS_MESSAGE: "Geen feed items gevonden",
             DUTCH: "Nederlands",
             ENGLISH: "Engels",
             SELECT_LANG: "Kies taal",
