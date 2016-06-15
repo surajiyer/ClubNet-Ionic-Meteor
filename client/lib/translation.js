@@ -62,8 +62,16 @@ angular.module('translation', ['pascalprecht.translate'])
             DESCRIPTION: "Beschrijving",
             PUBLISH: "Publiceer",
             DEADLINE: "Deadline",
-            
 
+            /* NOTIFCATION */
+            NOTIFICATION_VOTING_TEXT: "Vote for the exercise you like.",
+            NOTIFICATION_VOTING_TITLE: "New voting!",
+            NOTIFICATION_HEROES_TEXT: "Check out a new hero of the week.",
+            NOTIFICATION_HEROES_TITLE: "New Hero!",
+            NOTIFICATION_FORM_TEXT: "React on new practicality.",
+            NOTIFICATION_FORM_TITLE: "New practicality!",
+            NOTIFICATION_SPONSORING_TITLE: "New sponsoring event!",
+            NOTIFICATION_SPONSORING_TEXT: "Contribute to a new sponsoring event",
 
             /* PAGE HEADERS */
             MEMBERS_TITLE: "Leden",
@@ -133,6 +141,7 @@ angular.module('translation', ['pascalprecht.translate'])
             CURRENT_PASS: "Huidig wachtwoord",
             NEW_PASS: "Nieuw wachtwoord",
             CONFIRM_PASS: "Bevestig wachtwoord",
+            CONFIRM_VOTE: "Bevestig stem",
             CHANGE_PASS_SUCCESS: "Wachtwoord aangepast",
             ADD_USER: "Voeg gebruiker toe",
             FORGOT_PASS: "Wachtwoord vergeten",
@@ -149,9 +158,10 @@ angular.module('translation', ['pascalprecht.translate'])
             MISSING_CURRENT_PASS: "Huidige wachtwoord niet ingevuld",
             MISSING_NEW_PASS: "Geen nieuw wachtwoord ingevuld",
             MISSING_CONFIRM_PASS: "Geen bevestiging van wachtwoord ingevuld",
+            CONFIRM_DELETE: "Weet je zeker dat je het item wil verwijderen?",
             PASS_NO_MATCH: "Nieuwe wachtwoorden komen niet overeen",
             PASS_RESET_SUCCESS: "Uw wachtwoord is succesvol veranderd, log a.u.b. opnieuw in.",
-            EMAILSENDFORPASSRESET: "Er is een mail naar u verstuury om het wachtwoord te veranderen.",
+            EMAILSENDFORPASSRESET: "Er is een mail naar u verstuurt om het wachtwoord te veranderen.",
             PASS_NOT_VALID: "Nieuwe wachtwoord niet sterk genoeg. Het wachtwoord moet minstens acht tekens bevatten waarvan tenminste één letter en één cijfer",
             "Match failed": "Ongeldige combinatie",
             PASSWORD_RECOVERY_SENT: "Mail verzonden naar"

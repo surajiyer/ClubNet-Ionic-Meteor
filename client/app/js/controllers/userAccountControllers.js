@@ -231,14 +231,17 @@ angular.module('userAccountControllers', [])
             }
 
             var testPassword = CommonServices.checkPassword($scope.password.newPass);
-            if(!testPassword) {
-                return CommonServices.showAlert('Incorrect new password',
-                    'Password must be alphanumeric and at least 8 characters long');
+            if(!testPassword) {            
+                $translate(['ERROR', 'PASS_RESET_SUCCESS']).then(function (translations) {
+                  head = translations.ERROR;
+                  content = translations.PASS_RESET_SUCCESS;
+                  CommonServices.showAlert(head, content);
+                });
             }
             
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
 
-                $translate(['SUCCESS', 'PASS_RESET_SUCCESS']).then(function (translations) {
+                $translate(['SUCCESS', 'PASS_NOT_VALID']).then(function (translations) {
                   head = translations.ERROR;
                   content = translations.PASS_RESET_SUCCESS;
                   CommonServices.showAlert(head, content);

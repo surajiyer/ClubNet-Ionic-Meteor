@@ -245,36 +245,47 @@ angular.module('app.controllers', [
             });
         };
 
+
+
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
-            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                var type = $scope.type._id;
-                if (type == 'Voting') {
-                    Meteor.call('getTeamUsers', function(err, result){
-                        var text = 'Vote for the exercise you like.';
-                        var title = 'New voting!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                } else if (type == 'Form') {
-                    Meteor.call('getTeamUsers', function(err, result){
-                        var text = 'React on new practicality.';
-                        var title = 'New practicality!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                } else if (type == 'Heroes') {
-                    Meteor.call('getClubUsers', function(err, result){
-                        var text = 'Check out a new hero of the week.';
-                        var title = 'New Hero!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                } else if (type == 'Sponsoring') {
-                    Meteor.call('getClubUsers', function(err, result){
-                        var text = 'Contribute to a new sponsoring event.';
-                        var title = 'New sponsoring event!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                }
+
+             $translate(['VOTING_text', 'VOTING_title' , 'HEROES_text', 'HEROES_title', 'FORM_text', 'FORM_title', 'SPONSORING_title', 'SPONSORING_text']).then(function (translations) {
+              head = translations.ERROR;
+              content = translations.MISSING_VALID_EMAIL;
+
+              /* NOTIFCATIONS translations */
+              VOTING_text = NOTIFICATION_VOTING_TEXT
+              VOTING_title = NOTIFICATION_VOTING_TITLE
+              HEROES_text = NOTIFICATION_HEROES_TEXT
+              HEROES_title = NOTIFICATION_HEROES_TITLE
+              FORM_text = NOTIFICATION_FORM_TEXT
+              FORM_title = NOTIFICATION_FORM_TITLE
+              SPONSORING_title = NOTIFICATION_SPONSORING_TITLE
+              SPONSORING_text = NOTIFICATION_SPONSORING_TEXT
+           
+                           
+                Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
+                    var type = $scope.type._id;
+                    if (type == 'Voting') {
+                        Meteor.call('getTeamUsers', function(err, result){
+                            Meteor.call('userNotification', type, VOTING_text, VOTING_title, result);
+                        });
+                    } else if (type == 'Form') {
+                        Meteor.call('getTeamUsers', function(err, result){
+                            Meteor.call('userNotification', type, FORM_text, FORM_title, result);
+                        });
+                    } else if (type == 'Heroes') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            Meteor.call('userNotification', type, HEROES_text, HEROES_title, result);
+                        });
+                    } else if (type == 'Sponsoring') {
+                        Meteor.call('getClubUsers', function(err, result){
+                            Meteor.call('userNotification', type, SPONSORING_text, SPONSORING_title, result);
+                        });
+                    }
+                });
             });
 
             $scope.newItem = {};
@@ -286,7 +297,7 @@ angular.module('app.controllers', [
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      */
     .controller('generalItemCtrl', function ($scope, $meteor, AccessControl,
-                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices) {
+                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices, $translate) {
         // Get item type
         $scope.newItem = {};
         Meteor.call('getItemType', $scope.item.type, function (err, result) {
@@ -421,13 +432,16 @@ angular.module('app.controllers', [
          * @summary Function to delete a feed item
          */
         $scope.deleteItem = function () {
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Are you sure you want to delete the feed item?'
-            });
-            confirmPopup.then(function (res) {
-                if (res) {
-                    $meteor.call('deleteFeedItem', $scope.item._id);
-                }
+            $translate('INCORRECT_CREDENTIALS').then(function (result) {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: result
+                });
+        
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        $meteor.call('deleteFeedItem', $scope.item._id);
+                    }
+                });
             });
         };
 
