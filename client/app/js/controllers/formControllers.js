@@ -5,7 +5,7 @@ angular.module('formControllers', [])
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup) {
+    .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup, $translate) {
 
         /**
          * @summary Load the new form template
@@ -34,9 +34,14 @@ angular.module('formControllers', [])
          * @summary Function to show the 'select target value alert'
          */
         $scope.showAlert = function () {
-            $ionicPopup.alert({
-                title: 'Please select target value'
+
+            $translate('MISSING_TARGET_VALUE').then(function (result) {
+                        $ionicPopup.alert({
+                            title: result
+                        });
             });
+
+
         };
 
 
