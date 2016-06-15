@@ -2,10 +2,10 @@
     <ion-content>
         <div class="list">
             <a class="item" ng-if="showEdit" ng-click="editItem(); closePopover()">
-                <i class="icon ion-edit"></i> Edit
+                <i class="icon ion-edit"></i> {{ 'EDIT' | translate }}
             </a>
             <a class="item" ng-if="showDelete" ng-click="deleteItem(item._id); closePopover()">
-                <i class="icon ion-ios-trash"></i> Delete
+                <i class="icon ion-ios-trash"></i> {{ 'DELETE' | translate }}
             </a>
             <a class="item" ng-if="showEdit" ng-click="stickyItem(); closePopover()">
                 <i class="icon ion-star"></i> {{ item.sticky ? "Undo sticky" : "Sticky to the top"}}

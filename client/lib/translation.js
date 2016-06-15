@@ -13,11 +13,14 @@ angular.module('translation', ['pascalprecht.translate'])
         var translations = {};
         translations.nl = {
 
-            /* MENU */
+            /* WEB MENU */
             MENU_MEMBERS: "Leden",
             MENU_CLUB_SETTINGS: "Clubinstellingen",
             MENU_PROFILE: "Profiel",
             MENU_LOG_OUT: "Uitloggen",
+            MENU_FEED: "Feed",
+            MENU_CHAT: "Berichten",
+            MENU_SETTINGS: "Instellingen",
             
             /* GENERAL */
             LOG_IN: "Log in",
@@ -43,6 +46,10 @@ angular.module('translation', ['pascalprecht.translate'])
             PROFILE: "Profiel",
             CANCEL: "Annuleer",
             SEND: "Verstuur",
+            SETTINGS: "Instellingen",
+            STICKY: "Plak bovenaan vast",
+            STICKY_UNDO: "Losmaken",
+
 
             /* PAGE HEADERS */
             MEMBERS_TITLE: "Leden",
@@ -60,8 +67,12 @@ angular.module('translation', ['pascalprecht.translate'])
             DELETE_MESSAGE: "Weet je zeker dat je de deze gebruiker wilt verwijderen: ",
             FORGOT_PASS_TITLE: "Wachtwoord vergeten?",
             FORGOT_PASS_MESSAGE: "Wachtwoord vergeten? Als je hieronder je e-mail adres invult zullen we je een link sturen om je wachtwoord opnieuw in te stellen.",
-            
+
+
             /* OTHER */
+            DUTCH: "Nederlands",
+            ENGLISH: "Engels",
+            SELECT_LANG: "Kies taal",
             USER_PROFILE: "Gebruikersprofiel",
             UPDATE_PROFILE_SUCCESS: "Gebruikersprofiel aangepast",
             CHANGE_PASS: "Verander wachtwoord",
@@ -71,6 +82,8 @@ angular.module('translation', ['pascalprecht.translate'])
             CHANGE_PASS_SUCCESS: "Wachtwoord aangepast",
             ADD_USER: "Voeg gebruiker toe",
             FORGOT_PASS: "Wachtwoord vergeten",
+            RESET_PASS: "Nieuw wachtwoord instellen",
+            RESET_PASS_MESSAGE: "Vul hieronder je nieuwe wachtwoord in",
             INCORRECT_CREDENTIALS: "De gegevens zijn onjuist",
             MISSING_FIRST_NAME: "Geen voornaam ingevuld",
             MISSING_LAST_NAME: "Geen achternaam ingevuld",
