@@ -43,7 +43,7 @@ angular.module('web.controllers', [
             $meteor.logout();
             $state.go('login');
         };
-        $scope.hostname = 'https://' + window.location.hostname;
+        $scope.hostname = 'https://' + Meteor.absoluteUrl();
 
         /**
          * @summary Function for retrieving the club a user is logged into.
