@@ -140,7 +140,7 @@ angular.module('userAccountControllers', [])
 
 
         $scope.forgotPassword = function () {
-            if (!SimpleSchema.RegEx.Email.test($scope.email)) {
+            if (!SimpleSchema.RegEx.Email.test($scope.user.email)) {
                 $translate(['ERROR', 'MISSING_VALID_EMAIL']).then(function (translations) {
                   head = translations.ERROR;
                   content = translations.MISSING_VALID_EMAIL;
@@ -148,7 +148,7 @@ angular.module('userAccountControllers', [])
                 });
             }
 
-            Accounts.forgotPassword({email: $scope.email}, function () {
+            Accounts.forgotPassword({email: $scope.user.email}, function () {
                 $translate(['ERROR', 'EMAILSENDFORPASSRESET']).then(function (translations) {
                   head = translations.ERROR;
                   content = translations.EMAILSENDFORPASSRESET;

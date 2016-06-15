@@ -15,7 +15,7 @@ angular.module('app.controllers', [
          * @type {boolean}
          */
         $scope.showChat = false;
-        Tracker.autorun(function () {
+        $scope.autorun(function () {
             $scope.showChat = Chat.canViewChat();
         });
 
@@ -25,9 +25,11 @@ angular.module('app.controllers', [
         $scope.logout = function ($event) {
             $event.stopPropagation();
             $meteor.logout(function () {
-                $state.go('login').then(function () {
-                    $window.location.reload();
-                });
+                // Object.keys(Session.keys).forEach(function(key){
+                //     Session.set(key, undefined);
+                // });
+                // Session.keys = {}; // remove session keys
+                $state.go('login');
             });
         };
 
@@ -91,7 +93,7 @@ angular.module('app.controllers', [
         });
 
         // Limit on number of feed item to display
-        $scope.limit = 7;
+        $scope.limit = 10;
 
         /* Get the number of items that can be retrieved.
          * Needed for preventing indefinite increase of limit in infiniteScroll */
@@ -102,12 +104,14 @@ angular.module('app.controllers', [
         });
 
         // Reactively (re)subscribe to feed items based on selected filters and limit
-        Tracker.autorun(function () {
+        $scope.autorun(function () {
             $scope.getReactively('itemTypes', true);
             var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
                 return type.checked;
             }), '_id');
-            Meteor.subscribe('Feed', itemTypesFilter, $scope.getReactively('limit'));
+            $scope.subscribe('Feed', () => {
+                return [itemTypesFilter, $scope.getReactively('limit')];
+            });
         });
 
         /**
