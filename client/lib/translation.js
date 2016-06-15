@@ -51,6 +51,7 @@ angular.module('translation', ['pascalprecht.translate'])
             STICKY_UNDO: "Losmaken",
             HOME: "Home",
             CLOSE: "Sluiten",
+            OPEN: "Openen",
             SELECT: "Selecteer",
             OTHER: "Anders",
             DAILY: "Dagelijks",
@@ -96,6 +97,12 @@ angular.module('translation', ['pascalprecht.translate'])
             CONTRIBUTE: "Meld aan",
             BUTTON_PRESENT: "Aanwezig",
             BUTTON_WITHDRAW: "Trek terug",
+            
+            /* CHAT */
+            CHAT_TITLE: "Gesprekken",
+            NEW_CHAT: "Nieuw gesprek",
+            
+            
             
             /* HERO FORM */
             NEW_HERO: "Nieuwe held",
