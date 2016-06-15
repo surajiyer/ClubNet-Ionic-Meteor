@@ -75,7 +75,7 @@ angular.module('web.userAccountControllers', [])
          */
         $scope.login = function () {
             // Sign in the user if credentials match a user from the database
-            result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function (result) {
+            var result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function (result) {
                 // If signed in user is not of type PR, give an error message and log them out
                 if (Meteor.user().profile.type != 'pr') {
                     $translate('INCORRECT_CREDENTIALS').then(function (error) {

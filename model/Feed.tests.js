@@ -5,6 +5,7 @@ import {Meteor} from 'meteor/meteor';
 import { baseFeedItemSchema } from '/imports/schemas/feedItems';
 import { baseResponseSchema } from '/imports/schemas/responses';
 import './Feed.js';
+import './feedItems/Voting.js';
 
 let testItem;
 if (Meteor.isServer) {
@@ -68,9 +69,14 @@ if (Meteor.isServer) {
 
                 // Get item added in the previous test
                 try {
-                    result = Meteor.call('getFeedItem', testItem._id);
+                    var chatRightsStub = sinon.stub(Meteor, 'call');
+                    chatRightsStub
+                        .withArgs('getFeedItem', testItem._id)
+                        .returns(Items.find({_id: testItem._id}).fetch()[0]);
+                    var result = Meteor.call('getFeedItem', testItem._id);
                     assert(result._id == testItem._id);
                     testItem = result;
+                    Meteor.call.restore();
                     done();
                 } catch (err) {
                     assert.fail();
@@ -92,7 +98,7 @@ if (Meteor.isServer) {
             it("Get FeedItem Type succeed", (done) => {
                 // Get item added in the previous test
                 try {
-                    result = Meteor.call('getFeedItemType', testItem._id);
+                    var result = Meteor.call('getFeedItemType', testItem._id);
                     assert(result == testItem.type);
                     done();
                 } catch (err) {
@@ -128,11 +134,17 @@ if (Meteor.isServer) {
                 // Update testItem to newTestItem
                 try {
                     Meteor.call('updateFeedItem', newTestItem);
-                    result = Meteor.call('getFeedItem', testItem._id);
+                    var chatRightsStub = sinon.stub(Meteor, 'call');
+                    chatRightsStub
+                        .withArgs('getFeedItem', testItem._id)
+                        .returns(Items.find({_id: testItem._id}).fetch()[0]);
+                    var result = Meteor.call('getFeedItem', testItem._id);
                     assert(result.clubID == newTestItem.clubID);
                     testItem = newTestItem;
+                    Meteor.call.restore();
                     done();
                 } catch (err) {
+                    console.log(err);
                     assert.fail();
                 }
 
@@ -294,12 +306,13 @@ if (Meteor.isServer) {
             it("Get Voting Results normally", (done) => {
                 // Get results of item added in the previous test
                 try {
-                    result = Meteor.call('getVotingResults', testItem._id);
+                    var result = Meteor.call('getVotingResults', testItem._id);
                     assert(result[0].length == 3);
                     assert(result[0][0] == 1);
                     assert(result[0][1] == 0);
                     assert(result[0][2] == 0);
                 } catch (err) {
+                    console.log(err);
                     assert.fail();
                 }
 

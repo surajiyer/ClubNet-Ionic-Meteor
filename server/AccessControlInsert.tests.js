@@ -21,24 +21,24 @@ if (Meteor.isServer) {
             testPr = {
                 email: 'pr@pr.pr',
                 password: 'pr',
-                profile: {firstName: 'Pr', lastName: 'Pr', type: 'pr', clubID: 'test'}
+                profile: {firstName: 'Pr', lastName: 'Pr', type: 'pr', clubID: 'test', notifications: new Object()}
             };
 
             testPlayer = {
                 email: 'ur@ur.ur',
                 password: 'ur',
-                profile: {firstName: 'Ur', lastName: 'Ur', type: 'player', clubID: 'test'}
+                profile: {firstName: 'Ur', lastName: 'Ur', type: 'player', clubID: 'test', notifications: new Object()}
             };
 
             testCoach = {
                 email: 'c@c.cc',
                 password: 'cc',
-                profile: {firstName: 'c', lastName: 'c', type: 'coach', clubID: 'test'}
+                profile: {firstName: 'c', lastName: 'c', type: 'coach', clubID: 'test', notifications: new Object()}
             };
             testG = {
                 email: 'g@g.gg',
                 password: 'gg',
-                profile: {firstName: 'g', lastName: 'g', type: 'general', clubID: 'test'}
+                profile: {firstName: 'g', lastName: 'g', type: 'general', clubID: 'test', notifications: new Object()}
             };
 
             Meteor.users.remove({});
