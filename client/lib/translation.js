@@ -50,6 +50,16 @@ angular.module('translation', ['pascalprecht.translate'])
             STICKY: "Plak bovenaan vast",
             STICKY_UNDO: "Losmaken",
             HOME: "Home",
+            CLOSE: "Sluiten",
+            SELECT: "Selecteer",
+            OTHER: "Anders",
+            DAILY: "Dagelijks",
+            WEEKLY: "Wekelijks",
+            MONTHLY: "Maandelijks",
+            TITLE: "Titel",
+            DESCRIPTION: "Beschrijving",
+            PUBLISH: "Publiceer",
+            
 
 
             /* PAGE HEADERS */
@@ -69,6 +79,19 @@ angular.module('translation', ['pascalprecht.translate'])
             FORGOT_PASS_TITLE: "Wachtwoord vergeten?",
             FORGOT_PASS_MESSAGE: "Wachtwoord vergeten? Als je hieronder je e-mail adres invult zullen we je een link sturen om je wachtwoord opnieuw in te stellen.",
 
+            /* PRACTICALITY FORM */
+            NEW_PRACTICALITY: "Nieuwe inventarisatie",
+            SELECT_TYPE: "Selecteer een type",
+            LAUNDRY: "Was",
+            DRIVING: "Vervoer",
+            ABSENCE: "Absentie",
+            REPEAT_INTERVAL: "Herhaalfrequentie",
+            TARGET: "Doel (aantal)",
+            
+            /* HERO FORM */
+            NEW_HERO: "Nieuwe held",
+            SELECT_PICTURE: "Kies foto",
+            SELECTED_PICTURE: "De geselecteerde foto",
 
             /* OTHER */
             ENROLL: "Aanmelden",

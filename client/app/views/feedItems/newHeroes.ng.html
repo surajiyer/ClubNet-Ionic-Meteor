@@ -1,29 +1,29 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">New hero</h1>
+        <h1 class="title">{{ 'NEW_HERO' | translate }}</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeModal()">Close</button>
+            <button class="button button-clear" ng-click="closeModal()">{{ 'CLOSE' | translate }}</button>
         </div>
     </ion-header-bar>
     <ion-content>
         <div class="list">
             <label class="item item-input item-floating-label">
-                <span class="input-label">Title</span>
-                <input ng-model="newItem.title" type="text" placeholder="Title">
+                <span class="input-label">{{ 'TITLE' | translate }}</span>
+                <input ng-model="newItem.title" type="text" placeholder="{{ 'TITLE' | translate }}">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Description</span>
-                <textarea ng-model="newItem.description" rows="3" placeholder="Description"></textarea>
+                <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
+                <textarea ng-model="newItem.description" rows="3" placeholder="{{ 'DESCRIPTION' | translate }}"></textarea>
             </label>
             <button ng-click="getPicture()" class="button button-block button-positive">
-                Get picture from gallery
+                {{ 'SELECT_PICTURE' | translate }}
             </button>
-          <div ng-if="image" style="text-align: center; font-weight: bold; font-size: 15px; color:#404040;">Your uploaded picture:</div>
+          <div ng-if="image" style="text-align: center; font-weight: bold; font-size: 15px; color:#404040;">{{ 'SELECTED_PICTURE' | translate }}:</div>
               <div id="picture">
                 <img src={{image}} style="max-height:200px; max-width:200px; margin-left:auto; margin-right:auto; display: block; border: 3px dashed #ccc;" ng-disabled="!image">
               </div>
             <button ng-disabled="!newItem.title && !newItem.description" ng-click="edit(); addItem()" class="button button-block button-positive">
-                {{ postBtn }}
+                {{ 'PUBLISH' | translate }}
             </button>
         </div>
     </ion-content>

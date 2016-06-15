@@ -1,53 +1,53 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">New practicality form</h1>
+        <h1 class="title">{{ 'NEW_PRACTICALITY' | translate }}</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeModal()">Close</button>
+            <button class="button button-clear" ng-click="closeModal()">{{ 'CLOSE' | translate }}</button>
         </div>
     </ion-header-bar>
     <ion-content>
         <div class="list">
             <div class="item item-input item-label">
                 <span class="input-label">
-                    Select type:
+                    {{ 'SELECT_TYPE' | translate }}:
                 </span>
                 <select ng-model="newItem.target">
-                    <option ng-selected="true" disabled selected>Select your option</option>
-                    <option value="laundry" selected>Laundry</option>
-                    <option value="driving">Driving</option>
-                    <option value="absence">Absence</option>
-                    <option value="other">Other</option>
+                    <option ng-selected="true" disabled selected>{{ 'SELECT' | translate }}</option>
+                    <option value="laundry" selected>{{ 'LAUNDRY' | translate }}</option>
+                    <option value="driving">{{ 'DRIVING' | translate }}</option>
+                    <option value="absence">{{ 'ABSENCE' | translate }}</option>
+                    <option value="other">{{ 'OTHER' | translate }}</option>
                 </select>
             </div>
             <div class="item item-input item-label">
                 <span class="input-label">
-                    Repeat interval:
+                    {{ 'REPEAT_INTERVAL' | translate }}
                 </span>
                 <select ng-model="newItem.repeatInterval" >
-                    <option ng-selected="true" disabled selected>Select your option</option>
-                    <option value="daily" selected>Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="fourweeks">4 Weeks</option>
+                    <option ng-selected="true" disabled selected>{{ 'SELECT' | translate }}</option>
+                    <option value="daily" selected>{{ 'DAILY' | translate }}</option>
+                    <option value="weekly">{{ 'WEEKLY' | translate }}</option>
+                    <option value="fourweeks">{{ 'MONTHLY' | translate }}</option>
                 </select>
                 <div style="padding-right:5px; margin-right: 0px; margin-left:auto;" >
                   <a class="button button-icon icon ion-help" ng-click="showAlertRepeatInterval()"></a>
                 </div>
             </div>
             <label class="item item-input item-label">
-                <span class="input-label">Title</span>
-                <input ng-model="newItem.title" type="text" placeholder="Title">
+                <span class="input-label">{{ 'TITLE' | translate }}</span>
+                <input ng-model="newItem.title" type="text" placeholder="{{ 'TITLE' | translate }}">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Description</span>
-                <textarea ng-model="newItem.description" rows="3" placeholder="Description"></textarea>
+                <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
+                <textarea ng-model="newItem.description" rows="3" placeholder="{{ 'DESCRIPTION' | translate }}"></textarea>
             </label>
             <label class="item item-input item-label">
-                <span class="input-label">Target value:</span>
-                <input ng-model="newItem.targetValue" type="number" placeholder="Target value"><br>
+                <span class="input-label">{{ 'TARGET' | translate }}:</span>
+                <input ng-model="newItem.targetValue" type="number" placeholder="{{ 'TARGET' | translate }}"><br>
                 <a class="button button-icon icon ion-help" style="padding-right:15px;" ng-click="showAlertTargetValueInfo()"></a>
             </label>
             <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
-                {{ postBtn }}
+                {{ 'PUBLISH' | translate }}
             </button>
         </div>
     </ion-content>
