@@ -8,9 +8,9 @@ App.configurePlugin('cordova-plugin-customurlscheme', {
 App.info({
   id: 'com.tue.clubnet',
   name: 'ClubNet',
-  description: 'SEPSJIT',
+  description: 'ClubNet is an application to aid coaches of youth football teams in organizing things and creating more engagement of the team.',
   author: 'The Brofessionals',
-  website: 'http://wwwis.win.tue.nl/2R690/'
+  website: 'http://thegreatmatch.com'
 });
 
 
