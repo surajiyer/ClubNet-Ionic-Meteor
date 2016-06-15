@@ -381,8 +381,10 @@ angular.module('web.userAccountControllers', [])
                     $scope.passwordUpdatedVisible = true;
                     $scope.passwordErrorVisible = false;
                 }, function (error) {
+                    $translate('PASS_INCORRECT').then(function (error) {
+                        $scope.passwordError = error;
+                    });
                     $scope.passwordUpdatedVisible = false;
-                    $scope.passwordError = error.reason;
                     $scope.passwordErrorVisible = true;
                 });
             }
