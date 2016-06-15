@@ -7,17 +7,21 @@
                 <div class="panel-heading">
                     <div class="row-fluid user-row">
                         <h1>Reset password</h1>
-                        <img src="web/img/clubnet_logo.png" class="img-responsive" />
+                        <img src="/web/img/clubnet_logo.png" class="img-responsive"/>
                     </div>
                 </div>
                 <div class="panel-body">
                     <form accept-charset="UTF-8" role="form" class="form-signin">
-                        <input type="password" id="inputPassword" class="form-control" placeholder="{{ 'Password' | translate }}" ng-model="user.newPassword" required>
-                        <input type="password" id="inputPassword" class="form-control" placeholder="{{ 'Confirm Password' | translate }}" ng-model="user.confirmNewPassword" required>
+                        <input type="password" id="inputPassword" class="form-control"
+                               placeholder="{{ 'Password' | translate }}" ng-model="user.newPassword" required>
+                        <input type="password" id="inputPassword" class="form-control"
+                               placeholder="{{ 'Confirm Password' | translate }}" ng-model="user.confirmNewPassword"
+                               required>
                         <div ng-if="passwordErrorVisible" class="alert alert-warning">
                             {{ passwordError }}
                         </div>
-                        <input class="btn btn-lg btn-success btn-block" type="submit" ng-click="setPassword()" value="{{ 'Save Password' | translate }}">
+                        <input class="btn btn-lg btn-success btn-block" type="submit" ng-click="setPassword()"
+                               value="{{ 'Save Password' | translate }}">
                     </form>
                 </div>
             </div>

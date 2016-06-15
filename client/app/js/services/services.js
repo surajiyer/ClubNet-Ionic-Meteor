@@ -56,6 +56,12 @@ angular.module('app.services', [])
         });
 
         /**
+         * Used to display the chat notification on the menu when unread messages are present
+         * @type {ReactiveVar}
+         */
+        var showChatNotification = new ReactiveVar(false);
+
+        /**
          * Returns a reactive variable that updates
          * @returns {66}
          */
@@ -206,5 +212,6 @@ angular.module('app.services', [])
             getOneChat: getChat,
             sendMessage: sendMessage,
             updateChatStatus: updateChatStatus,
+            showChatNotification: showChatNotification
         }
     })

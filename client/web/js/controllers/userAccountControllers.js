@@ -7,7 +7,9 @@ angular.module('web.userAccountControllers', [])
 
         $scope.autorun(function () {
             if(Meteor.userId()) {
-                $scope.subscribe('userData');
+                $scope.subscribe('userData', null, () => {
+                    $state.reload();
+                });
             }
         });
 
@@ -127,7 +129,11 @@ angular.module('web.userAccountControllers', [])
 
             // Show when modal was closed in console
             modalInstance.result.then(function (email) {
-
+                console.log(email);
+                $translate('PASSWORD_RECOVERY_SENT').then(function (error) {
+                    $scope.error = error + " " + email;
+                    $scope.errorVisible = true;
+                });
             }, function () {
                 // Modal dismissed
             });
@@ -421,7 +427,7 @@ angular.module('web.userAccountControllers', [])
                         });
                         $scope.$apply();
                     } else {
-                        $modalInstance.close();
+                        $modalInstance.close($scope.input.email);
                     }
                 });
             }

@@ -38,12 +38,13 @@ if (Meteor.isServer) {
 
     Meteor.publish('MessagesCount', function (chatId) {
         check(chatId, String);
+        check(this.userId, String);
         self = this;
 
         var messages = Messages.find({chatID: chatId});
         var unreadMessages = Messages.find({
             chatID: chatId,
-            senderID: {$ne: self.userId},
+            senderID: {$ne: this.userId},
             read: false
         });
 
@@ -57,27 +58,36 @@ if (Meteor.isServer) {
         // Function to update the count of messages of given chat
         var updateCount = function () {
             let countObject = {count: messages.count()};
+            console.log('count: '+countObject.count);
             self.changed('MessagesCount', chatId, countObject);
         };
 
         // Function to update count of unread messages in given chat
         var updateUnreadCount = function () {
             let countObject = {unreadCount: unreadMessages.count()};
+            console.log('unread: '+countObject.unreadCount);
             self.changed('MessagesCount', chatId, countObject);
         };
 
         // Update count by observing changes in Messages collection for given chat
-        messages.observeChanges({
-            added: updateCount, removed: updateCount
+        var allMessagesHandle = messages.observeChanges({
+            added: updateCount,
+            removed: updateCount
         });
 
         // Update unread messages count by observing changes
-        unreadMessages.observeChanges({
-            added: updateUnreadCount, removed: updateUnreadCount
+        var unreadMessagesHandle = unreadMessages.observeChanges({
+            added: updateUnreadCount,
+            removed: updateUnreadCount
         });
 
-        // Tell the subscriber that the subscription is ready
+        // Inform client subscription is ready on client side
         this.ready();
+
+        this.onStop(function () {
+            allMessagesHandle.stop();
+            unreadMessagesHandle.stop();
+        });
     });
 }
 
