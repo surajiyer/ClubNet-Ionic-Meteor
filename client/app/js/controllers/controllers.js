@@ -36,7 +36,7 @@ angular.module('app.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
-            $('ion-header-bar.bar-stable').css('background', currentClub.colorAccent + '!important');
+            $('ion-header-bar.bar-stable').css('background', $scope.currentClub.colorAccent + '!important');
         }, function (err) {
             return CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
