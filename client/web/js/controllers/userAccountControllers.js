@@ -201,10 +201,10 @@ angular.module('web.userAccountControllers', [])
                 $meteor.call('addUser', newUser).then(function (result) {
                     $state.go('web.members'); // Redirect user if registration succeeds
                 }, function (err) {
-                    $translate(err.reason).then(function (error) {
+                    $translate('EMAIL_IN_USE').then(function (error) {
                         $scope.error = error;
+                        $scope.errorVisible = true;
                     });
-                    $scope.errorVisible = true;
                 });
                 }
             };
