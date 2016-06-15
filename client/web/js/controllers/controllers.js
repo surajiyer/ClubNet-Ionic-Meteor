@@ -115,7 +115,7 @@ angular.module('web.controllers', [
         $meteor.subscribe('images');
         $meteor.subscribe('clubs');
 
-        $scope.hostname = 'http://' + window.location.hostname;
+        $scope.hostname = 'https://' + Meteor.absoluteUrl();
 
         /**
          * @summary Function for uploading an image file.

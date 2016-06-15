@@ -9,7 +9,7 @@ angular.module('app.controllers', [
     /**
      * Menu Controller: provides all functionality for the menu of the app
      */
-    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat, $route) {
+    .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat) {
         /**
          * To check if user has permission to view chat option
          * @type {boolean}
@@ -29,7 +29,6 @@ angular.module('app.controllers', [
                 //     Session.set(key, undefined);
                 // });
                 // Session.keys = {}; // remove session keys
-                $route.reload();
                 $state.go('login');
             });
         };
@@ -39,6 +38,7 @@ angular.module('app.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
+            $('ion-header-bar.bar-stable').css('background', $scope.currentClub.colorAccent);
         }, function (err) {
             return CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
