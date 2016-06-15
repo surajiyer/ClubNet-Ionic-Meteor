@@ -97,6 +97,11 @@ angular.module('translation', ['pascalprecht.translate'])
             /* SPONSORING */
             NEW_SPONSORING: "Nieuw sponsorevenement",
             
+            /* EXERCISE VOTING */
+            NEW_VOTING: "Nieuwe stem voor oefening",
+            SELECT_TRAINING: "Selecteer een training",
+            SHOW_INT_RESULTS_MESSAGE: "Laat de tussentijdse resultaten zien",
+            SHOW_FINAL_RESULTS_MESSAGE: "Laat de resultaten zien na afloop",
             
             /* OTHER */
             ENROLL: "Aanmelden",
