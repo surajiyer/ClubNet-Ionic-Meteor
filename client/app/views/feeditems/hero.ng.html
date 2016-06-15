@@ -1,6 +1,9 @@
 <div class="item item-body">
     <span class="hero-name">{{item.title}}</span>
 </div>
-<div class="item item-body">
+<div class="item item-body" ng-if="item.image">
     <img class="full-image" src="{{item.image}}">
+</div>
+<div class="item item-body">
+    <span class="hero-name">{{item.description}}</span>
 </div>
