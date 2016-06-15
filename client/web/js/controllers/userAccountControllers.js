@@ -437,7 +437,7 @@ angular.module('web.userAccountControllers', [])
         };
     })
 
-    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, $translate) {
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, checkPassword, $translate) {
         $scope.token = $stateParams.token;
 
         $scope.user = {
@@ -473,6 +473,7 @@ angular.module('web.userAccountControllers', [])
             } else {
                 $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
                     $scope.passwordErrorVisible = false;
+                    $state.go('login');
 
 
                 //     /**
