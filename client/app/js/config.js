@@ -4,7 +4,7 @@ angular.module('app.config', ['chart.js'])
         // Configure all charts
         ChartJsProvider.setOptions({
             colours: ['#1976D2', '#1976D2'],
-            maintainAspectRatio: false
+            maintainAspectRatio: true
         });
 
         ChartJsProvider.setOptions('Line', {
@@ -13,3 +13,9 @@ angular.module('app.config', ['chart.js'])
 
         ChartJsProvider.setOptions('Bar', {});
     }])
+
+    .filter('capitalize', function() {
+        return function(token) {
+            return token.charAt(0).toUpperCase() + token.slice(1);
+        }
+    });

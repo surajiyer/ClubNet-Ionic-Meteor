@@ -58,29 +58,6 @@ angular.module('app.controllers', [
         /**
          * @summary Function to update the item types
          */
-        // $scope.updateItemTypes = function () {
-        //     // If itemTypes already exists, use its existing checked values
-        //     var oldItemTypes = [];
-        //     if ($scope.itemTypes) {
-        //         oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
-        //             result[id] = {name: name, checked: checked};
-        //             return result;
-        //         }, {});
-        //     }
-        //
-        //     // Get new item types from database
-        //     $scope.itemTypes = TypesCollection.find().fetch();
-        //
-        //     // Load filter from item types
-        //     _.each($scope.itemTypes, function (element) {
-        //         if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
-        //         else element.checked = true;
-        //     }, this);
-        // };
-        //
-        // // Load the filter
-        // Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
-
         Meteor.call('getItemTypes', function (err, result) {
             if (!err && result) {
                 $scope.itemTypes = result;
@@ -92,11 +69,9 @@ angular.module('app.controllers', [
             }
         });
 
-        // Load the plus button types
-        // Meteor.subscribe('createItemTypes');
-
         // Limit on number of feed item to display
         $scope.limit = 7;
+
         /* Get the number of items that can be retrieved.
          * Needed for preventing indefinite increase of limit in infiniteScroll */
         $meteor.call('getItemsCount').then(function (result) {
@@ -243,10 +218,9 @@ angular.module('app.controllers', [
                 quality: 80,
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-            };
+            }
 
-            var picture = MeteorCamera.getPicture(cameraOptions, function (error, localData) {
-                console.log(localData);
+            MeteorCamera.getPicture(cameraOptions, function(error, localData){
                 $scope.image = localData;
                 $scope.$apply();
             });
@@ -256,28 +230,32 @@ angular.module('app.controllers', [
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
             Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                Meteor.call('getFeedItemType', result, function (err, type) {
-                    if (type == 'Voting') {
-                        Meteor.call('getClubUsers', function (err, result) {
-                            var text = 'Vote for the exercise you like.';
-                            var title = 'New voting!';
-                            console.log('adding new voting');
-                            Meteor.call('userNotification', type, text, title, result);
-                        });
-                    } else if (type == 'Form') {
-                        Meteor.call('getTeamUsers', function (err, result) {
-                            var text = 'React on new practicality.';
-                            var title = 'New practicality!';
-                            Meteor.call('userNotification', type, text, title, result);
-                        });
-                    } else if (type == 'Heroes') {
-                        Meteor.call('getClubUsers', function (err, result) {
-                            var text = 'Check out a new hero of the week.';
-                            var title = 'New Hero!';
-                            Meteor.call('userNotification', type, text, title, result);
-                        });
-                    }
-                });
+                var type = $scope.type._id;
+                if (type == 'Voting') {
+                    Meteor.call('getTeamUsers', function(err, result){
+                        var text = 'Vote for the exercise you like.';
+                        var title = 'New voting!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                } else if (type == 'Form') {
+                    Meteor.call('getTeamUsers', function(err, result){
+                        var text = 'React on new practicality.';
+                        var title = 'New practicality!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                } else if (type == 'Heroes') {
+                    Meteor.call('getClubUsers', function(err, result){
+                        var text = 'Check out a new hero of the week.';
+                        var title = 'New Hero!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                } else if (type == 'Sponsoring') {
+                    Meteor.call('getClubUsers', function(err, result){
+                        var text = 'Contribute to a new sponsoring event.';
+                        var title = 'New sponsoring event!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                }
             });
 
             $scope.newItem = {};
@@ -369,9 +347,9 @@ angular.module('app.controllers', [
         $scope.showFullItem = function ($event) {
             var elem = angular.element($event.currentTarget);
             if ($scope.isFull) {
-                elem.parents(".list").css("max-height", "200px").find(".gradient").show();
+                elem.parents(".list").css("height", "200px").find(".gradient").show();
             } else {
-                elem.parents(".list").css("max-height", "100%").find(".gradient").hide();
+                elem.parents(".list").css("height", "100%").find(".gradient").hide();
             }
             $scope.isFull = !$scope.isFull;
         };

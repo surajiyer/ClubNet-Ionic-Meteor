@@ -6,22 +6,6 @@ angular.module('formControllers', [])
      *  @param {Function}
      */
     .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup) {
-        /* Practicality*/
-        $scope.newForm = {};
-
-        /*
-         * @summary Creates a form and add it to the feed
-         * @method form
-         */
-        $scope.form = function () {
-            $scope.newForm.type = 'Form';
-            $scope.newForm.createdAt = new Date;
-            $scope.newForm.locked = false;
-            $scope.newForm.teamID = Meteor.user().profile.teamID;
-            Meteor.call('addFeedItem', $scope.newForm);
-            $scope.newForm = {};
-            $scope.closeForm();
-        };
 
         /**
          * @summary Load the new form template
@@ -50,7 +34,7 @@ angular.module('formControllers', [])
          * @summary Function to show the 'select target value alert'
          */
         $scope.showAlert = function () {
-            var alertPopup = $ionicPopup.alert({
+            $ionicPopup.alert({
                 title: 'Please select target value'
             });
         };
@@ -95,7 +79,7 @@ angular.module('formControllers', [])
                     if (err) throw new Meteor.Error(err.reason);
                     //if there is no response from the logged in user found, set variables that indicate this.
                     if (!result) {
-                        $scope.item.myContribution = 0
+                        $scope.item.myContribution = 0;
                         $scope.item.hasContributed = false;
                     }
                     //If there exists a response for the logged in user, set variables that indicate this.
@@ -104,8 +88,6 @@ angular.module('formControllers', [])
                         $scope.item.hasContributed = true;
                     }
                     $scope.$apply();
-                    //console.log("myContribution: " + $scope.item.myContribution);
-                    //console.log("hasContributed: " + $scope.item.hasContributed);
                 });
             }
             //convinient logging that can be used to directly see the performance of this reload functionality
@@ -121,26 +103,30 @@ angular.module('formControllers', [])
          * @param {String} Value of the user's contribution field
          * @after A new entry is made in the FeedResponses collection. The local value hasContributed is set to the function's parameter
          */
-        $scope.signUp = function (value) {
-            if (!value) return;
-
-            //Insert a new response in the collection
+        $scope.signUp = function () {
+            if (!$scope.item.hasContributed) {
+                if ($scope.item.target == 'driving' || $scope.item.target == 'other') {
+                    if ($scope.item.currentContribution > 0) {
+                        var value = $scope.item.currentContribution;
+                    } else {
+                        $scope.showAlert();
+                        return;
+                    }
+                }
+                if ($scope.item.target == 'laundry' || $scope.item.target == 'absence') {
+                    var value = '1';
+                }
+            }
             $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
-                function (result) {
-                    $scope.item.hasContributed = value;
+                function () {
+                    $scope.item.hasContributed = true;
+                    //Increase the raisedValue of item with value=x
+                    $meteor.call('increaseValue', $scope.item._id, $scope.item.type, value).then(
+                        function () {}, function () {}
+                    );
                 },
                 function (err) {
                     console.log(err);
-                }
-            )
-
-            //Increase the raisedValue of item with value=x for the corresponding user's item
-            $meteor.call('increaseValue', $scope.item._id, $scope.item.type, value).then(
-                function (result) {
-
-                },
-                function (err) {
-
                 }
             );
         };
@@ -156,22 +142,20 @@ angular.module('formControllers', [])
          */       
         $scope.withdrawContribution = function () {
             $meteor.call('deleteResponse', $scope.item._id).then(
-                function (result) {
+                function () {
                     $scope.item.hasContributed = false;
                     $scope.item.myContribution = 0;
+
                 },
                 function (err) {
                     console.log(err);
                 }
             );
-
             //Decrease the raisedValue of item with value=x
             $meteor.call('decreaseValue', $scope.item._id, $scope.item.type, $scope.item.myContribution).then(
                 function (result) {
-
                 },
                 function (err) {
-
                 }
             );
         };

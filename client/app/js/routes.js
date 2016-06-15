@@ -116,9 +116,9 @@ angular.module('app.routes', [])
         handleOpenURL = function handleOpenURL(url) {
             var token = url.substr(url.lastIndexOf('/') + 1);
             if (url.startsWith('clubnet://enroll')) {
-                $state.go('enrollment', {"token": token});
+                $state.go('enroll', {"token": token});
             } else if (url.startsWith('clubnet://resetpassword')) {
-                $state.go('resetPassword', {"token": token});
+                $state.go('resetpassword', {"token": token});
             } else {
                 $state.go('login');
             }
@@ -135,8 +135,8 @@ angular.module('app.routes', [])
                 || toState.name === "enroll"
                 || toState.name === "resetpassword"
                 || toState.name === "forgotPassword") {
-                return; // no need to redirect, continue to toState state
-            }
+                return; // no need to redirect, continue to toState.name
+        }
 
             // now, redirect only not authenticated
             if (!Meteor.userId()) {
