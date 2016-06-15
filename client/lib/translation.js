@@ -64,6 +64,7 @@ angular.module('translation', ['pascalprecht.translate'])
             /* OTHER */
             USER_PROFILE: "Gebruikersprofiel",
             UPDATE_PROFILE_SUCCESS: "Gebruikersprofiel aangepast",
+            UPDATE_CLUB_SUCCESS: "Club aangepast",
             CHANGE_PASS: "Verander wachtwoord",
             CURRENT_PASS: "Huidig wachtwoord",
             NEW_PASS: "Nieuw wachtwoord",
@@ -72,6 +73,7 @@ angular.module('translation', ['pascalprecht.translate'])
             ADD_USER: "Voeg gebruiker toe",
             FORGOT_PASS: "Wachtwoord vergeten",
             INCORRECT_CREDENTIALS: "De gegevens zijn onjuist",
+            MISSING_CLUB_NAME: "Geen clubnaam ingevuld",
             MISSING_FIRST_NAME: "Geen voornaam ingevuld",
             MISSING_LAST_NAME: "Geen achternaam ingevuld",
             MISSING_VALID_EMAIL: "Geen geldig email adres ingevuld",
@@ -80,7 +82,8 @@ angular.module('translation', ['pascalprecht.translate'])
             MISSING_CONFIRM_PASS: "Geen bevestiging van wachtwoord ingevuld",
             PASS_NO_MATCH: "Nieuwe wachtwoorden komen niet overeen",
             PASS_NOT_VALID: "Nieuwe wachtwoord niet sterk genoeg. Het wachtwoord moet minstens acht tekens bevatten waarvan tenminste één letter en één cijfer",
-            "Match failed": "Ongeldige combinatie"
+            "Match failed": "Ongeldige combinatie",
+            PASSWORD_RECOVERY_SENT: "Mail verzonden naar"
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
