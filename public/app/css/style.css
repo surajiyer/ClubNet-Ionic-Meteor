@@ -81,7 +81,7 @@ ion-view.pane {
 }
 
 ion-header-bar.bar-stable {
-    background: #1976D2;
+    background: #1976D2 !important;
     color: #fff;
 }
 
