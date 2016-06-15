@@ -1,11 +1,13 @@
 if(Meteor.isServer) {
     Meteor.methods({
 
-         /**
+         /*
          * @summary Check what kind of repeatInterval we are dealing with
          * @param {Integer} item id
-         * @after forwarded to corresponding function (daily, weekly, four weeks are all being handled in seperate functions)
+         * @after forwarded to corresponding function (daily, weekly, fourweeks are all being handled in seperate functions)
          */
+
+
         checkRepeatInterval: function (id) {
             check(id, String);
             var item = Items.find({_id: id}).fetch()[0];
@@ -24,7 +26,7 @@ if(Meteor.isServer) {
             return true;
         },
 
-        /**
+        /*
          * @summary Calculates the time difference between the current time and the time that was passed as parameter
          * @param {String} timestamp that states the time at which the item was created
          */
@@ -56,7 +58,7 @@ if(Meteor.isServer) {
             return days;
         },
 
-        /**
+        /*
          * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
          * @param {Object} item that was created.
          */
@@ -86,7 +88,7 @@ if(Meteor.isServer) {
             return true;
         },
 
-        /**
+        /*
          * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
          * @param {Object} item that was created.
          */
@@ -116,7 +118,7 @@ if(Meteor.isServer) {
             return true;
         },
 
-        /**
+        /*
          * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
          * @param {Object} item that was created.
          */
@@ -163,7 +165,6 @@ if(Meteor.isServer) {
 
             return total;
         },
-
         getContributing: function (itemID) {
             check(itemID, String);
             var responses = Responses.find({itemID: itemID}).fetch();
@@ -175,7 +176,6 @@ if(Meteor.isServer) {
             });
             return peopleThatResponded;
         },
-
         increaseValue: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
@@ -191,7 +191,6 @@ if(Meteor.isServer) {
                 return Items.find(itemID, {_id: 1, type: 1, raisedValue: 1}).fetch()[0];
             } catch (e) {}
         },
-
         decreaseValue: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
@@ -206,6 +205,6 @@ if(Meteor.isServer) {
                     {$set: {raisedValue: newRaisedValue}});
                 return Items.find(itemID, {_id: 1, type: 1, raisedValue: 1}).fetch()[0];
             } catch (e) {}
-        }
+        },
     });
 }
