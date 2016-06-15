@@ -88,6 +88,14 @@ angular.module('translation', ['pascalprecht.translate'])
             ABSENCE: "Absentie",
             REPEAT_INTERVAL: "Herhaalfrequentie",
             TARGET: "Doel (aantal)",
+            TARGET_REACHED: "We hebben voldoende mensen.",
+            NUMBER_PRESENT: "Aantal aanwezigen",
+            STILL_NEED: "Nog nodig",
+            CONTRIBUTION: "Contributie",
+            ABSENT: "Absent",
+            CONTRIBUTE: "Meld aan",
+            BUTTON_PRESENT: "Aanwezig",
+            BUTTON_WITHDRAW: "Trek terug",
             
             /* HERO FORM */
             NEW_HERO: "Nieuwe held",
