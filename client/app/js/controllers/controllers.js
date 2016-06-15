@@ -6,19 +6,9 @@ angular.module('app.controllers', [
     'heroControllers',
     'sponsoringControllers'])
 
-    .controller('bodyCtrl', function ($scope) {
-
-        /**
-         * @summary Function to check if we run in Cordova environment
-         */
-        $scope.isPhone = function() {
-            return Meteor.isCordova;
-        }
-    })
-
-/**
- * Menu Controller: provides all functionality for the menu of the app
- */
+    /**
+     * Menu Controller: provides all functionality for the menu of the app
+     */
     .controller('menuCtrl', function ($scope, $meteor, $state, $window, Chat) {
         /**
          * To check if user has permission to view chat option
@@ -28,6 +18,7 @@ angular.module('app.controllers', [
         Tracker.autorun(function () {
             $scope.showChat = Chat.canViewChat();
         });
+
         /**
          * @summary Function to logout
          */
@@ -41,7 +32,7 @@ angular.module('app.controllers', [
         };
 
         /**
-         * Loading the current club for styling
+         * Loading the current club for styling, return an alert when an error is thrown
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
@@ -64,29 +55,6 @@ angular.module('app.controllers', [
         /**
          * @summary Function to update the item types
          */
-        // $scope.updateItemTypes = function () {
-        //     // If itemTypes already exists, use its existing checked values
-        //     var oldItemTypes = [];
-        //     if ($scope.itemTypes) {
-        //         oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
-        //             result[id] = {name: name, checked: checked};
-        //             return result;
-        //         }, {});
-        //     }
-        //
-        //     // Get new item types from database
-        //     $scope.itemTypes = TypesCollection.find().fetch();
-        //
-        //     // Load filter from item types
-        //     _.each($scope.itemTypes, function (element) {
-        //         if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
-        //         else element.checked = true;
-        //     }, this);
-        // };
-        //
-        // // Load the filter
-        // Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
-
         Meteor.call('getItemTypes', function (err, result) {
             if (!err && result) {
                 $scope.itemTypes = result;
@@ -98,11 +66,9 @@ angular.module('app.controllers', [
             }
         });
 
-        // Load the plus button types
-        // Meteor.subscribe('createItemTypes');
-
         // Limit on number of feed item to display
         $scope.limit = 7;
+
         /* Get the number of items that can be retrieved.
          * Needed for preventing indefinite increase of limit in infiniteScroll */
         $meteor.call('getItemsCount').then(function (result) {
@@ -182,7 +148,6 @@ angular.module('app.controllers', [
      *  New Item Controller: provides all functionality for the popover screen of the app
      */
     .controller('newItemCtrl', function ($scope, $meteor, $ionicModal, AccessControl, CommonServices, $ionicPopup) {
-
         $scope.newItem = {};
         $scope.trainings = [];
 
@@ -197,13 +162,25 @@ angular.module('app.controllers', [
                 console.log(err);
             }
         );
-
+        
+         /**
+         * @summary Displays an alert that serves as more information on 'the target value'.
+         * @method showAlertTargetValueInfo
+         * @after Alert is launched
+         */
          $scope.showAlertTargetValueInfo = function() {
-           $ionicPopup.alert({
-             title: 'More information',
-             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'
-           });
+             CommonServices.showAlert('More information', 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots');
          }
+
+         /**
+         * @summary Displays an alert that serves as more information on 'the repeat interval'.
+         * @method showAlertRepeatInterval
+         * @after Alert is launched
+         */
+         $scope.showAlertRepeatInterval = function() {
+             CommonServices.showAlert('More information', 'The repeat interval defines the time after which you want the feed item to reset itself.');
+         }
+
 
         $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
@@ -230,18 +207,18 @@ angular.module('app.controllers', [
         $scope.closeModal = function () {
             $scope.modal.hide();
         };
-        
+
         $scope.getPicture = function () {
             var cameraOptions = {
                 quality: 80,
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             }
-l̥
+
             MeteorCamera.getPicture(cameraOptions, function(error, localData){
                 $scope.image = localData;
                 $scope.$apply();
-            })
+            });
         };
 
         $scope.addItem = function () {
@@ -275,6 +252,7 @@ l̥
                     });
                 }
             });
+
             $scope.newItem = {};
             $scope.closeModal();
         };
@@ -455,7 +433,7 @@ l̥
      * Controller for settings page
      */
     .controller('settingsCtrl', function ($scope, $meteor) {
-        $scope.toggleChange = function(key, value){
+        $scope.toggleChange = function (key, value) {
             $meteor.call('updateUserNotificationSetting', key, value);
         };
     })

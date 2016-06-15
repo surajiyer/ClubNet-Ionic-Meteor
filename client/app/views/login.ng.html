@@ -1,20 +1,20 @@
-<ion-view title="Login">
+<ion-view title="{{ 'LOG_IN' | translate }}">
     <ion-content padding="true" class="has-header main-content " style="text-align: center">
         <img src="/app/img/logo-front.png" class="login-logo" alt="" />
         <form class="list login-form" ng-submit="login()">
             <ion-list>
                 <label class="item item-input">
-                    <input type="email" ng-model="user.email" placeholder="Email Address">
+                    <input type="email" ng-model="user.email" placeholder="{{ 'EMAIL' | translate }}">
                 </label>
                 <label class="item item-input">
-                    <input type="password" ng-model="user.password" placeholder="Password">
+                    <input type="password" ng-model="user.password" placeholder="{{ 'PASS' | translate }}">
                 </label>
             </ion-list>
             <div class="spacer" style="width: 300px; height: 22px;"></div>
-            <a ng-click="login()" id="login-button" style="font-size:18px;"
-               class="button button-positive  button-block">Log in</a>
+            <button ng-click="login()" id="login-button" style="font-size:18px;"
+               class="button button-positive button-block">{{ 'LOG_IN' | translate }}</button>
             <div class="forgot-pw">
-                <a ng-click="forgotPassword()">Forgot password?</a>
+                <a class="button button-stable" ng-click="forgotPassword()">{{ 'FORGOT_PASS' | translate }}?</a>
             </div>
         </form>
     </ion-content>

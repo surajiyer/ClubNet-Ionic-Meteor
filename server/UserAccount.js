@@ -62,15 +62,14 @@ Meteor.startup(function () {
     Meteor.publish('userData', function () {
         if(!this.userId) return this.ready();
         var userType = utils.getUserType(this.userId);
+        var clubID = utils.getUserClubID(this.userId);
         switch (userType) {
             case 'pr':
-                return Meteor.users.find({});
+                return Meteor.users.find({'profile.clubID': clubID});
             case 'coach':
-                var clubID = utils.getUserClubID(this.userId);
                 var teamID = utils.getUserTeamID(this.userId);
                 return getUsersFromTeam(clubID, teamID, ['coach', 'player']);
             case 'player':
-                var clubID = utils.getUserClubID(this.userId);
                 var teamID = utils.getUserTeamID(this.userId);
                 return getUsersFromTeam(clubID, teamID, ['coach']);
             default:

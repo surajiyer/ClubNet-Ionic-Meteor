@@ -32,6 +32,10 @@ angular.module('web.controllers', [
      *  @param {Function}
      */
     .controller('mainCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            firstName: ''
+        }
+        
         /**
          * @summary This function logs out the user and redirects it to the login page.
          */
@@ -51,6 +55,16 @@ angular.module('web.controllers', [
             console.log(err);
         });
 
+        if (Meteor.user() != undefined) {
+            $scope.user.firstName = Meteor.user().profile.firstName
+        } else {
+            setTimeout(function () {
+                if (Meteor.user() != undefined) {
+                    $scope.user.firstName = Meteor.user().profile.firstName
+                    $scope.$apply();
+                }
+            }, 250);
+        }
     })
 
     /**

@@ -9,6 +9,9 @@ if (Meteor.isClient) {
 
 if (Meteor.isServer) {
     Meteor.publish('Chats', function () {
+        check(this.userId, String);
+
+        // Get all chats corresponding to logged-in user sorted by lastMessage timestamp
         return Chats.find({users: this.userId}, {sort: {lastMessage: -1}});
     });
 
@@ -17,45 +20,66 @@ if (Meteor.isServer) {
         check(options.chatId, String);
         check(options.messageId, Match.Maybe(String));
         check(options.limit, Match.Maybe(Number));
+
+        // Get all messages of given chatId or specific message of
+        // given messageId
         var selector = {};
         selector.chatID = options.chatId;
         if (options.messageId) selector._id = options.messageId;
+
+        // Sort to descending order of message timestamp
         var projection = {sort: {createdAt: -1}};
+
+        // Limit number of messages to given limit
         if (options.limit) projection.limit = options.limit;
+
         return Messages.find(selector, projection);
     });
 
     Meteor.publish('MessagesCount', function (chatId) {
         check(chatId, String);
+        self = this;
+
+        var messages = Messages.find({chatID: chatId});
+        var unreadMessages = Messages.find({
+            chatID: chatId,
+            senderID: {$ne: self.userId},
+            read: false
+        });
 
         // Add the messages count of given chat to collection
-        let countObject = { count: Messages.find({chatID: chatId}).count()};
+        let countObject = {
+            count: messages.count(),
+            unreadCount: unreadMessages.count()
+        };
         this.added('MessagesCount', chatId, countObject);
 
         // Function to update the count of messages of given chat
-        self = this;
         var updateCount = function () {
-            let countObject = { count: Messages.find({chatID: chatId}).count()};
+            let countObject = {count: messages.count()};
+            self.changed('MessagesCount', chatId, countObject);
+        };
+
+        // Function to update count of unread messages in given chat
+        var updateUnreadCount = function () {
+            let countObject = {unreadCount: unreadMessages.count()};
             self.changed('MessagesCount', chatId, countObject);
         };
 
         // Update count by observing changes in Messages collection for given chat
-        Messages.find({chatID: chatId}).observeChanges({
+        messages.observeChanges({
             added: updateCount, removed: updateCount
+        });
+
+        // Update unread messages count by observing changes
+        unreadMessages.observeChanges({
+            added: updateUnreadCount, removed: updateUnreadCount
         });
 
         // Tell the subscriber that the subscription is ready
         this.ready();
     });
 }
-
-/**
- * Get the status of the chat
- * @returns {*}
- */
-const getChatStatus = function (chatID) {
-    return Chats.find({_id: chatID}).fetch()[0].status;
-};
 
 Meteor.startup(function () {
     Chats.allow({
@@ -85,13 +109,9 @@ Meteor.startup(function () {
             // Checks if user who is inserting is the logged in user and if they are part of the chat
             var isValidUser = !!userId && userId == Meteor.userId() && _.contains(doc.users, userId);
             // Checks if user has permission to delete a chat
-            var hasPermission = Meteor.call('checkRights', 'Chat', 'delete');
-            var allowed = isValidUser && hasPermission;
-            if (allowed) {
-                // If allowed to delete, then delete all messages related to this chat
-                Messages.remove({chatID: doc._id});
-            }
-            return allowed;
+            var hasPermission = Meteor.call('checkRights', 'Chat', 'delete')
+                && Meteor.call('checkRights', 'Messages', 'delete');
+            return isValidUser && hasPermission;
         }
     });
 
@@ -106,8 +126,11 @@ Meteor.startup(function () {
             var chatIsOpen = chat.status == 'open';
             return isValidUser && hasPermission && chatIsOpen;
         },
-        update: function () {
-            return false;
+        update: function (userId, doc) {
+            var chat = Chats.find({_id: doc.chatID}).fetch()[0];
+            // Checks if user who is inserting is the logged in user and if they are part of the chat
+            var isValidUser = !!userId && userId == Meteor.userId() && _.contains(chat.users, userId);
+            return isValidUser;
         },
         remove: function (userId, doc) {
             var chat = Chats.find({_id: doc.chatID}).fetch()[0];
@@ -122,6 +145,47 @@ Meteor.startup(function () {
     // Attach the schemas
     Chats.attachSchema(chats);
     Messages.attachSchema(messages);
+
+    if (Meteor.isServer) {
+        Meteor.methods({
+            readMessages: function (chatId) {
+                check(chatId, String);
+
+                // Get chat for authorization
+                var chat = Chats.find({_id: chatId}).fetch()[0];
+
+                // Checks if user who is inserting is the logged in user and if they are part of the chat
+                var isValidUser = Match.test(Meteor.userId(), String) && _.contains(chat.users, Meteor.userId());
+                if (!isValidUser) {
+                    throw new Meteor.Error('401', 'Not authorized');
+                }
+
+                // Update unread messages to read
+                Messages.update({
+                    chatID: chatId,
+                    senderID: {$ne: Meteor.userId()},
+                    read: false
+                }, {$set: {read: true}}, {multi: true});
+            },
+            deleteChat: function (chatId) {
+                check(chatId, String);
+
+                // Get chat for authorization
+                var chat = Chats.find({_id: chatId}).fetch()[0];
+
+                // Checks if user who is inserting is the logged in user and if they are part of the chat
+                var isValidUser = Match.test(Meteor.userId(), String) && _.contains(chat.users, Meteor.userId());
+                if (!isValidUser) {
+                    throw new Meteor.Error('401', 'Not authorized');
+                }
+
+                // Delete the chat
+                Chats.remove(chatId);
+                // Delete all messages related to this chat
+                Messages.remove({chatID: chatId});
+            }
+        });
+    }
 });
 
 // Meteor.methods({

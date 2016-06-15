@@ -1,5 +1,11 @@
 if (Meteor.isServer) {
     Meteor.methods({
+
+        /**
+         * @summary Returns an array of all club's users
+         * @method getClubUsers
+         * @returns {Array} Array of all club's users
+         */
         getClubUsers: function () {
             var clubID = Meteor.user().profile.clubID;
             var users = Meteor.users.find({"profile.clubID": clubID}).fetch();
@@ -9,6 +15,12 @@ if (Meteor.isServer) {
             });
             return users_array;
         },
+
+         /**
+         * @summary Returns an array of users that are affiliated with the same team as the logged in user
+         * @method getTeamUsers
+         * @returns {Array} Array of users that are affiliated with the same team as the logged in user
+         */
         getTeamUsers: function () {
             var teamID = Meteor.user().profile.teamID;
             var users = Meteor.users.find({"profile.teamID": teamID}).fetch();
@@ -20,8 +32,8 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for updating user notification setting.
-         * @param {key} key Which item type notification setting is for
-         * @param {value} value The setting itself
+         * @param {String} key Which item type notification setting is for
+         * @param {String} value The setting itself
          */
         updateUserNotificationSetting: function (key, value) {
             check(key, String);
