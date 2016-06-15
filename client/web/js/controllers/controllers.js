@@ -43,7 +43,7 @@ angular.module('web.controllers', [
             $meteor.logout();
             $state.go('login');
         };
-        $scope.hostname = 'https://' + Meteor.absoluteUrl();
+        $scope.hostname = 'https://clubnet.scalingo.io';
 
         /**
          * @summary Function for retrieving the club a user is logged into.
