@@ -10,12 +10,10 @@
 </div>
 <div class="item item-body" ng-switch="item.formType">
     <span ng-if="item.targetValue-item.raisedValue > 0">
-        <span ng-if="item.target == 'absence'">{{ 'NUMBER_PRESENT' | translate }}:</span>
-        <span ng-if="!(item.target == 'absence')">{{ 'STILL_NEED' | translate }}:</span>
-        {{(item.targetValue - item.raisedValue) | number}}/{{item.targetValue}}
+        {{ item.target == "absence" ? "People present:" : "We still need" }} {{(item.targetValue - item.raisedValue) | number}}/{{item.targetValue}}!
     </span>
     <span ng-if="item.targetValue-item.raisedValue <= 0">
-        {{ 'TARGET_REACHED' | translate }}
+        We already have enough contributing people.
     </span>
 </div>
 <div class="item item-body"
@@ -23,26 +21,24 @@
     <div>
         <label class="item item-input item-select">
             <div class="input-label">
-                {{ 'CONTRIBUTION' | translate }}:
+                Contribution:
             </div>
             <input ng-model="item.currentContribution" type="text" placeholder="1"><br>
         </label>
     </div>
 </div>
+
 <div class="item item-body" ng-switch on="item.hasContributed">
-    <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'absence'"
-           type="hidden" ng-value="1">
+    <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'absence'" type="hidden" ng-value="1">
     <button class="button button-outline button-balanced"
             ng-click="signUp()"
             ng-switch-when="false">
-        <span ng-if="item.target == 'absence'">{{ 'ABSENT' | translate }}</span>
-        <span ng-if="!(item.target == 'absence')">{{ 'CONTRIBUTE' | translate }}</span>
+        {{ item.target == "absence" ? "Absent" : "Contribute" }}
     </button>
     <button class="button button-outline button-assertive contributed"
             ng-click="withdrawContribution()"
             ng-switch-when="true">
-        <span ng-if="item.target == 'absence'">{{ 'BUTTON_PRESENT' | translate }}</span>
-        <span ng-if="!(item.target == 'absence')">{{ 'BUTTON_WITHDRAW' | translate }}</span>
+        {{ item.target == "absence" ? "I will be present" : "Withdraw your contribution" }}
         <span ng-if="item.target == 'driving' || item.target == 'other'">: {{item.myContribution}}</span>
     </button>
 </div>
