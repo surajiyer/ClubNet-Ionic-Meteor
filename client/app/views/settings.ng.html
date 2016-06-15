@@ -1,4 +1,4 @@
-<ion-view view-title="Settings">
+<ion-view view-title="{{ 'SETTINGS' | translate }}">
     <ion-content padding="true" class="has-header main-content">
         <form class="list main-content">
             <ion-toggle toggle-class="toggle-positive"
@@ -8,10 +8,10 @@
                 {{key}} notification
             </ion-toggle>
             <label class="item item-input item-select">
-                <label class="input-label">Set language</label>
+                <label class="input-label">{{ 'SELECT_LANG' | translate }}</label>
                 <select>
-                    <option>Nederlands</option>
-                    <option selected>English</option>
+                    <option>{{ 'DUTCH' | translate }}</option>
+                    <option selected>{{ 'ENGLISH' | translate }}</option>
                 </select>
             </label>
 

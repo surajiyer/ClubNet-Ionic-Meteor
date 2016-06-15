@@ -1,4 +1,4 @@
-<ion-view view-title="Chats">
+<ion-view view-title="{{ 'CHAT_TITLE' | translate }}">
     <ion-nav-bar class="bar-stable">
         <ion-nav-buttons side="left">
             <button class="button button-icon button-clear ion-navicon" menu-toggle="left"></button>
@@ -17,12 +17,12 @@
                                    ng-click="modifyStatus(chat._id, 'closed'); $event.stopPropagation();"
                                    stop-event="click"
                                    class="button-assertive">
-                    Close
+                    {{ 'CLOSE' | translate }}
                 </ion-option-button>
                 <ion-option-button ng-if="canModifyStatus && chat.status == 'closed'"
                                    ng-click="modifyStatus(chat._id, 'open'); $event.stopPropagation();"
                                    class="button-balanced">
-                    Open
+                    {{ 'OPEN' | translate }}
                 </ion-option-button>
             </ion-item>
         </ion-list>

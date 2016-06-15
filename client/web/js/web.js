@@ -10,5 +10,5 @@ angular.module('web', ['angular-meteor',
     'ui.router',
     'web.controllers',
     'web.routes',
-    'web.translation',
+    'translation',
     'web.services']);

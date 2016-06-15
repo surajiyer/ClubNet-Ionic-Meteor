@@ -1,6 +1,6 @@
 <div class="item item-body">
     <p>
-        {{item.title}}
+        {{item.target | capitalize}}: {{item.title}}
     </p>
 </div>
 <div class="item item-body">
@@ -9,50 +9,41 @@
     </p>
 </div>
 <div class="item item-body" ng-switch="item.formType">
-    <span ng-if="item.targetValue-item.raisedValue > 0">We still need {{(item.targetValue - item.raisedValue) | number}}! <br/></span>
-    <span ng-if="item.targetValue-item.raisedValue <= 0">We have enough people contributing<br/></span>
+    <span ng-if="item.targetValue-item.raisedValue > 0">
+        <span ng-if="item.target == 'absence'">{{ 'NUMBER_PRESENT' | translate }}:</span>
+        <span ng-if="!(item.target == 'absence')">{{ 'STILL_NEED' | translate }}:</span>
+        {{(item.targetValue - item.raisedValue) | number}}/{{item.targetValue}}
+    </span>
+    <span ng-if="item.targetValue-item.raisedValue <= 0">
+        {{ 'TARGET_REACHED' | translate }}
+    </span>
 </div>
-<div class="item item-body">
-    <div ng-init="item.currentContribution = '1'">
-        <label class="item item-input item-select"
-               ng-if="(item.target == 'driving' || item.target == 'other') && item.hasContributed == false && item.targetValue-item.raisedValue > 0">
+<div class="item item-body"
+     ng-if="(item.target == 'driving' || item.target == 'other') && !item.hasContributed && item.targetValue-item.raisedValue > 0">
+    <div>
+        <label class="item item-input item-select">
             <div class="input-label">
-                Contribution:
+                {{ 'CONTRIBUTION' | translate }}:
             </div>
-            <select ng-model="item.currentContribution">
-                <option value="" ng-selected="true" disabled selected>Select your option</option>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
-                <option value="10">10</option>
-                <option value="11">11</option>
-            </select>
+            <input ng-model="item.currentContribution" type="text" placeholder="1"><br>
         </label>
     </div>
-    <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'presence'"
-           type="hidden" value="1">
+</div>
+<div class="item item-body" ng-switch on="item.hasContributed">
+    <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'absence'"
+           type="hidden" ng-value="1">
     <button class="button button-outline button-balanced"
-            ng-show="!item.hasContributed && (item.target == 'driving' || item.target == 'other')"
-            ng-click="(item.currentContribution > 0) ? signUp(item.currentContribution) : showAlert()">
-        Contribute
+            ng-click="signUp()"
+            ng-switch-when="false">
+        <span ng-if="item.target == 'absence'">{{ 'ABSENT' | translate }}</span>
+        <span ng-if="!(item.target == 'absence')">{{ 'CONTRIBUTE' | translate }}</span>
     </button>
-    <button class="button button-outline button-balanced"
-            ng-show="!item.hasContributed && (item.target == 'laundry' || item.target == 'presence')"
-            ng-click="signUp('1')">
-        Contribute
+    <button class="button button-outline button-assertive contributed"
+            ng-click="withdrawContribution()"
+            ng-switch-when="true">
+        <span ng-if="item.target == 'absence'">{{ 'BUTTON_PRESENT' | translate }}</span>
+        <span ng-if="!(item.target == 'absence')">{{ 'BUTTON_WITHDRAW' | translate }}</span>
+        <span ng-if="item.target == 'driving' || item.target == 'other'">: {{item.myContribution}}</span>
     </button>
-    <button class="button button-outline button-assertive"
-            ng-show="item.myContribution > 0"
-            ng-click="withdrawContribution()">
-        Withdraw your contribution
-    </button>
-    <br>
-    <span ng-if="item.myContribution > 0">You are contributing: {{item.myContribution}} <br></span>
 </div>
 

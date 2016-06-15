@@ -129,7 +129,11 @@ angular.module('web.userAccountControllers', [])
 
             // Show when modal was closed in console
             modalInstance.result.then(function (email) {
-
+                console.log(email);
+                $translate('PASSWORD_RECOVERY_SENT').then(function (error) {
+                    $scope.error = error + " " + email;
+                    $scope.errorVisible = true;
+                });
             }, function () {
                 // Modal dismissed
             });
@@ -170,7 +174,7 @@ angular.module('web.userAccountControllers', [])
                 });
                 $scope.errorVisible = true;
             } else if (!$scope.user.lastName) {
-                $translate('MISSING_lAST_NAME').then(function (error) {
+                $translate('MISSING_LAST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
@@ -423,7 +427,7 @@ angular.module('web.userAccountControllers', [])
                         });
                         $scope.$apply();
                     } else {
-                        $modalInstance.close();
+                        $modalInstance.close($scope.input.email);
                     }
                 });
             }

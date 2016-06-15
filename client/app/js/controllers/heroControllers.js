@@ -22,5 +22,6 @@ angular.module('heroControllers', [])
 
         $scope.$on("loadEditData", function () {
             $scope.$parent.newItem.image = $scope.item.image;
+            $scope.$parent.newItem.description = $scope.item.description;
         });
     })

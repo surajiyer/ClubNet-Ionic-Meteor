@@ -1,27 +1,27 @@
 <ion-modal-view>
     <ion-header-bar>
-        <h1 class="title">New sponsor event</h1>
+        <h1 class="title">{{ 'NEW_SPONSORING' | translate }}</h1>
         <div class="buttons">
-            <button class="button button-clear" ng-click="closeModal()">Close</button>
+            <button class="button button-clear" ng-click="closeModal()">{{ 'CLOSE' | translate }}</button>
         </div>
     </ion-header-bar>
     <ion-content>
         <div class="list">
             <label class="item item-input item-floating-label">
-                <span class="input-label">Title</span>
-                <input ng-model="newItem.title" type="text" placeholder="Title">
+                <span class="input-label">{{ 'TITLE' | translate }}</span>
+                <input ng-model="newItem.title" type="text" placeholder="{{ 'TITLE' | translate }}">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Description</span>
-                <textarea ng-model="newItem.description" rows="3" placeholder="Description"></textarea>
+                <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
+                <textarea ng-model="newItem.description" rows="3" placeholder="{{ 'DESCRIPTION' | translate }}"></textarea>
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label" style="opacity: 1;">Deadline</span>
+                <span class="input-label" style="opacity: 1;">{{ 'DEADLINE' | translate }}</span>
                 <input ng-model="newItem.deadline" type="date" min="{{getCurrentDateISO()}}">
             </label>
             <label class="item item-input item-floating-label">
-                <span class="input-label">Target value</span>
-                <input ng-model="newItem.targetValue" type="number" placeholder="Target value">
+                <span class="input-label">{{ 'TARGET' | translate }}</span>
+                <input ng-model="newItem.targetValue" type="number" placeholder="{{ 'TARGET' | translate }}">
             </label>
             <input ng-model="newItem.raisedValue" type="hidden" ng-init="newItem.raisedValue = 0">
             <button ng-disabled="!newItem.title || !newItem.description || !newItem.deadline || !newItem.targetValue"

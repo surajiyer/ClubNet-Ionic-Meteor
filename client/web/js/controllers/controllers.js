@@ -7,7 +7,7 @@ angular.module('web.controllers', [
         /**
          * @summary Function to check if we run in Cordova environment
          */
-        $scope.isPhone = function() {
+        $scope.isPhone = function () {
             return Meteor.isCordova;
         }
     })
@@ -32,6 +32,10 @@ angular.module('web.controllers', [
      *  @param {Function}
      */
     .controller('mainCtrl', function ($scope, $meteor, $state) {
+        $scope.user = {
+            firstName: ''
+        }
+
         /**
          * @summary This function logs out the user and redirects it to the login page.
          */
@@ -47,10 +51,21 @@ angular.module('web.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
+            $scope.$apply();
         }, function (err) {
             console.log(err);
         });
 
+        if (Meteor.user() != undefined) {
+            $scope.user.firstName = Meteor.user().profile.firstName
+        } else {
+            setTimeout(function () {
+                if (Meteor.user() != undefined) {
+                    $scope.user.firstName = Meteor.user().profile.firstName
+                    $scope.$apply();
+                }
+            }, 250);
+        }
     })
 
     /**
@@ -61,11 +76,11 @@ angular.module('web.controllers', [
     .controller('redirectCtrl', function ($location, $window, $scope) {
         // Get url
         var url = $location.url();
-            console.log(url);
+        console.log(url);
 
         // Get redirect token
         var token = url.substr(url.lastIndexOf('/'));
-            console.log("Token: " + url.substr(url.lastIndexOf('/')));
+        console.log("Token: " + url.substr(url.lastIndexOf('/')));
 
         // Fix url for retrieving format
         var lastIndex = url.lastIndexOf("/");
@@ -73,10 +88,10 @@ angular.module('web.controllers', [
 
         // Get redirect sort
         var sort = url.substr(url.lastIndexOf('/') + 1);
-            console.log("Sort: " + url.substr(url.lastIndexOf('/') + 1));
+        console.log("Sort: " + url.substr(url.lastIndexOf('/') + 1));
 
         $scope.redirectURL = 'clubnet://' + sort + token;
-            console.log($scope.redirectURL);
+        console.log($scope.redirectURL);
 
         $window.close()
 
@@ -87,7 +102,7 @@ angular.module('web.controllers', [
      *  @param {String} Name of the controller
      *  @param {Function}
      */
-    .controller('settingsCtrl', function ($scope, $meteor, $timeout) {
+    .controller('settingsCtrl', function ($scope, $meteor, $timeout, $translate) {
         /**
          * @summary Function for retrieving the image URL for the club logo, which is in the database
          */
@@ -117,29 +132,39 @@ angular.module('web.controllers', [
                     if (err) {
                         console.log(err);
                     } else {
-                        console.log(fileObj.url({brokenIsFine: true}));
-                        $scope.currentClub.logo = fileObj.url({brokenIsFine: true});
+                        $scope.currentClub.logo = Meteor.absoluteUrl(fileObj.url({brokenIsFine: true}));
                     }
                 });
             }
         };
 
-        $scope.saved = false;
+        $scope.error = '';
+        $scope.errorVisible = false;
+        $scope.updatedVisible = false;
+
         /**
          * @summary Function for saving the new settings for the club.
          * @method save
          * @after The new settings are saved on the server.
          */
         $scope.save = function () {
-            $scope.saved = true;
-            $timeout(function () {
-                $scope.saved = false;
-            }, 1500);
-            $meteor.call('updateClub', $scope.currentClub).then(function (result) {
-                $scope.currentClub = result;
-            }, function (err) {
-                console.log(err);
-            });
+            if (!$scope.currentClub.name) {
+                $translate('MISSING_CLUB_NAME').then(function (error) {
+                    $scope.error = error;
+                });
+                $scope.updatedVisible = false;
+                $scope.errorVisible = true;
+            } else {
+                $meteor.call('updateClub', $scope.currentClub).then(function (result) {
+                    $scope.error = '';
+                    $scope.errorVisible = false;
+                    $scope.updatedVisible = true;
+                }, function (err) {
+                    $scope.error = 'err';
+                    $scope.updatedVisible = false;
+                    $scope.errorVisible = true;
+                });
+            }
         };
 
         /**

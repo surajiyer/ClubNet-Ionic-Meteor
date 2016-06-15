@@ -1,21 +1,29 @@
 <ion-side-menus enable-menu-with-back-views="false">
     <ion-side-menu side="left" expose-aside-when="large" id="side-menu">
-        <ion-content padding="false" class="side-menu-left has-header">
+        <ion-content padding="false" class="side-menu-left has-header" scroll="false">
             <div class="profile-img-div" style="background-image: url({{currentClub.logo}})"></div>
-            <div class="welcome-message">Hi, {{currentUser.profile.firstName}} {{currentUser.profile.lastName}}</div>
+            <div class="welcome-message">{{ 'WELCOME' | translate }}, {{currentUser.profile.firstName}}
+                {{currentUser.profile.lastName}}
+            </div>
             <ion-list>
-                <ion-item ui-sref-active="active" ui-sref="menu.feed" menu-close=""><i class="icon ion-ios-paper"></i> Feed</ion-item>
-                <ion-item ui-sref-active="active" ui-sref="menu.profile" menu-close=""><i class="icon ion-person"></i> Profile</ion-item>
+                <ion-item ui-sref-active="active" ui-sref="menu.feed" menu-close="">
+                    <i class="icon ion-ios-paper"></i> {{ 'MENU_FEED' | translate }}
+                </ion-item>
+                <ion-item ui-sref-active="active" ui-sref="menu.profile" menu-close="">
+                    <i class="icon ion-person"></i> {{ 'PROFILE' | translate }}
+                </ion-item>
                 <ion-item ng-if="showChat" ui-sref-active="active" ui-sref="menu.chats" menu-close="">
-                    <i class="icon ion-chatbubbles"></i> Chat
+                    <i class="icon ion-chatbubbles"></i> {{ 'MENU_CHAT' | translate }}
                     <div id="chat-menu-notify"
                          class="menu-notification"
                          ng-if="showChatNotification"></div>
                 </ion-item>
-                <ion-item ui-sref-active="active" ui-sref="menu.settings" menu-close=""><i class="icon ion-gear-a"></i> Settings</ion-item>
+                <ion-item ui-sref-active="active" ui-sref="menu.settings" menu-close="">
+                    <i class="icon ion-gear-a"></i> {{ 'MENU_SETTINGS' | translate }}
+                </ion-item>
                 <ion-item ng-click="logout($event)" menu-close="" class="item-complex">
                     <a class="item-content">
-                        <i class="icon ion-log-out"></i> Log out
+                        <i class="icon ion-log-out"></i> {{ 'MENU_LOG_OUT' | translate }}
                     </a>
                 </ion-item>
             </ion-list>

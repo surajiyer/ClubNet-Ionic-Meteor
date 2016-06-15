@@ -1,4 +1,4 @@
-<ion-view view-title="Your Profile">
+<ion-view view-title="{{ 'PROFILE' | translate }}">
     <ion-content padding="true" class="has-header main-content">
         <!--<div class="list">-->
             <!--<div class="item item-divider">-->
@@ -19,23 +19,20 @@
         <!--</div>-->
         <div class="list">
             <div class="item item-divider">
-                Change password
+                {{ 'CHANGE_PASS' | translate }}
             </div>
             <label class="item item-input">
-                <span class="input-label">Old password</span>
-                <input type="password" ng-model="password.oldPass">
+                <input type="password" placeholder="{{ 'CURRENT_PASS' | translate }}" ng-model="password.oldPass">
             </label>
             <label class="item item-input">
-                <span class="input-label">New password</span>
-                <input type="password" ng-model="password.newPass">
+                <input type="password" placeholder="{{ 'NEW_PASS' | translate }}" ng-model="password.newPass">
             </label>
             <label class="item item-input">
-                <span class="input-label">Confirm password</span>
-                <input type="password" ng-model="password.newPassCheck">
+                <input type="password" placeholder="{{ 'CONFIRM_PASS' | translate }}" ng-model="password.newPassCheck">
             </label>
             <button class="button button-full button-stable" style="margin-top: 0 !important;"
                     ng-click="changePassword()">
-                Change password
+                {{ 'SAVE' | translate }}
             </button>
         </div>
     </ion-content>

@@ -96,7 +96,11 @@ Meteor.startup(function () {
      *  some issues.
      */
     Accounts.urls.resetPassword = function (token) {
-        return Meteor.absoluteUrl("#/redirect/resetpassword/" + token);
+        return Meteor.absoluteUrl("#/redirect/resetpassword/" + token)
+        + "\n\n" 
+        + "PR users please use the following link: "
+        + "\n\n"
+        + Meteor.absoluteUrl("#/resetpassword/" + token);
     };
 });
 
@@ -104,7 +108,8 @@ Meteor.startup(function () {
 Meteor.methods({
     sendShareEmail: function (options) {
         Email.send(options);
-    },
+    }, 
+    
     /**
      * @summary Function for adding a new user to the collection.
      * It will check whether or not the new user adheres to the schema.
@@ -153,6 +158,7 @@ Meteor.methods({
         Accounts.sendEnrollmentEmail(userId);
         return userId;
     },
+    
     /**
      * @summary Function for updating the information of a certain user.
      * It will first check whether the parameters are valid.
