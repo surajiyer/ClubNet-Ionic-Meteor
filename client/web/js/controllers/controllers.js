@@ -51,7 +51,7 @@ angular.module('web.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
-            $scope.$apply();
+            //$scope.$apply();
         }, function (err) {
             console.log(err);
         });
@@ -62,7 +62,7 @@ angular.module('web.controllers', [
             setTimeout(function () {
                 if (Meteor.user() != undefined) {
                     $scope.user.firstName = Meteor.user().profile.firstName
-                    $scope.$apply();
+                   // $scope.$apply();
                 }
             }, 250);
         }

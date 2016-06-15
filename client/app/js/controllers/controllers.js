@@ -93,7 +93,7 @@ angular.module('app.controllers', [
         });
 
         // Limit on number of feed item to display
-        $scope.limit = 7;
+        $scope.limit = 10;
 
         /* Get the number of items that can be retrieved.
          * Needed for preventing indefinite increase of limit in infiniteScroll */
