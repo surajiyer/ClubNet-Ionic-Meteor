@@ -168,7 +168,7 @@ angular.module('web.userAccountControllers', [])
                 });
                 $scope.errorVisible = true;
             } else if (!$scope.user.lastName) {
-                $translate('MISSING_lAST_NAME').then(function (error) {
+                $translate('MISSING_LAST_NAME').then(function (error) {
                     $scope.error = error;
                 });
                 $scope.errorVisible = true;
