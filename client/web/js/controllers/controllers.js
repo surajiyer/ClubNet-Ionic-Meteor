@@ -115,7 +115,7 @@ angular.module('web.controllers', [
         $meteor.subscribe('images');
         $meteor.subscribe('clubs');
 
-        $scope.hostname = 'https://' + Meteor.absoluteUrl();
+        $scope.hostname = 'https://clubnet.scalingo.io';
 
         /**
          * @summary Function for uploading an image file.
