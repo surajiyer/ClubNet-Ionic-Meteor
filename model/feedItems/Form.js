@@ -1,6 +1,6 @@
 if(Meteor.isServer) {
     Meteor.methods({
-        /*
+         /*
          * @summary Check what kind of repeatInterval we are dealing with
          * @param {Integer} item id
          * @after forwarded to corresponding function (daily, weekly, fourweeks are all being handled in seperate functions)
