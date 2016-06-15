@@ -198,7 +198,13 @@ const heroesSchema = new SimpleSchema([baseFeedItemSchema, {
         type: String,
         min: 1
     },
-    image: {type: String}
+    description: {
+        type: String
+    },
+    image: {
+        type: String,
+        optional: true
+    }
 }]);
 
 /**

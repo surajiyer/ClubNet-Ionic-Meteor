@@ -11,7 +11,10 @@
                 <span class="input-label">Title</span>
                 <input ng-model="newItem.title" type="text" placeholder="Title">
             </label>
-
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Description</span>
+                <textarea ng-model="newItem.description" rows="3" placeholder="Description"></textarea>
+            </label>
             <button ng-click="getPicture()" class="button button-block button-positive">
                 Get picture from gallery
             </button>
@@ -19,7 +22,7 @@
               <div id="picture">
                 <img src={{image}} style="max-height:200px; max-width:200px; margin-left:auto; margin-right:auto; display: block; border: 3px dashed #ccc;" ng-disabled="!image">
               </div>
-            <button ng-disabled="!newItem.text && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
+            <button ng-disabled="!newItem.title && !newItem.description" ng-click="edit(); addItem()" class="button button-block button-positive">
                 {{ postBtn }}
             </button>
         </div>

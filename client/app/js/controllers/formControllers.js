@@ -6,18 +6,6 @@ angular.module('formControllers', [])
      *  @param {Function}
      */
     .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup) {
-        /* Practicality*/
-        $scope.newForm = {};
-
-        $scope.form = function () {
-            $scope.newForm.type = 'Form';
-            $scope.newForm.createdAt = new Date;
-            $scope.newForm.locked = false;
-            $scope.newForm.teamID = Meteor.user().profile.teamID;
-            Meteor.call('addFeedItem', $scope.newForm);
-            $scope.newForm = {};
-            $scope.closeForm();
-        };
 
         /**
          * @summary Load the new form template
@@ -46,7 +34,7 @@ angular.module('formControllers', [])
          * @summary Function to show the select target value alert
          */
         $scope.showAlert = function () {
-            var alertPopup = $ionicPopup.alert({
+            $ionicPopup.alert({
                 title: 'Please select target value'
             });
         };
@@ -81,11 +69,11 @@ angular.module('formControllers', [])
                 Meteor.call('getResponse', $scope.item._id, function (err, result) {
                     if (err) throw new Meteor.Error(err.reason);
                     if (!result) {
-                        $scope.item.myContribution = 0
+                        $scope.item.myContribution = 0;
                         $scope.item.hasContributed = false;
                     }
                     console.log("RESULT IN GET RESPONSE: " + result);
-                    if (result != null) {
+                    if (result) {
                         $scope.item.myContribution = result.value;
                         $scope.item.hasContributed = true;
                     }
@@ -102,24 +90,30 @@ angular.module('formControllers', [])
         /**
          * @summary Function to sign up
          */
-        $scope.signUp = function (value) {
-            if (!value) return;
+        $scope.signUp = function () {
+            if (!$scope.item.hasContributed) {
+                if ($scope.item.target == 'driving' || $scope.item.target == 'other') {
+                    if ($scope.item.currentContribution > 0) {
+                        var value = $scope.item.currentContribution;
+                    } else {
+                        $scope.showAlert();
+                        return;
+                    }
+                }
+                if ($scope.item.target == 'laundry' || $scope.item.target == 'absence') {
+                    var value = '1';
+                }
+            }
             $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
-                function (result) {
-                    $scope.item.hasContributed = value;
+                function () {
+                    $scope.item.hasContributed = true;
+                    //Increase the raisedValue of item with value=x
+                    $meteor.call('increaseValue', $scope.item._id, $scope.item.type, value).then(
+                        function () {}, function () {}
+                    );
                 },
                 function (err) {
                     console.log(err);
-                }
-            )
-
-            //Increase the raisedValue of item with value=x
-            $meteor.call('increaseValue', $scope.item._id, $scope.item.type, value).then(
-                function (result) {
-
-                },
-                function (err) {
-
                 }
             );
         };
@@ -129,22 +123,20 @@ angular.module('formControllers', [])
          */
         $scope.withdrawContribution = function () {
             $meteor.call('deleteResponse', $scope.item._id).then(
-                function (result) {
+                function () {
                     $scope.item.hasContributed = false;
                     $scope.item.myContribution = 0;
+
                 },
                 function (err) {
                     console.log(err);
                 }
             );
-
             //Decrease the raisedValue of item with value=x
             $meteor.call('decreaseValue', $scope.item._id, $scope.item.type, $scope.item.myContribution).then(
                 function (result) {
-
                 },
                 function (err) {
-
                 }
             );
         };

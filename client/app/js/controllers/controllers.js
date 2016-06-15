@@ -199,9 +199,10 @@ angular.module('app.controllers', [
         );
 
          $scope.showAlertTargetValueInfo = function() {
-           var alertPopup = $ionicPopup.alert({
+           $ionicPopup.alert({
              title: 'More information',
-             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'});
+             template: 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots'
+           });
          }
 
         $scope.showCreate = false;
@@ -231,14 +232,13 @@ angular.module('app.controllers', [
         };
         
         $scope.getPicture = function () {
-            var cameraOptions = {  
+            var cameraOptions = {
                 quality: 80,
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             }
 l̥
-           var picture = MeteorCamera.getPicture(cameraOptions, function(error, localData){
-                console.log (localData);
+            MeteorCamera.getPicture(cameraOptions, function(error, localData){
                 $scope.image = localData;
                 $scope.$apply();
             })
@@ -248,28 +248,32 @@ l̥
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
             Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                Meteor.call('getFeedItemType', result, function(err, type){
-                    if (type == 'Voting') {
-                        Meteor.call('getClubUsers', function(err, result){
-                            var text = 'Vote for the exercise you like.';
-                            var title = 'New voting!';
-                            console.log('adding new voting');
-                            Meteor.call('userNotification', type, text, title, result);
-                        });
-                    } else if (type == 'Form') {
-                        Meteor.call('getTeamUsers', function(err, result){
-                            var text = 'React on new practicality.';
-                            var title = 'New practicality!';
-                            Meteor.call('userNotification', type, text, title, result);
-                        });
-                    } else if (type == 'Heroes') {
-                        Meteor.call('getClubUsers', function(err, result){
-                            var text = 'Check out a new hero of the week.';
-                            var title = 'New Hero!';
-                            Meteor.call('userNotification', type, text, title, result);
-                        });
-                    }
-                });
+                var type = $scope.type._id;
+                if (type == 'Voting') {
+                    Meteor.call('getTeamUsers', function(err, result){
+                        var text = 'Vote for the exercise you like.';
+                        var title = 'New voting!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                } else if (type == 'Form') {
+                    Meteor.call('getTeamUsers', function(err, result){
+                        var text = 'React on new practicality.';
+                        var title = 'New practicality!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                } else if (type == 'Heroes') {
+                    Meteor.call('getClubUsers', function(err, result){
+                        var text = 'Check out a new hero of the week.';
+                        var title = 'New Hero!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                } else if (type == 'Sponsoring') {
+                    Meteor.call('getClubUsers', function(err, result){
+                        var text = 'Contribute to a new sponsoring event.';
+                        var title = 'New sponsoring event!';
+                        Meteor.call('userNotification', type, text, title, result);
+                    });
+                }
             });
             $scope.newItem = {};
             $scope.closeModal();
@@ -360,9 +364,9 @@ l̥
         $scope.showFullItem = function ($event) {
             var elem = angular.element($event.currentTarget);
             if ($scope.isFull) {
-                elem.parents(".list").css("max-height", "200px").find(".gradient").show();
+                elem.parents(".list").css("height", "200px").find(".gradient").show();
             } else {
-                elem.parents(".list").css("max-height", "100%").find(".gradient").hide();
+                elem.parents(".list").css("height", "100%").find(".gradient").hide();
             }
             $scope.isFull = !$scope.isFull;
         };

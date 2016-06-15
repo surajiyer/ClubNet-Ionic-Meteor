@@ -1,7 +1,7 @@
 <ion-view title="Login">
     <ion-content padding="true" class="has-header main-content " style="text-align: center">
         <img src="/app/img/logo-front.png" class="login-logo" alt="" />
-        <form class="list login-form">
+        <form class="list login-form" ng-submit="login()">
             <ion-list>
                 <label class="item item-input">
                     <input type="email" ng-model="user.email" placeholder="Email Address">
@@ -14,7 +14,7 @@
             <a ng-click="login()" id="login-button" style="font-size:18px;"
                class="button button-positive  button-block">Log in</a>
             <div class="forgot-pw">
-                <button class="button button-stable" ng-click="forgotPassword()">Forgot password?</button>
+                <a ng-click="forgotPassword()">Forgot password?</a>
             </div>
         </form>
     </ion-content>

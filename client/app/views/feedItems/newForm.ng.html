@@ -15,7 +15,7 @@
                     <option ng-selected="true" disabled selected>Select your option</option>
                     <option value="laundry" selected>Laundry</option>
                     <option value="driving">Driving</option>
-                    <option value="presence">Presence</option>
+                    <option value="absence">Absence</option>
                     <option value="other">Other</option>
                 </select>
             </label>
@@ -35,10 +35,9 @@
 
                 <input ng-model="newItem.title" type="text" placeholder="Title">
             </label>
-            <label class="item item-input item-label">
-                <span class="input-label">Description:</span>
-                <input ng-model="newItem.description" type="text" placeholder="Description">
-
+            <label class="item item-input item-floating-label">
+                <span class="input-label">Description</span>
+                <textarea ng-model="newItem.description" rows="3" placeholder="Description"></textarea>
             </label>
             <label class="item item-input item-label">
                 <span class="input-label">Target value:</span>
