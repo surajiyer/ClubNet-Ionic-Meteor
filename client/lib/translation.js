@@ -155,7 +155,8 @@ angular.module('translation', ['pascalprecht.translate'])
             PASS_NOT_VALID: "Nieuwe wachtwoord niet sterk genoeg. Het wachtwoord moet minstens acht tekens bevatten waarvan tenminste één letter en één cijfer",
             "Match failed": "Ongeldige combinatie",
             PASSWORD_RECOVERY_SENT: "Mail verzonden naar",
-            PASS_INCORRECT: "Wachtwoord niet correct"
+            PASS_INCORRECT: "Wachtwoord niet correct",
+            EMAIL_IN_USE: "Email adres is reeds in gebruik door een lid"
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
