@@ -54,6 +54,29 @@ angular.module('app.controllers', [
         $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
+        
+        // $scope.updateItemTypes = function () {
+        //     // If itemTypes already exists, use its existing checked values
+        //     var oldItemTypes = [];
+        //     if ($scope.itemTypes) {
+        //         oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
+        //             result[id] = {name: name, checked: checked};
+        //             return result;
+        //         }, {});
+        //     }
+        //
+        //     // Get new item types from database
+        //     $scope.itemTypes = TypesCollection.find().fetch();
+        //
+        //     // Load filter from item types
+        //     _.each($scope.itemTypes, function (element) {
+        //         if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
+        //         else element.checked = true;
+        //     }, this);
+        // };
+        //
+        // // Load the filter
+        // Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
         /**
          * @summary Function to update the item types
@@ -218,9 +241,10 @@ angular.module('app.controllers', [
                 quality: 80,
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
-            }
+            };
 
-            MeteorCamera.getPicture(cameraOptions, function(error, localData){
+            var picture = MeteorCamera.getPicture(cameraOptions, function (error, localData) {
+                console.log(localData);
                 $scope.image = localData;
                 $scope.$apply();
             });

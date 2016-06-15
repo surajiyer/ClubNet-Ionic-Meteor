@@ -15,30 +15,23 @@ Images = new FS.Collection("images", {
     }
 });
 
-if (Meteor.isServer) {
-
+Meteor.startup(function () {
     Images.allow({
-        insert: function () {
-            return true;
+        insert: function (userId) {
+            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
+            return isValidUser;
         },
-        remove: function () {
-            return true;
+        remove: function (userId) {
+            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
+            return isValidUser;
         },
-        download: function () {
-            return true;
+        download: function (userId) {
+            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
+            return isValidUser;
         },
-        update: function () {
-            return true;
+        update: function (userId) {
+            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
+            return isValidUser;
         }
     });
-
-    Meteor.methods({
-        getImage: function(){
-            return Images.find().fetch()[0];
-        }
-    })
-
-    Meteor.publish('images', function() {
-        return Images.find({});
-    });
-}
+});

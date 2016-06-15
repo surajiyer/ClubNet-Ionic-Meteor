@@ -7,7 +7,7 @@ angular.module('web.controllers', [
         /**
          * @summary Function to check if we run in Cordova environment
          */
-        $scope.isPhone = function() {
+        $scope.isPhone = function () {
             return Meteor.isCordova;
         }
     })
@@ -35,7 +35,7 @@ angular.module('web.controllers', [
         $scope.user = {
             firstName: ''
         }
-        
+
         /**
          * @summary This function logs out the user and redirects it to the login page.
          */
@@ -76,11 +76,11 @@ angular.module('web.controllers', [
     .controller('redirectCtrl', function ($location, $window, $scope) {
         // Get url
         var url = $location.url();
-            console.log(url);
+        console.log(url);
 
         // Get redirect token
         var token = url.substr(url.lastIndexOf('/'));
-            console.log("Token: " + url.substr(url.lastIndexOf('/')));
+        console.log("Token: " + url.substr(url.lastIndexOf('/')));
 
         // Fix url for retrieving format
         var lastIndex = url.lastIndexOf("/");
@@ -88,10 +88,10 @@ angular.module('web.controllers', [
 
         // Get redirect sort
         var sort = url.substr(url.lastIndexOf('/') + 1);
-            console.log("Sort: " + url.substr(url.lastIndexOf('/') + 1));
+        console.log("Sort: " + url.substr(url.lastIndexOf('/') + 1));
 
         $scope.redirectURL = 'clubnet://' + sort + token;
-            console.log($scope.redirectURL);
+        console.log($scope.redirectURL);
 
         $window.close()
 
@@ -118,8 +118,7 @@ angular.module('web.controllers', [
         $scope.hostname = 'http://' + window.location.hostname;
 
         /**
-         * @summary Function for uploading a file.
-         * @method uploadFile
+         * @summary Function for uploading an image file.
          * @param {Object} event The file to upload.
          * @after All the images are uploaded to the server.
          */
@@ -138,10 +137,10 @@ angular.module('web.controllers', [
                 });
             }
         };
-        
+
         $scope.error = '';
-        $scope.errorVisible = false;      
-        $scope.updatedVisible = false;  
+        $scope.errorVisible = false;
+        $scope.updatedVisible = false;
 
         /**
          * @summary Function for saving the new settings for the club.

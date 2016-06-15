@@ -188,18 +188,16 @@ angular.module('userAccountControllers', [])
             if ($scope.password.newPass != $scope.password.newPassCheck) {
                 return CommonServices.showAlert("Error", "Passwords don't match.");
             }
+
+            var testPassword = CommonServices.checkPassword($scope.password.newPass);
+            if(!testPassword) {
+                return CommonServices.showAlert('Incorrect new password',
+                    'Password must be alphanumeric and at least 8 characters long');
+            }
             
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
                 CommonServices.showAlert("Success!", "Password changed successfully. Please login again.");
                 Meteor.logout(function () {
-                      //Some cleanup code
-                      Object.keys(Session.keys).forEach(function(key){
-                        Session.set(key, undefined);
-                      });
-                      Session.keys = {} // remove session keys
-                      $scope.password.oldPass = '';
-                      $scope.password.newPass = '';
-                      $scope.password.newPassCheck = '';
                     $state.go('login');
                 });
             }, function (error) {
