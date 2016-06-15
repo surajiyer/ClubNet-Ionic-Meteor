@@ -58,19 +58,25 @@ Meteor.startup(function () {
         }
     });
 
+    // Attach user schema
+    Meteor.users.attachSchema(userSchema);
+
     // Publish userData
     Meteor.publish('userData', function () {
-        if(!this.userId) return this.ready();
-        var userType = utils.getUserType(this.userId);
-        var clubID = utils.getUserClubID(this.userId);
+        var loggedInUser = this.userId;
+        if (!loggedInUser) {
+            return this.ready();
+        }
+        var userType = utils.getUserType(loggedInUser);
+        var clubID = utils.getUserClubID(loggedInUser);
         switch (userType) {
             case 'pr':
-                return Meteor.users.find({'profile.clubID': clubID});
+                return Meteor.users.find({'profile.clubID': clubID}, {fields: {services: 0}});
             case 'coach':
-                var teamID = utils.getUserTeamID(this.userId);
+                var teamID = utils.getUserTeamID(loggedInUser);
                 return getUsersFromTeam(clubID, teamID, ['coach', 'player']);
             case 'player':
-                var teamID = utils.getUserTeamID(this.userId);
+                var teamID = utils.getUserTeamID(loggedInUser);
                 return getUsersFromTeam(clubID, teamID, ['coach']);
             default:
                 this.ready();
@@ -90,18 +96,20 @@ Meteor.startup(function () {
      *  some issues.
      */
     Accounts.urls.resetPassword = function (token) {
-        return Meteor.absoluteUrl("#/redirect/resetpassword/" + token);
+        return Meteor.absoluteUrl("#/redirect/resetpassword/" + token)
+        + "\n\n" 
+        + "PR users please use the following link: "
+        + "\n\n"
+        + Meteor.absoluteUrl("#/resetpassword/" + token);
     };
-
-    // Attach user schema
-    Meteor.users.attachSchema(userSchema);
 });
 
 // TODO: remove Meteor.isServer for latency compensation
 Meteor.methods({
     sendShareEmail: function (options) {
         Email.send(options);
-    },
+    }, 
+    
     /**
      * @summary Function for adding a new user to the collection.
      * It will check whether or not the new user adheres to the schema.
@@ -150,6 +158,7 @@ Meteor.methods({
         Accounts.sendEnrollmentEmail(userId);
         return userId;
     },
+    
     /**
      * @summary Function for updating the information of a certain user.
      * It will first check whether the parameters are valid.
@@ -195,9 +204,52 @@ Meteor.methods({
         check(Meteor.userId(), String);
         return Meteor.user().profile.type;
     },
-    getTeamSize: function() {
+    getTeamSize: function () {
         check(Meteor.userId(), String);
         var teamID = utils.getUserTeamID(Meteor.userId());
         return Meteor.users.find({type: 'player', 'profile.teamID': teamID}).count();
+    },
+    /**
+     * @summary Returns an array of all club's users
+     * @method getClubUsers
+     * @returns {Array} Array of all club's users
+     */
+    getClubUsers: function () {
+        var clubID = Meteor.user().profile.clubID;
+        var users = Meteor.users.find({"profile.clubID": clubID}).fetch();
+        var users_array = [];
+        _.each(users, function (user) {
+            users_array.push(user._id);
+        });
+        return users_array;
+    },
+
+    /**
+     * @summary Returns an array of users that are affiliated with the same team as the logged in user
+     * @method getTeamUsers
+     * @returns {Array} Array of users that are affiliated with the same team as the logged in user
+     */
+    getTeamUsers: function () {
+        var teamID = Meteor.user().profile.teamID;
+        var users = Meteor.users.find({"profile.teamID": teamID}).fetch();
+        var users_array = [];
+        _.each(users, function (user) {
+            users_array.push(user._id);
+        });
+        return users_array;
+    },
+    /**
+     * @summary Function for updating user notification setting.
+     * @param {String} key Which item type notification setting is for
+     * @param {String} value The setting itself
+     */
+    updateUserNotificationSetting: function (key, value) {
+        check(key, String);
+        check(value, Boolean);
+        var loggedInUser = Meteor.userId();
+        check(loggedInUser, String);
+        var userNotifications = Meteor.users.findOne({"_id": loggedInUser}).profile.notifications;
+        userNotifications[key] = value;
+        Meteor.users.update(loggedInUser, {$set: {"profile.notifications": userNotifications}});
     }
 });

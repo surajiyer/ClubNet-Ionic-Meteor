@@ -7,7 +7,9 @@ angular.module('web.userAccountControllers', [])
 
         $scope.autorun(function () {
             if(Meteor.userId()) {
-                $scope.subscribe('userData');
+                $scope.subscribe('userData', null, () => {
+                    $state.reload();
+                });
             }
         });
 
