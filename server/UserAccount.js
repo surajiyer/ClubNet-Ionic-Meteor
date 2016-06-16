@@ -252,8 +252,7 @@ Meteor.methods({
      * @return None.
      * @throws error if the input parameters do not have the required type.
      */
-    updateUserNotificationSetting: function (itemType, value) {
-        check(itemType, String);
+
     updateUserNotificationSetting: function (key, value) {
         check(key, Match.Where(function (type) {
             check(type, String);
