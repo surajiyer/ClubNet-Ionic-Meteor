@@ -22,7 +22,7 @@
         <td>{{user.profile.lastName}}</td>
         <td>{{user.emails[0].address}}</td>
         <td>{{user.profile.teamID}}</td>
-        <td>{{user.profile.type}}</td>
+        <td>{{ user.profile.type | translate }}</td>
         <td>
             <span ng-if="user.emails[0].verified" class="glyphicon glyphicon-ok" style="color:#449d44"></span>
             <span ng-if="!user.emails[0].verified" class="glyphicon glyphicon-remove" style="color:#c9302c"></span>

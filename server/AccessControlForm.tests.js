@@ -32,13 +32,13 @@ if (Meteor.isServer) {
                 testPlayer = {
                     email: 'ur@ur.ur',
                     password: 'ur',
-                    profile: {firstName: 'Ur', lastName: 'Ur', type: 'player', clubID: 'test', notifications: new Object()}
+                    profile: {firstName: 'Ur', lastName: 'Ur', type: 'player', clubID: 'test', teamID: 'test', notifications: new Object()}
                 };
 
                 testCoach = {
                     email: 'c@c.cc',
                     password: 'cc',
-                    profile: {firstName: 'c', lastName: 'c', type: 'coach', clubID: 'test', notifications: new Object()}
+                    profile: {firstName: 'c', lastName: 'c', type: 'coach', clubID: 'test', teamID: 'test', notifications: new Object()}
                 };
                 testG = {
                     email: 'g@g.gg',
