@@ -422,8 +422,13 @@ angular.module('web.userAccountControllers', [])
                 });
             } else {
                  $meteor.call('getUserInfoByEmail', $scope.input.email).then(function (result) {
-                     console.log(result);
-                     if (result.profile.type == 'pr') {
+                     if (!result) {
+                        $scope.errorVisible = true;
+                        $translate('MISSING_VALID_EMAIL').then(function (error) {
+                            $scope.error = error;
+                        });
+                        $scope.$apply();
+                     } else if (result.profile.type == 'pr') {
                          Accounts.forgotPassword({email: $scope.input.email}, function (err) {
                             if (err) {
                                 $scope.errorVisible = true;
