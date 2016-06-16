@@ -74,13 +74,10 @@ Meteor.methods({
         var clubID = Meteor.user().profile.clubID;
         var selector = {
             _id: {$ne: Meteor.userId()},
-            profile: {
-                clubID: clubID,
-                notifications: {}
-            }
+            'profile.clubID' : clubID
         };
-        selector.profile.notifications[type] = true;
-        console.log(selector);
+        var notificationType = 'profile.notifications.'+type;
+        selector[notificationType] = true;
         var users = Meteor.users.find(selector, {fields: {_id: 1}}).fetch();
         console.log('1: ', users);
         users = _.pluck(users, '_id');
@@ -107,16 +104,12 @@ Meteor.methods({
         var teamID = Meteor.user().profile.teamID;
         var selector = {
             _id: {$ne: Meteor.userId()},
-            profile: {
-                type: {$ne: "coach"},
-                teamID: {$exists: true, $eq: teamID},
-                notifications: {}
-            }
+            'profile.type': {$ne: "coach"},
+            'profile.teamID' : {$exists: true, $eq: teamID}
         };
-        selector.profile.notifications[type] = true;
-        console.log(selector);
+        var notificationType = 'profile.notifications.'+type;
+        selector[notificationType] = true;
         var users = Meteor.users.find(selector, {fields: {_id: 1}}).fetch();
-        console.log(users);
         users = _.pluck(users, '_id');
         userNotification(type, title, text, users);
     }

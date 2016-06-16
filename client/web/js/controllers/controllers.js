@@ -121,7 +121,7 @@ angular.module('web.controllers', [
                 if (err) {
                     console.log(err);
                 } else {
-                    $scope.currentClub.newlogo = Meteor.absoluteUrl(fileObj.url({brokenIsFine: true}));
+                    $scope.currentClub.newlogo = Meteor.absoluteUrl(fileObj.url({brokenIsFine: true}).substring(1));
                 }
             });
         };
