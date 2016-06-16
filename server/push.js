@@ -21,7 +21,6 @@ const userNotification = function (type, title, text, users) {
     check(title, String);
     check(users, [String]);
     var badge = 1;
-    var logo = Meteor.call('getClub').logo;
     Push.send({
         from: 'push',
         title: title,
@@ -30,9 +29,6 @@ const userNotification = function (type, title, text, users) {
         sound: 'airhorn.caf',
         query: {
             userId: {$in: users}
-        },
-        gcm: {
-            image: logo
         }
     });
 };
