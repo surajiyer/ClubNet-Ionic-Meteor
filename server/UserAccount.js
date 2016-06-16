@@ -252,8 +252,7 @@ Meteor.methods({
      * @return None.
      * @throws error if the input parameters do not have the required type.
      */
-    updateUserNotificationSetting: function (itemType, value) {
-        check(itemType, String);
+
     updateUserNotificationSetting: function (key, value) {
         check(key, Match.Where(function (type) {
             check(type, String);
@@ -263,7 +262,7 @@ Meteor.methods({
         var loggedInUser = Meteor.userId();
         check(loggedInUser, String);
         var userNotifications = Meteor.users.findOne({"_id": loggedInUser}).profile.notifications;
-        userNotifications[itemType] = value;
+        userNotifications[key] = value;
         Meteor.users.update(loggedInUser, {$set: {"profile.notifications": userNotifications}});
     }
 });
