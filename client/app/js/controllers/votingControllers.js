@@ -8,7 +8,7 @@ angular.module('votingControllers', [])
     .controller('votingCtrl', function ($scope, $meteor, $ionicModal, $ionicPopup, AccessControl, $translate) {
         $scope.postBtn = "Post";
         $scope.exercises = [];
-        
+
         $scope.$on("hasEnded", function(event, boolean) {
             $scope.hasEnded = boolean;
         });
@@ -17,12 +17,13 @@ angular.module('votingControllers', [])
          * @summary Function to retrieve and update the voting results
          */
         $scope.updateChartValues = function () {
+            if (!$scope.item) return;
             $meteor.call("checkVotingStatus", $scope.item._id).then(
                 function (result) {
                     $scope.$emit("hasEnded", !result);
                 },
                 function (err) {
-                    throw new Meteor.Error(err.reason);
+                    //throw new Meteor.Error(err.reason);
                 }
             );
             $meteor.call('getVotingResults', $scope.item._id).then(

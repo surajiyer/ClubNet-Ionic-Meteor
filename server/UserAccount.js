@@ -84,11 +84,10 @@ Meteor.startup(function () {
     });
 
     /**
-     *  Change the url for enrollment emails since the default includes a dash which causes
-     *  some issues.
+     *  Return token for the enrollment
      */
     Accounts.urls.enrollAccount = function (token) {
-        return Meteor.absoluteUrl("#/redirect/enroll/" + token);
+        return token;
     };
 
     /**
@@ -96,11 +95,20 @@ Meteor.startup(function () {
      *  some issues.
      */
     Accounts.urls.resetPassword = function (token) {
+
+        return 'Please put this token into forgot password page:'
+            + token
+            + "\n\n"
+            + "PR users please use the following link: "
+            + "\n\n"
+            + Meteor.absoluteUrl("#/resetpassword/" + token);
+    };
+    Accounts.urls.resetPassword = function (token) {
         return Meteor.absoluteUrl("#/redirect/resetpassword/" + token)
-        + "\n\n" 
-        + "PR users please use the following link: "
-        + "\n\n"
-        + Meteor.absoluteUrl("#/resetpassword/" + token);
+            + "\n\n"
+            + "PR users please use the following link: "
+            + "\n\n"
+            + Meteor.absoluteUrl("#/resetpassword/" + token);
     };
 });
 
@@ -147,7 +155,7 @@ Meteor.methods({
             return "Welcome to ClubNet, " + newUser.profile.firstName + "!\n\n"
                 + "Your club "
                 + "has signed you up for ClubNet. You can use ClubNet on your phone to read messages from your coach and receive updates from the club.\n\n"
-                + "To use ClubNet, click on the following link and set your desired password. \n\n"
+                + "To use ClubNet, paste this token into enrollment page token input. \n\n"
                 + url
                 + "\n\n"
                 + "Have fun using ClubNet!\n\n"
