@@ -8,6 +8,10 @@ angular.module('votingControllers', [])
     .controller('votingCtrl', function ($scope, $meteor, $ionicModal, $ionicPopup, AccessControl, $translate) {
         $scope.postBtn = "Post";
         $scope.exercises = [];
+        
+        $scope.$on("hasEnded", function(event, boolean) {
+            $scope.hasEnded = boolean;
+        });
 
         /**
          * @summary Function to retrieve and update the voting results
