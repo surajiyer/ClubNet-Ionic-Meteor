@@ -32,6 +32,8 @@ angular.module('web.controllers', [
      *  @param {Function}
      */
     .controller('mainCtrl', function ($scope, $meteor, $state) {
+        $scope.currentClub = {};
+        
         $scope.user = {
             firstName: ''
         }
@@ -50,7 +52,6 @@ angular.module('web.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
-            //$scope.$apply();
         }, function (err) {
             console.log(err);
         });
