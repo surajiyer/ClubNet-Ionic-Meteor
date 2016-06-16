@@ -173,7 +173,7 @@ angular.module('translation', ['pascalprecht.translate'])
             'absence': "Absentie",
             'other': "Anders",
             'Create': "Maak aan",
-            'Edit': "Pas aan"
+            'Save': "Opslaan"
 
         };
         translations.en = {
