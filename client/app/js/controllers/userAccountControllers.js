@@ -1,42 +1,42 @@
 angular.module('userAccountControllers', [])
-/**
- *  Register Controller: provides all functionality for the register screen of the app
- */
-// .controller('registerCtrl', function ($scope, $meteor, $state) {
-//     /**
-//      * Credentials of the user
-//      */
-//     $scope.user = {
-//         email: '',
-//         password: ''
-//     };
-//     /**
-//      * @summary Function to register a new user
-//      */
-//     $scope.register = function () {
-//         if (!$scope.user.email)
-//             throw new Meteor.Error('Account registration error: e-mail is not valid');
-//         var newUser = {
-//             email: $scope.user.email,
-//             password: $scope.user.password,
-//             profile: {
-//                 firstName: "p",
-//                 lastName: "1",
-//                 type: "player",
-//                 clubID: "club",
-//                 teamID: "team1"
-//             }
-//         };
-//         Meteor.call('addUser', newUser, function (err, result) {
-//             if (err || !Match.test(result, String))
-//                 throw new Meteor.Error('Account registration error: ' + err.reason);
-//             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-//                 if (error) throw new Meteor.Error(error.reason);
-//                 $state.go('menu.feed'); // Redirect user if registration succeeds
-//             });
-//         });
-//     };
-// })
+    /**
+     *  Register Controller: provides all functionality for the register screen of the app
+     */
+    // .controller('registerCtrl', function ($scope, $meteor, $state) {
+    //     /**
+    //      * Credentials of the user
+    //      */
+    //     $scope.user = {
+    //         email: '',
+    //         password: ''
+    //     };
+    //     /**
+    //      * @summary Function to register a new user
+    //      */
+    //     $scope.register = function () {
+    //         if (!$scope.user.email)
+    //             throw new Meteor.Error('Account registration error: e-mail is not valid');
+    //         var newUser = {
+    //             email: $scope.user.email,
+    //             password: $scope.user.password,
+    //             profile: {
+    //                 firstName: "p",
+    //                 lastName: "1",
+    //                 type: "player",
+    //                 clubID: "club",
+    //                 teamID: "team1"
+    //             }
+    //         };
+    //         Meteor.call('addUser', newUser, function (err, result) {
+    //             if (err || !Match.test(result, String))
+    //                 throw new Meteor.Error('Account registration error: ' + err.reason);
+    //             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+    //                 if (error) throw new Meteor.Error(error.reason);
+    //                 $state.go('menu.feed'); // Redirect user if registration succeeds
+    //             });
+    //         });
+    //     };
+    // })
 
     /**
      *  Login Controller: provides all functionality for the login screen of the app
