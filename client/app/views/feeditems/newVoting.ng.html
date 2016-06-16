@@ -34,7 +34,7 @@
             </label>
             <button ng-disabled="!newItem.title || !newItem.deadline || !newItem.training_id"
                     ng-click="edit(); addItem()" class="button button-block button-positive">
-                {{ postBtn }}
+                {{ postBtn | translate }}
             </button>
         </div>
     </ion-content>

@@ -1,5 +1,12 @@
 if (Meteor.isServer) {
     Meteor.methods({
+        /**
+         * @summary Increase the number of votes of an Exercise voting feed item by the specified amount.
+         * @param {String} itemID The id of the feed item.
+         * @param {String} itemType The type of the feed item.
+         * @param {Integer} value The number of votes to increase.
+         * @return {Integer} None.
+         */
         increaseNrVotes: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
@@ -15,13 +22,9 @@ if (Meteor.isServer) {
                 { $set: { nrVotes: newRaisedValue }});
         },
         /**
-         * @summary Function for retrieving the voting results of a voting feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * The response will consists of an array of number of votes nested within an array with no other data.
-         * @method getVotingResults
-         * @param {String} itemID The id of the feed item for which the voting results needs to be retrieved.
-         * @returns {Array} The voting results
+         * @summary Retrieve the voting results of an Exercise voting feed item.
+         * @param {String} itemID The id of the feed item
+         * @returns {Integer[]} An array consists of the number of votes of each exercise.
          */
         getVotingResults: function (itemID) {
             check(itemID, String);
@@ -33,9 +36,9 @@ if (Meteor.isServer) {
             return result;
         },
         /**
-         * @summary Function for retrieving a training.
-         * @param {String} trainingID The String Id of the training which needs to be retrieved.
-         * @returns {Object} The training
+         * @summary Retrieve the training object specified by the training id.
+         * @param {String} trainingID The id of the training.
+         * @return {Object} The training object.
          */
         getTrainingObj: function (trainingID) {
             check(trainingID, String);
@@ -45,8 +48,8 @@ if (Meteor.isServer) {
             });
         },
         /**
-         * @summary Function for retrieving a list of trainings.
-         * @returns {Array} The trainings
+         * @summary Retrieve the list of all scheduled trainings of the team of the logged in coach user.
+         * @return {Object[]} Array consists of all training objects.
          */
         getTrainings: function () {
             try {
@@ -61,9 +64,9 @@ if (Meteor.isServer) {
             }
         },
         /**
-         * @summary Function for retrieving the exercises of a training.
-         * @param {String} trainingID The String Id of the training for which the exercises need to be retrieved.
-         * @returns {Array} The exercises of a training
+         * @summary Retrieve all the candidate exercises of a training.
+         * @param {String} trainingID The id of the training.
+         * @return {Object[]} Array consists of all candidate exercises of the specified training.
          */
         getExercises: function (trainingID) {
             check(trainingID, String);

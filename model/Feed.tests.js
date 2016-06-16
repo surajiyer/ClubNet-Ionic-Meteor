@@ -249,6 +249,39 @@ if (Meteor.isServer) {
             });
         });
 
+        describe('getNumberResponsesOfOneItem()', () => {
+            it("Get Responses number of One Item wrong parameter", () => {
+                // Get responses with wrong parameter
+                try {
+                    Meteor.call('getNumberResponsesOfOneItem', false);
+                    assert.fail();
+                } catch (err) {
+                }
+            });
+
+            it("Get Responses number of One Item without responses", (done) => {
+                // Get reponses of item without responses
+                try {
+                    result = Meteor.call('getNumberResponsesOfOneItem', 'otherItem');
+                    assert(result == 0);
+                    done();
+                } catch (err) {
+                    assert.fail();
+                }
+            });
+
+            it("Get Responses number of One Item", (done) => {
+                // Get responses of item added in the previous test
+                try {
+                    result = Meteor.call('getNumberResponsesOfOneItem', testItem._id);
+                    assert(result == 1);
+                } catch (err) {
+                    assert.fail();
+                }
+                done();
+            });
+        });
+
         describe('getResponseOfItemType()', () => {
             it("Get Responses of ItemType wrong parameter", () => {
                 // Get responses with wrong parameter
