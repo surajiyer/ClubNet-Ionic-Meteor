@@ -214,8 +214,6 @@ Meteor.methods({
     getTeamSize: function () {
         check(Meteor.userId(), String);
         var teamID = utils.getUserTeamID(Meteor.userId());
-        console.log('teamID: ' + teamID);
-        console.log(Meteor.users.find({type: 'player', 'profile.teamID': teamID}));
         return Meteor.users.find({type: 'player', 'profile.teamID': teamID}).count();
     },
     /**
