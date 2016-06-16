@@ -77,7 +77,7 @@ angular.module('web.userAccountControllers', [])
          */
         $scope.login = function () {
             // Sign in the user if credentials match a user from the database
-            result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function (result) {
+            var result = $meteor.loginWithPassword($scope.user.email, $scope.user.password).then(function (result) {
                 // If signed in user is not of type PR, give an error message and log them out
                 if (Meteor.user().profile.type != 'pr') {
                     $translate('INCORRECT_CREDENTIALS').then(function (error) {
@@ -201,10 +201,10 @@ angular.module('web.userAccountControllers', [])
                 $meteor.call('addUser', newUser).then(function (result) {
                     $state.go('web.members'); // Redirect user if registration succeeds
                 }, function (err) {
-                    $translate(err.reason).then(function (error) {
+                    $translate('EMAIL_IN_USE').then(function (error) {
                         $scope.error = error;
+                        $scope.errorVisible = true;
                     });
-                    $scope.errorVisible = true;
                 });
                 }
             };
@@ -381,8 +381,10 @@ angular.module('web.userAccountControllers', [])
                     $scope.passwordUpdatedVisible = true;
                     $scope.passwordErrorVisible = false;
                 }, function (error) {
+                    $translate('PASS_INCORRECT').then(function (error) {
+                        $scope.passwordError = error;
+                    });
                     $scope.passwordUpdatedVisible = false;
-                    $scope.passwordError = error.reason;
                     $scope.passwordErrorVisible = true;
                 });
             }
@@ -437,7 +439,7 @@ angular.module('web.userAccountControllers', [])
         };
     })
 
-    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, $translate) {
+    .controller('enrollCtrl', function ($scope, $meteor, $state, $stateParams, checkPassword, $translate) {
         $scope.token = $stateParams.token;
 
         $scope.user = {
@@ -473,6 +475,7 @@ angular.module('web.userAccountControllers', [])
             } else {
                 $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
                     $scope.passwordErrorVisible = false;
+                    $state.go('login');
 
 
                 //     /**

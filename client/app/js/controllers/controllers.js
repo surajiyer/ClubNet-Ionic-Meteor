@@ -15,7 +15,7 @@ angular.module('app.controllers', [
          * @type {boolean}
          */
         $scope.showChat = false;
-        Tracker.autorun(function () {
+        $scope.autorun(function () {
             $scope.showChat = Chat.canViewChat();
         });
 
@@ -24,9 +24,7 @@ angular.module('app.controllers', [
          */
         $scope.logout = function () {
             $meteor.logout(function () {
-                $state.go('login').then(function () {
-                    $window.location.reload();
-                });
+                $state.go('login');
             });
         };
 
@@ -35,6 +33,7 @@ angular.module('app.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
+            jQuery('ion-header-bar.bar-stable').css('background', $scope.currentClub.colorAccent + '!important');
         }, function (err) {
             return CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
@@ -89,7 +88,7 @@ angular.module('app.controllers', [
         });
 
         // Limit on number of feed item to display
-        $scope.limit = 7;
+        $scope.limit = 10;
 
         /* Get the number of items that can be retrieved.
          * Needed for preventing indefinite increase of limit in infiniteScroll */
@@ -100,12 +99,14 @@ angular.module('app.controllers', [
         });
 
         // Reactively (re)subscribe to feed items based on selected filters and limit
-        Tracker.autorun(function () {
+        $scope.autorun(function () {
             $scope.getReactively('itemTypes', true);
             var itemTypesFilter = _.pluck(_.filter($scope.itemTypes, (type) => {
                 return type.checked;
             }), '_id');
-            Meteor.subscribe('Feed', itemTypesFilter, $scope.getReactively('limit'));
+            $scope.subscribe('Feed', () => {
+                return [itemTypesFilter, $scope.getReactively('limit')];
+            });
         });
 
         /**
@@ -244,6 +245,8 @@ angular.module('app.controllers', [
             });
         };
 
+
+
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
@@ -257,7 +260,7 @@ angular.module('app.controllers', [
      *  Control Item Controller: provides all functionality for the item operations popover of the app
      */
     .controller('generalItemCtrl', function ($scope, $meteor, AccessControl,
-                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices) {
+                                             $ionicPopover, $ionicPopup, $ionicModal, CommonServices, $translate) {
         // Get item type
         $scope.newItem = {};
         Meteor.call('getItemType', $scope.item.type, function (err, result) {
@@ -392,13 +395,16 @@ angular.module('app.controllers', [
          * @summary Function to delete a feed item
          */
         $scope.deleteItem = function () {
-            var confirmPopup = $ionicPopup.confirm({
-                title: 'Are you sure you want to delete the feed item?'
-            });
-            confirmPopup.then(function (res) {
-                if (res) {
-                    $meteor.call('deleteFeedItem', $scope.item._id);
-                }
+            $translate('INCORRECT_CREDENTIALS').then(function (result) {
+                var confirmPopup = $ionicPopup.confirm({
+                    title: result
+                });
+        
+                confirmPopup.then(function (res) {
+                    if (res) {
+                        $meteor.call('deleteFeedItem', $scope.item._id);
+                    }
+                });
             });
         };
 

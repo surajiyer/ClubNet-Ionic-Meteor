@@ -5,7 +5,7 @@ angular.module('votingControllers', [])
  *  @param {String} Name of the controller
  *  @param {Function}
  */
-    .controller('votingCtrl', function ($scope, $meteor, $ionicModal, $ionicPopup, AccessControl) {
+    .controller('votingCtrl', function ($scope, $meteor, $ionicModal, $ionicPopup, AccessControl, $translate) {
         /* Voting */
         $scope.editingItem = 0;
         $scope.postBtn = "Post";
@@ -134,8 +134,10 @@ angular.module('votingControllers', [])
          */
         $scope.vote = function (value) {
             if (value) {
-                var confirmPopup = $ionicPopup.confirm({
-                    title: 'Confirm vote'
+                $translate('CONFIRM_DELETE').then(function (result) {
+                    var confirmPopup = $ionicPopup.confirm({
+                        title: result
+                    });
                 });
                 confirmPopup.then(function (res) {
                     if (res) {
@@ -167,9 +169,7 @@ angular.module('votingControllers', [])
                         );
                     }
                 });
-            } else {
-                console.log('Please select what you are voting for');
-            }
+            } 
         };
 
         Items.find({_id: $scope.item._id}).observeChanges({
