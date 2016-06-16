@@ -23,11 +23,11 @@
     </span>
 </div>
 <div class="item item-body"
-     ng-if="!$parent.showEdit && (item.target == 'driving' || item.target == 'other') && !item.myContribution > 0 && item.targetValue-item.raisedValue > 0">
+     ng-if="(item.target == 'driving' || item.target == 'other') && !item.myContribution > 0 && item.targetValue-item.raisedValue > 0">
     <div>
         <label class="item item-input item-select">
             <div class="input-label">
-                Contribution:
+                {{'CONTRIBUTION' | translate}}
             </div>
             <input ng-model="item.currentContribution" type="text" placeholder="1"><br>
         </label>

@@ -26,8 +26,8 @@ angular.module('translation', ['pascalprecht.translate'])
             BUTTON_SIGNUP: "Aanmelden",
             BUTTON_CONTRIBUTE: "Verstuur",
             BUTTON_WITHDRAW: "Trek terug",
-            PRESENT: "Je geeft aan dat je aanwezig zult zijn.",
-            NOTPRESENT: "Je hebt aangegeven dat je afwezig zult zijn.",
+            PRESENT: "Je staat nu op 'aanwezig'.",
+            NOTPRESENT: "Je staat nu op 'afwezig'.",
             CANCEL: "Annuleer",
             CHANGE_PASS: "Verander wachtwoord",
             CHANGE_PASS_SUCCESS: "Wachtwoord aangepast",
@@ -161,7 +161,8 @@ angular.module('translation', ['pascalprecht.translate'])
             FILTER_ON: "Filteren op",
             CREATE_NEW: "Nieuw item",
             READ_MORE: "Lees meer",
-            READ_LESS: "Lees minder"
+            READ_LESS: "Lees minder",
+            CONTRIBUTION: "Bijdrage:"
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
