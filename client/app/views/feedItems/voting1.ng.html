@@ -1,0 +1,41 @@
+<div class="item item-body">
+    <p>
+        Training: {{item.training_date | date:'MM/dd/yyyy @ h:mma'}}
+    </p>
+</div>
+<div class="item item-body">
+    <h2>{{item.title}}</h2>
+    <p>
+        {{item.description}}
+    </p>
+</div>
+<div class="item item-body">
+    <p>
+        Deadline: {{item.deadline | date:'MM/dd/yyyy @ h:mma'}}
+    </p>
+</div>
+<form class="list">
+    <div class="variants">
+        <div ng-repeat="exercise in exercises"
+             ng-click="!isCoach ? select($event, $index+1) : ''"
+             ng-class="(($index + 1) == hasVoted) ? 'selected' : ''">
+            <img src="/exercise_images/{{ exercise.exId }}.jpg" width="100" alt="" />
+            <br />{{exercise.item}}
+        </div>
+    </div>
+</form>
+<div class="item item-body image-placeholder-div" ng-if="!isCoach">
+    <img src="http://placehold.it/300x300" class="image-placeholder" alt="" width="100%" />
+    <b>{{ exercises[item.selectedValue-1].item }}</b><br />
+    {{ exercises[item.selectedValue-1].description }}<br /><br />
+    <div class="col text-right">
+        <button class="button button-outline button-positive"
+                ng-click="vote(item.selectedValue)"
+                ng-disabled="hasVoted != 0">
+            {{hasVoted ? 'Already voted' : 'Vote!'}}
+        </button>
+    </div>
+</div>
+<div class="item item-body" ng-if="(item.intermediatePublic) || (hasEnded && item.finalPublic) || isCoach">
+    <canvas id="bar" class="chart chart-bar" chart-data="chartValues" chart-labels="chartLabels"></canvas>
+</div>

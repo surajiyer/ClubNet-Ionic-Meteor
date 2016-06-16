@@ -157,7 +157,14 @@ Meteor.startup(function () {
     Messages.attachSchema(messages);
 
     if (Meteor.isServer) {
+
         Meteor.methods({
+            /**
+             * @summary Update the status of the messages in a chat session to read.
+             * @param {String} chatId The id of the chat session.
+             * @return None.
+             * @after The attribute 'read' of all messages in the specified chat session are set to true.
+             */
             readMessages: function (chatId) {
                 check(chatId, String);
 
@@ -177,6 +184,12 @@ Meteor.startup(function () {
                     read: false
                 }, {$set: {read: true}}, {multi: true});
             },
+
+            /**
+             * @summary Delete a chat session.
+             * @param {String} chatId The id of the chat session to be deleted.
+             * @return None.
+             */
             deleteChat: function (chatId) {
                 check(chatId, String);
 

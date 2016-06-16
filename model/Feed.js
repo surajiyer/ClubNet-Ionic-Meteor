@@ -7,7 +7,7 @@ import {HTTP} from 'meteor/http'
 Items = new Mongo.Collection("Items");
 Responses = new Mongo.Collection("FeedResponses");
 
-/**
+/*
  * @summary Rules and Methods for the items collection.
  * On startup it will set the deny and allow rules, publish the item data and attach the feedItemSchema and responseSchema
  * @param {Function} Function to execute on startup.
@@ -98,13 +98,10 @@ Meteor.startup(function () {
 if (Meteor.isServer) {
     Meteor.methods({
         /**
-         * @summary Function for adding a new feed item to the collection
-         * It will check whether or not the new feed item adheres to the schema.
-         * If so, it will add the feed item to the collection.
-         * @method addFeedItem
+         * @summary Add a new feed item to the database.
          * @param {Object} newItem The feed item to add.
-         * @returns {String} The ObjectID of the inserted feed item
-         */
+         * @return {String} The id of the inserted feed item.
+         * @throws error if the new feed item does not conform to the corresponding scheme.*/
         addFeedItem: function (newItem) {
             check(newItem, Object);
             var loggedIn = Match.test(Meteor.userId(), String);
@@ -141,9 +138,10 @@ if (Meteor.isServer) {
             return itemId;
         },
         /**
-         * @summary Function for retrieving a feed item.
-         * @param {String} itemId The String Id of the feed item for which the information needs to be retrieved.
-         * @returns {Object} The retrieved feed item
+         * @summary Retrieve a feed item.
+         * @param {String} itemId The id of the feed item.
+         * @return {Object} The document of the feed item to be retrieved.
+         * @throws error if the logged in user has no permission to view the specified feed item.
          */
         getFeedItem: function (itemId) {
             check(itemId, String);
@@ -157,8 +155,11 @@ if (Meteor.isServer) {
             return item;
         },
         /**
-         * @summary Function for updating the information of a feed item.
-         * @param {Object} updatedItem The updated fields of an existing feed item.
+         * @summary Update the information of a feed item.
+         * @param {Object} updatedItem A document object that contains all attributes of the updated feed item..
+         * @return None.
+         * @throws error if the logged in user has no permission to update the specified feed item or
+         * the 'updatedItem' does not conform to the corresponding feed item scheme.
          */
         updateFeedItem: function (updatedItem) {
             check(updatedItem, Object);
@@ -180,9 +181,10 @@ if (Meteor.isServer) {
             }
         },
         /**
-         * @summary Function for deleting a feed item.
-         * @param {String} itemId The String Id of the feed item that should be deleted.
-         * @returns {Object} The deleted feed item
+         * @summary Delete a feed item.
+         * @param {String} itemId The id of the feed item to be deleted.
+         * @return None.
+         * @throws error if the logged in user has no permission to delete the specified feed item.
          */
         deleteFeedItem: function (itemId) {
             check(itemId, String);
@@ -200,22 +202,27 @@ if (Meteor.isServer) {
             }
         },
         /**
-         * @summary Function for retrieving responses of a feed item.
+         * @summary Retrieve all responses of a feed item.
          * @param {String} itemID The id of the feed item for which the responses need to be retrieved.
-         * @returns {Array} The responses of the feed item
+         * @return {Object[]} An array that contains the documents of all responses of the specified feed item.
          */
         getResponsesOfOneItem: function (itemID) {
             check(itemID, String);
             return Responses.find({itemID: itemID}).fetch();
         },
+        /**
+         * @summary Find the number of responses of a feed item.
+         * @param {String} itemID The id of the feed item.
+         * @return {Integer} The number of responses of the specified feed item.
+         */
         getNumberResponsesOfOneItem: function (itemID) {
             check(itemID, String);
             return Responses.find({itemID: itemID}).count();
         },
         /**
-         * @summary Function for retrieving the response of the currently logged in user to a feed item.
+         * @summary Retrieve the response of the currently logged in user to a feed item.
          * @param {String} itemID The id of the feed item for which the response needs to be retrieved.
-         * @returns {Object} The response
+         * @return {Object} The document of the response to the specified feed item.
          */
         getResponse: function (itemID) {
             check(itemID, String);
@@ -223,8 +230,9 @@ if (Meteor.isServer) {
             return Responses.find({itemID: itemID, userID: Meteor.userId()}).fetch()[0];
         },
         /**
-         * @summary Function for deleting a response of the currently logged in user to a feed item.
+         * @summary Delete the response of the currently logged in user to a feed item.
          * @param {String} itemID The id of the feed item for which response needs to be deleted.
+         * @return None.
          */
         deleteResponse: function (itemID) {
             check(itemID, String);
@@ -234,18 +242,18 @@ if (Meteor.isServer) {
         /**
          * @summary Function for retrieving the responses to feed items of a certain type.
          * @param {String} itemType The type of the feed items for which the responses needs to be retrieved.
-         * @returns {Array} The responses
+         * @return {Object[]} An array that contains all the responses to feed items of the specified type.
          */
         getResponsesOfItemType: function (itemType) {
             check(itemType, String);
             return Responses.find({itemType: itemType}).fetch();
         },
         /**
-         * @summary Function for posting a response to a feed item.
-         * @param {String} itemID The String Id of the feed item for which the response needs to be added.
-         * @param {String} itemType The type of the feed item for which the response needs to be added.
+         * @summary Add a new response to a feed item.
+         * @param {String} itemID The id of the feed item.
+         * @param {String} itemType The type of the feed item.
          * @param {String} value The value of the response.
-         * @returns {String} The Id of the inserted response
+         * @return {String} The id of the inserted response.
          */
         putResponse: function (itemID, itemType, value) {
             check(itemID, String);
@@ -261,8 +269,8 @@ if (Meteor.isServer) {
             return Responses.insert(response);
         },
         /**
-         * @summary Function for retrieving the number of all items that could be retrieved
-         * @returns {Number} The number of feed items that could be retrieved for an user
+         * @summary Get the number of all feed items that could be viewed by the logged in user.
+         * @return {Integer} The number of feed items that could be viewed by the logged in user.
          */
         getItemsCount: function () {
             var clubID = Meteor.user().profile.clubID;
@@ -274,11 +282,10 @@ if (Meteor.isServer) {
             return Items.find({clubID: clubID, $or: teamLevelSelector}).count();
         },
         /**
-         * @summary Function for adding a note.
-         * It will first check whether the parameters adhere to the schema.
-         * If so, it will store the note as a part of the user.
-         * @method addNote
-         * @param newNote The note that needs to be added.
+         * @summary Add a new note to a feed item.
+         * @param{Object} newNote A document object that contains all information of the note that needs to be added.
+         * @return None.
+         * @throws error if the 'newNote' does not conform to the corresponding database scheme.
          */
         addNote: function (newNote) {
             check(newNote, notesSchema);
@@ -288,11 +295,10 @@ if (Meteor.isServer) {
             );
         },
         /**
-         * @summary Function for updating a note.
-         * It will first check whether the parameters adhere to the schema.
-         * If so, it will find the note and update the text.
-         * @method updateNote
-         * @param newNote The note that needs to be updated, but with different text.
+         * @summary Update the context of a note.
+         * @param {Object} newNote A document object that contains all information of the updated note.
+         * @return None.
+         * @throws error if the 'newNote' does not conform to the corresponding database scheme.
          */
         updateNote: function (newNote) {
             check(newNote, notesSchema);

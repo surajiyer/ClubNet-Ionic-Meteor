@@ -1,16 +1,18 @@
 angular.module('translation', ['pascalprecht.translate'])
 
     .config(['$translateProvider', 'translations', function ($translateProvider, translations) {
-
         translations = translations();
 
         $translateProvider.translations('nl', translations.nl);
         $translateProvider.translations('en', translations.en);
-        $translateProvider.preferredLanguage('nl');
+        $translateProvider.preferredLanguage('en');
+        $translateProvider.fallbackLanguage('en');
     }])
 
     .constant('translations', function () {
         var translations = {};
+
+        // DUTCH TRANSLATIONS
         translations.nl = {
             "Match failed": "Ongeldige combinatie",
             "Token expired": "Link verlopen",
@@ -22,8 +24,12 @@ angular.module('translation', ['pascalprecht.translate'])
             ADD_MEMBER_TITLE: "Voeg lid toe",
             ADD_MEMBER_TYPE_TOOLTIP: "Het lid zal het gebruikerstype speler hebben als het gekoppeld is aan een team. Zo niet, zal het lid het gebruikerstype algemeen hebben.",
             ADD_USER: "Voeg gebruiker toe",
-            BUTTON_PRESENT: "Aanwezig",
+            BUTTON_SIGNOFF: "Afmelden",
+            BUTTON_SIGNUP: "Aanmelden",
+            BUTTON_CONTRIBUTE: "Verstuur",
             BUTTON_WITHDRAW: "Trek terug",
+            PRESENT: "Je staat nu op 'aanwezig'.",
+            NOTPRESENT: "Je staat nu op 'afwezig'.",
             CANCEL: "Annuleer",
             CHANGE_PASS: "Verander wachtwoord",
             CHANGE_PASS_SUCCESS: "Wachtwoord aangepast",
@@ -56,6 +62,7 @@ angular.module('translation', ['pascalprecht.translate'])
             EMAIL_IN_USE: "Email adres is reeds in gebruik door een lid",
             PWD_RECOVERY_EMAIL_SENT: "Er is een mail naar u verstuurt om het wachtwoord te veranderen.",
             ENGLISH: "Engels",
+            ENOUGH_PEOPLE: "Er hebben zich genoeg mensen aangemeld.",
             ENROLL: "Aanmelden",
             ENROLL_PASS: "Vul hieronder je gewenste wachtwoord in",
             ERROR: "Foutmelding",
@@ -79,6 +86,7 @@ angular.module('translation', ['pascalprecht.translate'])
             MENU_MEMBERS: "Leden",
             MENU_PROFILE: "Profiel",
             MENU_SETTINGS: "Instellingen",
+            PEOPLE_PRESENT: "Mensen aanwezig:",
             MISSING_CLUB_NAME: "Geen clubnaam ingevuld",
             MISSING_CONFIRM_PASS: "Geen bevestiging van wachtwoord ingevuld",
             MISSING_CURRENT_PASS: "Huidige wachtwoord niet ingevuld",
@@ -137,7 +145,7 @@ angular.module('translation', ['pascalprecht.translate'])
             SHOW_INT_RESULTS_MESSAGE: "Laat de tussentijdse resultaten zien",
             STICKY: "Plak bovenaan vast",
             STICKY_UNDO: "Losmaken",
-            STILL_NEED: "Nog nodig",
+            STILL_NEED: "Nog nodig:",
             SUCCESS: "Gelukt!",
             TARGET: "Doel (aantal)",
             TARGET_REACHED: "We hebben voldoende mensen.",
@@ -155,11 +163,26 @@ angular.module('translation', ['pascalprecht.translate'])
             FILTER_ON: "Filteren op",
             CREATE_NEW: "Nieuw item",
             READ_MORE: "Lees meer",
-            READ_LESS: "Lees minder"
+            READ_LESS: "Lees minder",
+            CONTRIBUTION: "Bijdrage:",
+
+            'player': "speler",
+            'pr': "pr",
+            'general': "algemeen",
+            'coach': "trainer",
+            'laundry': "Was",
+            'driving': "Vervoer",
+            'absence': "Absentie",
+            'other': "Anders",
+            'Create': "Maak aan",
+            'Save': "Opslaan"
+
         };
+
+        // ENGLISH TRANSLATION
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
         };
 
         return translations;
-    });
+    })

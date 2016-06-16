@@ -1,15 +1,17 @@
 if(Meteor.isServer) {
     Meteor.methods({
-         /*
-         * @summary Check what kind of repeatInterval we are dealing with
-         * @param {Integer} item id
-         * @after forwarded to corresponding function (daily, weekly, fourweeks are all being handled in seperate functions)
+         /**
+         * @summary Recreate a Practicality feed item based on its specified repeat interval.
+         * @param {Integer} id The id of the feed item.
+         * @return None.
+         * @after Based on the repeat interval(daily, weekly or monthly), a new Practicality feed item is created with
+         * the identical initial settings except the deadline. The new deadline is either a day, week or month later than
+          * the old deadline.
          */
         checkRepeatInterval: function (id) {
             check(id, String);
             var item = Items.find({_id: id}).fetch()[0];
             var repeatInterval = item.repeatInterval;
-            //*********what kind of interval are we dealing with? Do some method accordingly ***********/
             switch (repeatInterval) {
                 case 'daily':
                     var succesCheck = Meteor.call('renewItemDaily', item);
@@ -22,9 +24,10 @@ if(Meteor.isServer) {
             }
             return true;
         },
-        /*
-         * @summary Calculates the time difference between the current time and the time that was passed as parameter
-         * @param {String} timestamp that states the time at which the item was created
+        /**
+         * @summary Calculates the time difference in day unit between the current time and the time that is passed as parameter.
+         * @param {Date} createdAt A date object which the current time is compared with.
+         * @return {Integer} The time difference in day unit.
          */
         calculateTimeDifference: function (createdAt) {
             check(createdAt, Date);
@@ -53,9 +56,11 @@ if(Meteor.isServer) {
 
             return days;
         },
-        /*
-         * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
-         * @param {Object} item that was created.
+        /**
+         * @summary Recreate a feed item that is passed as parameter. The new feed item has the identical initial settings
+         * except the deadline. The deadline is a day later than the old deadline.
+         * @param {Object} item The item that needs to be recreated.
+         * @return None. .
          */
         renewItemDaily: function (item) {
             check(item, Object);
@@ -82,9 +87,11 @@ if(Meteor.isServer) {
 
             return true;
         },
-        /*
-         * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
-         * @param {Object} item that was created.
+        /**
+         * @summary Recreate a feed item that is passed as parameter. The new feed item has the identical initial settings
+         * except the deadline. The deadline is a week later than the old deadline.
+         * @param {Object} item The item that needs to be recreated.
+         * @return None. .
          */
         renewItemWeekly: function (item) {
             check(item, Object);
@@ -111,9 +118,11 @@ if(Meteor.isServer) {
 
             return true;
         },
-        /*
-         * @summary Checks if the set time elapsed, if so: renew item (copy item with initial settings, remove old item)
-         * @param {Object} item that was created.
+        /**
+         * @summary Recreate a feed item that is passed as parameter. The new feed item has the identical initial settings
+         * except the deadline. The deadline is a month ( four weeks ) later than the old deadline
+         * @param {Object} item The item that needs to be recreated.
+         * @return None. .
          */
         renewItemFourweeks: function (item) {
             check(item, Object);
@@ -139,9 +148,9 @@ if(Meteor.isServer) {
             return true;
         },
         /**
-         * @summary Function for retrieving the response to a feed item.
-         * @param {String} itemID The id of the feed item
-         * @returns {Object} The response
+         * @summary Calculate the raised value of a Practicality feed item.
+         * @param {String} itemID The id of the feed item.
+         * @returns {Integer} The raised value.
          */
         getRaisedValue: function (itemID) {
             check(itemID, String);
@@ -156,6 +165,13 @@ if(Meteor.isServer) {
 
             return total;
         },
+
+        /**
+         * @summary Find the name of the contributors of a Practicality feed item.
+         * @param {String} itemID The id of the feed item.
+         * @returns {String[]} An array consists of the names of all contributors. Each element is a concatenation of
+         * the first and last name of each contributor.
+         */
         getContributing: function (itemID) {
             check(itemID, String);
             var responses = Responses.find({itemID: itemID}).fetch();
@@ -167,6 +183,14 @@ if(Meteor.isServer) {
             });
             return peopleThatResponded;
         },
+
+        /**
+         * @summary Increase the raised value of a Practicality feed item by the specified amount.
+         * @param {String} itemID The id of the feed item.
+         * @param {String} itemType The type of the feed item ( Practicality ).
+         * @param {Integer} value The amount to increase.
+         * @return {Integer} None.
+         */
         increaseValue: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
@@ -182,6 +206,13 @@ if(Meteor.isServer) {
                 return Items.find(itemID, {_id: 1, type: 1, raisedValue: 1}).fetch()[0];
             } catch (e) {}
         },
+        /**
+         * @summary Decrease the raised value of a Practicality feed item by the specified amount.
+         * @param {String} itemID The id of the feed item.
+         * @param {String} itemType The type of the feed item ( Practicality ).
+         * @param {Integer} value The amount to decrease.
+         * @return {Integer} None.
+         */
         decreaseValue: function (itemID, itemType, value) {
             check(itemID, String);
             check(itemType, String);
