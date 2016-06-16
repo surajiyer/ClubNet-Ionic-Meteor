@@ -50,8 +50,7 @@
                        ng-click="showAlertTargetValueInfo()" ng-if="!item._id"></a>
                 </div>
             </div>
-            <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()"
-                    class="button button-block button-positive">
+            <button ng-disabled="!newItem.target || !newItem.title || !newItem.repeatInterval || !newItem.description || !newItem.targetValue" ng-click="edit(); addItem()" class="button button-block button-positive">
                 {{ postBtn | translate }}
             </button>
         </div>
