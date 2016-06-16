@@ -28,6 +28,8 @@ angular.module('translation', ['pascalprecht.translate'])
             POLLS: "Oefening kiezen",
             SPONSORING: "Sponsorevenement",
             CLOSED: "(gesloten)",
+            READ_MORE: "Lees meer",
+            READ_LESS: "Lees minder",
 
             /* GENERAL */
             LOG_IN: "Log in",
