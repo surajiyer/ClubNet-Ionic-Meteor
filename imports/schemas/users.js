@@ -56,8 +56,6 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$rename") return "required";
                 }
             } else {
-                console.log('notes');
-                console.log(this.value);
                 if(this.value && this.value.length > 0) return 'notAllowed';
             }
         }
