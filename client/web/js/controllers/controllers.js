@@ -32,7 +32,7 @@ angular.module('web.controllers', [
      *  @param {Function}
      */
     .controller('mainCtrl', function ($scope, $meteor, $state) {
-        $scope.currentClub = {};
+        $scope.currentClub = { logo: '' };
         
         $scope.user = {
             firstName: ''
@@ -116,17 +116,14 @@ angular.module('web.controllers', [
         $scope.uploadFile = function (event) {
             var files = event.target.files;
 
-            for (var i = 0, ln = files.length; i < ln; i++) {
-                files[i].userId = Meteor.userId();
-                // Insert all the images into the Images collection.
-                Images.insert(files[i], function (err, fileObj) {
-                    if (err) {
-                        console.log(err);
-                    } else {
-                        $scope.currentClub.logo = Meteor.absoluteUrl(fileObj.url({brokenIsFine: true}));
-                    }
-                });
-            }
+            // Insert all the images into the Images collection.
+            Images.insert(files[0], function (err, fileObj) {
+                if (err) {
+                    console.log(err);
+                } else {
+                    $scope.currentClub.newlogo = Meteor.absoluteUrl(fileObj.url({brokenIsFine: true}));
+                }
+            });
         };
 
         $scope.error = '';
@@ -146,6 +143,7 @@ angular.module('web.controllers', [
                 $scope.updatedVisible = false;
                 $scope.errorVisible = true;
             } else {
+                $scope.currentClub.logo = $scope.currentClub.newlogo;
                 $meteor.call('updateClub', $scope.currentClub).then(function (result) {
                     $scope.error = '';
                     $scope.errorVisible = false;
