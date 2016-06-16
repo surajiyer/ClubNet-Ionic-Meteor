@@ -5,14 +5,7 @@ angular.module('web.userAccountControllers', [])
      */
     .controller('accountManagementCtrl', function ($scope, $modal, $state) {
 
-        $scope.autorun(function () {
-            if(Meteor.userId()) {
-                $scope.subscribe('userData', null, () => {
-                    $state.reload();
-                });
-            }
-        });
-
+        $scope.subscribe('userData');
         $scope.helpers({
             userAccounts: function () {
                 return Meteor.users.find({}, {sort: {'profile.lastName': 1}});
@@ -88,7 +81,12 @@ angular.module('web.userAccountControllers', [])
                     // If PR user, log in and redirect
                 } else {
                     // Redirect user if login succeeds
-                    $state.go('web.members');
+                    $state.go('web.members').then(function () {
+                        // Neccesary for loading the members list on initial load
+                        setTimeout(function () {
+                            $state.reload();
+                        }, 1);
+                    });
                 }
             }, function (err) {
                 // Show error message in console
