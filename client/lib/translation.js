@@ -22,7 +22,7 @@ angular.module('translation', ['pascalprecht.translate'])
             MENU_CHAT: "Berichten",
             MENU_SETTINGS: "Instellingen",
 
-            /* ITEM TYPES*/
+            /* ITEM TYPES */
             FORM: "Inventarisatie",
             HEROES: "Helden",
             POLLS: "Oefening kiezen",
@@ -30,6 +30,13 @@ angular.module('translation', ['pascalprecht.translate'])
             CLOSED: "(gesloten)",
             READ_MORE: "Lees meer",
             READ_LESS: "Lees minder",
+
+            /* USER TYPES */
+            player: "speler",
+            pr: "pr",
+            general: "algemeen",
+            coach: "trainer",
+
 
             /* GENERAL */
             LOG_IN: "Log in",
