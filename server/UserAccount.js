@@ -254,11 +254,6 @@ Meteor.methods({
      */
     updateUserNotificationSetting: function (itemType, value) {
         check(itemType, String);
-    updateUserNotificationSetting: function (key, value) {
-        check(key, Match.Where(function (type) {
-            check(type, String);
-            return utils.isValidType(type);
-        }));
         check(value, Boolean);
         var loggedInUser = Meteor.userId();
         check(loggedInUser, String);
