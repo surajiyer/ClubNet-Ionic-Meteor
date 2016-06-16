@@ -387,7 +387,7 @@ angular.module('web.userAccountControllers', [])
                 });
             }
         };
-
+        
         if (Meteor.user() != undefined) {
             $scope.retrieveUser();
         } else {
@@ -396,9 +396,9 @@ angular.module('web.userAccountControllers', [])
                     $scope.retrieveUser();
                     $scope.$apply();
                 }
-            }, 100);
+            }, 250);
         }
-
+        
     })
 
     .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance, $translate, $meteor) {

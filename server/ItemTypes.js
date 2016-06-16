@@ -18,16 +18,17 @@ Meteor.startup(function () {
 
 Meteor.methods({
     /**
-     * @summary Function for getting all the item types in the collection
-     * @returns {Object} The item types in the collection.
+     * @summary Get all the defined item types.
+     * @return {Object[]} An array that contains the documents of all item types.
      */
     getItemTypes: function () {
         return TypesCollection.find().fetch();
     },
     /**
-     * @summary Get information of a single item type
-     * @param typeID Voting, Form, .. etc
-     * @returns {Object} The item type info.
+     * @summary Get information of a single item type.
+     * @param{String} typeID The id of the item type. 
+     * @return {Object} A document object that contains all the attributes of the specified item type.
+     * @throws error if the input parameters do not have the required type.
      */
     getItemType: function (typeID) {
         check(typeID, String);

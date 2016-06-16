@@ -6,6 +6,7 @@ if (Meteor.isServer) {
          * @param {String} itemType The type of the feed item.
          * @param {Integer} value The number of votes to increase.
          * @return {Integer} None.
+         * @throws error if the input parameters do not have the required type.
          */
         increaseNrVotes: function (itemID, itemType, value) {
             check(itemID, String);
@@ -25,6 +26,7 @@ if (Meteor.isServer) {
          * @summary Retrieve the voting results of an Exercise voting feed item.
          * @param {String} itemID The id of the feed item
          * @returns {Integer[]} An array consists of the number of votes of each exercise.
+         * @throws error if the input parameters do not have the required type.
          */
         getVotingResults: function (itemID) {
             check(itemID, String);
@@ -39,6 +41,7 @@ if (Meteor.isServer) {
          * @summary Retrieve the training object specified by the training id.
          * @param {String} trainingID The id of the training.
          * @return {Object} The training object.
+         * @throws error if the input parameters do not have the required type.
          */
         getTrainingObj: function (trainingID) {
             check(trainingID, String);
@@ -67,6 +70,7 @@ if (Meteor.isServer) {
          * @summary Retrieve all the candidate exercises of a training.
          * @param {String} trainingID The id of the training.
          * @return {Object[]} Array consists of all candidate exercises of the specified training.
+         * @throws error if the input parameters do not have the required type.
          */
         getExercises: function (trainingID) {
             check(trainingID, String);
@@ -76,5 +80,15 @@ if (Meteor.isServer) {
             });
             return trainings.exercises;
         },
+        /**
+         * @summary Function for checking whether the voting is still opened or closed (status).
+         * @param {String} itemId The Item Id of the item for which the status needs to be checked.
+         * @returns {Boolean} The status in boolean form
+         */
+        checkVotingStatus: function (itemID) {
+            check(itemID, String);
+            var item = Meteor.call("getFeedItem", itemID);
+            return new Date > item.deadline && Meteor.call("getTeamSize") > item.nrVotes;
+        }
     });
 }

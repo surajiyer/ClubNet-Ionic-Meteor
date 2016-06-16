@@ -2,36 +2,35 @@
     <ion-content padding="true" class="has-header main-content">
         <div class="card list">
             <div class="item item-divider">
-                General
+                {{ 'GENERAL' | translate }}
             </div>
 
             <div class="item item-input item-select">
                 <div class="input-label">{{ 'SELECT_LANG' | translate }}</div>
-                <select>
-                    <option selected>Nederlands</option>
-                    <option>English</option>
+                <select ng-model="selectedLanguage"
+                        ng-change="updateLanguage(selectedLanguage)">
+                    <option value="nl">Nederlands</option>
+                    <option value="en">English</option>
                 </select>
             </div>
         </div>
         <div class="card list">
             <div class="item item-divider">
-                Notifications
+                {{ 'NOTIFICATIONS' | translate }}
             </div>
-
             <ion-toggle class="item"
                         toggle-class="toggle-positive"
                         ng-repeat="(key, value) in currentUser.profile.notifications"
                         ng-change="updateNotificationSetting(key, value)"
                         ng-model="value">
-                {{key}} notification
+                {{key}} {{ 'NOTIFICATION' | translate }}
             </ion-toggle>
-
             <ion-toggle class="item"
                         toggle-class="toggle-positive"
                         ng-repeat="key in [1,2,3,4]"
-                        ng-change="updateNotificationSetting(key)"
+                        ng-change="yolo(key)"
                         ng-model="value">
-                {{key}} notification
+                {{key}}
             </ion-toggle>
         </div>
     </ion-content>
