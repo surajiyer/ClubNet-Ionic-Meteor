@@ -26,7 +26,7 @@
             <input ng-model="newItem.raisedValue" type="hidden" ng-init="newItem.raisedValue = 0">
             <button ng-disabled="!newItem.title || !newItem.description || !newItem.deadline || !newItem.targetValue"
                     ng-click="edit(); addItem()" class="button button-block button-positive">
-                {{ postBtn }}
+                {{ postBtn | translate }}
             </button>
         </div>
     </ion-content>
