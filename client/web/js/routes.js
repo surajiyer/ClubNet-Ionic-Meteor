@@ -100,7 +100,7 @@ angular.module('web.routes', [])
     .run(function($rootScope, $location, $state) {
         $rootScope.$on( '$stateChangeStart', function(e, toState  , toParams
                                                     , fromState, fromParams) {
-            if(toState.name === "login" || toSate.name === "redirect" || toState.name === "enroll" || toState.name === "reset"){
+            if(toState.name === "login" || toState.name === "redirect" || toState.name === "enroll" || toState.name === "reset"){
                 return; // no need to redirect
             }
 

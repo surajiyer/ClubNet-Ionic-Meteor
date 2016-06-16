@@ -43,7 +43,6 @@ angular.module('web.controllers', [
             $meteor.logout();
             $state.go('login');
         };
-        $scope.hostname = 'https://clubnet.scalingo.io';
 
         /**
          * @summary Function for retrieving the club a user is logged into.
@@ -103,19 +102,10 @@ angular.module('web.controllers', [
      *  @param {Function}
      */
     .controller('settingsCtrl', function ($scope, $meteor, $timeout, $translate) {
-        /**
-         * @summary Function for retrieving the image URL for the club logo, which is in the database
-         */
-        $meteor.call('getImage').then(function (result) {
-            //console.log(result);
-        }, function (err) {
-            console.log(err);
-        });
 
         $meteor.subscribe('images');
         $meteor.subscribe('clubs');
 
-        $scope.hostname = 'https://clubnet.scalingo.io';
 
         /**
          * @summary Function for uploading an image file.
@@ -132,7 +122,7 @@ angular.module('web.controllers', [
                     if (err) {
                         console.log(err);
                     } else {
-                        $scope.currentClub.logo = $scope.hostname + fileObj.url({brokenIsFine: true});
+                        $scope.currentClub.logo = Meteor.absoluteUrl(fileObj.url({brokenIsFine: true}));
                     }
                 });
             }

@@ -61,9 +61,9 @@ Meteor.startup(function () {
 
     if (Meteor.isServer) {
         Meteor.publish('Feed', function (itemTypes, limit) {
-            if (!itemTypes || !this.userId) return this.ready();
             check(itemTypes, [String]);
             check(limit, Number);
+            if (!itemTypes || !this.userId) return this.ready();
             var teamLevelSelector = [{teamID: {$exists: false}}];
             var teamID = utils.getUserTeamID(this.userId);
             if (teamID) {
