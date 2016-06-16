@@ -1,42 +1,42 @@
 angular.module('userAccountControllers', [])
-    /**
-     *  Register Controller: provides all functionality for the register screen of the app
-     */
-    // .controller('registerCtrl', function ($scope, $meteor, $state) {
-    //     /**
-    //      * Credentials of the user
-    //      */
-    //     $scope.user = {
-    //         email: '',
-    //         password: ''
-    //     };
-    //     /**
-    //      * @summary Function to register a new user
-    //      */
-    //     $scope.register = function () {
-    //         if (!$scope.user.email)
-    //             throw new Meteor.Error('Account registration error: e-mail is not valid');
-    //         var newUser = {
-    //             email: $scope.user.email,
-    //             password: $scope.user.password,
-    //             profile: {
-    //                 firstName: "p",
-    //                 lastName: "1",
-    //                 type: "player",
-    //                 clubID: "club",
-    //                 teamID: "team1"
-    //             }
-    //         };
-    //         Meteor.call('addUser', newUser, function (err, result) {
-    //             if (err || !Match.test(result, String))
-    //                 throw new Meteor.Error('Account registration error: ' + err.reason);
-    //             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-    //                 if (error) throw new Meteor.Error(error.reason);
-    //                 $state.go('menu.feed'); // Redirect user if registration succeeds
-    //             });
-    //         });
-    //     };
-    // })
+/**
+ *  Register Controller: provides all functionality for the register screen of the app
+ */
+// .controller('registerCtrl', function ($scope, $meteor, $state) {
+//     /**
+//      * Credentials of the user
+//      */
+//     $scope.user = {
+//         email: '',
+//         password: ''
+//     };
+//     /**
+//      * @summary Function to register a new user
+//      */
+//     $scope.register = function () {
+//         if (!$scope.user.email)
+//             throw new Meteor.Error('Account registration error: e-mail is not valid');
+//         var newUser = {
+//             email: $scope.user.email,
+//             password: $scope.user.password,
+//             profile: {
+//                 firstName: "p",
+//                 lastName: "1",
+//                 type: "player",
+//                 clubID: "club",
+//                 teamID: "team1"
+//             }
+//         };
+//         Meteor.call('addUser', newUser, function (err, result) {
+//             if (err || !Match.test(result, String))
+//                 throw new Meteor.Error('Account registration error: ' + err.reason);
+//             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+//                 if (error) throw new Meteor.Error(error.reason);
+//                 $state.go('menu.feed'); // Redirect user if registration succeeds
+//             });
+//         });
+//     };
+// })
 
     /**
      *  Login Controller: provides all functionality for the login screen of the app
@@ -60,49 +60,51 @@ angular.module('userAccountControllers', [])
 
         var ERROR = 'Error';
 
-        try {
-            check($scope.user.email, Match.Where(validateInput));
-        } catch (e) {
-            $translate('MISSING_VALID_EMAIL_MESSAGE').then(function (result) {
-                CommonServices.showAlert(ERROR, result);
-            });
-            return;
-        }
-
-        try {
-            check($scope.user.password, Match.Where(validateInput));
-        } catch (e) {
-            $translate('MISSING_PASSWORD').then(function (result) {
-                CommonServices.showAlert(ERROR, result);
-            });
-            return;
-        }
-
-        Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-            if (error) {
-                $translate('INCORRECT_CREDENTIALS').then(function (result) {
-                    // Show error message
-                    if (error.error == 400 || error.error == 403) {
-                        CommonServices.showAlert(ERROR, result);
-                    } else {
-                        CommonServices.showAlert(error.error + ' ' + error.reason, error.message);
-                    }
-                });
-                return;
-            }
-
-            // Check if user is a PR user
-            if (Meteor.user().profile.type == 'pr') {
-                Meteor.logout();
-                $translate('NOT_AUTHORIZED').then(function (result) {
+        $scope.login = function () {
+            try {
+                check($scope.user.email, Match.Where(validateInput));
+            } catch (e) {
+                $translate('MISSING_VALID_EMAIL_MESSAGE').then(function (result) {
                     CommonServices.showAlert(ERROR, result);
                 });
                 return;
             }
 
-            // Go to feed
-            window.location.replace("/");
-        });
+            try {
+                check($scope.user.password, Match.Where(validateInput));
+            } catch (e) {
+                $translate('MISSING_PASSWORD').then(function (result) {
+                    CommonServices.showAlert(ERROR, result);
+                });
+                return;
+            }
+
+            Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+                if (error) {
+                    $translate('INCORRECT_CREDENTIALS').then(function (result) {
+                        // Show error message
+                        if (error.error == 400 || error.error == 403) {
+                            CommonServices.showAlert(ERROR, result);
+                        } else {
+                            CommonServices.showAlert(error.error + ' ' + error.reason, error.message);
+                        }
+                    });
+                    return;
+                }
+
+                // Check if user is a PR user
+                if (Meteor.user().profile.type == 'pr') {
+                    Meteor.logout();
+                    $translate('NOT_AUTHORIZED').then(function (result) {
+                        CommonServices.showAlert(ERROR, result);
+                    });
+                    return;
+                }
+
+                // Go to feed
+                window.location.replace("/");
+            });
+        };
 
         /**
          * @summary Function to show the forgot password page
@@ -142,7 +144,7 @@ angular.module('userAccountControllers', [])
                     var content = translations.PWD_RECOVERY_EMAIL_SENT;
                     CommonServices.showAlert(head, content);
                 });
-                
+
                 $state.go('login');
             });
         };

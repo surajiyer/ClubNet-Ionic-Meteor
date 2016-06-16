@@ -18,18 +18,18 @@
                 Notifications
             </div>
 
-            <!--<ion-toggle class="item"-->
-                        <!--toggle-class="toggle-positive"-->
-                        <!--ng-repeat="(key, value) in currentUser.profile.notifications"-->
-                        <!--ng-change="toggleChange(key, value)"-->
-                        <!--ng-model="value">-->
-                <!--{{key}} notification-->
-            <!--</ion-toggle>-->
+            <ion-toggle class="item"
+                        toggle-class="toggle-positive"
+                        ng-repeat="(key, value) in currentUser.profile.notifications"
+                        ng-change="updateNotificationSetting(key, value)"
+                        ng-model="value">
+                {{key}} notification
+            </ion-toggle>
 
             <ion-toggle class="item"
                         toggle-class="toggle-positive"
                         ng-repeat="key in [1,2,3,4]"
-                        ng-change="toggleChange(key)"
+                        ng-change="updateNotificationSetting(key)"
                         ng-model="value">
                 {{key}} notification
             </ion-toggle>
