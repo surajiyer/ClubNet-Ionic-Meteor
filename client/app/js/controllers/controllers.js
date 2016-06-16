@@ -411,7 +411,7 @@ angular.module('app.controllers', [
      * Controller for settings page
      */
     .controller('settingsCtrl', function ($scope, $meteor) {
-        $scope.toggleChange = function (key, value) {
+        $scope.updateNotificationSetting = function (key, value) {
             $meteor.call('updateUserNotificationSetting', key, value);
         };
     })

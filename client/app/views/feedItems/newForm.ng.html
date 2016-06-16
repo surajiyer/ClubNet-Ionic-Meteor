@@ -33,19 +33,19 @@
                   <a class="button button-icon icon ion-help" ng-click="showAlertRepeatInterval()"></a>
                 </div>
             </div>
-            <label class="item item-input item-label">
+            <div class="item item-input item-label">
                 <span class="input-label">{{ 'TITLE' | translate }}</span>
                 <input ng-model="newItem.title" type="text" placeholder="{{ 'TITLE' | translate }}">
-            </label>
-            <label class="item item-input item-floating-label">
+            </div>
+            <div class="item item-input item-floating-label">
                 <span class="input-label">{{ 'DESCRIPTION' | translate }}</span>
                 <textarea ng-model="newItem.description" rows="3" placeholder="{{ 'DESCRIPTION' | translate }}"></textarea>
-            </label>
-            <label class="item item-input item-label">
+            </div>
+            <div class="item item-input item-label">
                 <span class="input-label">{{ 'TARGET' | translate }}:</span>
                 <input ng-model="newItem.targetValue" type="number" placeholder="{{ 'TARGET' | translate }}"><br>
                 <a class="button button-icon icon ion-help" style="padding-right:15px;" ng-click="showAlertTargetValueInfo()"></a>
-            </label>
+            </div>
             <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
                 {{ postBtn }}
             </button>

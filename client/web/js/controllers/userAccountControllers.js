@@ -365,13 +365,13 @@ angular.module('web.userAccountControllers', [])
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                $translate('PASS_NO_MATCH').then(function (error) {
+                $translate('PWD_NOT_MATCH').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
-                $translate('PASS_NOT_VALID').then(function (error) {
+                $translate('PWD_NOT_VALID').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
@@ -422,8 +422,13 @@ angular.module('web.userAccountControllers', [])
                 });
             } else {
                  $meteor.call('getUserInfoByEmail', $scope.input.email).then(function (result) {
-                     console.log(result);
-                     if (result.profile.type == 'pr') {
+                     if (!result) {
+                        $scope.errorVisible = true;
+                        $translate('MISSING_VALID_EMAIL').then(function (error) {
+                            $scope.error = error;
+                        });
+                        $scope.$apply();
+                     } else if (result.profile.type == 'pr') {
                          Accounts.forgotPassword({email: $scope.input.email}, function (err) {
                             if (err) {
                                 $scope.errorVisible = true;
@@ -481,12 +486,12 @@ angular.module('web.userAccountControllers', [])
                 });
                 $scope.passwordErrorVisible = true;
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                $translate('PASS_NO_MATCH').then(function (error) {
+                $translate('PWD_NOT_MATCH').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
             } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
-                $translate('PASS_NOT_VALID').then(function (error) {
+                $translate('PWD_NOT_VALID').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;

@@ -1,20 +1,38 @@
 <ion-view view-title="{{ 'SETTINGS' | translate }}">
     <ion-content padding="true" class="has-header main-content">
-        <form class="list main-content">
-            <ion-toggle toggle-class="toggle-positive"
+        <div class="card list">
+            <div class="item item-divider">
+                General
+            </div>
+
+            <div class="item item-input item-select">
+                <div class="input-label">{{ 'SELECT_LANG' | translate }}</div>
+                <select>
+                    <option selected>Nederlands</option>
+                    <option>English</option>
+                </select>
+            </div>
+        </div>
+        <div class="card list">
+            <div class="item item-divider">
+                Notifications
+            </div>
+
+            <ion-toggle class="item"
+                        toggle-class="toggle-positive"
                         ng-repeat="(key, value) in currentUser.profile.notifications"
-                        ng-change="toggleChange(key, value)"
+                        ng-change="updateNotificationSetting(key, value)"
                         ng-model="value">
                 {{key}} notification
             </ion-toggle>
-            <label class="item item-input item-select">
-                <label class="input-label">{{ 'SELECT_LANG' | translate }}</label>
-                <select>
-                    <option>{{ 'DUTCH' | translate }}</option>
-                    <option selected>{{ 'ENGLISH' | translate }}</option>
-                </select>
-            </label>
 
-        </form>
+            <ion-toggle class="item"
+                        toggle-class="toggle-positive"
+                        ng-repeat="key in [1,2,3,4]"
+                        ng-change="updateNotificationSetting(key)"
+                        ng-model="value">
+                {{key}} notification
+            </ion-toggle>
+        </div>
     </ion-content>
 </ion-view>

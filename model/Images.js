@@ -17,20 +17,18 @@ Images = new FS.Collection("images", {
 
 Meteor.startup(function () {
     Images.allow({
-        insert: function (userId) {
-            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
-            return isValidUser;
+        insert: function () {
+            return true;
         },
-        remove: function (userId) {
-            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
-            return isValidUser;
+        remove: function () {
+            return true;
         },
         download: function () {
             return true;
         },
-        update: function (userId) {
-            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
-            return isValidUser;
+        update: function () {
+            return true;
         }
     });
+
 });
