@@ -6,6 +6,7 @@ import {isAdmin} from '/imports/common';
 import {userSchema, userProfileSchema} from '/imports/schemas/users';
 import {notesSchema} from '/imports/schemas/misc';
 import './UserAccount.js';
+import * as utils from "../imports/common";
 /**
  * @summary Tests for methods in UserAccount.js
  * To run this, call meteor test --full-app --driver-package practicalmeteor:mocha
@@ -34,7 +35,7 @@ if (Meteor.isServer) {
                 testUser = {
                     email: 'test@test.test',
                     password: 'test',
-                    profile: {lastName: 'Test', type: 'player', clubID: 'test', notifications: new Object()}
+                    profile: {lastName: 'Test', type: 'player', clubID: 'test', teamID: 'test', notifications: new Object()}
                 };
 
                 testPr = {
@@ -87,7 +88,7 @@ if (Meteor.isServer) {
              */
             it("Update User Profile with incomplete data throws error", () => {
                 // Create a testProfile with a number for lastName
-                testProfile = {firstName: 'Test', lastName: 14, type: 'player', clubID: 'test', notifications: new Object()};
+                testProfile = {firstName: 'Test', lastName: 14, type: 'player', clubID: 'test', teamID: 'test', notifications: new Object()};
                 // Update the profile of the previous created user with the new testProfile
                 try {
                     Meteor.call('updateUserProfile', testUser._id, testProfile);
@@ -255,15 +256,56 @@ if (Meteor.isServer) {
             });
 
             /**
-             * @summary Getting user info with id
+             * @summary Getting user type
              * It tries to get the type of the currently logged in user.
              * This should succeed.
              */
-            it("Get user info type", () => {
+            it("Get user type", () => {
 
                 // Get user with id that does not exist
                 try {
                     Meteor.userId = sinon.stub().returns(testPr._id);
+                    Meteor.user = sinon.stub().returns(testPr);
+                    var test = Meteor.call('getUserType');
+                    console.log(test);
+                    assert.equal(test, 'pr');
+                    // It should throw an error, if it does not, the test fails
+                } catch (err) {
+                    assert.fail();
+                }
+            });
+
+        });
+
+        describe('getTeamSize()', () => {
+            /**
+             * @summary Getting team size of user without a team
+             * It tries to get a the team size of a user that does not belong to a team
+             * This should throw error.
+             */
+            it("Get team size of non existing team", () => {
+
+                // Get user with wrong parameter
+                try {
+                    Meteor.userId = sinon.stub().returns(testPr._id);
+                    user.profile.teamID = sinon.stub().returns(undefined);
+                    Meteor.call('getTeamSize');
+                    // It should throw an error, if it does not, the test fails
+                    assert.fail();
+                } catch (err) {
+                }
+            });
+
+            /**
+             * @summary Getting team size of user with a team
+             * It tries to get the team size of the currently logged in user
+             * This should succeed.
+             */
+            it("Get team size", () => {
+
+                // Get user with id that does not exist
+                try {
+                    Meteor.userId = sinon.stub().returns(testUser._id);
                     Meteor.user = sinon.stub().returns(testPr);
                     var test = Meteor.call('getUserType');
                     console.log(test);
