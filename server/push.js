@@ -70,8 +70,10 @@ Meteor.methods({
         var clubID = Meteor.user().profile.clubID;
         var selector = {
             _id: {$ne: Meteor.userId()},
-            'profile.clubID': clubID,
-            'profile.notifications': {}
+            profile: {
+                clubID: clubID,
+                notifications: {}
+            }
         };
         selector.profile.notifications[type] = true;
         console.log(selector);
@@ -91,9 +93,11 @@ Meteor.methods({
         var teamID = Meteor.user().profile.teamID;
         var selector = {
             _id: {$ne: Meteor.userId()},
-            'profile.type': {$ne: "coach"},
-            'profile.teamID': {$exists: true, $eq: teamID},
-            'profile.notifications': {}
+            profile: {
+                type: {$ne: "coach"},
+                teamID: {$exists: true, $eq: teamID},
+                notifications: {}
+            }
         };
         selector.profile.notifications[type] = true;
         console.log(selector);
