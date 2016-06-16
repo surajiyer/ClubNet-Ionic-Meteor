@@ -49,29 +49,6 @@ angular.module('app.controllers', [
         $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
-        
-        // $scope.updateItemTypes = function () {
-        //     // If itemTypes already exists, use its existing checked values
-        //     var oldItemTypes = [];
-        //     if ($scope.itemTypes) {
-        //         oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
-        //             result[id] = {name: name, checked: checked};
-        //             return result;
-        //         }, {});
-        //     }
-        //
-        //     // Get new item types from database
-        //     $scope.itemTypes = TypesCollection.find().fetch();
-        //
-        //     // Load filter from item types
-        //     _.each($scope.itemTypes, function (element) {
-        //         if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
-        //         else element.checked = true;
-        //     }, this);
-        // };
-        //
-        // // Load the filter
-        // Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
         /**
          * @summary Function to update the item types
@@ -238,14 +215,11 @@ angular.module('app.controllers', [
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             };
 
-            var picture = MeteorCamera.getPicture(cameraOptions, function (error, localData) {
-                console.log(localData);
+            MeteorCamera.getPicture(cameraOptions, function(error, localData){
                 $scope.image = localData;
                 $scope.$apply();
             });
         };
-
-
 
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
@@ -341,8 +315,10 @@ angular.module('app.controllers', [
             var elem = angular.element($event.currentTarget);
             if ($scope.isFull) {
                 elem.parents(".list").css("height", "200px").find(".gradient").show();
+                elem.parents(".list").find(".read-less").hide();
             } else {
                 elem.parents(".list").css("height", "100%").find(".gradient").hide();
+                elem.parents(".list").find(".read-less").show();
             }
             $scope.isFull = !$scope.isFull;
         };

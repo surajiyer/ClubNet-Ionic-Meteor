@@ -38,9 +38,9 @@ angular.module('userAccountControllers', [])
 //     };
 // })
 
-/**
- *  Login Controller: provides all functionality for the login screen of the app
- */
+    /**
+     *  Login Controller: provides all functionality for the login screen of the app
+     */
     .controller('loginCtrl', function ($scope, $meteor, $state, CommonServices, $translate) {
         /**
          * Credentials of the user
@@ -94,9 +94,10 @@ angular.module('userAccountControllers', [])
                 $translate('NOT_AUTHORIZED').then(function (result) {
                     CommonServices.showAlert(ERROR, result);
                 });
+                return;
             }
             // Go to feed
-            $state.go('menu.feed');
+            window.location.replace("/");
         });
 
         /**
@@ -121,8 +122,6 @@ angular.module('userAccountControllers', [])
         /**
          * @summary Function to send email to user to reset password
          */
-
-
         $scope.forgotPassword = function () {
             if (!SimpleSchema.RegEx.Email.test($scope.user.email)) {
                 $translate(['ERROR', 'MISSING_VALID_EMAIL']).then(function (translations) {
@@ -130,6 +129,7 @@ angular.module('userAccountControllers', [])
                     var content = translations.MISSING_VALID_EMAIL;
                     CommonServices.showAlert(head, content);
                 });
+                return;
             }
 
             Accounts.forgotPassword({email: $scope.user.email}, function () {
@@ -138,8 +138,7 @@ angular.module('userAccountControllers', [])
                     var content = translations.EMAILSENDFORPASSRESET;
                     CommonServices.showAlert(head, content);
                 });
-
-
+                
                 $state.go('login');
             });
         };
@@ -212,6 +211,7 @@ angular.module('userAccountControllers', [])
                     var content = translations.PASS_NO_MATCH;
                     CommonServices.showAlert(head, content);
                 });
+                return;
             }
 
             var testPassword = CommonServices.checkPassword($scope.password.newPass);
@@ -221,10 +221,10 @@ angular.module('userAccountControllers', [])
                     var content = translations.PASS_RESET_SUCCESS;
                     CommonServices.showAlert(head, content);
                 });
+                return;
             }
 
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
-
                 $translate(['SUCCESS', 'PASS_NOT_VALID']).then(function (translations) {
                     head = translations.ERROR;
                     var content = translations.PASS_RESET_SUCCESS;

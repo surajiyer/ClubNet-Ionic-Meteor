@@ -177,6 +177,103 @@ if (Meteor.isServer) {
                     assert.fail();
                 }
             });
+        });describe('getUserInfo()', () => {
+            /**
+             * @summary Getting user info with wrong parameters
+             * It tries to get a user with a wrong parameter
+             * This should throw error.
+             */
+            it("Get user info with non string id throws error", () => {
+
+                // Get user with wrong parameter
+                try {
+                    Meteor.call('getUserInfo', 1234);
+                    // It should throw an error, if it does not, the test fails
+                    assert.fail();
+                } catch (err) {
+                }
+            });
+
+            /**
+             * @summary Getting user info with non existing id
+             * It tries to get a user that does not exist
+             * This should throw error.
+             */
+            it("Get user info with non existing string id throws error", () => {
+
+                // Get user with id that does not exist
+                try {
+                    Meteor.call('getUserInfo', 'test');
+                    // It should throw an error, if it does not, the test fails
+                    assert.fail();
+                } catch (err) {
+                }
+            });
+
+
+            /**
+             * @summary Getting user info with existing id.
+             * It tries to get the user we previously created in the database
+             * Then a couple of asserts to check whether this user is indeed the same
+             * This should succeed.
+             */
+            it("Get user info with existing string id succeeds", (done) => {
+
+                // Get user with correct id
+                try {
+                    var gettingUser = Meteor.call('getUserInfo', testUser._id);
+                    // Checks to see whether the user is the same or not.
+                    assert.equal(gettingUser.emails[0].address, testUser.email);
+                    assert.equal(gettingUser.profile.firstName, testUser.profile.firstName);
+                    assert.equal(gettingUser.profile.lastName, testUser.profile.lastName);
+                    assert.equal(gettingUser.profile.type, testUser.profile.type);
+                    assert.equal(gettingUser.profile.clubID, testUser.profile.clubID);
+                    // Should succeed
+                    done();
+                } catch (err) {
+                    assert.fail();
+                }
+            });
+        });
+
+        describe('getUserType()', () => {
+            /**
+             * @summary Getting user type with wrong parameters
+             * It tries to get a user with a wrong parameter
+             * This should throw error.
+             */
+            it("Get user type with wrong id", () => {
+
+                // Get user with wrong parameter
+                try {
+                    Meteor.userId = sinon.stub().returns(1234);
+                    Meteor.call('getUserType');
+                    // It should throw an error, if it does not, the test fails
+                    assert.fail();
+                } catch (err) {
+                }
+            });
+
+            /**
+             * @summary Getting user info with id
+             * It tries to get the type of the currently logged in user.
+             * This should succeed.
+             */
+            it("Get user info type", () => {
+
+                // Get user with id that does not exist
+                try {
+                    Meteor.userId = sinon.stub().returns(testPr._id);
+                    Meteor.user = sinon.stub().returns(testPr);
+                    var test = Meteor.call('getUserType');
+                    console.log(test);
+                    assert.equal(test, 'pr');
+                    // It should throw an error, if it does not, the test fails
+                } catch (err) {
+                    assert.fail();
+                }
+            });
+
         });
 
         describe('Meteor.users.remove()', () => {
