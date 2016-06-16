@@ -11,6 +11,9 @@
         <label class="item item-input">
             <input type="password" ng-model="user.confirmNewPassword" placeholder="{{ 'CONFIRM_PASS' | translate }}"/>
         </label>
+        <label class="item item-input">
+            <input type="text" ng-model="user.token" placeholder="{{ 'TOKEN' | translate }}"/>
+        </label>
         <a ng-click="resetPassword()" id="reset-password" class="button button-positive  button-block">{{ 'ENROLL' | translate }}</a>
     </ion-content>
 </ion-view>

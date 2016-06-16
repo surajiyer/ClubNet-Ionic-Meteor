@@ -112,6 +112,13 @@ angular.module('userAccountControllers', [])
         $scope.forgotPassword = function () {
             $state.go('forgotPassword');
         };
+
+        /**
+         * @summary Function to show the enrollment page
+         */
+        $scope.enrollment = function () {
+            $state.go('enroll');
+        };
     })
 
     /**
@@ -180,7 +187,7 @@ angular.module('userAccountControllers', [])
                 return CommonServices.showAlert('Weak Password', 'Password not strong enough. ' +
                     'It should contain at least 8 characters of which at least one alphabetical and one numeric.');
             } else {
-                $meteor.resetPassword($stateParams.token, $scope.user.newPassword, function () {
+                $meteor.resetPassword($scope.user.token, $scope.user.newPassword, function () {
                     $state.go('menu.feed');
                 });
             }
