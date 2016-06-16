@@ -105,9 +105,6 @@ if (Meteor.isClient) {
              * O
              * M
              */
-
-
-            
         });
 
         // // Fake user data

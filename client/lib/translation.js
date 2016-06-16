@@ -1,16 +1,18 @@
 angular.module('translation', ['pascalprecht.translate'])
 
     .config(['$translateProvider', 'translations', function ($translateProvider, translations) {
-
         translations = translations();
 
         $translateProvider.translations('nl', translations.nl);
         $translateProvider.translations('en', translations.en);
-        $translateProvider.preferredLanguage('nl');
+        $translateProvider.preferredLanguage('en');
+        $translateProvider.fallbackLanguage('en');
     }])
 
     .constant('translations', function () {
         var translations = {};
+
+        // DUTCH TRANSLATIONS
         translations.nl = {
             "Match failed": "Ongeldige combinatie",
             "Token expired": "Link verlopen",
@@ -26,8 +28,8 @@ angular.module('translation', ['pascalprecht.translate'])
             BUTTON_SIGNUP: "Aanmelden",
             BUTTON_CONTRIBUTE: "Verstuur",
             BUTTON_WITHDRAW: "Trek terug",
-            PRESENT: "Je geeft aan dat je aanwezig zult zijn.",
-            NOTPRESENT: "Je hebt aangegeven dat je afwezig zult zijn.",
+            PRESENT: "Je staat nu op 'aanwezig'.",
+            NOTPRESENT: "Je staat nu op 'afwezig'.",
             CANCEL: "Annuleer",
             CHANGE_PASS: "Verander wachtwoord",
             CHANGE_PASS_SUCCESS: "Wachtwoord aangepast",
@@ -143,7 +145,7 @@ angular.module('translation', ['pascalprecht.translate'])
             SHOW_INT_RESULTS_MESSAGE: "Laat de tussentijdse resultaten zien",
             STICKY: "Plak bovenaan vast",
             STICKY_UNDO: "Losmaken",
-            STILL_NEED: "Nog nodig",
+            STILL_NEED: "Nog nodig:",
             SUCCESS: "Gelukt!",
             TARGET: "Doel (aantal)",
             TARGET_REACHED: "We hebben voldoende mensen.",
@@ -161,11 +163,26 @@ angular.module('translation', ['pascalprecht.translate'])
             FILTER_ON: "Filteren op",
             CREATE_NEW: "Nieuw item",
             READ_MORE: "Lees meer",
-            READ_LESS: "Lees minder"
+            READ_LESS: "Lees minder",
+            CONTRIBUTION: "Bijdrage:",
+
+            'player': "speler",
+            'pr': "pr",
+            'general': "algemeen",
+            'coach': "trainer",
+            'laundry': "Was",
+            'driving': "Vervoer",
+            'absence': "Absentie",
+            'other': "Anders",
+            'Create': "Maak aan",
+            'Save': "Opslaan"
+
         };
+
+        // ENGLISH TRANSLATION
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
         };
 
         return translations;
-    });
+    })
