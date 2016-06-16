@@ -498,7 +498,13 @@ angular.module('web.userAccountControllers', [])
                 $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function (result) {
                     $scope.passwordErrorVisible = false;
                     if (Meteor.user().profile.type == 'pr') {
-                        $state.go('web.members');
+                        // Redirect user if login succeeds
+                        $state.go('web.members').then(function () {
+                            // Neccesary for loading the members list on initial load
+                            setTimeout(function () {
+                                $state.reload();
+                            }, 1);
+                        });
                     } else {
                         Meteor.logout();
                         $state.go('login');

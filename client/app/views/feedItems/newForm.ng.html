@@ -46,7 +46,7 @@
                 <input ng-model="newItem.targetValue" type="number" placeholder="{{ 'TARGET' | translate }}"><br>
                 <a class="button button-icon icon ion-help" style="padding-right:15px;" ng-click="showAlertTargetValueInfo()"></a>
             </div>
-            <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
+            <button ng-disabled="!newItem.target || !newItem.title || !newItem.repeatInterval || !newItem.description || !newItem.targetValue" ng-click="edit(); addItem()" class="button button-block button-positive">
                 {{ postBtn | translate }}
             </button>
         </div>
