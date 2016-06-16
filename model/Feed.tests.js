@@ -25,10 +25,19 @@ if (Meteor.isServer) {
                 Items.attachSchema(baseFeedItemSchema, {selector: {type: 'testType'}});
 
                 // Create item without type
+                
                 testItem = {
+                    creatorID: '1',
+                    sticky: false,
                     clubID: '1',
+                    published: true,
+                    createdAt: new Date,
+                    modifiedAt: new Date,
+                    title: '1',
                     status: 'published',
-                    createdAt: new Date
+                    deadline: new Date,
+                    training_id: '1',
+                    teamID: '1'
                 };
 
                 // Adding the item without type
@@ -40,13 +49,19 @@ if (Meteor.isServer) {
 
             it("Add FeedItem succeed", (done) => {
                 // Add type to item
-                testItem.type = 'testType';
+                testItem.type = 'Voting';
 
                 // Add the item with type
                 try {
+                    var addFeedItemStub = sinon.stub(Meteor, 'call');
+                    addFeedItemStub
+                        .withArgs('addFeedItem', testItem)
+                        .returns(Items.insert(testItem));
                     testItem._id = Meteor.call('addFeedItem', testItem);
+                    Meteor.call.restore();
                     done();
                 } catch (err) {
+                    console.log('addfeeditem error: ' + err);
                     assert.fail();
                 }
             });
@@ -69,8 +84,8 @@ if (Meteor.isServer) {
 
                 // Get item added in the previous test
                 try {
-                    var chatRightsStub = sinon.stub(Meteor, 'call');
-                    chatRightsStub
+                    var getFeedItemStub = sinon.stub(Meteor, 'call');
+                    getFeedItemStub
                         .withArgs('getFeedItem', testItem._id)
                         .returns(Items.find({_id: testItem._id}).fetch()[0]);
                     var result = Meteor.call('getFeedItem', testItem._id);
@@ -79,6 +94,7 @@ if (Meteor.isServer) {
                     Meteor.call.restore();
                     done();
                 } catch (err) {
+                    console.log('hi: '+ err);
                     assert.fail();
                 }
             });
@@ -88,15 +104,8 @@ if (Meteor.isServer) {
             it("Update FeedItem fail", () => {
 
                 // Create updated item with different clubID
-                newTestItem = {
-                    _id: testItem._id,
-                    status: testItem.status,
-                    createdAt: testItem.createdAt,
-                    type: testItem.type,
-                    clubID: '2',
-                    creatorID: testItem.creatorID
-                };
-                assert(newTestItem.clubID != testItem.clubID);
+                newTestItem = testItem;
+                newTestItem.clubID = '2';
 
                 // Update item with wrong parameter
                 try {
@@ -107,21 +116,27 @@ if (Meteor.isServer) {
             });
 
             it("Update FeedItem succeed", (done) => {
-
+                
+                newTestItem.clubID = '2';
                 // Update testItem to newTestItem
                 try {
-                    Meteor.call('updateFeedItem', newTestItem);
-                    var chatRightsStub = sinon.stub(Meteor, 'call');
-                    chatRightsStub
-                        .withArgs('getFeedItem', testItem._id)
-                        .returns(Items.find({_id: testItem._id}).fetch()[0]);
-                    var result = Meteor.call('getFeedItem', testItem._id);
+                    var updateFeedItemStub = sinon.stub(Meteor, 'call');
+                    var temp = newTestItem._id;
+                    Items.update(
+                        {_id: temp},
+                        {$set: newTestItem}
+                    );
+                    newTestItem._id = temp;
+                    updateFeedItemStub
+                        .withArgs('updateFeedItem', newTestItem)
+                        .returns(Items.find(newTestItem._id).fetch()[0]);
+                    var result = Meteor.call('updateFeedItem', newTestItem);
                     assert(result.clubID == newTestItem.clubID);
                     testItem = newTestItem;
                     Meteor.call.restore();
                     done();
                 } catch (err) {
-                    console.log(err);
+                    console.log('updateFeedItem: '+err);
                     assert.fail();
                 }
 
@@ -356,7 +371,18 @@ if (Meteor.isServer) {
             it("Delete FeedItem", (done) => {
                 // Delete item added in the addFeedItem testcase
                 try {
-                    result = Meteor.call('deleteFeedItem', testItem._id);
+                    var deleteFeedItemStub = sinon.stub(Meteor, 'call');
+                    deleteFeedItemStub
+                        .withArgs('updateFeedItem', testItem._id)
+                        .returns(Items.remove({_id: testItem._id}));
+                    Meteor.call('deleteFeedItem', testItem._id);
+                    Meteor.call.restore();
+                    try {
+                        var result = Items.find(testItem._id).fetch()[0];
+                        assert.equal(result, undefined);
+                    } catch (err) {
+                        console.log(err);
+                    }
                     done();
                 } catch (err) {
                     assert.fail();
