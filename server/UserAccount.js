@@ -179,6 +179,12 @@ Meteor.methods({
             {$set: {profile: newInfo}}
         );
     },
+    
+    getUserInfoByEmail: function (email) {
+        check(email, String);
+        // check(Meteor.userId(), Match.Where(utils.isAdmin));
+        return Meteor.users.find({"emails.address": email}).fetch()[0];
+    },
     /**
      * @summary Function for getting the information of a certain user.
      * This can only be done by a user that had admin level rights.
@@ -204,6 +210,7 @@ Meteor.methods({
         check(Meteor.userId(), String);
         return Meteor.user().profile.type;
     },
+    
     getTeamSize: function () {
         check(Meteor.userId(), String);
         var teamID = utils.getUserTeamID(Meteor.userId());

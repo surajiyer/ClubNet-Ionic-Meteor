@@ -22,13 +22,8 @@ angular.module('app.controllers', [
         /**
          * @summary Function to logout
          */
-        $scope.logout = function ($event) {
-            $event.stopPropagation();
+        $scope.logout = function () {
             $meteor.logout(function () {
-                // Object.keys(Session.keys).forEach(function(key){
-                //     Session.set(key, undefined);
-                // });
-                // Session.keys = {}; // remove session keys
                 $state.go('login');
             });
         };
@@ -38,7 +33,7 @@ angular.module('app.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
-            $('ion-header-bar.bar-stable').css('background', $scope.currentClub.colorAccent + '!important');
+            jQuery('ion-header-bar.bar-stable').css('background', $scope.currentClub.colorAccent + '!important');
         }, function (err) {
             return CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
@@ -54,29 +49,6 @@ angular.module('app.controllers', [
         $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
-        
-        // $scope.updateItemTypes = function () {
-        //     // If itemTypes already exists, use its existing checked values
-        //     var oldItemTypes = [];
-        //     if ($scope.itemTypes) {
-        //         oldItemTypes = $scope.itemTypes.reduce((result, {id, name, checked}) => {
-        //             result[id] = {name: name, checked: checked};
-        //             return result;
-        //         }, {});
-        //     }
-        //
-        //     // Get new item types from database
-        //     $scope.itemTypes = TypesCollection.find().fetch();
-        //
-        //     // Load filter from item types
-        //     _.each($scope.itemTypes, function (element) {
-        //         if (oldItemTypes[element._id]) element.checked = oldItemTypes[element._id].checked;
-        //         else element.checked = true;
-        //     }, this);
-        // };
-        //
-        // // Load the filter
-        // Meteor.subscribe('ItemTypes', $scope.updateItemTypes);
 
         /**
          * @summary Function to update the item types
@@ -243,56 +215,16 @@ angular.module('app.controllers', [
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             };
 
-            var picture = MeteorCamera.getPicture(cameraOptions, function (error, localData) {
-                console.log(localData);
+            MeteorCamera.getPicture(cameraOptions, function(error, localData){
                 $scope.image = localData;
                 $scope.$apply();
             });
         };
 
-
-
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
-
-             $translate(['VOTING_text', 'VOTING_title' , 'HEROES_text', 'HEROES_title', 'FORM_text', 'FORM_title', 'SPONSORING_title', 'SPONSORING_text']).then(function (translations) {
-              head = translations.ERROR;
-              content = translations.MISSING_VALID_EMAIL;
-
-              /* NOTIFCATIONS translations */
-              VOTING_text = NOTIFICATION_VOTING_TEXT
-              VOTING_title = NOTIFICATION_VOTING_TITLE
-              HEROES_text = NOTIFICATION_HEROES_TEXT
-              HEROES_title = NOTIFICATION_HEROES_TITLE
-              FORM_text = NOTIFICATION_FORM_TEXT
-              FORM_title = NOTIFICATION_FORM_TITLE
-              SPONSORING_title = NOTIFICATION_SPONSORING_TITLE
-              SPONSORING_text = NOTIFICATION_SPONSORING_TEXT
-           
-                           
-                Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                    var type = $scope.type._id;
-                    if (type == 'Voting') {
-                        Meteor.call('getTeamUsers', function(err, result){
-                            Meteor.call('userNotification', type, VOTING_text, VOTING_title, result);
-                        });
-                    } else if (type == 'Form') {
-                        Meteor.call('getTeamUsers', function(err, result){
-                            Meteor.call('userNotification', type, FORM_text, FORM_title, result);
-                        });
-                    } else if (type == 'Heroes') {
-                        Meteor.call('getClubUsers', function(err, result){
-                            Meteor.call('userNotification', type, HEROES_text, HEROES_title, result);
-                        });
-                    } else if (type == 'Sponsoring') {
-                        Meteor.call('getClubUsers', function(err, result){
-                            Meteor.call('userNotification', type, SPONSORING_text, SPONSORING_title, result);
-                        });
-                    }
-                });
-            });
-
+            Meteor.call('addFeedItem', $scope.newItem);
             $scope.newItem = {};
             $scope.closeModal();
         };
@@ -383,8 +315,10 @@ angular.module('app.controllers', [
             var elem = angular.element($event.currentTarget);
             if ($scope.isFull) {
                 elem.parents(".list").css("height", "200px").find(".gradient").show();
+                elem.parents(".list").find(".read-less").hide();
             } else {
                 elem.parents(".list").css("height", "100%").find(".gradient").hide();
+                elem.parents(".list").find(".read-less").show();
             }
             $scope.isFull = !$scope.isFull;
         };
@@ -457,6 +391,7 @@ angular.module('app.controllers', [
             var obj = {
                 _id: $scope.item._id,
                 type: $scope.item.type,
+                creatorID: $scope.item.creatorID,
                 sticky: !$scope.item.sticky
             };
             Meteor.call("updateFeedItem", obj, function (err, result) {

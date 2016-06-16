@@ -107,26 +107,67 @@ if (Meteor.isServer) {
          */
         addFeedItem: function (newItem) {
             check(newItem, Object);
-            return Items.insert(newItem);
+            var loggedIn = Match.test(Meteor.userId(), String);
+            var allowed = Meteor.call('checkRights', newItem.type, 'create');
+            if (!(loggedIn && allowed)) {
+                throw new Meteor.Error(401, 'Not authorized');
+            }
+            var itemId = Items.insert(newItem);
+            if (itemId) {
+                var title, text;
+                switch (newItem.type) {
+                    case "Voting":
+                        title = 'New voting!';
+                        text = 'Vote for the exercise you like.';
+                        Meteor.call('sendTeamNotification', newItem.type, title, text);
+                        break;
+                    case "Form":
+                        title = 'New practicality!';
+                        text = 'React on new practicality.';
+                        Meteor.call('sendTeamNotification', newItem.type, title, text);
+                        break;
+                    case "Heroes":
+                        title = 'New Hero!';
+                        text = 'Check out a new hero of the week.';
+                        Meteor.call('sendClubNotification', newItem.type, title, text);
+                        break;
+                    case "Sponsoring":
+                        title = 'New sponsoring event!';
+                        text = 'Contribute to a new sponsoring event.';
+                        Meteor.call('sendClubNotification', newItem.type, title, text);
+                        break;
+                }
+            }
+            return itemId;
         },
         /**
          * @summary Function for retrieving a feed item.
-         * @param {String} id The String Id of the feed item for which the information needs to be retrieved.
+         * @param {String} itemId The String Id of the feed item for which the information needs to be retrieved.
          * @returns {Object} The retrieved feed item
          */
-        getFeedItem: function (id) {
-            check(id, String);
-            var succesCheck = Meteor.call('checkRepeatInterval', id);
-            return Items.find({_id: id}).fetch()[0];
+        getFeedItem: function (itemId) {
+            check(itemId, String);
+            var item = Items.find({_id: itemId}).fetch()[0];
+            var loggedIn = Match.test(Meteor.userId(), String);
+            var allowed = Meteor.call('checkRights', item.type, 'view');
+            if (!(loggedIn && allowed)) {
+                throw new Meteor.Error(401, 'Not authorized');
+            }
+            var succesCheck = Meteor.call('checkRepeatInterval', itemId);
+            return item;
         },
         /**
          * @summary Function for updating the information of a feed item.
          * @param {Object} updatedItem The updated fields of an existing feed item.
          */
         updateFeedItem: function (updatedItem) {
-            // updatedItem.creatorID = Meteor.userId();
-            // updatedItem.clubID = Meteor.user().profile.clubID;
             check(updatedItem, Object);
+            var loggedIn = Match.test(Meteor.userId(), String);
+            var allowed = Meteor.call('checkRights', updatedItem.type, 'edit');
+            var isCreator = updatedItem.creatorID == Meteor.userId();
+            if (!(loggedIn && allowed && isCreator)) {
+                throw new Meteor.Error(401, 'Not authorized');
+            }
             var id = updatedItem._id;
             delete updatedItem._id;
             try {
@@ -135,7 +176,8 @@ if (Meteor.isServer) {
                     {$set: updatedItem}
                 );
                 return Items.find(id).fetch()[0];
-            } catch (e) {}
+            } catch (e) {
+            }
         },
         /**
          * @summary Function for deleting a feed item.
@@ -144,26 +186,17 @@ if (Meteor.isServer) {
          */
         deleteFeedItem: function (itemId) {
             check(itemId, String);
-            var itemToRemove = Items.find(itemId).fetch()[0];
+            var item = Items.find(itemId).fetch()[0];
+            var loggedIn = Match.test(Meteor.userId(), String);
+            var allowed = Meteor.call('checkRights', item.type, 'delete');
+            var isCreator = item.creatorID == Meteor.userId();
+            if(!(loggedIn && allowed && isCreator)) {
+                throw new Meteor.Error(401, 'Not authorized');
+            }
             try {
                 Items.remove({_id: itemId});
-                return itemToRemove;
-            } catch (e) {}
-        },
-        /**
-         * @summary Function for retrieving a the type of a feed item.
-         * It will first check whether the parameters are valid.
-         * If so, it will try to get the information.
-         * @method getFeedItemType
-         * @param {String} itemID The id of the feed item for which the type needs to be retrieved.
-         * @returns {String} The type of the feed item
-         */
-        getFeedItemType: function (itemID) {
-            check(itemID, String);
-            try {
-                return Items.find({_id: itemID}).fetch()[0].type;
-            } catch (err) {
-                throw new Meteor.Error(err.message);
+                return item;
+            } catch (e) {
             }
         },
         /**

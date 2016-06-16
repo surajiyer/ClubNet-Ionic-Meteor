@@ -126,7 +126,7 @@ angular.module('app.routes', [])
 
         $rootScope.$on('$stateChangeStart', function (e, toState, toParams, fromState, fromParams) {
             // If already logged in, go directly to feed
-            if((toState.name === "login" || toState.name === "/") && Meteor.userId()) {
+            if ((toState.name === "login" || toState.name === "/") && Meteor.userId()) {
                 e.preventDefault(); // stop current execution
                 return $state.go('menu.feed');
             }
@@ -136,7 +136,7 @@ angular.module('app.routes', [])
                 || toState.name === "resetpassword"
                 || toState.name === "forgotPassword") {
                 return; // no need to redirect, continue to toState.name
-        }
+            }
 
             // now, redirect only not authenticated
             if (!Meteor.userId()) {
