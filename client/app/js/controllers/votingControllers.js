@@ -29,6 +29,14 @@ angular.module('votingControllers', [])
                     console.log(err);
                 }
             );
+            $meteor.call("getTrainingObj", $scope.item.training_id).then(
+                function (result) {
+                    $scope.item.training_date = result.date;
+                },
+                function (err) {
+                    throw new Meteor.Error(err.reason);
+                }
+            );
         };
 
         $scope.$on("loadEditData", function () {
@@ -40,15 +48,6 @@ angular.module('votingControllers', [])
         });
 
         $scope.$on("successEdit", function (e, res) {});
-
-        $meteor.call("getTrainingObj", $scope.item.training_id).then(
-            function (result) {
-                $scope.item.training_date = result.date;
-            },
-            function (err) {
-                throw new Meteor.Error(err.reason);
-            }
-        );
 
         $meteor.call('getExercises', $scope.item.training_id).then(
             function (result) {
@@ -103,7 +102,7 @@ angular.module('votingControllers', [])
                             function () {
                                 $scope.hasVoted = value;
                                 //increase the number of votes
-                                $meteor.call('increaseNrVotes', $scope.item._id, $scope.item.type, value.toString());
+                                $meteor.call('increaseNrVotes', $scope.item._id, $scope.item.type);
                             },
                             function (err) {
                                 console.log(err);

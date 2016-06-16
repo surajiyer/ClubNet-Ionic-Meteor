@@ -8,14 +8,13 @@ if (Meteor.isServer) {
          * @return {Integer} None.
          * @throws error if the input parameters do not have the required type.
          */
-        increaseNrVotes: function (itemID, itemType, value) {
+        increaseNrVotes: function (itemID, itemType) {
             check(itemID, String);
             check(itemType, String);
-            check(value, String);
 
             var item = Meteor.call('getFeedItem', itemID);
             var raisedValue = item.nrVotes;
-            var newRaisedValue = parseInt(raisedValue)+parseInt(value);
+            var newRaisedValue = parseInt(raisedValue)+1;
 
             console.log("raised value: "+raisedValue);
             console.log("New raised value: "+newRaisedValue);
@@ -88,7 +87,7 @@ if (Meteor.isServer) {
         checkVotingStatus: function (itemID) {
             check(itemID, String);
             var item = Meteor.call("getFeedItem", itemID);
-            return new Date > item.deadline && Meteor.call("getTeamSize") > item.nrVotes;
+            return new Date < item.deadline && Meteor.call("getTeamSize") > item.nrVotes;
         }
     });
 }

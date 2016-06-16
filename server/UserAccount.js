@@ -178,6 +178,7 @@ Meteor.methods({
             {$set: {profile: newInfo}}
         );
     },
+    
     /**
      * @summary Get the information of a user account specified by the email address.
      * @param{String} email The email address of the user account.
@@ -189,6 +190,7 @@ Meteor.methods({
         // check(Meteor.userId(), Match.Where(utils.isAdmin));
         return Meteor.users.find({"emails.address": email}).fetch()[0];
     },
+    
     /**
      * @summary Retrieve the information of a user account specified by the id.
      * @param{String} userID The id of the user account to be retrieve.
@@ -201,6 +203,7 @@ Meteor.methods({
         check(Meteor.userId(), Match.Where(utils.isAdmin));
         return Meteor.users.find({_id: userID}).fetch()[0];
     },
+    
     /**
      * @summary Get the type of the logged in user.
      * @returns {String} Type of the logged in user.
@@ -209,6 +212,7 @@ Meteor.methods({
         check(Meteor.userId(), String);
         return Meteor.user().profile.type;
     },
+    
     /**
      * @summary Get the size of the team of the logged in user.
      * @return{Integer} The number of players in the team.
@@ -218,6 +222,7 @@ Meteor.methods({
         var teamID = utils.getUserTeamID(Meteor.userId());
         return Meteor.users.find({'profile.type': 'player', 'profile.teamID': teamID}).count();
     },
+    
     /**
      * @summary Retrieve all users in the club of the logged in user.
      * @returns {Object[]} Array of document objects that contains all the user accounts in the club of the logged in user.
@@ -245,6 +250,7 @@ Meteor.methods({
         });
         return users_array;
     },
+    
     /**
      * @summary Update the notification setting of the logged in user.
      * @param {String} itemType The feed item type to which the notification setting is changed.
