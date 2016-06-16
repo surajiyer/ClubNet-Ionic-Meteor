@@ -399,6 +399,23 @@ angular.module('web.userAccountControllers', [])
             }, 250);
         }
         
+        // Get current language
+        $scope.selectedLanguage = $translate.use();
+
+        $scope.updateLanguage = function (selectedLanguage) {
+            $scope.selectedLanguage = selectedLanguage;
+            check($scope.selectedLanguage, String);
+            try {
+                $translate.use($scope.selectedLanguage);
+                $state.reload();
+            } catch (e) {
+                $translate('ERROR').then(function (ERROR) {
+                    CommonServices.showAlert(ERROR, e.reason);
+                });
+                return;
+            }
+        };
+        
     })
 
     .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance, $translate, $meteor) {

@@ -5,7 +5,7 @@ angular.module('translation', ['pascalprecht.translate'])
 
         $translateProvider.translations('nl', translations.nl);
         $translateProvider.translations('en', translations.en);
-        $translateProvider.preferredLanguage('en');
+        $translateProvider.preferredLanguage('nl');
         $translateProvider.fallbackLanguage('en');
     }])
 
@@ -124,7 +124,7 @@ angular.module('translation', ['pascalprecht.translate'])
             PWD_RESET_SUCCESS: "Uw wachtwoord is succesvol veranderd, log a.u.b. opnieuw in.",
             PASSWORD_RECOVERY_SENT: "Mail verzonden naar",
             PROFILE: "Profiel",
-            PROFILE_SUBTITLE: "Verander je gebruiksgegevens.",
+            PROFILE_SUBTITLE: "Verander je gebruikersgegevens.",
             PROFILE_TITLE: "Profiel",
             PUBLISH: "Publiceer",
             REPEAT_INTERVAL: "Herhaalfrequentie",
@@ -207,8 +207,8 @@ angular.module('translation', ['pascalprecht.translate'])
             CLOSE: "Close",
             CLOSED: "(closed)",
             CLUB: "Club",
-            CLUB_LOGO: "Clublogo",
-            CLUB_NAME: "Clubname",
+            CLUB_LOGO: "Club logo",
+            CLUB_NAME: "Club name",
             CLUB_SETTINGS_SUBTITLE: "Change settings for the entire club",
             CLUB_SETTINGS_TITLE: "Club settings",
             COLORS: "Colors",
