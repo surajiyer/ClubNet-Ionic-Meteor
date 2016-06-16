@@ -36,7 +36,7 @@ angular.module('web.controllers', [
         
         $scope.user = {
             firstName: ''
-        }
+        };
 
         /**
          * @summary This function logs out the user and redirects it to the login page.

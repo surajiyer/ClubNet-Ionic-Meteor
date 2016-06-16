@@ -28,12 +28,14 @@ angular.module('chatControllers', [])
         $scope.canModifyStatus = false;
         AccessControl.getPermission('Chat', 'edit', (result) => {
             $scope.canModifyStatus = result;
-            if(result) {
-                $scope.modifyStatus = function (chatId, newStatus) {
+            if (result) {
+                $scope.modifyStatus = function ($event, chatId, newStatus) {
+                    $event.stopPropagation();
                     Chat.updateChatStatus(chatId, newStatus, (err) => {
-                        if(err) {
+                        if (err) {
                             CommonServices.showAlert('Error', 'Failed to update chat status.');
                         }
+                        $scope.$apply();
                     });
                 };
             }
@@ -46,7 +48,7 @@ angular.module('chatControllers', [])
         $scope.canCreateChat = false;
         AccessControl.getPermission('Chat', 'create', function (result) {
             $scope.canCreateChat = result;
-            if(result) {
+            if (result) {
                 $ionicModal.fromTemplateUrl('client/app/views/chats/newChat.ng.html', {
                     scope: $scope
                 }).then(function (chatModal) {
@@ -77,7 +79,7 @@ angular.module('chatControllers', [])
                     var chat = Chat.getChatByUserId(userId);
                     if (chat) {
                         Chat.updateChatStatus(chat._id, "open", (err, result) => {
-                            if(!err && result) {
+                            if (!err && result) {
                                 $state.go('menu.chat', {chatId: chat._id});
                             }
                         });
@@ -97,32 +99,53 @@ angular.module('chatControllers', [])
         // Get last message
         var chat = $scope.chat;
         $scope.subscribe('Messages', () => {
-            return [{chatId: chat._id, messageId: chat.lastMessage}];
+            return [{chatId: chat._id, limit: 1}];
         });
 
         // Get the number of messages in given chat
-        $scope.subscribe('MessagesCount', () => { return [chat._id] });
+        // $scope.subscribe('MessagesCount', () => {
+        //     return [chat._id]
+        // });
+
+        // Stores the current last message object
+        var currentLastMessage;
 
         $scope.helpers({
             // Load chat info
             chat: function () {
-                return Chat.getOneChat(chat._id, function () {
-                    $scope.$apply();
-                });
+                return Chat.getOneChat(chat._id);
             },
-            messagesCount: function () {
-                return MessagesCount.find(chat._id);
+            lastMessage: function () {
+                var lastMessageCursor = Messages.find({chatID: chat._id}, {sort: {createdAt: -1}});
+                var lastMessage = lastMessageCursor.fetch()[0];
+                if (currentLastMessage) {
+                    var showChatNotification = lastMessage._id != currentLastMessage._id
+                        && (!lastMessage.read
+                        || lastMessage.createdAt > currentLastMessage.createdAt);
+                    Chat.showChatNotification.set(showChatNotification);
+                }
+                currentLastMessage = lastMessage;
+                return lastMessageCursor;
             }
         });
 
-        // Show notification in menu if unread messages are there
+        // Show Chat notification on chat info
+        $scope.showChatNotification = false;
         $scope.autorun(function () {
-            var nrOfMessages = $scope.getReactively('messagesCount')[0];
-            console.log('nrOfMessages', nrOfMessages);
-            if(nrOfMessages) {
-                Chat.showChatNotification.set(nrOfMessages.unreadCount != 0);
-            }
+            // Show notification in menu if unread messages are there
+            $scope.showChatNotification = Chat.showChatNotification.get();
         });
+
+        // MessagesCount.find(chat._id).observeChanges({
+        //     added: function (id, counts) {
+        //         console.log(id, counts);
+        //     },
+        //     changed: function (id, counts) {
+        //         console.log(id, counts);
+        //         // Automatically update chat notification icon in side menu
+        //         Chat.showChatNotification.set(counts.unreadCount != 0)
+        //     }
+        // });
     })
 
     /**-----------------------------------------------------------------------------------------------------------------
@@ -135,8 +158,7 @@ angular.module('chatControllers', [])
          */
         const chatId = $stateParams.chatId;
         const isIOS = ionic.Platform.isWebView() && ionic.Platform.isIOS();
-        var initialLimit = 20;
-        $scope.limit = 0;
+        var limit = 0, limitIncrementValue = 20;
         let preventAutoScroll = false;
 
         /**
@@ -144,9 +166,7 @@ angular.module('chatControllers', [])
          */
         $scope.helpers({
             chat: function () {
-                return Chat.getOneChat(chatId, function () {
-                    $scope.$apply();
-                });
+                return Chat.getOneChat(chatId);
             },
             messages: function () {
                 return Chat.getMessages(chatId);
@@ -159,54 +179,73 @@ angular.module('chatControllers', [])
         /**
          * Subscribes to messages
          */
-        $scope.refresh = function (newLimit) {
-            check(newLimit, Match.Maybe(Number));
-            newLimit = newLimit || $scope.limit || initialLimit;
+        $scope.refresh = function () {
             const totalNrOfMessages = $scope.messagesCount[0].count;
             const nrOfLoadedMessages = $scope.messages.length;
             const nrOfUnloadedMessages = totalNrOfMessages - nrOfLoadedMessages;
-            const nrOfMessagesToLoad = newLimit - $scope.limit;
-            if(totalNrOfMessages > nrOfLoadedMessages) {
-                $scope.limit = nrOfUnloadedMessages > nrOfMessagesToLoad
-                    ? newLimit : $scope.limit + nrOfUnloadedMessages;
+            if (totalNrOfMessages > nrOfLoadedMessages) {
+                // var firstMessage = Messages.find({chatID: chatId}, {limit:1}).fetch()[0];
+                var newLimit = limit +
+                    (nrOfUnloadedMessages > limitIncrementValue
+                    || totalNrOfMessages < limitIncrementValue ? limitIncrementValue : nrOfUnloadedMessages);
+                $scope.subscribe('Messages', () => {
+                    preventAutoScroll = true;
+                    console.log(newLimit, nrOfUnloadedMessages);
+                    return [{chatId: chatId, limit: newLimit}];
+                }, () => {
+                    // var newFirstMessages = Messages.find({chatID: chatId},
+                    //     {sort: {createdAt: 1}, limit:1}).fetch()[0];
+                    // if(firstMessage._id == newFirstMessages._id) {
+                    //     $scope.limit -= limitIncrementValue;
+                    // }
+                    limit = newLimit;
+
+                    // Stop the ion-refresher from spinning
+                    $scope.$broadcast('scroll.refreshComplete');
+                });
             } else {
                 $scope.$broadcast('scroll.refreshComplete');
-                return;
             }
-            $scope.subscribe('Messages', () => {
-                preventAutoScroll = true;
-                return [{chatId: chatId, limit: $scope.limit}];
-            }, () => {
-                //Stop the ion-refresher from spinning
-                $scope.$broadcast('scroll.refreshComplete');
-            });
         };
 
         /**
          * Update total number of messages in the chat
          */
-        $scope.subscribe('MessagesCount', () => { return [chatId] }, () => {
+        $scope.subscribe('MessagesCount', () => {
+            return [chatId]
+        }, () => {
             // Subscribe to an initial set of messages
             $scope.refresh();
 
             $scope.$on("$destroy", function () {
                 // Delete the chat if it contains no messages
                 var nrOfMessages = $scope.messagesCount[0].count;
-                console.log('nrOfMessages', $scope.messagesCount[0]);
-                if(nrOfMessages == 0) {
+                if (nrOfMessages == 0) {
                     Chat.deleteChat(chatId);
                 }
             });
         });
 
+        /**
+         * Function to read unread messages.
+         * @param id String chat ID
+         * @param counts message counts object
+         */
+        var readUnreadMessages = function (id, counts) {
+            // If there are unread messages,
+            if (counts.unreadCount > 0) {
+                // Set messages to read
+                Meteor.call('readMessages', chatId, function (err) {
+                    if (!err) {
+                        Chat.showChatNotification.set(false);
+                    }
+                });
+            }
+        };
+
         // Reactively update recipient messages to read as they come in
-        $scope.autorun(() => {
-            $scope.getCollectionReactively('messages');
-            Meteor.call('readMessages', chatId, function (err, result) {
-                if(!err && result) {
-                    console.log(result);
-                }
-            });
+        MessagesCount.find(chatId).observeChanges({
+            added: readUnreadMessages, changed: readUnreadMessages
         });
 
         /**
@@ -274,7 +313,7 @@ angular.module('chatControllers', [])
                 const currMessagesNum = $scope.getCollectionReactively('messages').length;
                 const animate = recentMessagesNum != currMessagesNum;
                 recentMessagesNum = currMessagesNum;
-                if(preventAutoScroll) {
+                if (preventAutoScroll) {
                     preventAutoScroll = false;
                     return;
                 }

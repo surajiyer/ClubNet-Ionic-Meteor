@@ -14,13 +14,12 @@
                       ui-sref="menu.chat({chatId: chat._id})">
                 <chat-info chat="chat"></chat-info>
                 <ion-option-button ng-if="canModifyStatus && chat.status == 'open'"
-                                   ng-click="modifyStatus(chat._id, 'closed'); $event.stopPropagation();"
-                                   stop-event="click"
+                                   ng-click="modifyStatus($event, chat._id, 'closed');"
                                    class="button-assertive">
                     {{ 'CLOSE' | translate }}
                 </ion-option-button>
                 <ion-option-button ng-if="canModifyStatus && chat.status == 'closed'"
-                                   ng-click="modifyStatus(chat._id, 'open'); $event.stopPropagation();"
+                                   ng-click="modifyStatus($event, chat._id, 'open');"
                                    class="button-balanced">
                     {{ 'OPEN' | translate }}
                 </ion-option-button>

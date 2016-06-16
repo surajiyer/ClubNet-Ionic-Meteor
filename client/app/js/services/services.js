@@ -134,10 +134,9 @@ angular.module('app.services', [])
         /**
          * Load chat info into passed object with given chat ID
          * @param chatID String id of the chat
-         * @param done callback to call upon retrieving chat
          * @returns {Object|any} chat info
          */
-        const getChat = function (chatID, done) {
+        const getChat = function (chatID) {
             var currentChat = Chats.find({_id: chatID}).fetch()[0];
             if (!currentChat) return;
 
@@ -154,10 +153,10 @@ angular.module('app.services', [])
             currentChat.picture = 'https://cdn0.iconfinder.com/data/icons/sports-and-fitness-flat-colorful-icons-svg/137/Sports_flat_round_colorful_simple_activities_athletic_colored-03-512.png';
 
             // Get the last message
-            getMessage(currentChat._id, currentChat.lastMessage, function (message) {
-                currentChat.lastMessage = message;
-                if (done) done();
-            });
+            // getMessage(currentChat._id, currentChat.lastMessage, function (message) {
+            //     currentChat.lastMessage = message;
+            //     if (done) done();
+            // });
 
             return currentChat;
         };

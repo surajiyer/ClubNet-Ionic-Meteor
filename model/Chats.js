@@ -41,7 +41,7 @@ if (Meteor.isServer) {
         check(this.userId, String);
         self = this;
 
-        var messages = Messages.find({chatID: chatId});
+        var allMessages = Messages.find({chatID: chatId});
         var unreadMessages = Messages.find({
             chatID: chatId,
             senderID: {$ne: this.userId},
@@ -50,27 +50,42 @@ if (Meteor.isServer) {
 
         // Add the messages count of given chat to collection
         let countObject = {
-            count: messages.count(),
+            count: allMessages.count(),
             unreadCount: unreadMessages.count()
         };
         this.added('MessagesCount', chatId, countObject);
 
         // Function to update the count of messages of given chat
         var updateCount = function () {
-            let countObject = {count: messages.count()};
-            console.log('count: '+countObject.count);
-            self.changed('MessagesCount', chatId, countObject);
+            var localCount = {
+                count: Messages.find({chatID: chatId}).count()
+            };
+            if(countObject.count != localCount.count) {
+                countObject.count = localCount.count;
+                self.changed('MessagesCount', chatId, localCount);
+            }
         };
 
         // Function to update count of unread messages in given chat
         var updateUnreadCount = function () {
-            let countObject = {unreadCount: unreadMessages.count()};
-            console.log('unread: '+countObject.unreadCount);
-            self.changed('MessagesCount', chatId, countObject);
+            var localCount = {
+                unreadCount: Messages.find({
+                    chatID: chatId,
+                    senderID: {$ne: self.userId},
+                    read: false
+                }).count()
+            };
+            if(countObject.unreadCount != localCount.unreadCount) {
+                if(self.userId == 'Nw58wxngQgah79hPW') {
+                    console.log('unreadCount', countObject.unreadCount);
+                }
+                countObject.unreadCount = localCount.unreadCount;
+                self.changed('MessagesCount', chatId, localCount);
+            }
         };
 
         // Update count by observing changes in Messages collection for given chat
-        var allMessagesHandle = messages.observeChanges({
+        var allMessagesHandle = allMessages.observeChanges({
             added: updateCount,
             removed: updateCount
         });
@@ -157,7 +172,6 @@ Meteor.startup(function () {
     Messages.attachSchema(messages);
 
     if (Meteor.isServer) {
-
         Meteor.methods({
             /**
              * @summary Update the status of the messages in a chat session to read.
@@ -185,7 +199,6 @@ Meteor.startup(function () {
                     read: false
                 }, {$set: {read: true}}, {multi: true});
             },
-
             /**
              * @summary Delete a chat session.
              * @param {String} chatId The id of the chat session to be deleted.

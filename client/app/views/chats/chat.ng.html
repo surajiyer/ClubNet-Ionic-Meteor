@@ -6,7 +6,7 @@
         </ion-nav-buttons>
     </ion-nav-bar>
     <ion-content class="chat" delegate-handle="chatScroll">
-        <ion-refresher on-refresh="refresh(limit+20)"></ion-refresher>
+        <ion-refresher on-refresh="refresh()"></ion-refresher>
         <div class="message-list">
             <div ng-repeat="message in messages" class="message-wrapper">
                 <div class="message"
