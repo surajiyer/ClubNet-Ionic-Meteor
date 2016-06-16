@@ -5,7 +5,7 @@ angular.module('translation', ['pascalprecht.translate'])
 
         $translateProvider.translations('nl', translations.nl);
         $translateProvider.translations('en', translations.en);
-        $translateProvider.preferredLanguage('en');
+        $translateProvider.preferredLanguage('nl');
         $translateProvider.fallbackLanguage('en');
     }])
 
@@ -124,7 +124,7 @@ angular.module('translation', ['pascalprecht.translate'])
             PWD_RESET_SUCCESS: "Uw wachtwoord is succesvol veranderd, log a.u.b. opnieuw in.",
             PASSWORD_RECOVERY_SENT: "Mail verzonden naar",
             PROFILE: "Profiel",
-            PROFILE_SUBTITLE: "Verander je gebruiksgegevens.",
+            PROFILE_SUBTITLE: "Verander je gebruikersgegevens.",
             PROFILE_TITLE: "Profiel",
             PUBLISH: "Publiceer",
             REPEAT_INTERVAL: "Herhaalfrequentie",
@@ -153,6 +153,8 @@ angular.module('translation', ['pascalprecht.translate'])
             UPDATE_CLUB_SUCCESS: "Club aangepast",
             UPDATE_PROFILE_SUCCESS: "Gebruikersprofiel aangepast",
             USER_PROFILE: "Gebruikersprofiel",
+            UPDATE_PROFILE: "Profiel aanpassen",
+            UPDATE_PASS: "Wachtwoord aanpassen",
             WEEKLY: "Wekelijks",
             WELCOME: "Welkom",
             FORM: "Inventarisatie",
@@ -187,7 +189,7 @@ angular.module('translation', ['pascalprecht.translate'])
             ABSENCE: "Absence",
             ABSENT: "Absent",
             ACTIVATED: "Activated",
-            ADD_MEMBER: "Add a member",
+            ADD_MEMBER: "Add member",
             ADD_MEMBER_SUBTITLE: "Add a club member to the ClubNet system.",
             ADD_MEMBER_TITLE: "Add a member",
             ADD_MEMBER_TYPE_TOOLTIP: "The member will have the user type player if it is coupled to a team. If not, the member will have the user type general member.",
@@ -205,8 +207,8 @@ angular.module('translation', ['pascalprecht.translate'])
             CLOSE: "Close",
             CLOSED: "(closed)",
             CLUB: "Club",
-            CLUB_LOGO: "Clublogo",
-            CLUB_NAME: "Clubname",
+            CLUB_LOGO: "Club logo",
+            CLUB_NAME: "Club name",
             CLUB_SETTINGS_SUBTITLE: "Change settings for the entire club",
             CLUB_SETTINGS_TITLE: "Club settings",
             COLORS: "Colors",
@@ -321,6 +323,8 @@ angular.module('translation', ['pascalprecht.translate'])
             TITLE: "Title",
             UPDATE_CLUB_SUCCESS: "Club updated",
             UPDATE_PROFILE_SUCCESS: "User profile changed",
+            UPDATE_PROFILE: "Update profile",
+            UPDATE_PASS: "Update password",
             USER_PROFILE: "User profile",
             WEEKLY: "Weekly",
             WELCOME: "Welcome",

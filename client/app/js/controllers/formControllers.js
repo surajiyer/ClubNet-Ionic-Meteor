@@ -92,7 +92,7 @@ angular.module('formControllers', [])
 
             //convinient logging that can be used to directly see the performance of this reload functionality
             //which is invoked by observeChange when the increaseValue was incremented for the corresponding item.
-            console.log("reloaded");
+            
         };
 
         $scope.reloadResponses();

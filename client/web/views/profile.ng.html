@@ -1,9 +1,19 @@
 <div class="header">
-    <h1>{{ 'Profile' | translate }}</h1>
-    <h2>{{ 'Change your personal user settings.' | translate }}</h2>
+    <h1>{{ 'PROFILE' | translate }}</h1>
+    <h2>{{ 'PROFILE_SUBTITLE' | translate }}</h2>
 </div>
 <div class="content">
     <h2 class="content-subhead"></h2>
+    
+    <div class="item item-input item-select">
+                <div class="input-label">{{ 'SELECT_LANG' | translate }}</div>
+                <select ng-model="selectedLanguage"
+                        ng-change="updateLanguage(selectedLanguage)">
+                    <option value="nl">Nederlands</option>
+                    <option value="en">English</option>
+                </select>
+            </div>
+        
     <form g-submit="addAccount()">
         <h3>{{ 'USER_PROFILE' | translate }}</h3>
         <div class="form-group">
@@ -26,7 +36,7 @@
         <div ng-if="updatedVisible" class="alert alert-success">
             {{ 'UPDATE_PROFILE_SUCCESS' | translate }}
         </div>
-        <a ng-click="saveChanges()" id="login-button" class="btn btn-primary">{{ 'SAVE' | translate }}</a>
+        <a ng-click="saveChanges()" id="login-button" class="btn btn-primary">{{ 'UPDATE_PROFILE' | translate }}</a>
 
         <h3 style="padding-top:20px;">{{ 'CHANGE_PASS' | translate }}</h3>
         <div class="form-group">
@@ -51,6 +61,6 @@
         <div ng-if="passwordUpdatedVisible" class="alert alert-success">
             {{ 'CHANGE_PASS_SUCCESS' | translate }}
         </div>
-        <a ng-click="savePasswordChanges()" id="login-button" class="btn btn-primary">{{ 'SAVE' | translate }}</a>
+        <a ng-click="savePasswordChanges()" id="login-button" class="btn btn-primary">{{ 'UPDATE_PASS' | translate }}</a>
     </form>
 </div>

@@ -21,7 +21,6 @@ const userNotification = function (type, title, text, users) {
     check(title, String);
     check(users, [String]);
     var badge = 1;
-    var logo = Meteor.call('getClub').logo;
     Push.send({
         from: 'push',
         title: title,
@@ -30,9 +29,6 @@ const userNotification = function (type, title, text, users) {
         sound: 'airhorn.caf',
         query: {
             userId: {$in: users}
-        },
-        gcm: {
-            image: logo
         }
     });
 };
@@ -78,15 +74,14 @@ Meteor.methods({
         var clubID = Meteor.user().profile.clubID;
         var selector = {
             _id: {$ne: Meteor.userId()},
-            profile: {
-                clubID: clubID,
-                notifications: {}
-            }
+            'profile.clubID' : clubID
         };
-        selector.profile.notifications[type] = true;
-        console.log(selector);
+        var notificationType = 'profile.notifications.'+type;
+        selector[notificationType] = true;
         var users = Meteor.users.find(selector, {fields: {_id: 1}}).fetch();
+        console.log('1: ', users);
         users = _.pluck(users, '_id');
+        console.log('2:', users);
         userNotification(type, title, text, users);
     },
     /**
@@ -109,14 +104,11 @@ Meteor.methods({
         var teamID = Meteor.user().profile.teamID;
         var selector = {
             _id: {$ne: Meteor.userId()},
-            profile: {
-                type: {$ne: "coach"},
-                teamID: {$exists: true, $eq: teamID},
-                notifications: {}
-            }
+            'profile.type': {$ne: "coach"},
+            'profile.teamID' : {$exists: true, $eq: teamID}
         };
-        selector.profile.notifications[type] = true;
-        console.log(selector);
+        var notificationType = 'profile.notifications.'+type;
+        selector[notificationType] = true;
         var users = Meteor.users.find(selector, {fields: {_id: 1}}).fetch();
         users = _.pluck(users, '_id');
         userNotification(type, title, text, users);
