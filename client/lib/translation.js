@@ -171,7 +171,9 @@ angular.module('translation', ['pascalprecht.translate'])
             'laundry': "Was",
             'driving': "Vervoer",
             'absence': "Absentie",
-            'other': "Anders"
+            'other': "Anders",
+            'Create': "Maak aan",
+            'Edit': "Pas aan"
 
         };
         translations.en = {
