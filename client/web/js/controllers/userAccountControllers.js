@@ -256,7 +256,7 @@ angular.module('web.userAccountControllers', [])
                 var updatedProfile = {
                     firstName: $scope.user.firstName,
                     lastName: $scope.user.lastName,
-                    type: $scope.user.team != '' ? 'player' : 'general',
+                    type: $scope.user.team != '' && $scope.user.team != undefined ? 'player' : 'general',
                     clubID: $scope.user.clubID,
                     teamID: $scope.user.team,
                     notifications: {
@@ -473,32 +473,20 @@ angular.module('web.userAccountControllers', [])
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else {
-                $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function () {
+                $meteor.resetPassword($scope.token, $scope.user.newPassword).then(function (result) {
                     $scope.passwordErrorVisible = false;
-                    $state.go('login');
-
-
-                //     /**
-                //      *
-                //      * @type {{firstName: *, lastName: *, type: string, clubID: string, teamID: string}}
-                //      */
-                //     var updatedProfile = {
-                //         firstName: Meteor.user().profile.firstName,
-                //         lastName: Meteor.user().profile.lastName,
-                //         type: 'pr',
-                //         clubID: Meteor.user().profile.clubID,
-                //         teamID: ''
-                //     };
-                //     $meteor.call('updateUserProfile', Meteor.userId(), updatedProfile).then(function (result) {
-                //     }, function (err) {
-                //         console.log('Profile not updated to pr');
-                //         console.log(err);
-                //     });
-
-                //     $state.go('/');
-                // }, function (error) {
-                //     $scope.passwordError = error.reason;
-                //     $scope.passwordErrorVisible = true;
+                    if (Meteor.user().profile.type == 'pr') {
+                        $state.go('web.members');
+                    } else {
+                        Meteor.logout();
+                        $state.go('login');
+                    }
+                }, function (err) {
+                    $translate(err.reason).then(function (error) {
+                        $scope.passwordError = error;
+                    });
+                    $scope.passwordErrorVisible = true;
+                    $scope.passwordUpdatedVisible = false;
                 });
             }
         };
