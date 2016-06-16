@@ -85,13 +85,9 @@ angular.module('userAccountControllers', [])
                     return x.length > 0;
                 }));
             } catch (e) {
-
-                  $translate('MISSING_PASSWORD').then(function (result) {
-                  CommonServices.showAlert(ERROR, result);
-            });
-
-
-
+                $translate('MISSING_PASSWORD').then(function (result) {
+                    CommonServices.showAlert(ERROR, result);
+                });
             }
 
             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
@@ -107,11 +103,11 @@ angular.module('userAccountControllers', [])
                 // Check if user is a PR user
                 if (Meteor.user().profile.type == 'pr') {
                     Meteor.logout();
-                    return CommonServices.showAlert(ERROR, NOT_AUTHORIZED);
+                    return CommonServices.showAlert('Not Authorized', 'Please use the Web interface to login.');
+                } else {
+                    // Go to feed
+                    window.location.replace("/");
                 }
-
-                // Go to feed
-                $state.go('menu.feed');
             });
         };
 
@@ -137,8 +133,6 @@ angular.module('userAccountControllers', [])
         /**
          * @summary Function to send email to user to reset password
          */
-
-
         $scope.forgotPassword = function () {
             if (!SimpleSchema.RegEx.Email.test($scope.user.email)) {
                 $translate(['ERROR', 'MISSING_VALID_EMAIL']).then(function (translations) {
@@ -154,8 +148,6 @@ angular.module('userAccountControllers', [])
                   content = translations.EMAILSENDFORPASSRESET;
                   CommonServices.showAlert(head, content);
                 });
-
-                
                 $state.go('login');
             });
         };

@@ -21,7 +21,14 @@ angular.module('translation', ['pascalprecht.translate'])
             MENU_FEED: "Feed",
             MENU_CHAT: "Berichten",
             MENU_SETTINGS: "Instellingen",
-            
+
+            /* ITEM TYPES*/
+            FORM: "Inventarisatie",
+            HEROES: "Helden",
+            POLLS: "Oefening kiezen",
+            SPONSORING: "Sponsorevenement",
+            CLOSED: "(gesloten)",
+
             /* GENERAL */
             LOG_IN: "Log in",
             SUCCESS: "Gelukt!",
@@ -167,11 +174,13 @@ angular.module('translation', ['pascalprecht.translate'])
             "Token expired": "Link verlopen",
             PASSWORD_RECOVERY_SENT: "Mail verzonden naar",
             PASS_INCORRECT: "Wachtwoord niet correct",
-            EMAIL_IN_USE: "Email adres is reeds in gebruik door een lid"
+            EMAIL_IN_USE: "Email adres is reeds in gebruik door een lid",
+            CREATE_NEW: "Nieuw item aanmaken",
+            FILTER_ON: "Filteren op"
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
         };
 
         return translations;
-    })	
+    });
