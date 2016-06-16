@@ -147,7 +147,15 @@ angular.module('translation', ['pascalprecht.translate'])
             UPDATE_PROFILE_SUCCESS: "Gebruikersprofiel aangepast",
             USER_PROFILE: "Gebruikersprofiel",
             WEEKLY: "Wekelijks",
-            WELCOME: "Welkom"
+            WELCOME: "Welkom",
+            FORM: "Inventarisatie",
+            HEROES: "Helden",
+            POLLS: "Oefening kiezen",
+            SPONSORING: "Sponsorevenement",
+            FILTER_ON: "Filteren op",
+            CREATE_NEW: "Nieuw item",
+            READ_MORE: "Lees meer",
+            READ_LESS: "Lees minder"
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
