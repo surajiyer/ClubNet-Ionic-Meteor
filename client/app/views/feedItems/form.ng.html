@@ -36,17 +36,17 @@
 <div class="item item-body" id="animate-switch-container" ng-switch on="item.hasContributed"> 
     <!-- BEFORE CLICK -->
     <div class="animate-switch" ng-switch-when="false">
-        <span ng-if="item.target == 'absence'">{{ 'PRESENT' | translate }}</span><br>
+        <span ng-if="item.target == 'absence' && item.targetValue-item.raisedValue > 0">{{ 'PRESENT' | translate }}</span><br>
         <!-- absence -->
         <button class="button button-outline button-assertive"
                 ng-click="signUp()"
-                ng-if="item.target == 'absence'">
+                ng-if="item.target == 'absence' && item.targetValue-item.raisedValue > 0">
                 {{'BUTTON_SIGNOFF' | translate}}
         </button>
         <!-- all other -->
         <button class="button button-outline button-balanced"
                 ng-click="signUp()"
-                ng-if="item.target != 'absence'">
+                ng-if="item.target != 'absence' && item.targetValue-item.raisedValue > 0">
                 {{'BUTTON_CONTRIBUTE' | translate}}
         </button>
     </div>
