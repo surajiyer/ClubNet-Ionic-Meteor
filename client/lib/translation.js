@@ -143,7 +143,7 @@ angular.module('translation', ['pascalprecht.translate'])
             SHOW_INT_RESULTS_MESSAGE: "Laat de tussentijdse resultaten zien",
             STICKY: "Plak bovenaan vast",
             STICKY_UNDO: "Losmaken",
-            STILL_NEED: "Nog nodig",
+            STILL_NEED: "Nog nodig:",
             SUCCESS: "Gelukt!",
             TARGET: "Doel (aantal)",
             TARGET_REACHED: "We hebben voldoende mensen.",
