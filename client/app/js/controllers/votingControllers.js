@@ -132,7 +132,7 @@ angular.module('votingControllers', [])
          */
         $scope.vote = function (value) {
             if (value) {
-                $translate('CONFIRM_DELETE').then(function (result) {
+                $translate('CONFIRM_VOTE').then(function (result) {
                     confirmPopup = $ionicPopup.confirm({
                         title: result
                     });
