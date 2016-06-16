@@ -23,7 +23,7 @@
     </span>
 </div>
 <div class="item item-body"
-     ng-if="(item.target == 'driving' || item.target == 'other') && !item.hasContributed && item.targetValue-item.raisedValue > 0">
+     ng-if="!$parent.showEdit && (item.target == 'driving' || item.target == 'other') && !item.myContribution > 0 && item.targetValue-item.raisedValue > 0">
     <div>
         <label class="item item-input item-select">
             <div class="input-label">
@@ -33,6 +33,7 @@
         </label>
     </div>
 </div>
+
 
 <div class="item item-body" id="animate-switch-container" ng-switch on="item.hasContributed"> 
     <!-- BEFORE CLICK -->
@@ -71,3 +72,4 @@
 
     </div>
 </div>
+
