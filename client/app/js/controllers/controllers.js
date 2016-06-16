@@ -22,8 +22,7 @@ angular.module('app.controllers', [
         /**
          * @summary Function to logout
          */
-        $scope.logout = function ($event) {
-            $event.stopPropagation();
+        $scope.logout = function () {
             $meteor.logout(function () {
                 $state.go('login').then(function () {
                     $window.location.reload();
@@ -248,35 +247,7 @@ angular.module('app.controllers', [
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
-            Meteor.call('addFeedItem', $scope.newItem, function (err, result) {
-                var type = $scope.type._id;
-                if (type == 'Voting') {
-                    Meteor.call('getTeamUsers', function(err, result){
-                        var text = 'Vote for the exercise you like.';
-                        var title = 'New voting!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                } else if (type == 'Form') {
-                    Meteor.call('getTeamUsers', function(err, result){
-                        var text = 'React on new practicality.';
-                        var title = 'New practicality!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                } else if (type == 'Heroes') {
-                    Meteor.call('getClubUsers', function(err, result){
-                        var text = 'Check out a new hero of the week.';
-                        var title = 'New Hero!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                } else if (type == 'Sponsoring') {
-                    Meteor.call('getClubUsers', function(err, result){
-                        var text = 'Contribute to a new sponsoring event.';
-                        var title = 'New sponsoring event!';
-                        Meteor.call('userNotification', type, text, title, result);
-                    });
-                }
-            });
-
+            Meteor.call('addFeedItem', $scope.newItem);
             $scope.newItem = {};
             $scope.closeModal();
         };
@@ -438,6 +409,7 @@ angular.module('app.controllers', [
             var obj = {
                 _id: $scope.item._id,
                 type: $scope.item.type,
+                creatorID: $scope.item.creatorID,
                 sticky: !$scope.item.sticky
             };
             Meteor.call("updateFeedItem", obj, function (err, result) {

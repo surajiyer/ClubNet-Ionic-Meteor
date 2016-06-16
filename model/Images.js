@@ -25,9 +25,8 @@ Meteor.startup(function () {
             var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
             return isValidUser;
         },
-        download: function (userId) {
-            var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";
-            return isValidUser;
+        download: function () {
+            return true;
         },
         update: function (userId) {
             var isValidUser = !!userId && userId == Meteor.userId() && Meteor.user().profile.type == "pr";

@@ -11,8 +11,10 @@
                 </label>
             </ion-list>
             <div class="spacer" style="width: 300px; height: 22px;"></div>
-            <button ng-click="login()" id="login-button" style="font-size:18px;"
-               class="button button-positive button-block">{{ 'LOG_IN' | translate }}</button>
+            <input type="submit" id="login-button"
+                   style="font-size:18px;"
+                   class="button button-positive button-block"
+                   value="{{ 'LOG_IN' | translate }}"/>
             <div class="forgot-pw">
                 <a class="button button-stable" ng-click="forgotPassword()">{{ 'FORGOT_PASS' | translate }}?</a>
             </div>

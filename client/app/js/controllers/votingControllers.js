@@ -53,6 +53,14 @@ angular.module('votingControllers', [])
             $scope.hasVoted = false;
             $scope.$parent.hasEnded = false;
 
+            // Check if voting has ended because the deadline has passed
+            // or if number of votes exceeds allowed number of voters
+            // TODO: remove nrVoters from the item collection
+            $scope.$parent.hasEnded = new Date > $scope.item.deadline;
+            if ($scope.$parent.hasEnded) {
+                $scope.$emit("hasEnded");
+            }
+
             $meteor.call("getTrainingObj", $scope.item.training_id).then(
                 function (result) {
                     $scope.item.training_date = result.date;
@@ -65,22 +73,6 @@ angular.module('votingControllers', [])
             $meteor.call('getExercises', $scope.item.training_id).then(
                 function (result) {
                     $scope.exercises = result;
-                },
-                function (err) {
-                    console.log(err);
-                }
-            );
-
-            // Check if voting has ended because the deadline has passed
-            // or if number of votes exceeds allowed number of voters
-            $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
-                function (result) {
-                    var today = new Date;
-                    // TODO: remove nrVoters from the item collection
-                    $scope.$parent.hasEnded = today > $scope.item.deadline;
-                    if ($scope.$parent.hasEnded) {
-                        $scope.$emit("hasEnded");
-                    }
                 },
                 function (err) {
                     console.log(err);
@@ -149,7 +141,6 @@ angular.module('votingControllers', [])
                     if (res) {
                         $meteor.call('putResponse', $scope.item._id, $scope.item.type, value.toString()).then(
                             function (result) {
-                                $scope.updateChartValues();
                                 $scope.hasVoted = value;
                                 //increase the number of votes
                                   $meteor.call('increaseNrVotes', $scope.item._id, $scope.item.type, value.toString()).then(
@@ -163,9 +154,9 @@ angular.module('votingControllers', [])
                                 console.log(err);
                             }
                         );
-                        $meteor.call('getResponsesOfOneItem', $scope.item._id).then(
+                        $meteor.call('getNumberResponsesOfOneItem', $scope.item._id).then(
                             function (result) {
-                                if (result.length >= $scope.item.nrVoters) {
+                                if (result >= $scope.item.nrVoters) {
                                     $scope.$parent.hasEnded = true;
                                     $scope.$emit("hasEnded");
                                 }
@@ -181,11 +172,7 @@ angular.module('votingControllers', [])
             }
         };
 
-        Items.find().observeChanges({
-           changed: function (nrVotes) {
-               $scope.updateChartValues();
-           },
+        Items.find({_id: $scope.item._id}).observeChanges({
+           changed: $scope.updateChartValues
         });
-
-
     })

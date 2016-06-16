@@ -54,17 +54,19 @@ angular.module('userAccountControllers', [])
          * @summary Function for a user to login
          */
         $scope.login = function () {
+            var validateInput = function (x) {
+                check(x, String);
+                return x.length > 0;
+            };
+
             try {
-                check($scope.user.email, String);
+                check($scope.user.email, Match.Where(validateInput));
             } catch (e) {
                 return CommonServices.showAlert('Invalid E-mail', 'Please provide a valid e-mail address');
             }
 
             try {
-                check($scope.user.password, Match.Where(function (x) {
-                    check(x, String);
-                    return x.length > 0;
-                }));
+                check($scope.user.password, Match.Where(validateInput));
             } catch (e) {
                 return CommonServices.showAlert('Invalid password', 'Please enter a valid password');
             }
