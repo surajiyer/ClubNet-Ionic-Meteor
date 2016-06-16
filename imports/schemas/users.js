@@ -39,7 +39,7 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$rename") return "required";
                 }
             } else {
-                if(value !== null && value.length > 0) return 'notAllowed';
+                if(this.value && this.value.length > 0) return 'notAllowed';
             }
         }
     },
@@ -56,7 +56,7 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$rename") return "required";
                 }
             } else {
-                if(value !== null && value.length > 0) return 'notAllowed';
+                if(this.value && this.value.length > 0) return 'notAllowed';
             }
         }
     },

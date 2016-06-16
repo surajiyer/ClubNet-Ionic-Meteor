@@ -1,10 +1,10 @@
 angular.module('formControllers', [])
 
-    /**
-     *  Form Controller: provides all functionality for the form feed item of the app
-     *  @param {String} Name of the controller
-     *  @param {Function}
-     */
+/**
+ *  Form Controller: provides all functionality for the form feed item of the app
+ *  @param {String} Name of the controller
+ *  @param {Function}
+ */
     .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup, $translate) {
 
         /**
@@ -34,14 +34,11 @@ angular.module('formControllers', [])
          * @summary Function to show the 'select target value alert'
          */
         $scope.showAlert = function () {
-
             $translate('MISSING_TARGET_VALUE').then(function (result) {
-                        $ionicPopup.alert({
-                            title: result
-                        });
+                $ionicPopup.alert({
+                    title: result
+                });
             });
-
-
         };
 
         /**
@@ -67,7 +64,7 @@ angular.module('formControllers', [])
                 //     // A possible more robust implementation would be to use both the calculatedRaisedValue and the directRaisedValue
                 //     // these 2 variables can then be compared and thus should be equal to each other
                 // });
-                
+
                 // Check user response
                 Meteor.call('getResponse', $scope.item._id, function (err, result) {
                     if (err) {
@@ -107,7 +104,9 @@ angular.module('formControllers', [])
                     $scope.item.hasContributed = true;
                     //Increase the raisedValue of item with value=x
                     $meteor.call('increaseValue', $scope.item._id, $scope.item.type, value).then(
-                        function () {}, function () {}
+                        function () {
+                        }, function () {
+                        }
                     );
                 },
                 function (err) {
@@ -120,7 +119,7 @@ angular.module('formControllers', [])
          * @summary Function to withdraw contribution
          * @method withdrawContribution
          * @after The to the item's and user's corresponding FeedResponse collection is deleted. hasContributed and myContribution are reset to its initial value.
-         */       
+         */
         $scope.withdrawContribution = function () {
             $meteor.call('deleteResponse', $scope.item._id).then(
                 function () {
@@ -145,7 +144,7 @@ angular.module('formControllers', [])
          * @summary Meteor function that invokes the reloadResponse when a change in the item's collection is observered
          * @method observeChanges
          * @after reloadResponse is fired, see reloadResponse function
-         */    
+         */
         Items.find({_id: $scope.item._id}).observeChanges({
             changed: $scope.reloadResponses
         });
