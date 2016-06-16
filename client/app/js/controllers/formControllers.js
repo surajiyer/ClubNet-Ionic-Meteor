@@ -48,6 +48,7 @@ angular.module('formControllers', [])
          */
         $scope.reloadResponses = function () {
 
+            if (!$scope.item) return;
             var calculatedRaisedValue = "";
 
             // Did someone already repond?
