@@ -9,14 +9,14 @@
     </ion-nav-bar>
     <div ng-show="showFilter" class="filter-box">
         <div class="item item-divider">
-            Filter on:
+            {{ 'FILTER_ON' | translate }}
         </div>
         <ion-list>
             <ion-checkbox ng-repeat="type in itemTypes"
                           ng-checked="type.checked"
                           ng-model="type.checked"
                           ng-change="type.checked">
-                {{type.name}}
+                {{ type.name | translate }}
             </ion-checkbox>
         </ion-list>
     </div>
@@ -30,7 +30,7 @@
                     <div class="item item-divider feed-icon"
                          ng-click="showFullItem($event)">
                         <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt=""/>
-                        {{itemType.name}} <span ng-if="item.type == 'Voting' && hasEnded">(completed)</span>
+                        {{ itemType.name | translate }} <span ng-if="item.type == 'Voting' && hasEnded">{{ 'CLOSED' | translate }}</span>
                         <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" ng-if="showEdit || showDelete"></i>
                         <i class="icon ion-arrow-shrink show-full" ng-if="isFull" id="icon-expand"></i>
                     </div>
@@ -39,10 +39,10 @@
                     <hero item="item" ng-switch-when="Heroes"></hero>
                     <sponsoring item="item" ng-switch-when="Sponsoring"></sponsoring>
                     <div class="gradient" ng-click="showFullItem($event)">
-                        Read more <i class="icon ion-android-arrow-down"></i>
+                        {{ 'READ_MORE' | translate }} <i class="icon ion-android-arrow-down"></i>
                     </div>
                     <div class="item read-less" ng-click="showFullItem($event)">
-                        Read less <i class="icon ion-android-arrow-up"></i>
+                        {{ 'READ_LESS' | translate }} <i class="icon ion-android-arrow-up"></i>
                     </div>
                 </div>
             </div>
