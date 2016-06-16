@@ -1,29 +1,36 @@
 <!-- Scripts -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
-    <link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="/web/css/layout.css"/>
-    <link rel="stylesheet" href="/web/css/side-menu.css"/>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"/>
+<link href='https://fonts.googleapis.com/css?family=Roboto:400,500,700,900' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="/web/css/layout.css"/>
+<link rel="stylesheet" href="/web/css/side-menu.css"/>
 
-    <!-- NAVIGATION BAR -->
-    <div id="menu" style="background: {{currentClub.colorPrimary}}">
-        <div class="pure-menu">
-            <div id="menu-logo" style="background: {{currentClub.colorSecondary}}">
-                <img src="{{hostname + currentClub.logo}}">
-            </div>
-            <a class="pure-menu-heading" style="background: {{currentClub.colorSecondary}}">{{currentClub.name}}</a>
-            <a class="pure-menu-subheading" style="background: {{currentClub.colorSecondary}}">{{ 'WELCOME' | translate }}, {{user.firstName}}</a>
-            <ul>
-                <li class="pure-menu-item"><a href="#" ui-sref="web.members" class="pure-menu-link">{{ 'MENU_MEMBERS' | translate }}</a></li>
-                <li class="pure-menu-item"><a href="#" ui-sref="web.settings" class="pure-menu-link">{{ 'MENU_CLUB_SETTINGS' | translate }}</a></li>
-                <li class="pure-menu-item"><a href="#" ui-sref="web.profile" class="pure-menu-link">{{ 'MENU_PROFILE' | translate }}</a></li>
-                <li class="pure-menu-item"><a href="" ng-click="logout()" class="pure-menu-link">{{ 'MENU_LOG_OUT' | translate }}</a></li>
-            </ul>
+<!-- NAVIGATION BAR -->
+<div id="menu" style="background: {{currentClub.colorPrimary}}">
+    <div class="pure-menu">
+        <div id="menu-logo" style="background: {{currentClub.colorSecondary}}">
+            <img ng-src="{{currentClub.logo}}">
         </div>
-        <div id="nav-footer">
-            <img src="/web/img/clubnet_logo_light.png">
-            Intuitive Technologies B.V.
-        </div>
+        <a class="pure-menu-heading" style="background: {{currentClub.colorSecondary}}">{{currentClub.name}}</a>
+        <a class="pure-menu-subheading" style="background: {{currentClub.colorSecondary}}">{{ 'WELCOME' | translate }},
+            {{user.firstName}}</a>
+        <ul>
+            <li class="pure-menu-item"><a href="#" ui-sref="web.members" class="pure-menu-link">{{ 'MENU_MEMBERS' |
+                translate }}</a></li>
+            <li class="pure-menu-item"><a href="#" ui-sref="web.settings" class="pure-menu-link">{{ 'MENU_CLUB_SETTINGS'
+                | translate }}</a></li>
+            <li class="pure-menu-item"><a href="#" ui-sref="web.profile" class="pure-menu-link">{{ 'MENU_PROFILE' |
+                translate }}</a></li>
+            <li class="pure-menu-item"><a href="" ng-click="logout()" class="pure-menu-link">{{ 'MENU_LOG_OUT' |
+                translate }}</a></li>
+        </ul>
     </div>
+    <div id="nav-footer">
+        <img src="/web/img/clubnet_logo_light.png">
+        Intuitive Technologies B.V.
+    </div>
+</div>
 
-    <!-- CONTENT -->
-    <div class="content"><div ui-view></div></div>
+<!-- CONTENT -->
+<div class="content">
+    <div ui-view></div>
+</div>

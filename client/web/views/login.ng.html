@@ -6,22 +6,27 @@
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <div class="row-fluid user-row">
-                        <img src="web/img/clubnet_logo.png" class="img-responsive" />
+                        <img src="/web/img/clubnet_logo.png" class="img-responsive"/>
                     </div>
                 </div>
                 <div class="panel-body">
                     <form accept-charset="UTF-8" role="form" class="form-signin">
-                            <!--<label class="panel-login">-->
-                                <!--<div class="login_result"></div>-->
-                            <!--</label>-->
-                            <input type="email" id="inputEmail" class="form-control" placeholder="{{ 'EMAIL' | translate }}" ng-model="user.email" required autofocus>
-                            <input type="password" id="inputPassword" class="form-control" placeholder="{{ 'PASS' | translate }}" ng-model="user.password" required>
+                        <!--<label class="panel-login">-->
+                        <!--<div class="login_result"></div>-->
+                        <!--</label>-->
+                        <input type="email" id="inputEmail" class="form-control" placeholder="{{ 'EMAIL' | translate }}"
+                               ng-model="user.email" required autofocus>
+                        <input type="password" id="inputPassword" class="form-control"
+                               placeholder="{{ 'PASS' | translate }}" ng-model="user.password" required>
                         <div ng-if="errorVisible" class="alert alert-warning">
                             {{ error }}
                         </div>
-                        <input class="btn btn-lg btn-success btn-block" type="submit" ng-click="login()" value="{{ 'LOG_IN' | translate }}">
+                        <input class="btn btn-lg btn-success btn-block" type="submit" ng-click="login()"
+                               value="{{ 'LOG_IN' | translate }}">
                         <div id="forgotpassword">
-                            <button ng-click="forgotPass()" type="button" class="btn btn-link">{{ 'FORGOT_PASS' | translate }}?</button>
+                            <button ng-click="forgotPass()" type="button" class="btn btn-link">{{ 'FORGOT_PASS' |
+                                translate }}?
+                            </button>
                         </div>
                     </form>
                 </div>

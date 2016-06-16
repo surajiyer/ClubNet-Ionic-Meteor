@@ -1,4 +1,4 @@
-<ion-view view-title="Home">
+<ion-view view-title="{{ 'HOME' | translate}}">
     <ion-nav-bar class="bar-stable">
         <ion-nav-buttons side="left">
             <button class="button button-icon icon ion-navicon" menu-toggle="left"></button>
@@ -49,7 +49,7 @@
             <div class="list card" ng-show="!items.length" style="height: auto">
                 <div class="item item-body">
                     <p>
-                        No items have been found.
+                        {{ 'NO_ITEMS_MESSAGE' | translate }}
                     </p>
                 </div>
             </div>

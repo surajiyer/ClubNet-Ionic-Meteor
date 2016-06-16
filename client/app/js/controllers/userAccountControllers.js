@@ -41,7 +41,7 @@ angular.module('userAccountControllers', [])
     /**
      *  Login Controller: provides all functionality for the login screen of the app
      */
-    .controller('loginCtrl', function ($scope, $meteor, $state, CommonServices) {
+    .controller('loginCtrl', function ($scope, $meteor, $state, CommonServices, $translate) {
         /**
          * Credentials of the user
          */
@@ -54,10 +54,29 @@ angular.module('userAccountControllers', [])
          * @summary Function for a user to login
          */
         $scope.login = function () {
+
+            var INCORRECT_CREDENTIALS;
+            var NOT_AUTHORIZED;
+            var ERROR;
+
+
+            $translate('INCORRECT_CREDENTIALS').then(function (result) {
+              INCORRECT_CREDENTIALS=result;
+            });
+             $translate('NOT_AUTHORIZED').then(function (result) {
+              NOT_AUTHORIZED=result;
+            });
+            $translate('ERROR').then(function (result) {
+              ERROR=result;
+            });
+
+
             try {
                 check($scope.user.email, String);
             } catch (e) {
-                return CommonServices.showAlert('Invalid E-mail', 'Please provide a valid e-mail address');
+              $translate('MISSING_VALID_EMAIL_MESSAGE').then(function (result) {
+                CommonServices.showAlert('Error', result);
+              });
             }
 
             try {
@@ -66,14 +85,16 @@ angular.module('userAccountControllers', [])
                     return x.length > 0;
                 }));
             } catch (e) {
-                return CommonServices.showAlert('Invalid password', 'Please enter a valid password');
+                $translate('MISSING_PASSWORD').then(function (result) {
+                    CommonServices.showAlert(ERROR, result);
+                });
             }
 
             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                 if (error) {
                     // Show error message
                     if (error.error == 400 || error.error == 403) {
-                        return CommonServices.showAlert('Incorrect Credentials', 'Username or Password does not match.');
+                        return CommonServices.showAlert(ERROR, INCORRECT_CREDENTIALS);
                     } else {
                         return CommonServices.showAlert(error.error + ' ' + error.reason, error.message);
                     }
@@ -101,7 +122,7 @@ angular.module('userAccountControllers', [])
     /**
      *  Forgot Password Controller: provides functionality for restoring forgotten password
      */
-    .controller('forgotPasswordCtrl', function ($scope, $state, CommonServices) {
+    .controller('forgotPasswordCtrl', function ($scope, $state, CommonServices, $translate) {
         /**
          * Information of the user who forgot his password
          */
@@ -113,12 +134,20 @@ angular.module('userAccountControllers', [])
          * @summary Function to send email to user to reset password
          */
         $scope.forgotPassword = function () {
-            if (!SimpleSchema.RegEx.Email.test($scope.email)) {
-                return CommonServices.showAlert('Invalid E-mail', 'Please provide a valid e-mail address');
+            if (!SimpleSchema.RegEx.Email.test($scope.user.email)) {
+                $translate(['ERROR', 'MISSING_VALID_EMAIL']).then(function (translations) {
+                  head = translations.ERROR;
+                  content = translations.MISSING_VALID_EMAIL;
+                  CommonServices.showAlert(head, content);
+                });
             }
 
-            Accounts.forgotPassword({email: $scope.email}, function () {
-                CommonServices.showAlert('E-mail Sent', 'An E-mail has been sent to reset the password.');
+            Accounts.forgotPassword({email: $scope.user.email}, function () {
+                $translate(['ERROR', 'EMAILSENDFORPASSRESET']).then(function (translations) {
+                  head = translations.ERROR;
+                  content = translations.EMAILSENDFORPASSRESET;
+                  CommonServices.showAlert(head, content);
+                });
                 $state.go('login');
             });
         };
@@ -162,7 +191,7 @@ angular.module('userAccountControllers', [])
     /**
      *  Profile Controller: provides all functionality for the Profile screen of the app
      */
-    .controller('profileCtrl', function ($scope, $meteor, $state, CommonServices) {
+    .controller('profileCtrl', function ($scope, $meteor, $state, CommonServices, $translate) {
         /**
          * Profile information
          */
@@ -186,20 +215,30 @@ angular.module('userAccountControllers', [])
          */
         $scope.changePassword = function () {
             if ($scope.password.newPass != $scope.password.newPassCheck) {
-                return CommonServices.showAlert("Error", "Passwords don't match.");
+                $translate(['ERROR', 'PASS_NO_MATCH']).then(function (translations) {
+                  head = translations.ERROR;
+                  content = translations.PASS_NO_MATCH;
+                  CommonServices.showAlert(head, content);
+                });
+            }
+
+            var testPassword = CommonServices.checkPassword($scope.password.newPass);
+            if(!testPassword) {            
+                $translate(['ERROR', 'PASS_RESET_SUCCESS']).then(function (translations) {
+                  head = translations.ERROR;
+                  content = translations.PASS_RESET_SUCCESS;
+                  CommonServices.showAlert(head, content);
+                });
             }
             
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
-                CommonServices.showAlert("Success!", "Password changed successfully. Please login again.");
+
+                $translate(['SUCCESS', 'PASS_NOT_VALID']).then(function (translations) {
+                  head = translations.ERROR;
+                  content = translations.PASS_RESET_SUCCESS;
+                  CommonServices.showAlert(head, content);
+                });
                 Meteor.logout(function () {
-                      //Some cleanup code
-                      Object.keys(Session.keys).forEach(function(key){
-                        Session.set(key, undefined);
-                      });
-                      Session.keys = {} // remove session keys
-                      $scope.password.oldPass = '';
-                      $scope.password.newPass = '';
-                      $scope.password.newPassCheck = '';
                     $state.go('login');
                 });
             }, function (error) {

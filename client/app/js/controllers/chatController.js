@@ -83,7 +83,6 @@ angular.module('chatControllers', [])
                         });
                     } else {
                         var chatID = Chat.createChat(userId);
-                        console.log('createChat() chatId: ' + chatID);
                         $state.go('menu.chat', {chatId: chatID});
                     }
                 };
@@ -113,6 +112,15 @@ angular.module('chatControllers', [])
             },
             messagesCount: function () {
                 return MessagesCount.find(chat._id);
+            }
+        });
+
+        // Show notification in menu if unread messages are there
+        $scope.autorun(function () {
+            var nrOfMessages = $scope.getReactively('messagesCount')[0];
+            console.log('nrOfMessages', nrOfMessages);
+            if(nrOfMessages) {
+                Chat.showChatNotification.set(nrOfMessages.unreadCount != 0);
             }
         });
     })
@@ -180,14 +188,15 @@ angular.module('chatControllers', [])
         $scope.subscribe('MessagesCount', () => { return [chatId] }, () => {
             // Subscribe to an initial set of messages
             $scope.refresh();
-        });
 
-        $scope.$on("$destroy", function () {
-            // Delete the chat if it contains no messages
-            var nrOfMessages = $scope.messagesCount[0].count;
-            if(nrOfMessages == 0) {
-                Chat.deleteChat(chatId);
-            }
+            $scope.$on("$destroy", function () {
+                // Delete the chat if it contains no messages
+                var nrOfMessages = $scope.messagesCount[0].count;
+                console.log('nrOfMessages', $scope.messagesCount[0]);
+                if(nrOfMessages == 0) {
+                    Chat.deleteChat(chatId);
+                }
+            });
         });
 
         // Reactively update recipient messages to read as they come in
