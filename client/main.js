@@ -28,7 +28,7 @@ if(Meteor.isProduction) {
     if (Meteor.isCordova) {
         angular.element(document).on("deviceready", loadApp);
     } else {
-        angular.element(document).ready(loadWeb);
+        angular.element(document).ready(loadApp);
     }
 } else {
     angular.element(document).ready(loadWeb);
