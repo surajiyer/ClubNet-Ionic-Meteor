@@ -365,13 +365,13 @@ angular.module('web.userAccountControllers', [])
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                $translate('PASS_NO_MATCH').then(function (error) {
+                $translate('PWD_NOT_MATCH').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
                 $scope.passwordUpdatedVisible = false;
             } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
-                $translate('PASS_NOT_VALID').then(function (error) {
+                $translate('PWD_NOT_VALID').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
@@ -481,12 +481,12 @@ angular.module('web.userAccountControllers', [])
                 });
                 $scope.passwordErrorVisible = true;
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                $translate('PASS_NO_MATCH').then(function (error) {
+                $translate('PWD_NOT_MATCH').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
             } else if (!checkPassword.checkPassword($scope.user.newPassword)) {
-                $translate('PASS_NOT_VALID').then(function (error) {
+                $translate('PWD_NOT_VALID').then(function (error) {
                     $scope.passwordError = error;
                 });
                 $scope.passwordErrorVisible = true;
