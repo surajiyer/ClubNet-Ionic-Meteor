@@ -97,6 +97,9 @@ Meteor.methods({
         check(title, String);
         check(text, String);
         check(Meteor.userId(), String);
+
+        console.log("Test 1");
+
         var isValidUser = Meteor.user().profile.type == "coach";
         if(!isValidUser) {
             throw new Meteor.Error('401', 'Not Authorized');
@@ -107,6 +110,9 @@ Meteor.methods({
             'profile.type': {$ne: "coach"},
             'profile.teamID' : {$exists: true, $eq: teamID}
         };
+
+        console.log("Test 2");
+        
         var notificationType = 'profile.notifications.'+type;
         selector[notificationType] = true;
         var users = Meteor.users.find(selector, {fields: {_id: 1}}).fetch();
