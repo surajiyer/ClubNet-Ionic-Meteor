@@ -24,7 +24,6 @@ const UserProfile = new SimpleSchema({
         type: String,
         optional: true,
         custom: function () {
-            if(!this.value) return;
             var shouldBeRequired = this.siblingField('type').value == 'coach'
                 || this.siblingField('type').value == 'player';
             if (shouldBeRequired) {
@@ -40,7 +39,7 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$rename") return "required";
                 }
             } else {
-                return 'notAllowed';
+                if(this.value && this.value.length > 0) return 'notAllowed';
             }
         }
     },
@@ -48,7 +47,6 @@ const UserProfile = new SimpleSchema({
         type: [notesSchema],
         optional: true,
         custom: function () {
-            if(!this.value) return;
             var shouldBeRequired = this.siblingField('type').value == 'coach';
             if (shouldBeRequired) {
                 // updates
@@ -58,7 +56,9 @@ const UserProfile = new SimpleSchema({
                     if (this.operator === "$rename") return "required";
                 }
             } else {
-                return 'notAllowed';
+                console.log('notes');
+                console.log(this.value);
+                if(this.value && this.value.length > 0) return 'notAllowed';
             }
         }
     },

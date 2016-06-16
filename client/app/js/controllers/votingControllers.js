@@ -135,22 +135,17 @@ angular.module('votingControllers', [])
         $scope.vote = function (value) {
             if (value) {
                 $translate('CONFIRM_DELETE').then(function (result) {
-                    var confirmPopup = $ionicPopup.confirm({
+                    confirmPopup = $ionicPopup.confirm({
                         title: result
                     });
                 });
                 confirmPopup.then(function (res) {
                     if (res) {
                         $meteor.call('putResponse', $scope.item._id, $scope.item.type, value.toString()).then(
-                            function (result) {
+                            function () {
                                 $scope.hasVoted = value;
                                 //increase the number of votes
-                                  $meteor.call('increaseNrVotes', $scope.item._id, $scope.item.type, value.toString()).then(
-                                      function(result){
-                                      },
-                                      function (err) {
-                                      }
-                                  );
+                                $meteor.call('increaseNrVotes', $scope.item._id, $scope.item.type, value.toString());
                             },
                             function (err) {
                                 console.log(err);
@@ -169,10 +164,10 @@ angular.module('votingControllers', [])
                         );
                     }
                 });
-            } 
+            }
         };
 
         Items.find({_id: $scope.item._id}).observeChanges({
-           changed: $scope.updateChartValues
+            changed: $scope.updateChartValues
         });
     })

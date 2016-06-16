@@ -1,42 +1,42 @@
 angular.module('userAccountControllers', [])
-/**
- *  Register Controller: provides all functionality for the register screen of the app
- */
-// .controller('registerCtrl', function ($scope, $meteor, $state) {
-//     /**
-//      * Credentials of the user
-//      */
-//     $scope.user = {
-//         email: '',
-//         password: ''
-//     };
-//     /**
-//      * @summary Function to register a new user
-//      */
-//     $scope.register = function () {
-//         if (!$scope.user.email)
-//             throw new Meteor.Error('Account registration error: e-mail is not valid');
-//         var newUser = {
-//             email: $scope.user.email,
-//             password: $scope.user.password,
-//             profile: {
-//                 firstName: "p",
-//                 lastName: "1",
-//                 type: "player",
-//                 clubID: "club",
-//                 teamID: "team1"
-//             }
-//         };
-//         Meteor.call('addUser', newUser, function (err, result) {
-//             if (err || !Match.test(result, String))
-//                 throw new Meteor.Error('Account registration error: ' + err.reason);
-//             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-//                 if (error) throw new Meteor.Error(error.reason);
-//                 $state.go('menu.feed'); // Redirect user if registration succeeds
-//             });
-//         });
-//     };
-// })
+    /**
+     *  Register Controller: provides all functionality for the register screen of the app
+     */
+    // .controller('registerCtrl', function ($scope, $meteor, $state) {
+    //     /**
+    //      * Credentials of the user
+    //      */
+    //     $scope.user = {
+    //         email: '',
+    //         password: ''
+    //     };
+    //     /**
+    //      * @summary Function to register a new user
+    //      */
+    //     $scope.register = function () {
+    //         if (!$scope.user.email)
+    //             throw new Meteor.Error('Account registration error: e-mail is not valid');
+    //         var newUser = {
+    //             email: $scope.user.email,
+    //             password: $scope.user.password,
+    //             profile: {
+    //                 firstName: "p",
+    //                 lastName: "1",
+    //                 type: "player",
+    //                 clubID: "club",
+    //                 teamID: "team1"
+    //             }
+    //         };
+    //         Meteor.call('addUser', newUser, function (err, result) {
+    //             if (err || !Match.test(result, String))
+    //                 throw new Meteor.Error('Account registration error: ' + err.reason);
+    //             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
+    //                 if (error) throw new Meteor.Error(error.reason);
+    //                 $state.go('menu.feed'); // Redirect user if registration succeeds
+    //             });
+    //         });
+    //     };
+    // })
 
     /**
      *  Login Controller: provides all functionality for the login screen of the app
@@ -58,14 +58,15 @@ angular.module('userAccountControllers', [])
             return x.length > 0;
         };
 
-        var ERROR = 'error';
+        var ERROR = 'Error';
 
         try {
             check($scope.user.email, Match.Where(validateInput));
         } catch (e) {
             $translate('MISSING_VALID_EMAIL_MESSAGE').then(function (result) {
-                CommonServices.showAlert('Error', result);
+                CommonServices.showAlert(ERROR, result);
             });
+            return;
         }
 
         try {
@@ -74,6 +75,7 @@ angular.module('userAccountControllers', [])
             $translate('MISSING_PASSWORD').then(function (result) {
                 CommonServices.showAlert(ERROR, result);
             });
+            return;
         }
 
         Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
@@ -81,11 +83,12 @@ angular.module('userAccountControllers', [])
                 $translate('INCORRECT_CREDENTIALS').then(function (result) {
                     // Show error message
                     if (error.error == 400 || error.error == 403) {
-                        return CommonServices.showAlert(ERROR, result);
+                        CommonServices.showAlert(ERROR, result);
                     } else {
-                        return CommonServices.showAlert(error.error + ' ' + error.reason, error.message);
+                        CommonServices.showAlert(error.error + ' ' + error.reason, error.message);
                     }
                 });
+                return;
             }
 
             // Check if user is a PR user
@@ -96,6 +99,7 @@ angular.module('userAccountControllers', [])
                 });
                 return;
             }
+
             // Go to feed
             window.location.replace("/");
         });
@@ -133,9 +137,9 @@ angular.module('userAccountControllers', [])
             }
 
             Accounts.forgotPassword({email: $scope.user.email}, function () {
-                $translate(['ERROR', 'EMAILSENDFORPASSRESET']).then(function (translations) {
+                $translate(['ERROR', 'PWD_RECOVERY_EMAIL_SENT']).then(function (translations) {
                     head = translations.ERROR;
-                    var content = translations.EMAILSENDFORPASSRESET;
+                    var content = translations.PWD_RECOVERY_EMAIL_SENT;
                     CommonServices.showAlert(head, content);
                 });
                 
@@ -158,18 +162,20 @@ angular.module('userAccountControllers', [])
             confirmNewPassword: ''
         };
 
+        var ERROR = 'Error';
+
         /**
          * @summary Function to reset the users password
          */
         $scope.resetPassword = function () {
             if (!$scope.user.newPassword) {
-                CommonServices.showAlert('Error', 'No new password specified');
+                return CommonServices.showAlert(ERROR, 'No new password specified');
             } else if (!$scope.user.confirmNewPassword) {
-                CommonServices.showAlert('Error', 'Please confirm your new password');
+                return CommonServices.showAlert(ERROR, 'Please confirm your new password');
             } else if ($scope.user.newPassword != $scope.user.confirmNewPassword) {
-                CommonServices.showAlert("Error", "New passwords don't match");
+                return CommonServices.showAlert(ERROR, "New passwords don't match");
             } else if (!CommonServices.checkPassword($scope.user.newPassword)) {
-                CommonServices.showAlert('Weak Password', 'Password not strong enough. ' +
+                return CommonServices.showAlert('Weak Password', 'Password not strong enough. ' +
                     'It should contain at least 8 characters of which at least one alphabetical and one numeric.');
             } else {
                 $meteor.resetPassword($stateParams.token, $scope.user.newPassword, function () {
@@ -206,9 +212,9 @@ angular.module('userAccountControllers', [])
          */
         $scope.changePassword = function () {
             if ($scope.password.newPass != $scope.password.newPassCheck) {
-                $translate(['ERROR', 'PASS_NO_MATCH']).then(function (translations) {
+                $translate(['ERROR', 'PWD_NOT_MATCH']).then(function (translations) {
                     head = translations.ERROR;
-                    var content = translations.PASS_NO_MATCH;
+                    var content = translations.PWD_NOT_MATCH;
                     CommonServices.showAlert(head, content);
                 });
                 return;
@@ -216,24 +222,27 @@ angular.module('userAccountControllers', [])
 
             var testPassword = CommonServices.checkPassword($scope.password.newPass);
             if (!testPassword) {
-                $translate(['ERROR', 'PASS_RESET_SUCCESS']).then(function (translations) {
+                $translate(['ERROR', 'PWD_NOT_VALID']).then(function (translations) {
                     head = translations.ERROR;
-                    var content = translations.PASS_RESET_SUCCESS;
+                    var content = translations.PWD_NOT_VALID;
                     CommonServices.showAlert(head, content);
                 });
                 return;
             }
 
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
-                $translate(['SUCCESS', 'PASS_NOT_VALID']).then(function (translations) {
-                    head = translations.ERROR;
-                    var content = translations.PASS_RESET_SUCCESS;
+                $translate(['SUCCESS', 'PWD_RESET_SUCCESS']).then(function (translations) {
+                    head = translations.SUCCESS;
+                    var content = translations.PWD_RESET_SUCCESS;
                     CommonServices.showAlert(head, content);
                 });
                 Meteor.logout(function () {
                     $state.go('login');
                 });
             }, function (error) {
+                $translate('ERROR').then(function () {
+
+                });
                 return CommonServices.showAlert('Error', error.reason);
             });
         };

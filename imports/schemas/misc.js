@@ -35,7 +35,9 @@ const permissionSchema = new SimpleSchema({
     _id: {
         type: String,
         custom: function () {
-            if(!utils.isValidType(this.value)) return "notAllowed";
+            if(!utils.isValidType(this.value)) {
+                return "notAllowed";
+            }
         }
     },
     permissions: {type: Object},
