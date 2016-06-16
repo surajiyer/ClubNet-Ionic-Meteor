@@ -259,12 +259,15 @@ Meteor.methods({
      * @throws error if the input parameters do not have the required type.
      */
     updateUserNotificationSetting: function (itemType, value) {
-        check(itemType, String);
-        check(value, Boolean);
-        var loggedInUser = Meteor.userId();
-        check(loggedInUser, String);
-        var userNotifications = Meteor.users.findOne({"_id": loggedInUser}).profile.notifications;
-        userNotifications[itemType] = value;
-        Meteor.users.update(loggedInUser, {$set: {"profile.notifications": userNotifications}});
-    }
+       check(itemType, Match.Where(function (type) {
+           check(type, String);
+           return utils.isValidType(type);
+       }));
+       check(value, Boolean);
+       var loggedInUser = Meteor.userId();
+       check(loggedInUser, String);
+       var userNotifications = Meteor.users.findOne({"_id": loggedInUser}).profile.notifications;
+       userNotifications[itemType] = value;
+       Meteor.users.update(loggedInUser, {$set: {"profile.notifications": userNotifications}});
+   }
 });
