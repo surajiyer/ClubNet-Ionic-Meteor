@@ -17,18 +17,18 @@
     </span>
 </div>
 <div class="item item-body"
-     ng-if="!$parent.showEdit && (item.target == 'driving' || item.target == 'other') && !item.hasContributed && item.targetValue-item.raisedValue > 0">
+     ng-if="(item.target == 'driving' || item.target == 'other') && !item.myContribution > 0 && item.targetValue-item.raisedValue > 0">
     <div>
         <label class="item item-input item-select">
             <div class="input-label">
                 Contribution:
             </div>
-            <input ng-model="item.currentContribution" type="text" placeholder="amount" class="contribution"><br>
+            <input ng-model="item.myContribution" type="text" placeholder="amount" class="contribution"><br>
         </label>
     </div>
 </div>
 
-<div class="item item-body" ng-if="!$parent.showEdit">
+<div class="item item-body" ng-switch on="item.myContribution > 0">
     <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'absence'" type="hidden" ng-value="1">
     <button class="button button-outline button-balanced"
             ng-click="signUp()"
@@ -42,4 +42,3 @@
         <span ng-if="item.target == 'driving' || item.target == 'other'">: {{item.myContribution}}</span>
     </button>
 </div>
-

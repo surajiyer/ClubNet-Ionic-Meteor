@@ -19,7 +19,7 @@ angular.module('app.directives', [])
     .directive('formdir', function () {
         return {
             restrict: 'E',
-            templateUrl: 'client/app/views/feedItems/formdir.ng.html',
+            templateUrl: 'client/app/views/feedItems/form.ng.html',
             scope: {
                 item: "="
             },
