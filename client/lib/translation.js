@@ -5,7 +5,7 @@ angular.module('translation', ['pascalprecht.translate'])
 
         $translateProvider.translations('nl', translations.nl);
         $translateProvider.translations('en', translations.en);
-        $translateProvider.preferredLanguage('en');
+        $translateProvider.preferredLanguage('nl');
         $translateProvider.fallbackLanguage('en');
     }])
 
@@ -124,7 +124,7 @@ angular.module('translation', ['pascalprecht.translate'])
             PWD_RESET_SUCCESS: "Uw wachtwoord is succesvol veranderd, log a.u.b. opnieuw in.",
             PASSWORD_RECOVERY_SENT: "Mail verzonden naar",
             PROFILE: "Profiel",
-            PROFILE_SUBTITLE: "Verander je gebruiksgegevens.",
+            PROFILE_SUBTITLE: "Verander je gebruikersgegevens.",
             PROFILE_TITLE: "Profiel",
             PUBLISH: "Publiceer",
             REPEAT_INTERVAL: "Herhaalfrequentie",
