@@ -47,8 +47,6 @@ angular.module('formControllers', [])
          * @after The session variables are updated. (raisedValue, myContribution, hasContribution)
          */
         $scope.reloadResponses = function () {
-            // Check if user has contributed to this item when initialising
-            if ($scope.item != null) {
 
                 var calculatedRaisedValue = "";
 
@@ -89,7 +87,7 @@ angular.module('formControllers', [])
                     }
                     $scope.$apply();
                 });
-            }
+            
             //convinient logging that can be used to directly see the performance of this reload functionality
             //which is invoked by observeChange when the increaseValue was incremented for the corresponding item.
             console.log("reloaded");
