@@ -162,7 +162,17 @@ angular.module('translation', ['pascalprecht.translate'])
             CREATE_NEW: "Nieuw item",
             READ_MORE: "Lees meer",
             READ_LESS: "Lees minder",
-            CONTRIBUTION: "Bijdrage:"
+            CONTRIBUTION: "Bijdrage:",
+
+            'player': "speler",
+            'pr': "pr",
+            'general': "algemeen",
+            'coach': "trainer",
+            'laundry': "Was",
+            'driving': "Vervoer",
+            'absence': "Absentie",
+            'other': "Anders"
+
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
