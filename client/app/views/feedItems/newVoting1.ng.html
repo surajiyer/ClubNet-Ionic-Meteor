@@ -1,0 +1,41 @@
+<ion-modal-view>
+    <ion-header-bar>
+        <h1 class="title">{{ 'NEW_VOTING' | translate }}</h1>
+        <div class="buttons">
+            <button class="button button-clear" ng-click="closeModal()">{{ 'CLOSE' | translate }}</button>
+        </div>
+    </ion-header-bar>
+    <ion-content>
+        <div class="list">
+            <label class="item item-input item-select" ng-hide="newItem._id">
+                <div class="input-label">
+                    Training
+                </div>
+                <select ng-model="newItem.training_id">
+                    <option value="">{{ 'SELECT_TRAINING' | translate }}</option>
+                    <option ng-repeat="training in trainings" value="{{training.trId}}">{{training.date | date:'MM/dd/yyyy @ h:mma' }}</option>
+                </select>
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label">{{ 'TITLE' | translate }}</span>
+                <textarea ng-model="newItem.title" rows="3" placeholder="{{ 'TITLE' | translate }}"></textarea>
+            </label>
+            <label class="item item-input item-floating-label">
+                <span class="input-label" style="opacity: 1;">Deadline</span>
+                <input ng-model="newItem.deadline" type="date" min="{{getCurrentDateISO()}}">
+            </label>
+            <label class="item checkbox-label">
+                <input type="checkbox" ng-model="newItem.intermediatePublic">
+                <span class="input-label">{{ 'SHOW_INT_RESULTS_MESSAGE' | translate }}</span>
+            </label>
+            <label class="item checkbox-label">
+                <input type="checkbox" ng-model="newItem.finalPublic">
+                <span class="input-label">{{ 'SHOW_FINAL_RESULTS_MESSAGE' | translate }}</span>
+            </label>
+            <button ng-disabled="!newItem.title || !newItem.deadline || !newItem.training_id"
+                    ng-click="edit(); addItem()" class="button button-block button-positive">
+                {{ postBtn | translate }}
+            </button>
+        </div>
+    </ion-content>
+</ion-modal-view>
