@@ -1,16 +1,18 @@
 angular.module('translation', ['pascalprecht.translate'])
 
     .config(['$translateProvider', 'translations', function ($translateProvider, translations) {
-
         translations = translations();
 
         $translateProvider.translations('nl', translations.nl);
         $translateProvider.translations('en', translations.en);
-        $translateProvider.preferredLanguage('nl');
+        $translateProvider.preferredLanguage('en');
+        $translateProvider.fallbackLanguage('en');
     }])
 
     .constant('translations', function () {
         var translations = {};
+
+        // DUTCH TRANSLATIONS
         translations.nl = {
             "Match failed": "Ongeldige combinatie",
             "Token expired": "Link verlopen",
@@ -149,9 +151,11 @@ angular.module('translation', ['pascalprecht.translate'])
             WEEKLY: "Wekelijks",
             WELCOME: "Welkom"
         };
+
+        // ENGLISH TRANSLATION
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."
         };
 
         return translations;
-    });
+    })

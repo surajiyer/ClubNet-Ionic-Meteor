@@ -251,7 +251,10 @@ Meteor.methods({
      * @param {String} value The setting itself
      */
     updateUserNotificationSetting: function (key, value) {
-        check(key, String);
+        check(key, Match.Where(function (type) {
+            check(type, String);
+            return utils.isValidType(type);
+        }));
         check(value, Boolean);
         var loggedInUser = Meteor.userId();
         check(loggedInUser, String);
