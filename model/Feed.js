@@ -142,6 +142,7 @@ if (Meteor.isServer) {
          * @param {String} itemId The id of the feed item.
          * @return {Object} The document of the feed item to be retrieved.
          * @throws error if the logged in user has no permission to view the specified feed item.
+         * @throws error if the input parameters do not have the required type.
          */
         getFeedItem: function (itemId) {
             check(itemId, String);
@@ -158,8 +159,8 @@ if (Meteor.isServer) {
          * @summary Update the information of a feed item.
          * @param {Object} updatedItem A document object that contains all attributes of the updated feed item..
          * @return None.
-         * @throws error if the logged in user has no permission to update the specified feed item or
-         * the 'updatedItem' does not conform to the corresponding feed item scheme.
+         * @throws error if the logged in user has no permission to update the specified feed item
+         * @throws error if the 'updatedItem' does not conform to the corresponding feed item scheme.
          */
         updateFeedItem: function (updatedItem) {
             check(updatedItem, Object);
@@ -185,6 +186,7 @@ if (Meteor.isServer) {
          * @param {String} itemId The id of the feed item to be deleted.
          * @return None.
          * @throws error if the logged in user has no permission to delete the specified feed item.
+         * @throws error if the input parameters do not have the required type.
          */
         deleteFeedItem: function (itemId) {
             check(itemId, String);
@@ -205,6 +207,7 @@ if (Meteor.isServer) {
          * @summary Retrieve all responses of a feed item.
          * @param {String} itemID The id of the feed item for which the responses need to be retrieved.
          * @return {Object[]} An array that contains the documents of all responses of the specified feed item.
+         * @throws error if the input parameters do not have the required type.
          */
         getResponsesOfOneItem: function (itemID) {
             check(itemID, String);
@@ -214,6 +217,7 @@ if (Meteor.isServer) {
          * @summary Find the number of responses of a feed item.
          * @param {String} itemID The id of the feed item.
          * @return {Integer} The number of responses of the specified feed item.
+         * @throws error if the input parameters do not have the required type.
          */
         getNumberResponsesOfOneItem: function (itemID) {
             check(itemID, String);
@@ -223,6 +227,7 @@ if (Meteor.isServer) {
          * @summary Retrieve the response of the currently logged in user to a feed item.
          * @param {String} itemID The id of the feed item for which the response needs to be retrieved.
          * @return {Object} The document of the response to the specified feed item.
+         * @throws error if the input parameters do not have the required type.
          */
         getResponse: function (itemID) {
             check(itemID, String);
@@ -233,6 +238,7 @@ if (Meteor.isServer) {
          * @summary Delete the response of the currently logged in user to a feed item.
          * @param {String} itemID The id of the feed item for which response needs to be deleted.
          * @return None.
+         * @throws error if the input parameters do not have the required type.
          */
         deleteResponse: function (itemID) {
             check(itemID, String);
@@ -243,6 +249,7 @@ if (Meteor.isServer) {
          * @summary Function for retrieving the responses to feed items of a certain type.
          * @param {String} itemType The type of the feed items for which the responses needs to be retrieved.
          * @return {Object[]} An array that contains all the responses to feed items of the specified type.
+         * @throws error if the input parameters do not have the required type.
          */
         getResponsesOfItemType: function (itemType) {
             check(itemType, String);
@@ -254,6 +261,7 @@ if (Meteor.isServer) {
          * @param {String} itemType The type of the feed item.
          * @param {String} value The value of the response.
          * @return {String} The id of the inserted response.
+         * @throws error if the input parameters do not have the required type.
          */
         putResponse: function (itemID, itemType, value) {
             check(itemID, String);

@@ -23,7 +23,7 @@ const getUsersFromTeam = function (clubID, teamID, userTypes) {
     );
 };
 
-/**
+/*
  * @summary Rules and Methods for the users collection.
  * On startup it will set the deny and allow rules, publish the user data and attach the userSchema
  * @instancename Meteor.users
@@ -111,12 +111,12 @@ Meteor.methods({
     }, 
     
     /**
-     * @summary Function for adding a new user to the collection.
-     * It will check whether or not the new user adheres to the schema.
-     * If so, it will add the user to the collection and it will send an enrollment email to the new user.
-     * @method addUser
-     * @param {Object} newUser An object that wants to be added to the collection, needs to adhere to the schema.
-     * @returns {String} userId The id of the newly created user
+     * @summary Add a new user account.
+     * @param {Object} newUser A document object that contains all attributes of the user account to be added.
+     * @return {String} The id of the newly added user.
+     * @after After a new user account is added, a confirmation email is sent to the user.
+     * @throws error if the 'newUser' does not conform to the database scheme.
+     * @throws error if the input parameters do not have the required type.
      */
     addUser: function (newUser) {
         // Validate the information in the newUser.
@@ -160,12 +160,11 @@ Meteor.methods({
     },
     
     /**
-     * @summary Function for updating the information of a certain user.
-     * It will first check whether the parameters are valid.
-     * If so, it will update the user with the new information.
-     * @method updateUserProfile
-     * @param {String} userID The id of the user to have its information be updated.
-     * @param {Object} newInfo The new information to be added to the user.
+     * @summary Update the information of a user.
+     * @param {String} userID The id of the user account whose information is to be updated.
+     * @param {Object} newInfo A document object that contains all attributes of the updated user.
+     * @throws error if the 'newInfo' does not conform to the database scheme.
+     * @throws error if the input parameters do not have the required type.
      */
     updateUserProfile: function (userID, newInfo) {
         // TODO: should not check full user profile schema for update
@@ -179,20 +178,23 @@ Meteor.methods({
             {$set: {profile: newInfo}}
         );
     },
-    
+    /**
+     * @summary Get the information of a user account specified by the email address.
+     * @param{String} email The email address of the user account.
+     * @return{Object} A document object that contains all the attributes of the user account specified by the email address.
+     * @throws error if the input parameters do not have the required type.
+     */
     getUserInfoByEmail: function (email) {
         check(email, String);
         // check(Meteor.userId(), Match.Where(utils.isAdmin));
         return Meteor.users.find({"emails.address": email}).fetch()[0];
     },
     /**
-     * @summary Function for getting the information of a certain user.
-     * This can only be done by a user that had admin level rights.
-     * It will first check whether the parameters are valid and if the user is an admin.
-     * If so, it will try to get the information.
-     * @method getUserInfo
-     * @param {String} userID The id of the user who's information needs to be retrieved.
-     * @return {Object} The information of the user
+     * @summary Retrieve the information of a user account specified by the id.
+     * @param{String} userID The id of the user account to be retrieve.
+     * @return{Object} A document object that contains all the attributes of the user account specified by the id.
+     * @throws error if the logged in user is not allowed to retrieve user accounts information.
+     * @throws error if the input parameters do not have the required type.
      */
     getUserInfo: function (userID) {
         check(userID, String);
@@ -200,26 +202,25 @@ Meteor.methods({
         return Meteor.users.find({_id: userID}).fetch()[0];
     },
     /**
-     * @summary Function for getting the type of the current logged in user.
-     * It will first check whether the parameters are valid.
-     * If so, it will try to get the type of the user.
-     * @method getUserType
-     * @returns {String} Type of the user
+     * @summary Get the type of the logged in user.
+     * @returns {String} Type of the logged in user.
      */
     getUserType: function () {
         check(Meteor.userId(), String);
         return Meteor.user().profile.type;
     },
-    
+    /**
+     * @summary Get the size of the team of the logged in user.
+     * @return{Integer} The number of players in the team.
+     */
     getTeamSize: function () {
         check(Meteor.userId(), String);
         var teamID = utils.getUserTeamID(Meteor.userId());
         return Meteor.users.find({type: 'player', 'profile.teamID': teamID}).count();
     },
     /**
-     * @summary Returns an array of all club's users
-     * @method getClubUsers
-     * @returns {Array} Array of all club's users
+     * @summary Retrieve all users in the club of the logged in user.
+     * @returns {Object[]} Array of document objects that contains all the user accounts in the club of the logged in user.
      */
     getClubUsers: function () {
         var clubID = Meteor.user().profile.clubID;
@@ -232,9 +233,8 @@ Meteor.methods({
     },
 
     /**
-     * @summary Returns an array of users that are affiliated with the same team as the logged in user
-     * @method getTeamUsers
-     * @returns {Array} Array of users that are affiliated with the same team as the logged in user
+     * @summary Retrieve all users in the team of the logged in user.
+     * @return {Object[]} Array of document objects that contains all the user accounts in the team of the logged in user.
      */
     getTeamUsers: function () {
         var teamID = Meteor.user().profile.teamID;
@@ -246,17 +246,19 @@ Meteor.methods({
         return users_array;
     },
     /**
-     * @summary Function for updating user notification setting.
-     * @param {String} key Which item type notification setting is for
-     * @param {String} value The setting itself
+     * @summary Update the notification setting of the logged in user.
+     * @param {String} itemType The feed item type to which the notification setting is changed.
+     * @param {Boolean} value A boolean that indicates whether to subscribe to the specified feed item type.
+     * @return None.
+     * @throws error if the input parameters do not have the required type.
      */
-    updateUserNotificationSetting: function (key, value) {
-        check(key, String);
+    updateUserNotificationSetting: function (itemType, value) {
+        check(itemType, String);
         check(value, Boolean);
         var loggedInUser = Meteor.userId();
         check(loggedInUser, String);
         var userNotifications = Meteor.users.findOne({"_id": loggedInUser}).profile.notifications;
-        userNotifications[key] = value;
+        userNotifications[itemType] = value;
         Meteor.users.update(loggedInUser, {$set: {"profile.notifications": userNotifications}});
     }
 });
