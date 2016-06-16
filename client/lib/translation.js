@@ -22,8 +22,12 @@ angular.module('translation', ['pascalprecht.translate'])
             ADD_MEMBER_TITLE: "Voeg lid toe",
             ADD_MEMBER_TYPE_TOOLTIP: "Het lid zal het gebruikerstype speler hebben als het gekoppeld is aan een team. Zo niet, zal het lid het gebruikerstype algemeen hebben.",
             ADD_USER: "Voeg gebruiker toe",
-            BUTTON_PRESENT: "Aanwezig",
+            BUTTON_SIGNOFF: "Afmelden",
+            BUTTON_SIGNUP: "Aanmelden",
+            BUTTON_CONTRIBUTE: "Verstuur",
             BUTTON_WITHDRAW: "Trek terug",
+            PRESENT: "Je geeft aan dat je aanwezig zult zijn.",
+            NOTPRESENT: "Je hebt aangegeven dat je afwezig zult zijn.",
             CANCEL: "Annuleer",
             CHANGE_PASS: "Verander wachtwoord",
             CHANGE_PASS_SUCCESS: "Wachtwoord aangepast",
@@ -56,6 +60,7 @@ angular.module('translation', ['pascalprecht.translate'])
             EMAIL_IN_USE: "Email adres is reeds in gebruik door een lid",
             PWD_RECOVERY_EMAIL_SENT: "Er is een mail naar u verstuurt om het wachtwoord te veranderen.",
             ENGLISH: "Engels",
+            ENOUGH_PEOPLE: "Er hebben zich genoeg mensen aangemeld.",
             ENROLL: "Aanmelden",
             ENROLL_PASS: "Vul hieronder je gewenste wachtwoord in",
             ERROR: "Foutmelding",
@@ -79,6 +84,7 @@ angular.module('translation', ['pascalprecht.translate'])
             MENU_MEMBERS: "Leden",
             MENU_PROFILE: "Profiel",
             MENU_SETTINGS: "Instellingen",
+            PEOPLE_PRESENT: "Mensen aanwezig:",
             MISSING_CLUB_NAME: "Geen clubnaam ingevuld",
             MISSING_CONFIRM_PASS: "Geen bevestiging van wachtwoord ingevuld",
             MISSING_CURRENT_PASS: "Huidige wachtwoord niet ingevuld",
@@ -147,7 +153,15 @@ angular.module('translation', ['pascalprecht.translate'])
             UPDATE_PROFILE_SUCCESS: "Gebruikersprofiel aangepast",
             USER_PROFILE: "Gebruikersprofiel",
             WEEKLY: "Wekelijks",
-            WELCOME: "Welkom"
+            WELCOME: "Welkom",
+            FORM: "Inventarisatie",
+            HEROES: "Helden",
+            POLLS: "Oefening kiezen",
+            SPONSORING: "Sponsorevenement",
+            FILTER_ON: "Filteren op",
+            CREATE_NEW: "Nieuw item",
+            READ_MORE: "Lees meer",
+            READ_LESS: "Lees minder"
         };
         translations.en = {
             MEMBERS_SUBTITLE: "Add, delete and manage the members of your club."

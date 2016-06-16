@@ -1,6 +1,6 @@
 <div class="item item-body">
     <p>
-        {{item.target | capitalize}}: {{item.title}}
+        {{ item.target | translate }}: {{item.title}}
     </p>
 </div>
 <div class="item item-body">
@@ -10,14 +10,20 @@
 </div>
 <div class="item item-body" ng-switch="item.formType">
     <span ng-if="item.targetValue-item.raisedValue > 0">
-        {{ item.target == "absence" ? "People present:" : "We still need" }} {{(item.targetValue - item.raisedValue) | number}}/{{item.targetValue}}!
+     <!--    {{ item.target == "absence" ? PEOPLE_PRESENT | translate : "We still need" }} {{(item.targetValue - item.raisedValue) | number}}/{{item.targetValue}}! -->
+        <span ng-if="item.target == 'absence'">
+           {{ 'PEOPLE_PRESENT' | translate }} {{(item.targetValue - item.raisedValue) | number}}/{{item.targetValue}}!
+        </span>
+        <span ng-if="item.target != 'absence'">
+           {{ 'STILL_NEED' | translate }} {{(item.targetValue - item.raisedValue) | number}}/{{item.targetValue}}!
+        </span>
     </span>
     <span ng-if="item.targetValue-item.raisedValue <= 0">
-        We already have enough contributing people.
+        {{'ENOUGH_PEOPLE' | translate}}
     </span>
 </div>
 <div class="item item-body"
-     ng-if="(item.target == 'driving' || item.target == 'other') && !item.hasContributed && item.targetValue-item.raisedValue > 0">
+     ng-if="!$parent.showEdit && (item.target == 'driving' || item.target == 'other') && !item.myContribution > 0 && item.targetValue-item.raisedValue > 0">
     <div>
         <label class="item item-input item-select">
             <div class="input-label">
@@ -28,18 +34,42 @@
     </div>
 </div>
 
+
 <div class="item item-body" id="animate-switch-container" ng-switch on="item.hasContributed"> 
+    <!-- BEFORE CLICK -->
     <div class="animate-switch" ng-switch-when="false">
+        <span ng-if="item.target == 'absence'">{{ 'PRESENT' | translate }}</span><br>
+        <!-- absence -->
+        <button class="button button-outline button-assertive"
+                ng-click="signUp()"
+                ng-if="item.target == 'absence'">
+                {{'BUTTON_SIGNOFF' | translate}}
+        </button>
+        <!-- all other -->
         <button class="button button-outline button-balanced"
-                ng-click="signUp()">
-            {{ item.target == "absence" ? "Absent" : "Contribute" }}
+                ng-click="signUp()"
+                ng-if="item.target != 'absence'">
+                {{'BUTTON_CONTRIBUTE' | translate}}
         </button>
     </div>
+    <!-- AFTER CLICK -->
     <div class="animate-switch" ng-switch-when="true">
-        <button class="button button-outline button-assertive contributed"
-                ng-click="withdrawContribution()">
-            {{ item.target == "absence" ? "I will be present" : "Withdraw your contribution" }}
+        <!-- absence -->
+        <span ng-if="item.target == 'absence'">{{ 'NOTPRESENT' | translate }}</span><br>
+        <button class="button button-outline button-balanced contributed"
+                ng-click="withdrawContribution()"
+                ng-if="item.target == 'absence'">
+                {{'BUTTON_SIGNUP' | translate}}
             <span ng-if="item.target == 'driving' || item.target == 'other'">: {{item.myContribution}}</span>
         </button>
+        <!-- all other -->
+        <button class="button button-outline button-assertive contributed"
+                ng-click="withdrawContribution()"
+                ng-if="item.target != 'absence'">
+                {{'BUTTON_WITHDRAW' | translate}}
+            <span ng-if="item.target == 'driving' || item.target == 'other'">: {{item.myContribution}}</span>
+        </button>
+
     </div>
 </div>
+

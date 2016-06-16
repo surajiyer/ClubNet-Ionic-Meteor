@@ -250,8 +250,8 @@ angular.module('app.controllers', [
             $scope.showItem = result;
         });
 
-        $scope.$on("hasEnded", function () {
-            $scope.hasEnded = true;
+        $scope.$on("hasEnded", function (event, bool) {
+            $scope.hasEnded = bool;
         });
 
         /**
@@ -355,6 +355,7 @@ angular.module('app.controllers', [
          */
         $scope.edit = function () {
             $scope.newItem.type = $scope.item.type;
+            $scope.newItem.creatorID = $scope.item.creatorID;
             $meteor.call('updateFeedItem', $scope.newItem).then(
                 function (result) {
                     $scope.$broadcast("successEdit", result);

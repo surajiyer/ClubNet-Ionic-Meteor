@@ -48,46 +48,48 @@ angular.module('formControllers', [])
          */
         $scope.reloadResponses = function () {
 
-                var calculatedRaisedValue = "";
+            var calculatedRaisedValue = "";
 
-                // Did someone already repond?
-                Meteor.call('getRaisedValue', $scope.item._id, function (err, result) {
+            // Did someone already repond?
+            Meteor.call('getRaisedValue', $scope.item._id, function (err, result) {
+                if (err) throw new Meteor.Error(err.reason);
+                calculatedRaisedValue = result;
+
+                Meteor.call('getFeedItem', $scope.item._id, function (err, result) {
                     if (err) throw new Meteor.Error(err.reason);
-                    calculatedRaisedValue = result;
+                    directRaisedValue = result.raisedValue;
 
-                    Meteor.call('getFeedItem', $scope.item._id, function (err, result) {
-                        if (err) throw new Meteor.Error(err.reason);
-                        directRaisedValue = result.raisedValue;
+                    //console.log("calculatedRaisedValue: " + calculatedRaisedValue);
+                    //console.log("directRaisedValue: " + directRaisedValue);
 
-                        //console.log("calculatedRaisedValue: " + calculatedRaisedValue);
-                        //console.log("directRaisedValue: " + directRaisedValue);
-
-                        // There should be a check here that determines wheter the raisedValue from
-                        // the database is the same as the one that is calculated from all responses.
-                        // for convinience we are only using the directRaisedValue (from the database directly)
-                        // For this we have to assume that this will be consistent with the response items at all times.
-                        // A possible more robust implementation would be to use both the caclculatedRaisedValue and the directRaisedValue
-                        // these 2 variables can then be compared and thus should be equal to eachother
-                        $scope.item.raisedValue = directRaisedValue;
-                        $scope.$apply();
-                    });
-                });
-                //Did the user respond?
-                Meteor.call('getResponse', $scope.item._id, function (err, result) {
-                    if (err) throw new Meteor.Error(err.reason);
-                    //if there is no response from the logged in user found, set variables that indicate this.
-                    if (!result) {
-                        $scope.item.myContribution = 0;
-                        $scope.item.hasContributed = false;
-                    }
-                    //If there exists a response for the logged in user, set variables that indicate this.
-                    if (result != null) {
-                        $scope.item.myContribution = result.value;
-                        $scope.item.hasContributed = true;
-                    }
+                    // There should be a check here that determines wheter the raisedValue from
+                    // the database is the same as the one that is calculated from all responses.
+                    // for convinience we are only using the directRaisedValue (from the database directly)
+                    // For this we have to assume that this will be consistent with the response items at all times.
+                    // A possible more robust implementation would be to use both the caclculatedRaisedValue and the directRaisedValue
+                    // these 2 variables can then be compared and thus should be equal to eachother
+                    $scope.item.raisedValue = directRaisedValue;
                     $scope.$apply();
                 });
-            
+            });
+            //Did the user respond?
+            Meteor.call('getResponse', $scope.item._id, function (err, result) {
+                if (err) throw new Meteor.Error(err.reason);
+                //if there is no response from the logged in user found, set variables that indicate this.
+                if (!result) {
+                    $scope.item.myContribution = 0;
+                    $scope.item.hasContributed = false;
+                }
+                //If there exists a response for the logged in user, set variables that indicate this.
+                if (result != null) {
+                    $scope.item.myContribution = result.value;
+                    $scope.item.hasContributed = true;
+                }
+                $scope.$apply();
+            });
+
+            $scope.$emit("hasEnded", $scope.item.targetValue <= $scope.item.raisedValue);
+
             //convinient logging that can be used to directly see the performance of this reload functionality
             //which is invoked by observeChange when the increaseValue was incremented for the corresponding item.
             console.log("reloaded");
