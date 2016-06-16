@@ -30,7 +30,7 @@ angular.module('app.directives', [])
     .directive('hero', function () {
         return {
             restrict: 'E',
-            templateUrl: 'client/app/views/feedItems/hero.ng.html',
+            templateUrl: 'client/app/views/feedItems/heroes.ng.html',
             scope: {
                 item: "="
             },

@@ -214,7 +214,7 @@ Meteor.methods({
     getTeamSize: function () {
         check(Meteor.userId(), String);
         var teamID = utils.getUserTeamID(Meteor.userId());
-        return Meteor.users.find({type: 'player', 'profile.teamID': teamID}).count();
+        return Meteor.users.find({'profile.type': 'player', 'profile.teamID': teamID}).count();
     },
     /**
      * @summary Returns an array of all club's users
