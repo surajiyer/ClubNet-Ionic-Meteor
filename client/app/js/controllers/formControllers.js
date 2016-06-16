@@ -1,11 +1,11 @@
 angular.module('formControllers', [])
 
-/**
- *  Form Controller: provides all functionality for the form feed item of the app
- *  @param {String} Name of the controller
- *  @param {Function}
- */
-    .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup, $translate) {
+    /**
+     *  Form Controller: provides all functionality for the form feed item of the app
+     *  @param {String} Name of the controller
+     *  @param {Function}
+     */
+    .controller('formCtrl', function ($scope, $ionicModal, $meteor, $ionicPopup) {
 
         /**
          * @summary Load the new form template
@@ -34,12 +34,12 @@ angular.module('formControllers', [])
          * @summary Function to show the 'select target value alert'
          */
         $scope.showAlert = function () {
-            $translate('MISSING_TARGET_VALUE').then(function (result) {
-                $ionicPopup.alert({
-                    title: result
-                });
+            $ionicPopup.alert({
+                title: 'Please select target value'
             });
         };
+
+
 
         /**
          * @summary (Re)loads various session variables
@@ -47,37 +47,49 @@ angular.module('formControllers', [])
          * @after The session variables are updated. (raisedValue, myContribution, hasContribution)
          */
         $scope.reloadResponses = function () {
-            // Check if user has contributed to this item when initialising
-            if ($scope.item != null) {
 
-                // Check responses from other users
-                // Meteor.call('getRaisedValue', $scope.item._id, function (err, result) {
-                //     if (err) {
-                //         throw new Meteor.Error(err.reason);
-                //     }
-                //     calculatedRaisedValue = result;
-                //
-                //     // There should be a check here that determines whether the raisedValue from
-                //     // the database is the same as the one that is calculated from all responses.
-                //     // for convenience we are only using the directRaisedValue (from the database directly)
-                //     // For this we have to assume that this will be consistent with the response items at all times.
-                //     // A possible more robust implementation would be to use both the calculatedRaisedValue and the directRaisedValue
-                //     // these 2 variables can then be compared and thus should be equal to each other
-                // });
+                var calculatedRaisedValue = "";
 
-                // Check user response
+                // Did someone already repond?
+                Meteor.call('getRaisedValue', $scope.item._id, function (err, result) {
+                    if (err) throw new Meteor.Error(err.reason);
+                    calculatedRaisedValue = result;
+
+                    Meteor.call('getFeedItem', $scope.item._id, function (err, result) {
+                        if (err) throw new Meteor.Error(err.reason);
+                        directRaisedValue = result.raisedValue;
+
+                        //console.log("calculatedRaisedValue: " + calculatedRaisedValue);
+                        //console.log("directRaisedValue: " + directRaisedValue);
+
+                        // There should be a check here that determines wheter the raisedValue from
+                        // the database is the same as the one that is calculated from all responses.
+                        // for convinience we are only using the directRaisedValue (from the database directly)
+                        // For this we have to assume that this will be consistent with the response items at all times.
+                        // A possible more robust implementation would be to use both the caclculatedRaisedValue and the directRaisedValue
+                        // these 2 variables can then be compared and thus should be equal to eachother
+                        $scope.item.raisedValue = directRaisedValue;
+                        $scope.$apply();
+                    });
+                });
+                //Did the user respond?
                 Meteor.call('getResponse', $scope.item._id, function (err, result) {
-                    if (err) {
-                        throw new Meteor.Error(err.reason);
+                    if (err) throw new Meteor.Error(err.reason);
+                    //if there is no response from the logged in user found, set variables that indicate this.
+                    if (!result) {
+                        $scope.item.myContribution = 0;
+                        $scope.item.hasContributed = false;
                     }
-                    // If there exists a response, get the response.
-                    $scope.item.myContribution = !!result ? result.value : 0;
-                    // Refresh the scope to update on UI
+                    //If there exists a response for the logged in user, set variables that indicate this.
+                    if (result != null) {
+                        $scope.item.myContribution = result.value;
+                        $scope.item.hasContributed = true;
+                    }
                     $scope.$apply();
                 });
-            }
-            // convenient logging that can be used to directly see the performance of this reload functionality
-            // which is invoked by observeChange when the increaseValue was incremented for the corresponding item.
+            
+            //convinient logging that can be used to directly see the performance of this reload functionality
+            //which is invoked by observeChange when the increaseValue was incremented for the corresponding item.
             console.log("reloaded");
         };
 
@@ -90,23 +102,25 @@ angular.module('formControllers', [])
          * @after A new entry is made in the FeedResponses collection. The local value hasContributed is set to the function's parameter
          */
         $scope.signUp = function () {
-            if ($scope.item.myContribution <= 0) {
+            if (!$scope.item.hasContributed) {
                 if ($scope.item.target == 'driving' || $scope.item.target == 'other') {
-
+                    if ($scope.item.currentContribution > 0) {
+                        var value = $scope.item.currentContribution;
+                    } else {
+                        $scope.showAlert();
+                        return;
+                    }
                 }
                 if ($scope.item.target == 'laundry' || $scope.item.target == 'absence') {
                     var value = '1';
                 }
             }
-
             $meteor.call('putResponse', $scope.item._id, $scope.item.type, value).then(
                 function () {
                     $scope.item.hasContributed = true;
                     //Increase the raisedValue of item with value=x
                     $meteor.call('increaseValue', $scope.item._id, $scope.item.type, value).then(
-                        function () {
-                        }, function () {
-                        }
+                        function () {}, function () {}
                     );
                 },
                 function (err) {
@@ -117,14 +131,19 @@ angular.module('formControllers', [])
 
         /**
          * @summary Function to withdraw contribution
+         */
+
+        /**
+         * @summary Function to withdraw contribution
          * @method withdrawContribution
          * @after The to the item's and user's corresponding FeedResponse collection is deleted. hasContributed and myContribution are reset to its initial value.
-         */
+         */       
         $scope.withdrawContribution = function () {
             $meteor.call('deleteResponse', $scope.item._id).then(
                 function () {
                     $scope.item.hasContributed = false;
                     $scope.item.myContribution = 0;
+
                 },
                 function (err) {
                     console.log(err);
@@ -144,9 +163,11 @@ angular.module('formControllers', [])
          * @summary Meteor function that invokes the reloadResponse when a change in the item's collection is observered
          * @method observeChanges
          * @after reloadResponse is fired, see reloadResponse function
-         */
-        Items.find({_id: $scope.item._id}).observeChanges({
-            changed: $scope.reloadResponses
+         */    
+        Items.find().observeChanges({
+            changed: function (raisedValue) {
+                $scope.reloadResponses();
+            }
         });
 
         $scope.$on("loadEditData", function () {
