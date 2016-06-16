@@ -1,13 +1,13 @@
 <style>.popover { min-width: 240px; }</style>
 <ion-popover-view style="height: 255px;margin-top: -10px;">
     <ion-header-bar>
-        <h1 class="title">Create new</h1>
+        <h1 class="title">{{ 'CREATE_NEW' | translate }}</h1>
         <button class="button button-icon icon ion-minus-round" ng-click="closePopover()"> </button>
     </ion-header-bar>
     <ion-content>
         <div ng-repeat="type in itemTypes" ng-controller="newItemCtrl">
             <span class="item" ng-click="openModal(); closePopover()" ng-if="showCreate">
-                {{ type.name }}
+                {{ type.name | translate }}
             </span>
         </div>
     </ion-content>
