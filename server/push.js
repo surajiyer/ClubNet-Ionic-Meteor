@@ -82,9 +82,9 @@ Meteor.methods({
         selector.profile.notifications[type] = true;
         console.log(selector);
         var users = Meteor.users.find(selector, {fields: {_id: 1}}).fetch();
-        console.log('1: ' + users);
+        console.log('1: ', users);
         users = _.pluck(users, '_id');
-        console.log('2: ' + users);
+        console.log('2:', users);
         userNotification(type, title, text, users);
     },
     /**
