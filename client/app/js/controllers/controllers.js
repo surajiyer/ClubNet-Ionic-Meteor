@@ -225,7 +225,7 @@ angular.module('app.controllers', [
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
-            Meteor.call('addFeedItem', $scope.newItem
+            Meteor.call('addFeedItem', $scope.newItem);
             $scope.newItem = {};
             $scope.closeModal();
         };
