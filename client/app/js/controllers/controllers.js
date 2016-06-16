@@ -244,11 +244,6 @@ angular.module('app.controllers', [
         $scope.trainings = [];
         $scope.hasEnded = false;
 
-        $scope.showItem = false;
-        AccessControl.getPermission($scope.item.type, 'view', function (result) {
-            $scope.showItem = result;
-        });
-
         $scope.$on("hasEnded", function (event, bool) {
             $scope.hasEnded = bool;
         });
