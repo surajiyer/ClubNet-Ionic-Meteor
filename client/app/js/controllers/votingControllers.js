@@ -51,14 +51,13 @@ angular.module('votingControllers', [])
 
         if ($scope.item != null) {
             $scope.hasVoted = false;
-            $scope.$parent.hasEnded = false;
 
             // Check if voting has ended because the deadline has passed
             // or if number of votes exceeds allowed number of voters
             // TODO: remove nrVoters from the item collection
-            $scope.$parent.hasEnded = new Date > $scope.item.deadline;
-            if ($scope.$parent.hasEnded) {
-                $scope.$emit("hasEnded");
+            var bool = new Date > $scope.item.deadline;
+            if (bool) {
+                $scope.$emit("hasEnded", true);
             }
 
             $meteor.call("getTrainingObj", $scope.item.training_id).then(
@@ -84,8 +83,7 @@ angular.module('votingControllers', [])
                     $meteor.call('getTeamSize').then(
                         function (nr2) {
                             if (nr1 == nr2) {
-                                $scope.$parent.hasEnded = true;
-                                $scope.$emit("hasEnded");
+                                $scope.$emit("hasEnded", true);
                             }
                         },
                         function (err) {
@@ -134,7 +132,7 @@ angular.module('votingControllers', [])
          */
         $scope.vote = function (value) {
             if (value) {
-                $translate('CONFIRM_DELETE').then(function (result) {
+                $translate('CONFIRM_VOTE').then(function (result) {
                     confirmPopup = $ionicPopup.confirm({
                         title: result
                     });
@@ -154,8 +152,7 @@ angular.module('votingControllers', [])
                         $meteor.call('getNumberResponsesOfOneItem', $scope.item._id).then(
                             function (result) {
                                 if (result >= $scope.item.nrVoters) {
-                                    $scope.$parent.hasEnded = true;
-                                    $scope.$emit("hasEnded");
+                                    $scope.$emit("hasEnded", true);
                                 }
                             },
                             function (err) {

@@ -30,7 +30,7 @@
                     <div class="item item-divider feed-icon"
                          ng-click="showFullItem($event)">
                         <img src="/feed_icons/{{ itemType.icon | lowercase }}" height="30px" alt=""/>
-                        {{ itemType.name | translate }} <span ng-if="item.type == 'Voting' && hasEnded">{{ 'CLOSED' | translate }}</span>
+                        {{ itemType.name | translate }} <span ng-if="hasEnded">{{ 'CLOSED' | translate }}</span>
                         <i class="icon ion-more" ng-click="openPopover($event)" id="icon-expand" ng-if="showEdit || showDelete"></i>
                         <i class="icon ion-arrow-shrink show-full" ng-if="isFull" id="icon-expand"></i>
                     </div>

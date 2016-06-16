@@ -249,8 +249,8 @@ angular.module('app.controllers', [
             $scope.showItem = result;
         });
 
-        $scope.$on("hasEnded", function () {
-            $scope.hasEnded = true;
+        $scope.$on("hasEnded", function (event, bool) {
+            $scope.hasEnded = bool;
         });
 
         /**
@@ -354,6 +354,7 @@ angular.module('app.controllers', [
          */
         $scope.edit = function () {
             $scope.newItem.type = $scope.item.type;
+            $scope.newItem.creatorID = $scope.item.creatorID;
             $meteor.call('updateFeedItem', $scope.newItem).then(
                 function (result) {
                     $scope.$broadcast("successEdit", result);
@@ -370,7 +371,7 @@ angular.module('app.controllers', [
          * @summary Function to delete a feed item
          */
         $scope.deleteItem = function () {
-            $translate('INCORRECT_CREDENTIALS').then(function (result) {
+            $translate('CONFIRM_DELETE').then(function (result) {
                 var confirmPopup = $ionicPopup.confirm({
                     title: result
                 });

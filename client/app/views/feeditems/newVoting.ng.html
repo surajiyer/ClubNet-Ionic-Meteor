@@ -7,7 +7,7 @@
     </ion-header-bar>
     <ion-content>
         <div class="list">
-            <label class="item item-input item-select">
+            <label class="item item-input item-select" ng-hide="newItem._id">
                 <div class="input-label">
                     Training
                 </div>
@@ -34,7 +34,7 @@
             </label>
             <button ng-disabled="!newItem.title || !newItem.deadline || !newItem.training_id"
                     ng-click="edit(); addItem()" class="button button-block button-positive">
-                {{ postBtn }}
+                {{ postBtn | translate }}
             </button>
         </div>
     </ion-content>
