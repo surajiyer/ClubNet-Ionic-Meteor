@@ -372,7 +372,7 @@ angular.module('app.controllers', [
          * @summary Function to delete a feed item
          */
         $scope.deleteItem = function () {
-            $translate('INCORRECT_CREDENTIALS').then(function (result) {
+            $translate('CONFIRM_DELETE').then(function (result) {
                 var confirmPopup = $ionicPopup.confirm({
                     title: result
                 });
