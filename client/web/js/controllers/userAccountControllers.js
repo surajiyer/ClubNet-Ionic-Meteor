@@ -403,7 +403,7 @@ angular.module('web.userAccountControllers', [])
 
     })
 
-    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance, $translate) {
+    .controller('ForgotPassModalInstanceCtrl', function ($scope, $modalInstance, $translate, $meteor) {
 
         $scope.error = '';
         $scope.errorVisible = false;
@@ -421,17 +421,36 @@ angular.module('web.userAccountControllers', [])
                     $scope.error = error;
                 });
             } else {
-                Accounts.forgotPassword({email: $scope.input.email}, function (err) {
-                    if (err) {
+                 $meteor.call('getUserInfoByEmail', $scope.input.email).then(function (result) {
+                     console.log(result);
+                     if (result.profile.type == 'pr') {
+                         Accounts.forgotPassword({email: $scope.input.email}, function (err) {
+                            if (err) {
+                                $scope.errorVisible = true;
+                                $translate('MISSING_VALID_EMAIL').then(function (error) {
+                                    $scope.error = error;
+                                });
+                                $scope.$apply();
+                            } else {
+                                $modalInstance.close($scope.input.email);
+                            }
+                        });
+                     } else {
                         $scope.errorVisible = true;
                         $translate('MISSING_VALID_EMAIL').then(function (error) {
                             $scope.error = error;
                         });
-                        $scope.$apply();
-                    } else {
-                        $modalInstance.close($scope.input.email);
-                    }
-                });
+                        $scope.$apply();                         
+                     }
+                }, function (err) {
+                    console.log(err);
+                    
+                    $scope.errorVisible = true;
+                    $translate('MISSING_VALID_EMAIL').then(function (error) {
+                        $scope.error = error;
+                    });
+                    $scope.$apply();
+                });                
             }
         }
         $scope.cancel = function () {

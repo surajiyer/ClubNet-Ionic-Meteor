@@ -154,4 +154,4 @@ angular.module('translation', ['pascalprecht.translate'])
         };
 
         return translations;
-    })	
+    });

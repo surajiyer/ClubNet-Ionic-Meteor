@@ -84,29 +84,6 @@ if (Meteor.isServer) {
             });
         });
 
-        describe('getFeedItemType()', () => {
-            it("Get FeedItem Type fail", () => {
-                // Get item type with wrong parameter
-                try {
-                    Meteor.call('getFeedItemType', false);
-                    assert.fail();
-                } catch (err) {
-                }
-
-            });
-
-            it("Get FeedItem Type succeed", (done) => {
-                // Get item added in the previous test
-                try {
-                    var result = Meteor.call('getFeedItemType', testItem._id);
-                    assert(result == testItem.type);
-                    done();
-                } catch (err) {
-                    assert.fail();
-                }
-            });
-        });
-
         describe('updateFeedItem()', () => {
             it("Update FeedItem fail", () => {
 
@@ -224,7 +201,6 @@ if (Meteor.isServer) {
         });
 
         describe('getResponseOfOneItem()', () => {
-
             it("Get Responses of One Item wrong parameter", () => {
                 // Get responses with wrong parameter
                 try {
@@ -246,8 +222,7 @@ if (Meteor.isServer) {
             });
 
             it("Get Responses of One Item", (done) => {
-
-                // Get reponses of item added in the previous test
+                // Get responses of item added in the previous test
                 try {
                     result = Meteor.call('getResponsesOfOneItem', testItem._id);
                     assert(result.length == 1);

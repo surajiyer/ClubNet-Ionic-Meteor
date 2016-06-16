@@ -22,8 +22,7 @@ angular.module('app.controllers', [
         /**
          * @summary Function to logout
          */
-        $scope.logout = function ($event) {
-            $event.stopPropagation();
+        $scope.logout = function () {
             $meteor.logout(function () {
                 $state.go('login');
             });
@@ -34,7 +33,7 @@ angular.module('app.controllers', [
          */
         $meteor.call('getClub').then(function (result) {
             $scope.currentClub = result;
-            $('ion-header-bar.bar-stable').css('background', $scope.currentClub.colorAccent + '!important');
+            jQuery('ion-header-bar.bar-stable').css('background', $scope.currentClub.colorAccent + '!important');
         }, function (err) {
             return CommonServices.showAlert(err.error + ' ' + err.reason, err.message);
         });
@@ -392,6 +391,7 @@ angular.module('app.controllers', [
             var obj = {
                 _id: $scope.item._id,
                 type: $scope.item.type,
+                creatorID: $scope.item.creatorID,
                 sticky: !$scope.item.sticky
             };
             Meteor.call("updateFeedItem", obj, function (err, result) {
