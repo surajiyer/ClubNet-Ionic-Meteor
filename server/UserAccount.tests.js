@@ -237,105 +237,107 @@ if (Meteor.isServer) {
             });
         });
 
-        // describe('getUserType()', () => {
-        //     /**
-        //      * @summary Getting user type with wrong parameters
-        //      * It tries to get a user with a wrong parameter
-        //      * This should throw error.
-        //      */
-        //     it("Get user type with wrong id", () => {
-        //
-        //         // Get user with wrong parameter
-        //         try {
-        //             Meteor.userId = sinon.stub().returns(1234);
-        //             Meteor.call('getUserType');
-        //             // It should throw an error, if it does not, the test fails
-        //             assert.fail();
-        //         } catch (err) {
-        //         }
-        //     });
-        //
-        //     /**
-        //      * @summary Getting user type
-        //      * It tries to get the type of the currently logged in user.
-        //      * This should succeed.
-        //      */
-        //     it("Get user type", () => {
-        //
-        //         // Get user with id that does not exist
-        //         try {
-        //             Meteor.userId = sinon.stub().returns(testPr._id);
-        //             Meteor.user = sinon.stub().returns(testPr);
-        //             var test = Meteor.call('getUserType');
-        //             console.log(test);
-        //             assert.equal(test, 'pr');
-        //             // It should throw an error, if it does not, the test fails
-        //         } catch (err) {
-        //             assert.fail();
-        //         }
-        //     });
-        //
-        // });
-        //
-        // describe('getTeamSize()', () => {
-        //     /**
-        //      * @summary Getting team size of user without a team
-        //      * It tries to get a the team size of a user that does not belong to a team
-        //      * This should throw error.
-        //      */
-        //     it("Get team size of non existing team", () => {
-        //
-        //         // Get user with wrong parameter
-        //         try {
-        //             Meteor.userId = sinon.stub().returns(testPr._id);
-        //             user.profile.teamID = sinon.stub().returns(undefined);
-        //             Meteor.call('getTeamSize');
-        //             // It should throw an error, if it does not, the test fails
-        //             assert.fail();
-        //         } catch (err) {
-        //         }
-        //     });
-        //
-        //     /**
-        //      * @summary Getting team size of user with a team
-        //      * It tries to get the team size of the currently logged in user
-        //      * This should succeed.
-        //      */
-        //     it("Get team size", () => {
-        //
-        //         // Get user with id that does not exist
-        //         try {
-        //             Meteor.userId = sinon.stub().returns(testUser._id);
-        //             user.profile.teamID = sinon.stub().returns('test');
-        //             var result = Meteor.call('getTeamSize');
-        //             console.log(result);
-        //             // It should throw an error, if it does not, the test fails
-        //         } catch (err) {
-        //             assert.fail();
-        //         }
-        //     });
-        //
-        // });
-        //
-        // describe('getClubUsers()', () => {
-        //     /**
-        //      * @summary Getting all the members of the club of the currently logged in player
-        //      * It tries to get a all the members of the club
-        //      * This should succeed
-        //      */
-        //     it("Get club users", () => {
-        //         // Get user with wrong parameter
-        //         try {
-        //             Meteor.userId = sinon.stub().returns(testPr._id);
-        //             Meteor.user().profile.clubID = sinon.stub().returns('test');
-        //             var result = Meteor.call('getClubUsers');
-        //             // It should throw an error, if it does not, the test fails
-        //             console.log(result);
-        //         } catch (err) {
-        //             assert.fail();
-        //         }
-        //     });
-        // });
+        describe('getUserType()', () => {
+            /**
+             * @summary Getting user type with wrong parameters
+             * It tries to get a user with a wrong parameter
+             * This should throw error.
+             */
+            it("Get user type with wrong id", () => {
+        
+                // Get user with wrong parameter
+                try {
+                    Meteor.userId = sinon.stub().returns(1234);
+                    Meteor.call('getUserType');
+                    // It should throw an error, if it does not, the test fails
+                    assert.fail();
+                } catch (err) {
+                }
+            });
+        
+            /**
+             * @summary Getting user type
+             * It tries to get the type of the currently logged in user.
+             * This should succeed.
+             */
+            it("Get user type", () => {
+        
+                // Get user with id that does not exist
+                try {
+                    Meteor.userId = sinon.stub().returns(testPr._id);
+                    Meteor.user = sinon.stub().returns(testPr);
+                    var test = Meteor.call('getUserType');
+                    assert.equal(test, 'pr');
+                    // It should throw an error, if it does not, the test fails
+                } catch (err) {
+                    assert.fail();
+                }
+            });
+        
+        });
+        
+        describe('getTeamSize()', () => {
+            /**
+             * @summary Getting team size of user without a team
+             * It tries to get a the team size of a user that does not belong to a team
+             * This should throw error.
+             */
+            it("Get team size of non existing team", () => {
+        
+                // Get user with wrong parameter
+                try {
+                    Meteor.userId = sinon.stub().returns(testPr._id);
+                    user.profile.teamID = sinon.stub().returns(undefined);
+                    Meteor.call('getTeamSize');
+                    // It should throw an error, if it does not, the test fails
+                    assert.fail();
+                } catch (err) {
+                }
+            });
+        
+            /**
+             * @summary Getting team size of user with a team
+             * It tries to get the team size of the currently logged in user
+             * This should succeed.
+             */
+            it("Get team size", () => {
+        
+                // Get user with id that does not exist
+                try {
+                    Meteor.userId = sinon.stub().returns(testUser._id);
+                    //user.profile.teamID = sinon.stub().returns('test');
+                    console.log('teamsize call');
+                    var result = Meteor.call('getTeamSize');
+                    console.log(result);
+                    // It should throw an error, if it does not, the test fails
+                } catch (err) {
+                    console.log('hi: ' + err);
+                    assert.fail();
+                }
+            });
+        
+        });
+        
+        describe('getClubUsers()', () => {
+            /**
+             * @summary Getting all the members of the club of the currently logged in player
+             * It tries to get a all the members of the club
+             * This should succeed
+             */
+            it("Get club users", (done) => {
+                // Get user with wrong parameter
+                try {
+                    Meteor.userId = sinon.stub().returns(testPr._id);
+                    Meteor.user().profile.clubID = sinon.stub().returns('test');
+                    var result = Meteor.call('getClubUsers');
+                    // It should throw an error, if it does not, the test fails
+                    console.log(result);
+                    done();
+                } catch (err) {
+                    assert.fail();
+                }
+            });
+        });
 
         describe('Meteor.users.remove()', () => {
             /**
