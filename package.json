@@ -4,7 +4,7 @@
   "scripts": {
     "start": "meteor run",
     "test": "meteor test --driver-package practicalmeteor:mocha --port 3100",
-    "testfull": "meteor test --full-app --driver-package practicalmeteor:mocha --port 3100",
+    "testfull": "meteor test --full-app --driver-package practicalmeteor:mocha --port 3100"
   },
   "dependencies": {
     "angular": "^1.5.5",
