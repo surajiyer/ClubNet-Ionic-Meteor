@@ -19,7 +19,7 @@
                     <option value="other">{{ 'OTHER' | translate }}</option>
                 </select>
             </div>
-            <div class="item item-input item-label">
+            <div class="item item-input item-label" style="height: 45px">
                 <span class="input-label">
                     {{ 'REPEAT_INTERVAL' | translate }}
                 </span>
@@ -29,8 +29,9 @@
                     <option value="weekly">{{ 'WEEKLY' | translate }}</option>
                     <option value="fourweeks">{{ 'MONTHLY' | translate }}</option>
                 </select>
-                <div style="padding-right:5px; margin-right: 0px; margin-left:auto;" >
-                  <a class="button button-icon icon ion-help" ng-click="showAlertRepeatInterval()"></a>
+                <div style="position: absolute;right: 10px;top:0;" >
+                  <a class="button button-icon icon ion-ios-help-outline"
+                     ng-click="showAlertRepeatInterval()" ng-if="!item._id"></a>
                 </div>
             </div>
             <div class="item item-input item-label">
@@ -44,9 +45,13 @@
             <div class="item item-input item-label">
                 <span class="input-label">{{ 'TARGET' | translate }}:</span>
                 <input ng-model="newItem.targetValue" type="number" placeholder="{{ 'TARGET' | translate }}"><br>
-                <a class="button button-icon icon ion-help" style="padding-right:15px;" ng-click="showAlertTargetValueInfo()"></a>
+                <div style="position: absolute;right: 10px;top:0;" >
+                    <a class="button button-icon icon ion-ios-help-outline"
+                       ng-click="showAlertTargetValueInfo()" ng-if="!item._id"></a>
+                </div>
             </div>
-            <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()" class="button button-block button-positive">
+            <button ng-disabled="!newItem.target && !newItem.title" ng-click="edit(); addItem()"
+                    class="button button-block button-positive">
                 {{ postBtn | translate }}
             </button>
         </div>
