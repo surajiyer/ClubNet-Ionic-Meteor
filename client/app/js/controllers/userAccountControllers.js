@@ -83,10 +83,10 @@ angular.module('userAccountControllers', [])
                 if (Meteor.user().profile.type == 'pr') {
                     Meteor.logout();
                     return CommonServices.showAlert('Not Authorized', 'Please use the Web interface to login.');
+                } else {
+                    // Go to feed
+                    window.location.replace("/");
                 }
-
-                // Go to feed
-                $state.go('menu.feed');
             });
         };
 

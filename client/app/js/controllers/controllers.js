@@ -25,9 +25,7 @@ angular.module('app.controllers', [
         $scope.logout = function ($event) {
             $event.stopPropagation();
             $meteor.logout(function () {
-                $state.go('login').then(function () {
-                    $window.location.reload();
-                });
+                $state.go('login');
             });
         };
 
@@ -343,8 +341,10 @@ angular.module('app.controllers', [
             var elem = angular.element($event.currentTarget);
             if ($scope.isFull) {
                 elem.parents(".list").css("height", "200px").find(".gradient").show();
+                elem.parents(".list").find(".read-less").hide();
             } else {
                 elem.parents(".list").css("height", "100%").find(".gradient").hide();
+                elem.parents(".list").find(".read-less").show();
             }
             $scope.isFull = !$scope.isFull;
         };
