@@ -58,6 +58,14 @@ const sendGlobalNotification = function (text, title) {
 };
 
 Meteor.methods({
+    /**
+     * @summary Send push notifications to all users in the club who subscribed to the notification of the feed item type
+     * when a new feed item of that type is created.
+     * @param{String} type The type of the created feed item.
+     * @param{String} title The title to be shown in the push notification.
+     * @param{String} text .The text to be shown in the push notification.
+     * @return None.
+     */
     sendClubNotification: function (type, title, text) {
         check(type, String);
         check(title, String);
@@ -81,6 +89,14 @@ Meteor.methods({
         users = _.pluck(users, '_id');
         userNotification(type, title, text, users);
     },
+    /**
+     * @summary Send push notifications to all users in the team who subscribed to the notification of the feed item type
+     * when a new feed item of that type is created.
+     * @param{String} type The type of the created feed item.
+     * @param{String} title The title to be shown in the push notification.
+     * @param{String} text .The text to be shown in the push notification.
+     * @return None.
+     */
     sendTeamNotification: function (type, title, text) {
         check(type, String);
         check(title, String);

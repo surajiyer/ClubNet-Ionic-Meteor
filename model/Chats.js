@@ -163,6 +163,7 @@ Meteor.startup(function () {
              * @summary Update the status of the messages in a chat session to read.
              * @param {String} chatId The id of the chat session.
              * @return None.
+             * @throws error if the input parameters do not have the required type.
              * @after The attribute 'read' of all messages in the specified chat session are set to true.
              */
             readMessages: function (chatId) {
@@ -189,6 +190,7 @@ Meteor.startup(function () {
              * @summary Delete a chat session.
              * @param {String} chatId The id of the chat session to be deleted.
              * @return None.
+             * @throws error if the input parameters do not have the required type.
              */
             deleteChat: function (chatId) {
                 check(chatId, String);

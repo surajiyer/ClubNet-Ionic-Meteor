@@ -44,6 +44,7 @@ if (Meteor.isServer) {
          * @summary Update the information of a club.
          * @param {Object} updatedItem A document object that contains all attributes of the club with updated information.
          * @return {Object} The document of the updated club.
+         * @throws error if the 'updatedItem' does not conform to the database scheme.
          */
         updateClub: function (updatedItem) {
             check(updatedItem, Object);

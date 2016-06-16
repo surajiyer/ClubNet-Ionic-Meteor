@@ -2,7 +2,7 @@
     <ion-content padding="true" class="has-header main-content">
         <div class="card list">
             <div class="item item-divider">
-                General
+                {{ 'GENERAL' | translate }}
             </div>
 
             <div class="item item-input item-select">
@@ -16,14 +16,14 @@
         </div>
         <div class="card list">
             <div class="item item-divider">
-                Notifications
+                {{ 'NOTIFICATIONS' | translate }}
             </div>
             <ion-toggle class="item"
                         toggle-class="toggle-positive"
                         ng-repeat="(key, value) in currentUser.profile.notifications"
                         ng-change="updateNotificationSetting(key, value)"
                         ng-model="value">
-                {{key}} notification
+                {{key}} {{ 'NOTIFICATION' | translate }}
             </ion-toggle>
             <ion-toggle class="item"
                         toggle-class="toggle-positive"
