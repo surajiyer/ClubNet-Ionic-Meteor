@@ -162,25 +162,24 @@ angular.module('app.controllers', [
                 console.log(err);
             }
         );
-        
-         /**
+
+        /**
          * @summary Displays an alert that serves as more information on 'the target value'.
          * @method showAlertTargetValueInfo
          * @after Alert is launched
          */
-         $scope.showAlertTargetValueInfo = function() {
-             CommonServices.showAlert('More information', 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots');
-         }
+        $scope.showAlertTargetValueInfo = function () {
+            CommonServices.showAlert('More information', 'The target value can be used to set the goal of the practicality. It is advised to mention the measurement unit in the description. For example: You need 14 car-spots for driving, you set the target-value to 11 and in the description you mention that you are searching for 11 spots');
+        };
 
-         /**
+        /**
          * @summary Displays an alert that serves as more information on 'the repeat interval'.
          * @method showAlertRepeatInterval
          * @after Alert is launched
          */
-         $scope.showAlertRepeatInterval = function() {
-             CommonServices.showAlert('More information', 'The repeat interval defines the time after which you want the feed item to reset itself.');
-         }
-
+        $scope.showAlertRepeatInterval = function () {
+            CommonServices.showAlert('More information', 'The repeat interval defines the time after which you want the feed item to reset itself.');
+        };
 
         $scope.showCreate = false;
         AccessControl.getPermission($scope.type._id, 'create', function (result) {
@@ -215,7 +214,7 @@ angular.module('app.controllers', [
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             };
 
-            MeteorCamera.getPicture(cameraOptions, function(error, localData){
+            MeteorCamera.getPicture(cameraOptions, function (error, localData) {
                 $scope.image = localData;
                 $scope.$apply();
             });
@@ -376,7 +375,7 @@ angular.module('app.controllers', [
                 var confirmPopup = $ionicPopup.confirm({
                     title: result
                 });
-        
+
                 confirmPopup.then(function (res) {
                     if (res) {
                         $meteor.call('deleteFeedItem', $scope.item._id);
@@ -405,13 +404,29 @@ angular.module('app.controllers', [
                 }
             });
         }
-
     })
 
     /**
      * Controller for settings page
      */
-    .controller('settingsCtrl', function ($scope, $meteor) {
+    .controller('settingsCtrl', function ($scope, $meteor, $translate, $state) {
+        // Get current language
+        $scope.selectedLanguage = $translate.use();
+
+        $scope.updateLanguage = function (selectedLanguage) {
+            $scope.selectedLanguage = selectedLanguage;
+            check($scope.selectedLanguage, String);
+            try {
+                $translate.use($scope.selectedLanguage);
+                $state.reload();
+            } catch (e) {
+                $translate('ERROR').then(function (ERROR) {
+                    CommonServices.showAlert(ERROR, e.reason);
+                });
+                return;
+            }
+        };
+
         $scope.updateNotificationSetting = function (key, value) {
             $meteor.call('updateUserNotificationSetting', key, value);
         };

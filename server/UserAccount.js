@@ -216,7 +216,7 @@ Meteor.methods({
     getTeamSize: function () {
         check(Meteor.userId(), String);
         var teamID = utils.getUserTeamID(Meteor.userId());
-        return Meteor.users.find({type: 'player', 'profile.teamID': teamID}).count();
+        return Meteor.users.find({'profile.type': 'player', 'profile.teamID': teamID}).count();
     },
     /**
      * @summary Retrieve all users in the club of the logged in user.
@@ -254,6 +254,11 @@ Meteor.methods({
      */
     updateUserNotificationSetting: function (itemType, value) {
         check(itemType, String);
+    updateUserNotificationSetting: function (key, value) {
+        check(key, Match.Where(function (type) {
+            check(type, String);
+            return utils.isValidType(type);
+        }));
         check(value, Boolean);
         var loggedInUser = Meteor.userId();
         check(loggedInUser, String);

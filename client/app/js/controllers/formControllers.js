@@ -165,11 +165,9 @@ angular.module('formControllers', [])
          * @summary Meteor function that invokes the reloadResponse when a change in the item's collection is observered
          * @method observeChanges
          * @after reloadResponse is fired, see reloadResponse function
-         */    
-        Items.find().observeChanges({
-            changed: function (raisedValue) {
-                $scope.reloadResponses();
-            }
+         */
+        Items.find({_id: $scope.item._id}).observeChanges({
+            changed: $scope.reloadResponses
         });
 
         $scope.$on("loadEditData", function () {

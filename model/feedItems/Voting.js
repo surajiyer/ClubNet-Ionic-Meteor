@@ -80,5 +80,15 @@ if (Meteor.isServer) {
             });
             return trainings.exercises;
         },
+        /**
+         * @summary Function for checking whether the voting is still opened or closed (status).
+         * @param {String} itemId The Item Id of the item for which the status needs to be checked.
+         * @returns {Boolean} The status in boolean form
+         */
+        checkVotingStatus: function (itemID) {
+            check(itemID, String);
+            var item = Meteor.call("getFeedItem", itemID);
+            return new Date > item.deadline && Meteor.call("getTeamSize") > item.nrVotes;
+        }
     });
 }
