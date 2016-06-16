@@ -17,7 +17,7 @@
     </span>
 </div>
 <div class="item item-body"
-     ng-if="(item.target == 'driving' || item.target == 'other') && !item.hasContributed && item.targetValue-item.raisedValue > 0">
+     ng-if="!$parent.showEdit && (item.target == 'driving' || item.target == 'other') && !item.myContribution > 0 && item.targetValue-item.raisedValue > 0">
     <div>
         <label class="item item-input item-select">
             <div class="input-label">
@@ -28,18 +28,17 @@
     </div>
 </div>
 
-<div class="item item-body" id="animate-switch-container" ng-switch on="item.hasContributed"> 
-    <div class="animate-switch" ng-switch-when="false">
-        <button class="button button-outline button-balanced"
-                ng-click="signUp()">
-            {{ item.target == "absence" ? "Absent" : "Contribute" }}
-        </button>
-    </div>
-    <div class="animate-switch" ng-switch-when="true">
-        <button class="button button-outline button-assertive contributed"
-                ng-click="withdrawContribution()">
-            {{ item.target == "absence" ? "I will be present" : "Withdraw your contribution" }}
-            <span ng-if="item.target == 'driving' || item.target == 'other'">: {{item.myContribution}}</span>
-        </button>
-    </div>
+<div class="item item-body" ng-if="!$parent.showEdit">
+    <input ng-model="item.currentContribution" ng-if="item.target == 'laundry' || item.target == 'absence'" type="hidden" ng-value="1">
+    <button class="button button-outline button-balanced"
+            ng-click="signUp()"
+            ng-if="!item.hasContributed">
+        {{ item.target == "absence" ? "Absent" : "Contribute" }}
+    </button>
+    <button class="button button-outline button-assertive contributed"
+            ng-click="withdrawContribution()"
+            ng-if="item.hasContributed">
+        {{ item.target == "absence" ? "I will be present" : "Withdraw your contribution" }}
+        <span ng-if="item.target == 'driving' || item.target == 'other'">: {{item.myContribution}}</span>
+    </button>
 </div>
