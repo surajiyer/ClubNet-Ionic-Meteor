@@ -50,6 +50,9 @@ angular.module('formControllers', [])
          * @after The session variables are updated. (raisedValue, myContribution, hasContribution)
          */
         $scope.reloadResponses = function () {
+
+            $scope.$emit("hasEnded", $scope.item.targetValue <= $scope.item.raisedValue);
+
             // Check if user has contributed to this item when initialising
             if ($scope.item != null) {
 

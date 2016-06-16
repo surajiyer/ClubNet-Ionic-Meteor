@@ -250,8 +250,8 @@ angular.module('app.controllers', [
             $scope.showItem = result;
         });
 
-        $scope.$on("hasEnded", function () {
-            $scope.hasEnded = true;
+        $scope.$on("hasEnded", function (event, bool) {
+            $scope.hasEnded = bool;
         });
 
         /**
