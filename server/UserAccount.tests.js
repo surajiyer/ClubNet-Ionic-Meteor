@@ -306,9 +306,8 @@ if (Meteor.isServer) {
                 try {
                     Meteor.userId = sinon.stub().returns(testUser._id);
                     //user.profile.teamID = sinon.stub().returns('test');
-                    console.log('teamsize call');
                     var result = Meteor.call('getTeamSize');
-                    console.log(result);
+                    assert.equal(result, 1);
                     // It should throw an error, if it does not, the test fails
                 } catch (err) {
                     console.log('hi: ' + err);
@@ -331,7 +330,7 @@ if (Meteor.isServer) {
                     Meteor.user().profile.clubID = sinon.stub().returns('test');
                     var result = Meteor.call('getClubUsers');
                     // It should throw an error, if it does not, the test fails
-                    console.log(result);
+                    assert.equal(result.length, 2);
                     done();
                 } catch (err) {
                     assert.fail();
