@@ -22,7 +22,11 @@ Meteor.methods({
      * @return {Object[]} An array that contains the documents of all item types.
      */
     getItemTypes: function () {
-        return TypesCollection.find().fetch();
+        var itemTypes = TypesCollection.find().fetch();
+        itemTypes = _.filter(itemTypes, function(type) {
+            return Meteor.call("checkRights", type._id, "view");
+        });
+        return itemTypes;
     },
     /**
      * @summary Get information of a single item type.
