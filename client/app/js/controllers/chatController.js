@@ -1,8 +1,8 @@
 angular.module('chatControllers', [])
 
-    /**-----------------------------------------------------------------------------------------------------------------
-     *  @summary Controller for loading chats
-     */
+/**-----------------------------------------------------------------------------------------------------------------
+ *  @summary Controller for loading chats
+ */
     .controller('chatsCtrl', function ($scope, $ionicModal, $state, AccessControl, Chat, CommonServices) {
         // Subscribe to user info of chat recipients
         $scope.subscribe('userData');
@@ -45,11 +45,13 @@ angular.module('chatControllers', [])
          * Show chat notification in menu if any chat contains unread messages
          * @type {Array}
          */
-        $scope.chatNotifications = [];
+        $scope.chatNotifications = {};
         $scope.autorun(function () {
             var chatNotifications = $scope.getReactively('chatNotifications', true);
-            console.log(chatNotifications);
+            console.log('chatNotifications', chatNotifications);
+            console.log('chatNotifications values', _.values(chatNotifications));
             var showChatNotification = _.contains(_.values(chatNotifications), true);
+            console.log(showChatNotification);
             Chat.showChatNotification.set(showChatNotification);
         });
 
@@ -119,15 +121,13 @@ angular.module('chatControllers', [])
         //     return [chat._id]
         // });
 
-        // Stores the current last message object
-        var currentLastMessage;
-
         // Show Chat notification on chat info
         $scope.autorun(function () {
             // Show notification in menu if unread messages are there
             var showChatNotification = $scope.getReactively('showChatNotification');
-            if(Match.test(showChatNotification, Boolean)) {
+            if (Match.test(showChatNotification, Boolean)) {
                 $scope.$parent.chatNotifications[chat._id] = showChatNotification;
+                console.log($scope.$parent.chatNotifications);
             }
         });
         $scope.showChatNotification = false;
@@ -138,15 +138,25 @@ angular.module('chatControllers', [])
                 return Chat.getOneChat(chat._id);
             },
             lastMessage: function () {
-                var lastMessageCursor = Messages.find({chatID: chat._id}, {sort: {createdAt: -1}});
-                var lastMessage = lastMessageCursor.fetch()[0];
-                if (currentLastMessage) {
-                    $scope.showChatNotification = lastMessage._id != currentLastMessage._id
-                        && (!lastMessage.read);// || lastMessage.createdAt > currentLastMessage.createdAt);
-                }
-                currentLastMessage = lastMessage;
-                return lastMessageCursor;
+                return Messages.find({chatID: chat._id}, {sort: {createdAt: -1}});
             }
+        });
+
+        // Stores the current last message object
+        var currentLastMessage;
+
+        // Update unread messages view on chat info
+        $scope.autorun(function () {
+            var lastMessage = $scope.getReactively('lastMessage[0]', true);
+            if (!lastMessage) return;
+            $scope.showChatNotification = lastMessage.senderID != Meteor.userId()
+                && !lastMessage.read;
+            if (currentLastMessage) {
+                $scope.showChatNotification = $scope.showChatNotification ||
+                    (lastMessage._id != currentLastMessage._id
+                    && lastMessage.createdAt > currentLastMessage.createdAt);
+            }
+            currentLastMessage = lastMessage;
         });
 
         // Delete the chat notification variable from parent on destroy

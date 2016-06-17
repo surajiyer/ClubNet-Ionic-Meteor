@@ -145,14 +145,22 @@ angular.module('userAccountControllers', [])
                 return;
             }
 
-            Accounts.forgotPassword({email: $scope.user.email}, function () {
-                $translate(['ERROR', 'PWD_RECOVERY_EMAIL_SENT']).then(function (translations) {
-                    head = translations.ERROR;
-                    var content = translations.PWD_RECOVERY_EMAIL_SENT;
-                    CommonServices.showAlert(head, content);
-                });
+            Accounts.forgotPassword({email: $scope.user.email}, function (err) {
+                if(!err) {
+                    $translate(['SUCCESS', 'PWD_RECOVERY_EMAIL_SENT']).then(function (translations) {
+                        head = translations.SUCCESS;
+                        var content = translations.PWD_RECOVERY_EMAIL_SENT;
+                        CommonServices.showAlert(head, content);
+                    });
 
-                $state.go('login');
+                    $state.go('login');
+                } else {
+                    $translate(['ERROR', 'MISSING_VALID_EMAIL']).then(function (translations) {
+                        head = translations.ERROR;
+                        var content = translations.MISSING_VALID_EMAIL;
+                        CommonServices.showAlert(head, content);
+                    });
+                }
             });
         };
     })
@@ -187,7 +195,13 @@ angular.module('userAccountControllers', [])
                 return CommonServices.showAlert('Weak Password', 'Password not strong enough. ' +
                     'It should contain at least 8 characters of which at least one alphabetical and one numeric.');
             } else {
-                $meteor.resetPassword($scope.user.token, $scope.user.newPassword, function () {
+                $meteor.resetPassword($scope.user.token, $scope.user.newPassword, function (err) {
+                    if(err) {
+                        $translate('ERROR').then(function (ERROR) {
+                            CommonServices.showAlert(ERROR, error.reason);
+                        });
+                        return;
+                    }
                     $state.go('menu.feed');
                 });
             }
@@ -249,10 +263,9 @@ angular.module('userAccountControllers', [])
                     $state.go('login');
                 });
             }, function (error) {
-                $translate('ERROR').then(function () {
-
+                $translate('ERROR').then(function (ERROR) {
+                    CommonServices.showAlert(ERROR, error.reason);
                 });
-                return CommonServices.showAlert('Error', error.reason);
             });
         };
     })
