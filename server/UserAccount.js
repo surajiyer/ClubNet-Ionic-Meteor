@@ -103,13 +103,7 @@ Meteor.startup(function () {
             + "\n\n"
             + Meteor.absoluteUrl("#/resetpassword/" + token);
     };
-    Accounts.urls.resetPassword = function (token) {
-        return Meteor.absoluteUrl("#/redirect/resetpassword/" + token)
-            + "\n\n"
-            + "PR users please use the following link: "
-            + "\n\n"
-            + Meteor.absoluteUrl("#/resetpassword/" + token);
-    };
+
 });
 
 // TODO: remove Meteor.isServer for latency compensation
