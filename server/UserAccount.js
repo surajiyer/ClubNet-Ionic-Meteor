@@ -225,33 +225,33 @@ Meteor.methods({
         return Meteor.users.find({'profile.type': 'player', 'profile.teamID': teamID}).count();
     },
     
-    /**
-     * @summary Retrieve all users in the club of the logged in user.
-     * @returns {Object[]} Array of document objects that contains all the user accounts in the club of the logged in user.
-     */
-    getClubUsers: function () {
-        var clubID = Meteor.user().profile.clubID;
-        var users = Meteor.users.find({"profile.clubID": clubID}).fetch();
-        var users_array = [];
-        _.each(users, function (user) {
-            users_array.push(user._id);
-        });
-        return users_array;
-    },
-
-    /**
-     * @summary Retrieve all users in the team of the logged in user.
-     * @return {Object[]} Array of document objects that contains all the user accounts in the team of the logged in user.
-     */
-    getTeamUsers: function () {
-        var teamID = Meteor.user().profile.teamID;
-        var users = Meteor.users.find({"profile.teamID": teamID}).fetch();
-        var users_array = [];
-        _.each(users, function (user) {
-            users_array.push(user._id);
-        });
-        return users_array;
-    },
+    // /**
+    //  * @summary Retrieve all users in the club of the logged in user.
+    //  * @returns {Object[]} Array of document objects that contains all the user accounts in the club of the logged in user.
+    //  */
+    // getClubUsers: function () {
+    //     var clubID = Meteor.user().profile.clubID;
+    //     var users = Meteor.users.find({"profile.clubID": clubID}).fetch();
+    //     var users_array = [];
+    //     _.each(users, function (user) {
+    //         users_array.push(user._id);
+    //     });
+    //     return users_array;
+    // },
+    //
+    // /**
+    //  * @summary Retrieve all users in the team of the logged in user.
+    //  * @return {Object[]} Array of document objects that contains all the user accounts in the team of the logged in user.
+    //  */
+    // getTeamUsers: function () {
+    //     var teamID = Meteor.user().profile.teamID;
+    //     var users = Meteor.users.find({"profile.teamID": teamID}).fetch();
+    //     var users_array = [];
+    //     _.each(users, function (user) {
+    //         users_array.push(user._id);
+    //     });
+    //     return users_array;
+    // },
     
     /**
      * @summary Update the notification setting of the logged in user.

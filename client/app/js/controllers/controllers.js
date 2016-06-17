@@ -20,6 +20,15 @@ angular.module('app.controllers', [
         });
 
         /**
+         * To notify user of unread chat messages
+         * @type {boolean}
+         */
+        $scope.showChatNotification = false;
+        $scope.autorun(function () {
+            $scope.showChatNotification = Chat.showChatNotification.get();
+        });
+
+        /**
          * @summary Function to logout
          */
         $scope.logout = function () {

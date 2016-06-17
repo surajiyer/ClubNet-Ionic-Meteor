@@ -42,6 +42,18 @@ angular.module('chatControllers', [])
         });
 
         /**
+         * Show chat notification in menu if any chat contains unread messages
+         * @type {Array}
+         */
+        $scope.chatNotifications = [];
+        $scope.autorun(function () {
+            var chatNotifications = $scope.getReactively('chatNotifications', true);
+            console.log(chatNotifications);
+            var showChatNotification = _.contains(_.values(chatNotifications), true);
+            Chat.showChatNotification.set(showChatNotification);
+        });
+
+        /**
          * Show the create chat button
          * @type {boolean}
          */
@@ -110,6 +122,16 @@ angular.module('chatControllers', [])
         // Stores the current last message object
         var currentLastMessage;
 
+        // Show Chat notification on chat info
+        $scope.autorun(function () {
+            // Show notification in menu if unread messages are there
+            var showChatNotification = $scope.getReactively('showChatNotification');
+            if(Match.test(showChatNotification, Boolean)) {
+                $scope.$parent.chatNotifications[chat._id] = showChatNotification;
+            }
+        });
+        $scope.showChatNotification = false;
+
         $scope.helpers({
             // Load chat info
             chat: function () {
@@ -119,21 +141,17 @@ angular.module('chatControllers', [])
                 var lastMessageCursor = Messages.find({chatID: chat._id}, {sort: {createdAt: -1}});
                 var lastMessage = lastMessageCursor.fetch()[0];
                 if (currentLastMessage) {
-                    var showChatNotification = lastMessage._id != currentLastMessage._id
-                        && (!lastMessage.read
-                        || lastMessage.createdAt > currentLastMessage.createdAt);
-                    Chat.showChatNotification.set(showChatNotification);
+                    $scope.showChatNotification = lastMessage._id != currentLastMessage._id
+                        && (!lastMessage.read);// || lastMessage.createdAt > currentLastMessage.createdAt);
                 }
                 currentLastMessage = lastMessage;
                 return lastMessageCursor;
             }
         });
 
-        // Show Chat notification on chat info
-        $scope.showChatNotification = false;
-        $scope.autorun(function () {
-            // Show notification in menu if unread messages are there
-            $scope.showChatNotification = Chat.showChatNotification.get();
+        // Delete the chat notification variable from parent on destroy
+        $scope.$on('destroy', () => {
+            delete $scope.$parent.showChatNotification[chat._id];
         });
 
         // MessagesCount.find(chat._id).observeChanges({
@@ -190,7 +208,6 @@ angular.module('chatControllers', [])
                     || totalNrOfMessages < limitIncrementValue ? limitIncrementValue : nrOfUnloadedMessages);
                 $scope.subscribe('Messages', () => {
                     preventAutoScroll = true;
-                    console.log(newLimit, nrOfUnloadedMessages);
                     return [{chatId: chatId, limit: newLimit}];
                 }, () => {
                     // var newFirstMessages = Messages.find({chatID: chatId},
@@ -237,7 +254,7 @@ angular.module('chatControllers', [])
                 // Set messages to read
                 Meteor.call('readMessages', chatId, function (err) {
                     if (!err) {
-                        Chat.showChatNotification.set(false);
+                        $scope.$parent.showChatNotification = false;
                     }
                 });
             }
@@ -293,6 +310,9 @@ angular.module('chatControllers', [])
             }, 300);
         };
 
+        /**
+         * Set keyboard height and scroll to the bottom when chat input is opened
+         */
         $scope.inputUp = function () {
             if (isIOS) {
                 ionic.keyboard.height = 216;
@@ -300,6 +320,9 @@ angular.module('chatControllers', [])
             $scope.scrollBottom(true);
         };
 
+        /**
+         * Resize keyboard and reset scroll when input is closed
+         */
         $scope.inputDown = function () {
             if (isIOS) {
                 ionic.keyboard.height = 0;
@@ -307,6 +330,9 @@ angular.module('chatControllers', [])
             $ionicScrollDelegate.$getByHandle('chatScroll').resize();
         };
 
+        /**
+         * Function to animate chat scrolling to the bottom
+         */
         $scope.autoScroll = function () {
             let recentMessagesNum = $scope.messages.length;
             $scope.autorun(() => {

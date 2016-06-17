@@ -317,26 +317,26 @@ if (Meteor.isServer) {
         
         });
         
-        describe('getClubUsers()', () => {
-            /**
-             * @summary Getting all the members of the club of the currently logged in player
-             * It tries to get a all the members of the club
-             * This should succeed
-             */
-            it("Get club users", (done) => {
-                // Get user with wrong parameter
-                try {
-                    Meteor.userId = sinon.stub().returns(testPr._id);
-                    Meteor.user().profile.clubID = sinon.stub().returns('test');
-                    var result = Meteor.call('getClubUsers');
-                    // It should throw an error, if it does not, the test fails
-                    assert.equal(result.length, 2);
-                    done();
-                } catch (err) {
-                    assert.fail();
-                }
-            });
-        });
+        // describe('getClubUsers()', () => {
+        //     /**
+        //      * @summary Getting all the members of the club of the currently logged in player
+        //      * It tries to get a all the members of the club
+        //      * This should succeed
+        //      */
+        //     it("Get club users", (done) => {
+        //         // Get user with wrong parameter
+        //         try {
+        //             Meteor.userId = sinon.stub().returns(testPr._id);
+        //             Meteor.user().profile.clubID = sinon.stub().returns('test');
+        //             var result = Meteor.call('getClubUsers');
+        //             // It should throw an error, if it does not, the test fails
+        //             assert.equal(result.length, 2);
+        //             done();
+        //         } catch (err) {
+        //             assert.fail();
+        //         }
+        //     });
+        // });
 
         describe('Meteor.users.remove()', () => {
             /**
