@@ -44,9 +44,7 @@ if(Meteor.isServer) {
         setPermissions: function (newAccess) {
             check(Meteor.userId(), Match.Where(isAdmin));
             check(newAccess, accessControlSchema);
-            return AMx.insert(newAccess, function (err) {
-                if (err) throw new Meteor.Error(err.error);
-            });
+            return AMx.insert(newAccess);
         }
     });
 }
