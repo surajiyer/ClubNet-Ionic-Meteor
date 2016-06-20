@@ -18,8 +18,8 @@ Meteor.startup(function () {
 
 Meteor.methods({
     /**
-     * @summary Get all the defined item types.
-     * @return {Object[]} An array that contains the documents of all item types.
+     * @summary Get the filtered item types.
+     * @return {Object[]} An array that contains the documents of the filtered item types.
      */
     getItemTypes: function () {
         var itemTypes = TypesCollection.find().fetch();
@@ -27,6 +27,13 @@ Meteor.methods({
             return Meteor.call("checkRights", type._id, "view");
         });
         return itemTypes;
+    },
+    /**
+     * @summary Get all the defined item types.
+     * @return {Object[]} An array that contains the documents of all item types.
+     */
+    getAllItemTypes: function () {
+        return TypesCollection.find().fetch();
     },
     /**
      * @summary Get information of a single item type.

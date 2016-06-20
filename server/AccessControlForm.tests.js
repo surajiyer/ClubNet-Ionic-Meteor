@@ -21,7 +21,7 @@ if (Meteor.isServer) {
             it("Set permissions for PR user", (done) => {
 
                 // Add schema to Items
-                AMx.attachSchema(accessControlSchema);
+                //AMx.attachSchema(accessControlSchema);
 
                 testPr = {
                     email: 'pr@pr.pr',
@@ -158,7 +158,7 @@ if (Meteor.isServer) {
                     Meteor.call('setPermissions', testControlPr);
                     done();
                 } catch (err) {
-                    console.log('setPermissions: ' + err);
+                    console.log('setPermissionsBegin: ' + err);
                     assert.fail();
                 }
             });

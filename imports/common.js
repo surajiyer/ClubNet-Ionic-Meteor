@@ -26,6 +26,6 @@ export const isAdmin = function (userId) {
 
 export const isValidType = function (itemType) {
     check(itemType, String);
-    var validTypes = _.pluck(Meteor.call('getItemTypes'), '_id');
+    var validTypes = _.pluck(Meteor.call('getAllItemTypes'), '_id');
     return _.contains(validTypes, itemType);
 };
