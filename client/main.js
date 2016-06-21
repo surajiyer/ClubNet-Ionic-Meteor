@@ -1,3 +1,7 @@
+/*
+ * Variables that hold html links that state which resources should be loaded
+ * It also consists of some html layout tags that define the layout structure
+ */
 var appContent = "<link rel='stylesheet' href='/app/css/ionic.min.css'/>" +
     "<link rel='stylesheet' href='/app/css/style.css'/>" +
     "<ion-nav-bar class='bar-stable'></ion-nav-bar>" +
@@ -24,6 +28,9 @@ function loadWeb() {
     angular.bootstrap(document, ['web']);
 }
 
+
+//Statement that controles whether an instance is running in Production mode
+//and whetether the App or the Web should be loaded.
 if(Meteor.isProduction) {
     if (Meteor.isCordova) {
         angular.element(document).on("deviceready", loadApp);
