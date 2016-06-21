@@ -76,42 +76,42 @@ if (Meteor.isServer) {
                 sinon.restore(Meteor.userId);
             });
 
-            it("should be able to create a Form item", () => {
+            it("should not be able to create a Form item", () => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Form', 'create');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                 } catch (err) {
                     console.log(err);
                     assert.fail();
                 }
             });
 
-            it("should be able to edit a Form item", () => {
+            it("should not be able to edit a Form item", () => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Form', 'edit');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                 } catch (err) {
                     assert.fail();
                 }
             });
 
-            it("should be able to view a Form item", () => {
+            it("should not be able to view a Form item", () => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Form', 'view');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                 } catch (err) {
                     assert.fail();
                 }
             });
 
-            it("should be to delete a Form item", () => {
+            it("should not be to delete a Form item", () => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Form', 'delete');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                 } catch (err) {
                     assert.fail();
                 }
