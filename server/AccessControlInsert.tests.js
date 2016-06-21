@@ -99,7 +99,7 @@ if (Meteor.isServer) {
             sinon.restore(Meteor.userId);
         });
 
-        it("PR user can set permissions", () => {
+        it("should allow a PR user to set permissions", () => {
             Meteor.userId = sinon.stub().returns(testPr._id);
             Meteor.user = sinon.stub().returns(testPr);
 
@@ -110,7 +110,7 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Player user cannot set permissions", (done) => {
+        it("should not allow a Player user to set permissions", (done) => {
             Meteor.userId = sinon.stub().returns(testPlayer._id);
             Meteor.user = sinon.stub().returns(testPlayer);
 
@@ -122,7 +122,7 @@ if (Meteor.isServer) {
             }
         });
 
-        it("Coach user cannot set permissions", (done) => {
+        it("should not allow a Coach user to set permissions", (done) => {
             Meteor.userId = sinon.stub().returns(testCoach._id);
             Meteor.user = sinon.stub().returns(testCoach);
 
@@ -134,7 +134,7 @@ if (Meteor.isServer) {
             }
         });
 
-        it("General user cannot set permissions", (done) => {
+        it("should not allow a General user to set permissions", (done) => {
             Meteor.userId = sinon.stub().returns(testG._id);
             Meteor.user = sinon.stub().returns(testG);
 

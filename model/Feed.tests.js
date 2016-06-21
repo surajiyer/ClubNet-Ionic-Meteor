@@ -24,7 +24,7 @@ if (Meteor.isServer) {
         });
 
         describe('addFeedItem()', () => {
-            it("Add VotingItem fail", () => {
+            it("should fail adding a feed item", () => {
                 // Create item without type
                 testItem = {
                     creatorID: '1',
@@ -47,7 +47,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Add FeedItem succeed", () => {
+            it("should succeed adding a feed item", () => {
                 // Add type to item
                 testItem.type = 'Voting';
 
@@ -95,7 +95,7 @@ if (Meteor.isServer) {
         });
 
         describe('updateFeedItem()', () => {
-            it("Update FeedItem fail", () => {
+            it("should fail updating a feed item", () => {
                 // Create updated item with different clubID
                 newTestItem = testItem;
                 newTestItem.clubID = '2';
@@ -108,7 +108,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Update FeedItem succeed", (done) => {
+            it("should succeed updating a feed item", (done) => {
                 newTestItem.clubID = '2';
                 // Update testItem to newTestItem
                 try {
@@ -217,7 +217,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Responses of One Item", (done) => {
+            it("should get the responses on a feed item", (done) => {
                 // Get responses of item added in the previous test
                 try {
                     result = Meteor.call('getResponsesOfOneItem', testItem._id);
@@ -231,7 +231,7 @@ if (Meteor.isServer) {
         });
 
         describe('getNumberResponsesOfOneItem()', () => {
-            it("Get Responses number of One Item wrong parameter", () => {
+            it("should throw error with wrong parameters ", () => {
                 // Get responses with wrong parameter
                 try {
                     Meteor.call('getNumberResponsesOfOneItem', false);
@@ -240,7 +240,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Responses number of One Item without responses", () => {
+            it("should get 0 responses for item without responses ", () => {
                 // Get responses of item without responses
                 try {
                     result = Meteor.call('getNumberResponsesOfOneItem', 'otherItem');
@@ -250,7 +250,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Responses number of One Item", () => {
+            it("should get 1 response for an item with 1 response", () => {
                 // Get responses of item added in the previous test
                 try {
                     result = Meteor.call('getNumberResponsesOfOneItem', testItem._id);
@@ -295,7 +295,7 @@ if (Meteor.isServer) {
         });
 
         describe('getVotingResults()', () => {
-            it("Get Voting Results wrong parameters", (done) => {
+            it("should throw error with invalid parameters", (done) => {
                 // Get results with wrong parameter
                 try {
                     Meteor.call('getVotingResults', false);
@@ -305,7 +305,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Voting Results normally", () => {
+            it("should get the voting results", () => {
                 // Get results of item added in the previous test
                 try {
                     var result = Meteor.call('getVotingResults', testItem._id);
@@ -319,7 +319,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Voting Results, adding a response", () => {
+            it("should get the voting results with a new vote added", () => {
                 // Add extra responses and check result
                 try {
                     Meteor.call('putResponse', testItem._id, testItem.type, '1');
@@ -360,7 +360,7 @@ if (Meteor.isServer) {
         });
 
         describe('deleteFeedItem()', () => {
-            it("Delete FeedItem wrong parameter", () => {
+            it("should throw error with invalid parameter", () => {
                 // Delete item with wrong parameter
                 try {
                     Meteor.call('deleteFeedItem', false);
@@ -369,7 +369,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Delete FeedItem", () => {
+            it("should delete the feed item", () => {
                 // Delete item added in the addFeedItem test case
                 try {
                     var deleteFeedItemStub = sinon.stub(Meteor, 'call');
