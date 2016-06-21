@@ -36,7 +36,7 @@ describe('ItemTypes', () => {
     it("Get ItemTypes", (done) => {
         // Get item added in the previous test
         try {
-            var result = Meteor.call('getItemTypes');
+            var result = Meteor.call('getAllItemTypes');
             assert(result[0]._id == testType._id);
             assert(result[1]._id == testType2._id);
             done();

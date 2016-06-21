@@ -167,7 +167,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -180,7 +180,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -192,7 +192,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -204,7 +204,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -234,7 +234,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
-
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -246,7 +246,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
-
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -258,7 +258,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -270,7 +270,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
-
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -299,7 +299,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -311,7 +311,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -323,7 +323,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -335,7 +335,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
-
+                    assert.equal(permission, true);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -364,7 +364,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
-
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -376,7 +376,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
-
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -388,7 +388,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
-
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -400,7 +400,7 @@ if (Meteor.isServer) {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
-
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
