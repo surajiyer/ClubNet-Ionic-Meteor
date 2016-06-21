@@ -15,14 +15,12 @@ if (Meteor.isServer) {
         describe('addFeedItem()', () => {
             beforeEach(() => {
                 // Mock user and userId since there is no user logged in while testing
-                console.log('elfnerjfbjkrbfj');
                 sinon.stub(global.Meteor, 'user').returns(user);
                 sinon.stub(global.Meteor, 'userId').returns(userId);
             });
 
             afterEach(() => {
                 sinon.restore(global.Meteor.user);
-                console.log(Meteor.user());
                 sinon.restore(global.Meteor.userId);
             });
 

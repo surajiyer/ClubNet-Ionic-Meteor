@@ -45,7 +45,7 @@ if (Meteor.isServer) {
                         lastName: 'Pr',
                         type: 'pr',
                         clubID: 'test',
-                        notifications: new Object()
+                        notifications: {}
                     }
                 };
                 testPr._id = Accounts.createUser(testPr);
@@ -129,7 +129,7 @@ if (Meteor.isServer) {
                         type: 'player',
                         clubID: 'test',
                         teamID: 'test',
-                        notifications: new Object()
+                        notifications: {}
                     }
                 };
 
@@ -213,7 +213,7 @@ if (Meteor.isServer) {
                         type: 'coach',
                         clubID: 'test',
                         teamID: 'test',
-                        notifications: new Object()
+                        notifications: {}
                     }
                 };
 
@@ -296,7 +296,7 @@ if (Meteor.isServer) {
                         lastName: 'g',
                         type: 'general',
                         clubID: 'test',
-                        notifications: new Object()
+                        notifications: {}
                     }
                 };
 

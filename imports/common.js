@@ -24,8 +24,12 @@ export const isAdmin = function (userId) {
     return getUserType(userId) == 'pr';
 };
 
+export const getAllItemTypes = function () {
+    return TypesCollection.find().fetch();
+};
+
 export const isValidType = function (itemType) {
     check(itemType, String);
-    var validTypes = _.pluck(Meteor.call('getAllItemTypes'), '_id');
+    var validTypes = _.pluck(getAllItemTypes(), '_id');
     return _.contains(validTypes, itemType);
 };

@@ -18,9 +18,20 @@ if (Meteor.isServer) {
             testClub._id = Clubs.insert(testClub);
         });
 
-        it("should throw error while getting non-existing club info", (done) => {
+        beforeEach(() => {
             // Mock user to include the clubID of the test club we just added
             sinon.stub(global.Meteor, 'user').returns({
+                profile : { clubID : testClub._id}
+            });
+        });
+
+        afterEach(() => {
+            sinon.restore(global.Meteor.user);
+        });
+
+        it("should throw error while getting non-existing club info", (done) => {
+            // Mock user to include the clubID of the test club we just added
+            global.Meteor.user.returns({
                 profile : { clubID : 'test'}
             });
 
@@ -31,16 +42,9 @@ if (Meteor.isServer) {
             } catch (err) {
                 done();
             }
-
-            sinon.restore(global.Meteor.user);
         });
 
         it("should get club info", (done) => {
-            // Mock user to include the clubID of the test club we just added
-            sinon.stub(global.Meteor, 'user').returns({
-                profile : { clubID : testClub._id}
-            });
-
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');
@@ -49,8 +53,6 @@ if (Meteor.isServer) {
             } catch (err) {
                 assert.fail();
             }
-
-            sinon.restore(global.Meteor.user);
         });
 
         it("should update club name", (done) => {
