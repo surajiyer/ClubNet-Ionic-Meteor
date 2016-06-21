@@ -1,6 +1,9 @@
 angular.module('userAccountControllers', [])
-/**
+
+
+/******
  *  Register Controller: provides all functionality for the register screen of the app
+    This code is commented out as it was not a requested functionality by our client.
  */
 // .controller('registerCtrl', function ($scope, $meteor, $state) {
 //     /**
@@ -61,6 +64,8 @@ angular.module('userAccountControllers', [])
         var ERROR = 'Error';
 
         $scope.login = function () {
+
+            //Check that determines wheter an email is present.
             try {
                 check($scope.user.email, Match.Where(validateInput));
             } catch (e) {
@@ -70,6 +75,7 @@ angular.module('userAccountControllers', [])
                 return;
             }
 
+            //Check that determines wheter there is a valid password inserted
             try {
                 check($scope.user.password, Match.Where(validateInput));
             } catch (e) {
@@ -79,6 +85,9 @@ angular.module('userAccountControllers', [])
                 return;
             }
 
+            //The actual login process starts here.
+            //The meteor 'loginWithPassword()' method is called and takes 2 arguments:
+            // The user's email and the user's password.
             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
                 if (error) {
                     $translate('INCORRECT_CREDENTIALS').then(function (result) {
@@ -222,7 +231,7 @@ angular.module('userAccountControllers', [])
         };
 
         /**
-         * Password information
+         * Password information from the form
          */
         $scope.password = {
             oldPass: '',
@@ -234,6 +243,8 @@ angular.module('userAccountControllers', [])
          * @summary Function to change the password
          */
         $scope.changePassword = function () {
+            //Check wheteter the password and the password confirmation are equal.
+            //If not, an error will be thrown.
             if ($scope.password.newPass != $scope.password.newPassCheck) {
                 $translate(['ERROR', 'PWD_NOT_MATCH']).then(function (translations) {
                     head = translations.ERROR;
@@ -243,6 +254,7 @@ angular.module('userAccountControllers', [])
                 return;
             }
 
+            //The newly entered password is checked wheter it complies with the set requirements.
             var testPassword = CommonServices.checkPassword($scope.password.newPass);
             if (!testPassword) {
                 $translate(['ERROR', 'PWD_NOT_VALID']).then(function (translations) {
@@ -253,6 +265,9 @@ angular.module('userAccountControllers', [])
                 return;
             }
 
+            //The actual password change takes place here. A build-in Meteor method is called that 
+            //requires 2 parameters to be present: 'the old password and the new password'.
+            // Here the new password is validated against a control field.
             $meteor.changePassword($scope.password.oldPass, $scope.password.newPass).then(function () {
                 $translate(['SUCCESS', 'PWD_RESET_SUCCESS']).then(function (translations) {
                     head = translations.SUCCESS;
