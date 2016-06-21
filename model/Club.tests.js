@@ -5,7 +5,7 @@ import './Club.js';
 let testClub = {};
 if (Meteor.isServer) {
     describe('Club', () => {
-        it("Get nonexisting Club should fail", (done) => {
+        before(() => {
             // Create a test club
             testClub = {
                 name: 'Name1',
@@ -15,11 +15,12 @@ if (Meteor.isServer) {
                 colorAccent: '#FFFFFF',
                 heroesMax: 0
             };
-            testClubID = Clubs.insert(testClub);
-            testClub._id = testClubID;
+            testClub._id = Clubs.insert(testClub);
+        });
 
+        it("should throw error while getting non-existing club info", (done) => {
             // Mock user to include the clubID of the test club we just added
-            global.Meteor.user = sinon.stub().returns({
+            sinon.stub(global.Meteor, 'user').returns({
                 profile : { clubID : 'test'}
             });
 
@@ -27,29 +28,32 @@ if (Meteor.isServer) {
             try {
                 result = Meteor.call('getClub');
                 assert.fail();
-                done();
             } catch (err) {
                 done();
             }
+
+            sinon.restore(global.Meteor.user);
         });
 
-        it("Get Club should succeed", (done) => {
+        it("should get club info", (done) => {
             // Mock user to include the clubID of the test club we just added
-            global.Meteor.user = sinon.stub().returns({
+            sinon.stub(global.Meteor, 'user').returns({
                 profile : { clubID : testClub._id}
             });
 
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');
-                assert(result._id == testClub._id);
+                assert.equal(result._id, testClub._id);
                 done();
             } catch (err) {
                 assert.fail();
             }
+
+            sinon.restore(global.Meteor.user);
         });
 
-        it("Update Club", (done) => {
+        it("should update club name", (done) => {
             // Changing the test club
             testClub.name = 'Name2';
 
@@ -57,14 +61,14 @@ if (Meteor.isServer) {
             try {
                 Meteor.call('updateClub', testClub);
                 result = Meteor.call('getClub');
-                assert(result.name == 'Name2');
+                assert.equal(result.name, 'Name2');
                 done();
             } catch (err) {
                 assert.fail();
             }
         });
 
-        it("Update Club Invalid Parameter", (done) => {
+        it("should throw error when updating club with invalid parameters", (done) => {
             // Retrieving the club
             try {
                 Meteor.call('updateClub', false);
@@ -72,7 +76,6 @@ if (Meteor.isServer) {
             } catch (err) {
                 done();
             }
-
         });
     });
 }

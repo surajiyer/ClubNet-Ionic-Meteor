@@ -41,6 +41,12 @@ if (Meteor.isClient) {
                 chatRightsStub
                     .withArgs('checkRights', 'Chat', 'create')
                     .returns(true);
+                global.Meteor.userId = sinon.stub().returns('1');
+            });
+
+            after(function () {
+                chatRightsStub.restore();
+                sinon.restore(global.Meteor.userId);
             });
 
             it("deny access to non-logged in users", function () {
@@ -49,47 +55,56 @@ if (Meteor.isClient) {
             });
 
             it("deny access to non-participating user", function () {
-                global.Meteor.userId = sinon.stub().returns('1');
                 var response = allow.insert('1', {});
                 assert.equal(response, false);
             });
 
             it("deny access to non-participating user", function () {
-                global.Meteor.userId = sinon.stub().returns('1');
                 sameClub = sinon.stub(utils, 'getUserClubID');
                 sameClub.withArgs('1').returns(true);
                 sameClub.withArgs('2').returns(false);
                 sameTeam = sinon.stub(utils, 'getUserTeamID');
                 sameTeam.returns(false);
                 var response = allow.insert('1', {users: ['1', '2']});
+                sameClub.restore();
+                sameTeam.restore();
                 assert.equal(response, false);
             });
 
             it("deny access to non-same club users", function () {
-                global.Meteor.userId = sinon.stub().returns('1');
+                sameClub = sinon.stub(utils, 'getUserClubID');
                 sameClub.withArgs('1').returns(true);
                 sameClub.withArgs('2').returns(false);
+                sameTeam = sinon.stub(utils, 'getUserTeamID');
                 sameTeam.returns(false);
                 var response = allow.insert('1', {users: ['1', '2']});
+                sameClub.restore();
+                sameTeam.restore();
                 assert.equal(response, false);
             });
 
             it("deny access to non-same team, but same club, users", function () {
-                global.Meteor.userId = sinon.stub().returns('1');
+                sameClub = sinon.stub(utils, 'getUserClubID');
                 sameClub.returns(true);
+                sameTeam = sinon.stub(utils, 'getUserTeamID');
                 sameTeam.withArgs('1').returns(true);
                 sameTeam.withArgs('2').returns(false);
                 var response = allow.insert('1', {users: ['1', '2']});
+                sameClub.restore();
+                sameTeam.restore();
                 assert.equal(response, false);
             });
 
             it("allow access to same team, but same club, users", function () {
-                global.Meteor.userId = sinon.stub().returns('1');
+                sameClub = sinon.stub(utils, 'getUserClubID');
                 sameClub.withArgs('1').returns(true);
                 sameClub.withArgs('2').returns(true);
+                sameTeam = sinon.stub(utils, 'getUserTeamID');
                 sameTeam.withArgs('1').returns(true);
                 sameTeam.withArgs('2').returns(true);
                 var response = allow.insert('1', {users: ['1', '2']});
+                sameClub.restore();
+                sameTeam.restore();
                 assert.equal(response, true);
             });
 

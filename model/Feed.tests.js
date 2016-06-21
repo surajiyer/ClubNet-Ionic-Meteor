@@ -2,35 +2,36 @@ import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
 
-import { baseFeedItemSchema } from '/imports/schemas/feedItems';
-import { baseResponseSchema } from '/imports/schemas/responses';
+import {baseResponseSchema} from '/imports/schemas/responses';
 import './Feed.js';
 import './feedItems/Voting.js';
 
 let testItem;
 if (Meteor.isServer) {
     userId = '1';
+    user = {profile: {clubID: '-'}};
+
     describe('FeedItems', () => {
-
         describe('addFeedItem()', () => {
-            it("Add FeedItem fail", () => {
-
+            beforeEach(() => {
                 // Mock user and userId since there is no user logged in while testing
-                global.Meteor.user = sinon.stub().returns({
-                    profile: {clubID: '-'}
-                });
-                global.Meteor.userId = sinon.stub().returns(userId);
+                console.log('elfnerjfbjkrbfj');
+                sinon.stub(global.Meteor, 'user').returns(user);
+                sinon.stub(global.Meteor, 'userId').returns(userId);
+            });
 
-                // Add schema to Items
-                Items.attachSchema(baseFeedItemSchema, {selector: {type: 'testType'}});
+            afterEach(() => {
+                sinon.restore(global.Meteor.user);
+                console.log(Meteor.user());
+                sinon.restore(global.Meteor.userId);
+            });
 
+            it("Add VotingItem fail", () => {
                 // Create item without type
-                
                 testItem = {
                     creatorID: '1',
                     sticky: false,
                     clubID: '1',
-                    published: true,
                     createdAt: new Date,
                     modifiedAt: new Date,
                     title: '1',
@@ -44,7 +45,8 @@ if (Meteor.isServer) {
                 try {
                     Meteor.call('addFeedItem', testItem);
                     assert.fail();
-                } catch (err) {}
+                } catch (err) {
+                }
             });
 
             it("Add FeedItem succeed", (done) => {
@@ -68,20 +70,16 @@ if (Meteor.isServer) {
         });
 
         describe('getFeedItem()', () => {
-
-            it("Get FeedItem fail", () => {
-
+            it("should fail getting feed item", () => {
                 // Get item with wrong parameter
                 try {
                     Meteor.call('getFeedItem', false);
                     assert.fail();
                 } catch (err) {
                 }
-
             });
 
-            it("Get FeedItem succeed", (done) => {
-
+            it("should get feed item successfully", (done) => {
                 // Get item added in the previous test
                 try {
                     var getFeedItemStub = sinon.stub(Meteor, 'call');
@@ -94,7 +92,7 @@ if (Meteor.isServer) {
                     Meteor.call.restore();
                     done();
                 } catch (err) {
-                    console.log('hi: '+ err);
+                    console.log(err);
                     assert.fail();
                 }
             });
@@ -102,7 +100,6 @@ if (Meteor.isServer) {
 
         describe('updateFeedItem()', () => {
             it("Update FeedItem fail", () => {
-
                 // Create updated item with different clubID
                 newTestItem = testItem;
                 newTestItem.clubID = '2';
@@ -111,12 +108,11 @@ if (Meteor.isServer) {
                 try {
                     Meteor.call('updateFeedItem', false);
                     assert.fail();
-                } catch (err) {}
-
+                } catch (err) {
+                }
             });
 
             it("Update FeedItem succeed", (done) => {
-                
                 newTestItem.clubID = '2';
                 // Update testItem to newTestItem
                 try {
@@ -136,10 +132,9 @@ if (Meteor.isServer) {
                     Meteor.call.restore();
                     done();
                 } catch (err) {
-                    console.log('updateFeedItem: '+err);
+                    console.log('updateFeedItem: ' + err);
                     assert.fail();
                 }
-
             });
         });
 
@@ -154,7 +149,6 @@ if (Meteor.isServer) {
                     assert.fail();
                 } catch (err) {
                 }
-
             });
 
             it("Put Response invalid id type", () => {
@@ -164,7 +158,6 @@ if (Meteor.isServer) {
                     assert.fail();
                 } catch (err) {
                 }
-
             });
 
             it("Put Response invalid value", () => {
@@ -174,7 +167,6 @@ if (Meteor.isServer) {
                     assert.fail();
                 } catch (err) {
                 }
-
             });
 
             it("Put Response valid input", (done) => {
@@ -191,7 +183,6 @@ if (Meteor.isServer) {
 
         describe('getResponse()', () => {
             it("Get Response wrong parameter", () => {
-
                 // Get item with wrong parameter
                 try {
                     Meteor.call('getResponse', false);
@@ -425,7 +416,6 @@ if (Meteor.isServer) {
 
         describe('trainings()', () => {
             it("Get trainings", (done) => {
-
                 // Try to get some trainings
                 try {
                     Meteor.call('getTrainings');
@@ -433,11 +423,9 @@ if (Meteor.isServer) {
                 } catch (err) {
                     assert(false, "Error with training retrieval.");
                 }
-
             });
 
-            it("Get exercsises for a particular training", (done) => {
-
+            it("Get exercises for a particular training", (done) => {
                 // Get exercises for invalid type parameter.
                 try {
                     Meteor.call('getExercises', false);
@@ -445,9 +433,7 @@ if (Meteor.isServer) {
                 } catch (err) {
                     done();
                 }
-
             });
         });
-
     });
 }

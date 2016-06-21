@@ -1,7 +1,6 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
-import {accessControlSchema} from '/imports/schemas/misc';
 import './AccessControl';
 
 let testPermissions;
@@ -12,11 +11,6 @@ let testG;
 let testType;
 if (Meteor.isServer) {
     describe('Access Control Set Permissions', () => {
-        before(function() {
-            // Add schema to Items
-            AMx.attachSchema(accessControlSchema);
-        });
-
         it("PR user can set permissions", (done) => {
             testPr = {
                 email: 'pr@pr.pr',
@@ -88,6 +82,9 @@ if (Meteor.isServer) {
             } catch (err) {
                 console.log('setPermissions: ' + err);
                 assert.fail();
+            } finally {
+                Meteor.user.restore();
+                Meteor.userId.restore();
             }
         });
 
@@ -101,6 +98,9 @@ if (Meteor.isServer) {
                 assert.fail();
             } catch (err) {
                 done();
+            } finally {
+                Meteor.user.restore();
+                Meteor.userId.restore();
             }
         });
 
@@ -113,6 +113,9 @@ if (Meteor.isServer) {
                 assert.fail();
             } catch (err) {
                 done();
+            } finally {
+                Meteor.user.restore();
+                Meteor.userId.restore();
             }
         });
 
@@ -125,6 +128,9 @@ if (Meteor.isServer) {
                 assert.fail();
             } catch (err) {
                 done();
+            } finally {
+                Meteor.user.restore();
+                Meteor.userId.restore();
             }
         });
 

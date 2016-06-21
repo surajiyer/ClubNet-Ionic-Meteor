@@ -18,7 +18,7 @@ Meteor.startup(function () {
 
 Meteor.methods({
     /**
-     * @summary Get all the defined item types.
+     * @summary Get all defined item types that user is allowed to view.
      * @return {Object[]} An array that contains the documents of all item types.
      */
     getItemTypes: function () {
