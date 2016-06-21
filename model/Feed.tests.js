@@ -12,18 +12,18 @@ if (Meteor.isServer) {
     user = {profile: {clubID: '-'}};
 
     describe('FeedItems', () => {
+        beforeEach(() => {
+            // Mock user and userId since there is no user logged in while testing
+            sinon.stub(global.Meteor, 'user').returns(user);
+            sinon.stub(global.Meteor, 'userId').returns(userId);
+        });
+
+        afterEach(() => {
+            sinon.restore(global.Meteor.user);
+            sinon.restore(global.Meteor.userId);
+        });
+
         describe('addFeedItem()', () => {
-            beforeEach(() => {
-                // Mock user and userId since there is no user logged in while testing
-                sinon.stub(global.Meteor, 'user').returns(user);
-                sinon.stub(global.Meteor, 'userId').returns(userId);
-            });
-
-            afterEach(() => {
-                sinon.restore(global.Meteor.user);
-                sinon.restore(global.Meteor.userId);
-            });
-
             it("Add VotingItem fail", () => {
                 // Create item without type
                 testItem = {
@@ -47,7 +47,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Add FeedItem succeed", (done) => {
+            it("Add FeedItem succeed", () => {
                 // Add type to item
                 testItem.type = 'Voting';
 
@@ -58,8 +58,7 @@ if (Meteor.isServer) {
                         .withArgs('addFeedItem', testItem)
                         .returns(Items.insert(testItem));
                     testItem._id = Meteor.call('addFeedItem', testItem);
-                    Meteor.call.restore();
-                    done();
+                    sinon.restore(Meteor.call);
                 } catch (err) {
                     console.log('addfeeditem error: ' + err);
                     assert.fail();
@@ -77,7 +76,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("should get feed item successfully", (done) => {
+            it("should get feed item successfully", () => {
                 // Get item added in the previous test
                 try {
                     var getFeedItemStub = sinon.stub(Meteor, 'call');
@@ -87,8 +86,7 @@ if (Meteor.isServer) {
                     var result = Meteor.call('getFeedItem', testItem._id);
                     assert(result._id == testItem._id);
                     testItem = result;
-                    Meteor.call.restore();
-                    done();
+                    sinon.restore(Meteor.call);
                 } catch (err) {
                     console.log(err);
                     assert.fail();
@@ -137,7 +135,7 @@ if (Meteor.isServer) {
         });
 
         describe('putResponse()', () => {
-            it("Put Response invalid id", () => {
+            it("should throw error with invalid id", () => {
                 // Add schema to Responses
                 Responses.attachSchema(baseResponseSchema, {selector: {itemType: testItem.type}});
 
@@ -149,7 +147,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Put Response invalid id type", () => {
+            it("should throw error with invalid id and type", () => {
                 // Invalid id type
                 try {
                     Meteor.call('putResponse', testItem._id, false, '1');
@@ -158,7 +156,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Put Response invalid value", () => {
+            it("should throw error with invalid response value", () => {
                 // Invalid value
                 try {
                     Meteor.call('putResponse', testItem._id, testItem.type, false);
@@ -167,20 +165,18 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Put Response valid input", (done) => {
-
+            it("should add response successfully with valid input", () => {
                 // Valid input          
                 try {
                     Meteor.call('putResponse', testItem._id, testItem.type, '1');
                 } catch (err) {
                     assert.fail();
                 }
-                done();
             });
         });
 
         describe('getResponse()', () => {
-            it("Get Response wrong parameter", () => {
+            it("should throw error with wrong parameters", () => {
                 // Get item with wrong parameter
                 try {
                     Meteor.call('getResponse', false);
@@ -189,23 +185,19 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Response", (done) => {
-
-                // Get reponse added in the previous test
+            it("should get the response successfully", () => {
+                // Get response added in the previous test
                 try {
                     result = Meteor.call('getResponse', testItem._id);
-                    assert(result.itemID == testItem._id);
-                    testResponse = result
+                    assert.equal(result.itemID, testItem._id);
                 } catch (err) {
                     assert.fail();
                 }
-
-                done();
             });
         });
 
         describe('getResponseOfOneItem()', () => {
-            it("Get Responses of One Item wrong parameter", () => {
+            it("should throw error with wrong parameter", () => {
                 // Get responses with wrong parameter
                 try {
                     Meteor.call('getResponsesOfOneItem', false);
@@ -214,11 +206,11 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Responses of One Item without responses", (done) => {
-                // Get reponses of item without responses
+            it("should get an empty array of responses for item without responses", (done) => {
+                // Get responses of item without responses
                 try {
                     result = Meteor.call('getResponsesOfOneItem', 'otherItem');
-                    assert(result.length == 0);
+                    assert.equal(result.length, 0);
                     done();
                 } catch (err) {
                     assert.fail();
@@ -229,8 +221,8 @@ if (Meteor.isServer) {
                 // Get responses of item added in the previous test
                 try {
                     result = Meteor.call('getResponsesOfOneItem', testItem._id);
-                    assert(result.length == 1);
-                    assert(result[0].itemID == testItem._id);
+                    assert.equal(result.length, 1);
+                    assert.equal(result[0].itemID, testItem._id);
                 } catch (err) {
                     assert.fail();
                 }
@@ -248,31 +240,29 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Responses number of One Item without responses", (done) => {
-                // Get reponses of item without responses
+            it("Get Responses number of One Item without responses", () => {
+                // Get responses of item without responses
                 try {
                     result = Meteor.call('getNumberResponsesOfOneItem', 'otherItem');
-                    assert(result == 0);
-                    done();
+                    assert.equal(result, 0);
                 } catch (err) {
                     assert.fail();
                 }
             });
 
-            it("Get Responses number of One Item", (done) => {
+            it("Get Responses number of One Item", () => {
                 // Get responses of item added in the previous test
                 try {
                     result = Meteor.call('getNumberResponsesOfOneItem', testItem._id);
-                    assert(result == 1);
+                    assert.equal(result, 1);
                 } catch (err) {
                     assert.fail();
                 }
-                done();
             });
         });
 
         describe('getResponseOfItemType()', () => {
-            it("Get Responses of ItemType wrong parameter", () => {
+            it("should throw error with invalid parameters", () => {
                 // Get responses with wrong parameter
                 try {
                     Meteor.call('getResponsesOfItemType', false);
@@ -281,24 +271,24 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Responses of ItemType without responses", () => {
-                // Get reponses of item without reponeses
+            it("should get an empty array for an item type that does not have responses", () => {
+                // Get responses of item without responses
                 try {
                     result = Meteor.call('getResponsesOfItemType', 'otherItemType');
-                    assert(result.length == 0);
+                    assert.equal(result.length, 0);
                 } catch (err) {
                     assert.fail();
                 }
             });
 
-            it("Get Responses of ItemType", (done) => {
-
-                // Get reponses of item added in the previous test
+            it("should get all responses of given item type", () => {
+                // Get responses of item added in the previous test
                 try {
-                    result = Meteor.call('getResponsesOfItemType', testItem.type);
+                    var result = Meteor.call('getResponsesOfItemType', testItem.type);
                     assert(result.length == 1);
-                    done();
+                    //assert.equal(result.length, 1);
                 } catch (err) {
+                    console.log('fbuifbsuiebfuisbf', err);
                     assert.fail();
                 }
             });
@@ -315,51 +305,41 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Get Voting Results normally", (done) => {
+            it("Get Voting Results normally", () => {
                 // Get results of item added in the previous test
                 try {
                     var result = Meteor.call('getVotingResults', testItem._id);
-                    assert(result[0].length == 3);
-                    assert(result[0][0] == 1);
-                    assert(result[0][1] == 0);
-                    assert(result[0][2] == 0);
+                    assert.equal(result[0].length, 3);
+                    assert.equal(result[0][0], 1);
+                    assert.equal(result[0][1], 0);
+                    assert.equal(result[0][2], 0);
                 } catch (err) {
                     console.log(err);
                     assert.fail();
                 }
-
-                done();
             });
 
-            it("Get Voting Results, adding a response", (done) => {
-
-
+            it("Get Voting Results, adding a response", () => {
                 // Add extra responses and check result
                 try {
-                    userId = '2';
                     Meteor.call('putResponse', testItem._id, testItem.type, '1');
-                    userId = '3';
                     Meteor.call('putResponse', testItem._id, testItem.type, '2');
                     result = Meteor.call('getVotingResults', testItem._id);
-                    assert(result[0].length == 3);
-                    assert(result[0][0] == 2);
-                    assert(result[0][1] == 1);
-                    assert(result[0][2] == 0);
+                    assert.equal(result[0].length, 3);
+                    assert.equal(result[0][0], 2);
+                    assert.equal(result[0][1], 1);
+                    assert.equal(result[0][2], 0);
 
                     Meteor.call('deleteResponse', testItem._id);
-                    userId = '2';
                     Meteor.call('deleteResponse', testItem._id);
-                    userId = '1';
                 } catch (err) {
                     assert.fail();
                 }
-
-                done();
             });
         });
 
         describe('deleteResponse()', () => {
-            it("Delete Response wrong parameter", () => {
+            it("should throw error with invalid parameter", () => {
                 // Delete response with wrong parameter
                 try {
                     Meteor.call('deleteResponse', false);
@@ -369,11 +349,10 @@ if (Meteor.isServer) {
 
             });
 
-            it("Delete Response", (done) => {
-                // Delete response added in the addResponse testcase
+            it("should delete response", () => {
+                // Delete response added in the addResponse test case
                 try {
-                    result = Meteor.call('deleteResponse', testItem._id);
-                    done();
+                    Meteor.call('deleteResponse', testItem._id);
                 } catch (err) {
                     assert.fail();
                 }
@@ -390,22 +369,21 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Delete FeedItem", (done) => {
-                // Delete item added in the addFeedItem testcase
+            it("Delete FeedItem", () => {
+                // Delete item added in the addFeedItem test case
                 try {
                     var deleteFeedItemStub = sinon.stub(Meteor, 'call');
                     deleteFeedItemStub
                         .withArgs('updateFeedItem', testItem._id)
                         .returns(Items.remove({_id: testItem._id}));
                     Meteor.call('deleteFeedItem', testItem._id);
-                    Meteor.call.restore();
+                    sinon.restore(Meteor.call);
                     try {
                         var result = Items.find(testItem._id).fetch()[0];
                         assert.equal(result, undefined);
                     } catch (err) {
                         console.log(err);
                     }
-                    done();
                 } catch (err) {
                     assert.fail();
                 }
@@ -413,23 +391,21 @@ if (Meteor.isServer) {
         });
 
         describe('trainings()', () => {
-            it("Get trainings", (done) => {
+            it("should get trainings", () => {
                 // Try to get some trainings
                 try {
                     Meteor.call('getTrainings');
-                    done();
                 } catch (err) {
-                    assert(false, "Error with training retrieval.");
+                    assert.fail();
                 }
             });
 
-            it("Get exercises for a particular training", (done) => {
+            it("should throw error with invalid parameters", () => {
                 // Get exercises for invalid type parameter.
                 try {
                     Meteor.call('getExercises', false);
-                    assert(false, "No exercises should be retrieved when a invalid parameter is passed.");
+                    assert.fail();
                 } catch (err) {
-                    done();
                 }
             });
         });

@@ -1,173 +1,77 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
-import {accessControlSchema} from '/imports/schemas/misc';
-import './AccessControl.js';
+import './AccessControl';
+import './ItemTypes';
 
-let testControlPr;
-let testControlP;
-let testControlC;
-let testControlG;
-let testPr;
-let testPlayer;
-let testCoach;
-let testG;
-let Voting;
-let Form;
 if (Meteor.isServer) {
-    describe('Access Control Voting', () => {
+    describe('Access Control Form', () => {
+        before(() => {
+            // Reset database
+            Meteor.users.remove({});
+            AMx.remove({});
+            TypesCollection.remove({});
+
+            // Create fake item types
+            let Voting = {
+                _id: 'Voting',
+                name: 'Exercise poll',
+                icon: 'Voting.ClubNet'
+            };
+            TypesCollection.insert(Voting);
+        });
+
+        after(() => {
+            // Reset the database
+            Meteor.users.remove({});
+            AMx.remove({});
+            TypesCollection.remove({});
+        });
 
         describe('PR user', () => {
-            it("Set permissions for PR user", (done) => {
-
-                // Add schema to Items
-                AMx.attachSchema(accessControlSchema);
-
-                testPr = {
+            before(() => {
+                // Create a fake PR user
+                let testPr = {
                     email: 'pr@pr.pr',
                     password: 'pr',
-                    profile: {firstName: 'Pr', lastName: 'Pr', type: 'pr', clubID: 'test', notifications: new Object()}
+                    profile: {
+                        firstName: 'Pr',
+                        lastName: 'Pr',
+                        type: 'pr',
+                        clubID: 'test',
+                        notifications: {}
+                    }
                 };
-
-                testPlayer = {
-                    email: 'ur@ur.ur',
-                    password: 'ur',
-                    profile: {firstName: 'Ur', lastName: 'Ur', type: 'player', clubID: 'test', teamID: 'test', notifications: new Object()}
-                };
-
-                testCoach = {
-                    email: 'c@c.cc',
-                    password: 'cc',
-                    profile: {firstName: 'c', lastName: 'c', type: 'coach', clubID: 'test', teamID: 'test', notifications: new Object()}
-                };
-                testG = {
-                    email: 'g@g.gg',
-                    password: 'gg',
-                    profile: {firstName: 'g', lastName: 'g', type: 'general', clubID: 'test', notifications: new Object()}
-                };
-
-                Meteor.users.remove({});
                 testPr._id = Accounts.createUser(testPr);
                 // console.log("pr added: "+testPr._id);
-                testPlayer._id = Accounts.createUser(testPlayer);
-                // console.log("p added: " + testPlayer._id);
-                testCoach._id = Accounts.createUser(testCoach);
-                // console.log("c added: " + testCoach._id);
-                testG._id = Accounts.createUser(testG);
-                // console.log("g added: " + testG._id);
 
-                // Create item without type
-                testControlPr = {
+                // Create fake Access control
+                let testControlPr = {
                     _id: 'pr',
                     items: [{
-                        _id: 'Voting', permissions: {
-                            create: true,
-                            edit: true, view: true, delete: true
-                        }
-                    },
-                        {
-                            _id: 'Form', permissions: {
-                            create: true,
-                            edit: true, view: true, delete: true
-                        }
-                        }
-                    ]
+                        _id: 'Voting',
+                        permissions: {create: false, edit: false, view: false, delete: false}
+                    }]
                 };
 
-                // Create item without type
-                testControlP = {
-                    _id: 'player',
-                    items: [{
-                        _id: 'Voting', permissions: {
-                            create: false,
-                            edit: false, view: true, delete: false
-                        }
-                    },
-                        {
-                            _id: 'Form', permissions: {
-                            create: true,
-                            edit: true, view: true, delete: true
-                        }
-                        }
-                    ]
-                };
-
-                // Create item without type
-                testControlC = {
-                    _id: 'coach',
-                    items: [{
-                        _id: 'Voting', permissions: {
-                            create: true,
-                            edit: true, view: true, delete: true
-                        }
-                    },
-                        {
-                            _id: 'Form', permissions: {
-                            create: true,
-                            edit: true, view: true, delete: true
-                        }
-                        }
-                    ]
-                };
-
-                // Create item without type
-                testControlG = {
-                    _id: 'general',
-                    items: [{
-                        _id: 'Voting', permissions: {
-                            create: false,
-                            edit: false, view: false, delete: false
-                        }
-                    },
-                        {
-                            _id: 'Form', permissions: {
-                            create: false,
-                            edit: false, view: false, delete: false
-                        }
-                        }
-                    ]
-                };
-
-                Voting = {
-                    _id: 'Voting',
-                    name: 'Voting',
-                    icon: 'Voting.ClubNet'
-                };
-
-                // Create item without type
-                Form = {
-                    _id: 'Form',
-                    name: 'Form',
-                    icon: 'Form.ClubNet'
-                };
-
-                try {
-                    AMx.remove({});
-                    TypesCollection.remove({});
-                    TypesCollection.insert(Voting);
-                    TypesCollection.insert(Form);
-                } catch (err) {
-                    console.log("before: " + err);
-                }
-
+                // Stub Meteor.user as PR user
                 Meteor.userId = sinon.stub().returns(testPr._id);
                 Meteor.user = sinon.stub().returns(testPr);
 
-                // Adding the custom type
-                try {
-                    Meteor.call('setPermissions', testControlPr);
-                    done();
-                } catch (err) {
-                    console.log('setPermissions: ' + err);
-                    assert.fail();
-                }
+                // Add PR user permissions
+                AMx.insert(testControlPr);
             });
 
-            it("PR user is able to create a Voting item", (done) => {
+            after(() => {
+                sinon.restore(Meteor.user);
+                sinon.restore(Meteor.userId);
+            });
+
+            it("should not be able to create a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -176,11 +80,11 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("PR user is able to edit a Voting item", (done) => {
+            it("should not be able to edit a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -188,11 +92,11 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("PR user is able to view a Voting item", (done) => {
+            it("should not be able to view a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -200,11 +104,11 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("PR user is able to delete a Voting item", (done) => {
+            it("should not be able to delete a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
-                    assert.equal(permission, true);
+                    assert.equal(permission, false);
                     // Should succeed
                     done();
                 } catch (err) {
@@ -214,23 +118,46 @@ if (Meteor.isServer) {
         });
 
         describe('Player user', () => {
-            it("Set permissions for Player user", (done) => {
+            before(() => {
+                let testPlayer = {
+                    email: 'ur@ur.ur',
+                    password: 'ur',
+                    profile: {
+                        firstName: 'Ur',
+                        lastName: 'Ur',
+                        type: 'player',
+                        clubID: 'test',
+                        teamID: 'test',
+                        notifications: {}
+                    }
+                };
 
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
+                testPlayer._id = Accounts.createUser(testPlayer);
+                // console.log("p added: " + testPlayer._id);
 
-                // Adding the custom type
-                try {
-                    Meteor.call('setPermissions', testControlP);
-                    Meteor.userId = sinon.stub().returns(testPlayer._id);
-                    Meteor.user = sinon.stub().returns(testPlayer);
-                    done();
-                } catch (err) {
-                    assert.fail();
-                }
+                // Player user permissions
+                let testControlP = {
+                    _id: 'player',
+                    items: [{
+                        _id: 'Voting',
+                        permissions: {create: false, edit: false, view: true, delete: false}
+                    }]
+                };
+
+                // Stub Meteor.user as player user
+                Meteor.userId = sinon.stub().returns(testPlayer._id);
+                Meteor.user = sinon.stub().returns(testPlayer);
+
+                // Add Player user permissions
+                AMx.insert(testControlP);
             });
 
-            it("Player user is not able to create a Voting item", (done) => {
+            after(() => {
+                sinon.restore(Meteor.user);
+                sinon.restore(Meteor.userId);
+            });
+
+            it("should not be able to create a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
@@ -242,7 +169,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Player user is not able to edit a Voting item", (done) => {
+            it("should not be able to edit a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
@@ -254,7 +181,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Player user is able to view a Voting item", (done) => {
+            it("should be able to view a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
@@ -266,7 +193,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Player user is not able to delete a Voting item", (done) => {
+            it("should not be able to delete a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
@@ -280,22 +207,46 @@ if (Meteor.isServer) {
         });
 
         describe('Coach user', () => {
-            it("Set permissions for Coach user a Voting item", (done) => {
+            before(() => {
+                let testCoach = {
+                    email: 'c@c.cc',
+                    password: 'cc',
+                    profile: {
+                        firstName: 'c',
+                        lastName: 'c',
+                        type: 'coach',
+                        clubID: 'test',
+                        teamID: 'test',
+                        notifications: {}
+                    }
+                };
 
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
-                // Adding the custom type
-                try {
-                    Meteor.call('setPermissions', testControlC);
-                    Meteor.userId = sinon.stub().returns(testCoach._id);
-                    Meteor.user = sinon.stub().returns(testCoach);
-                    done();
-                } catch (err) {
-                    assert.fail();
-                }
+                testCoach._id = Accounts.createUser(testCoach);
+                // console.log("c added: " + testCoach._id);
+
+                // Coach user permissions
+                let testControlC = {
+                    _id: 'coach',
+                    items: [{
+                        _id: 'Voting',
+                        permissions: {create: true, edit: true, view: true, delete: true}
+                    }]
+                };
+
+                // Stub Meteor.user as coach user
+                Meteor.userId = sinon.stub().returns(testCoach._id);
+                Meteor.user = sinon.stub().returns(testCoach);
+
+                // Add Coach user permissions
+                AMx.insert(testControlC);
             });
 
-            it("Coach user is able to create a Voting item", (done) => {
+            after(() => {
+                sinon.restore(Meteor.user);
+                sinon.restore(Meteor.userId);
+            });
+
+            it("should be able to create a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
@@ -307,7 +258,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Coach user is able to edit a Voting item", (done) => {
+            it("should be able to edit a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
@@ -319,7 +270,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Coach user is able to view a Voting item", (done) => {
+            it("should be able to view a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
@@ -331,7 +282,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("Coach user is able to delete a Voting item", (done) => {
+            it("should be able to delete a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
@@ -345,22 +296,45 @@ if (Meteor.isServer) {
         });
 
         describe('General user', () => {
-            it("Set permissions for General user a Voting item", (done) => {
+            before(() => {
+                let testG = {
+                    email: 'g@g.gg',
+                    password: 'gg',
+                    profile: {
+                        firstName: 'g',
+                        lastName: 'g',
+                        type: 'general',
+                        clubID: 'test',
+                        notifications: {}
+                    }
+                };
 
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
-                // Adding the custom type
-                try {
-                    Meteor.call('setPermissions', testControlG);
-                    Meteor.userId = sinon.stub().returns(testG._id);
-                    Meteor.user = sinon.stub().returns(testG);
-                    done();
-                } catch (err) {
-                    assert.fail();
-                }
+                testG._id = Accounts.createUser(testG);
+                // console.log("g added: " + testG._id);
+
+                // General member permissions
+                let testControlG = {
+                    _id: 'general',
+                    items: [{
+                        _id: 'Voting',
+                        permissions: {create: false, edit: false, view: false, delete: false}
+                    }]
+                };
+
+                // Stub Meteor.user as general user
+                Meteor.userId = sinon.stub().returns(testG._id);
+                Meteor.user = sinon.stub().returns(testG);
+
+                // Add General user permissions
+                AMx.insert(testControlG);
             });
 
-            it("General user is not able to create a Voting item", (done) => {
+            after(() => {
+                sinon.restore(Meteor.user);
+                sinon.restore(Meteor.userId);
+            });
+
+            it("should not be able to create a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
@@ -372,7 +346,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("General user is not able to edit a Voting item", (done) => {
+            it("should not be able to edit a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'edit');
@@ -384,7 +358,7 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("General user is not able to view a Voting item", (done) => {
+            it("should not be able to view a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
@@ -396,30 +370,11 @@ if (Meteor.isServer) {
                 }
             });
 
-            it("General user is not able to delete a Voting item", (done) => {
+            it("should not be able to delete a Voting item", (done) => {
                 // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'delete');
                     assert.equal(permission, false);
-                    // Should succeed
-                    done();
-                } catch (err) {
-                    assert.fail();
-                }
-            });
-            
-            /**
-             * @summary Deleting the PR user.
-             * It tries to remove the previously created PR user.
-             * This should succeed.
-             */
-            it("Reset the database", (done) => {
-                // Remove the user from the collection
-                try {
-                    Meteor.users.remove(testPr._id);
-                    Meteor.users.remove(testPlayer._id);
-                    Meteor.users.remove(testCoach._id);
-                    Meteor.users.remove(testG._id);
                     // Should succeed
                     done();
                 } catch (err) {

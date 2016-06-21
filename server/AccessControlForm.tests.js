@@ -13,17 +13,11 @@ if (Meteor.isServer) {
             TypesCollection.remove({});
 
             // Create fake item types
-            let Voting = {
-                _id: 'Voting',
-                name: 'Exercise poll',
-                icon: 'Voting.ClubNet'
-            };
             let Form = {
                 _id: 'Form',
                 name: 'Practicality form',
                 icon: 'Form.ClubNet'
             };
-            TypesCollection.insert(Voting);
             TypesCollection.insert(Form);
         });
 
@@ -55,9 +49,6 @@ if (Meteor.isServer) {
                 let testControlPr = {
                     _id: 'pr',
                     items: [{
-                        _id: 'Voting',
-                        permissions: {create: false, edit: false, view: false, delete: false}
-                    }, {
                         _id: 'Form',
                         permissions: {create: false, edit: false, view: false, delete: false}
                     }]
@@ -140,9 +131,6 @@ if (Meteor.isServer) {
                 let testControlP = {
                     _id: 'player',
                     items: [{
-                        _id: 'Voting',
-                        permissions: {create: false, edit: false, view: true, delete: false}
-                    }, {
                         _id: 'Form',
                         permissions: {create: false, edit: false, view: true, delete: false}
                     }]
@@ -224,9 +212,6 @@ if (Meteor.isServer) {
                 let testControlC = {
                     _id: 'coach',
                     items: [{
-                        _id: 'Voting',
-                        permissions: {create: true, edit: true, view: true, delete: true}
-                    }, {
                         _id: 'Form',
                         permissions: {create: true, edit: true, view: true, delete: true}
                     }]
@@ -307,9 +292,6 @@ if (Meteor.isServer) {
                 let testControlG = {
                     _id: 'general',
                     items: [{
-                        _id: 'Voting',
-                        permissions: {create: false, edit: false, view: false, delete: false}
-                    }, {
                         _id: 'Form',
                         permissions: {create: false, edit: false, view: false, delete: false}
                     }]
