@@ -14,12 +14,12 @@ if (Meteor.isServer) {
 
             var item = Meteor.call('getFeedItem', itemID);
             var raisedValue = item.nrVotes;
-            var newRaisedValue = parseInt(raisedValue)+1;
+            var newRaisedValue = parseInt(raisedValue) + 1;
 
-            console.log("raised value: "+raisedValue);
-            console.log("New raised value: "+newRaisedValue);
-            return Items.update({ _id: itemID, type: itemType},
-                { $set: { nrVotes: newRaisedValue }});
+            console.log("raised value: " + raisedValue);
+            console.log("New raised value: " + newRaisedValue);
+            return Items.update({_id: itemID, type: itemType},
+                {$set: {nrVotes: newRaisedValue}});
         },
         /**
          * @summary Retrieve the voting results of an Exercise voting feed item.
@@ -54,16 +54,12 @@ if (Meteor.isServer) {
          * @return {Object[]} Array consists of all training objects.
          */
         getTrainings: function () {
-            try {
-                var obj = HTTP.call("GET", Meteor.absoluteUrl("trainings.json"));
-                obj = obj.data;
-                for (var training in obj) {
-                    obj[training] = obj[training]['training' + (parseInt(training) + 1)];
-                }
-                return obj;
-            } catch (err) {
-                throw new Meteor.Error(err.message);
+            var obj = HTTP.call("GET", Meteor.absoluteUrl("trainings.json"));
+            obj = obj.data;
+            for (var training in obj) {
+                obj[training] = obj[training]['training' + (parseInt(training) + 1)];
             }
+            return obj;
         },
         /**
          * @summary Retrieve all the candidate exercises of a training.

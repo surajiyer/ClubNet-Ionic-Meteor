@@ -1,14 +1,12 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
-import {feedItemTypesSchema} from '/imports/schemas/feedItems';
-import './ItemTypes';
+import * as utils from '/imports/common';
 
 describe('ItemTypes', () => {
-    it("Add ItemTypes", (done) => {
-        // Add schema to Items
-        TypesCollection.attachSchema(feedItemTypesSchema);
+    let testType, testType2;
 
+    before((done) => {
         // Create item without type
         testType = {
             _id: '1',
@@ -33,13 +31,16 @@ describe('ItemTypes', () => {
         }
     });
 
-    it("Get ItemTypes", (done) => {
+    after(() => {
+        TypesCollection.remove({});
+    });
+
+    it("Get ItemTypes", () => {
         // Get item added in the previous test
         try {
-            var result = Meteor.call('getAllItemTypes');
+            var result = utils.getAllItemTypes();
             assert(result[0]._id == testType._id);
             assert(result[1]._id == testType2._id);
-            done();
         } catch (err) {
             assert.fail();
         }
@@ -48,19 +49,18 @@ describe('ItemTypes', () => {
     it("Get ItemType with wrong parameter", (done) => {
         // Get item added in the previous test
         try {
-            var result = Meteor.call('getItemType', false);
+            Meteor.call('getItemType', false);
             assert.fail();
         } catch (err) {
             done();
         }
     });
 
-    it("Get ItemType with correct parameter", (done) => {
+    it("Get ItemType with correct parameter", () => {
         // Get item added in the previous test
         try {
             var result = Meteor.call('getItemType', '1');
             assert(result._id == testType._id);
-            done();
         } catch (err) {
             assert.fail();
         }
