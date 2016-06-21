@@ -2,8 +2,7 @@ import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
 import './AccessControl';
-
-let testPr;
+import './ItemTypes';
 
 if (Meteor.isServer) {
     describe('Access Control Form', () => {
@@ -12,21 +11,6 @@ if (Meteor.isServer) {
             Meteor.users.remove({});
             AMx.remove({});
             TypesCollection.remove({});
-
-            // Create a fake PR user
-            testPr = {
-                email: 'pr@pr.pr',
-                password: 'pr',
-                profile: {
-                    firstName: 'Pr',
-                    lastName: 'Pr',
-                    type: 'pr',
-                    clubID: 'test',
-                    notifications: new Object()
-                }
-            };
-            testPr._id = Accounts.createUser(testPr);
-            // console.log("pr added: "+testPr._id);
 
             // Create fake item types
             let Voting = {
@@ -52,6 +36,21 @@ if (Meteor.isServer) {
 
         describe('PR user', () => {
             before(() => {
+                // Create a fake PR user
+                let testPr = {
+                    email: 'pr@pr.pr',
+                    password: 'pr',
+                    profile: {
+                        firstName: 'Pr',
+                        lastName: 'Pr',
+                        type: 'pr',
+                        clubID: 'test',
+                        notifications: new Object()
+                    }
+                };
+                testPr._id = Accounts.createUser(testPr);
+                // console.log("pr added: "+testPr._id);
+
                 // Create fake Access control
                 let testControlPr = {
                     _id: 'pr',
@@ -64,6 +63,7 @@ if (Meteor.isServer) {
                     }]
                 };
 
+                // Stub Meteor.user as PR user
                 Meteor.userId = sinon.stub().returns(testPr._id);
                 Meteor.user = sinon.stub().returns(testPr);
 
@@ -144,18 +144,16 @@ if (Meteor.isServer) {
                         permissions: {create: false, edit: false, view: true, delete: false}
                     }, {
                         _id: 'Form',
-                        permissions: {create: true, edit: true, view: true, delete: true}
+                        permissions: {create: false, edit: false, view: true, delete: false}
                     }]
                 };
 
-                // Add Player user permissions
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
-                AMx.insert(testControlP);
-
                 // Stub Meteor.user as player user
-                Meteor.userId.returns(testPlayer._id);
-                Meteor.user.returns(testPlayer);
+                Meteor.userId = sinon.stub().returns(testPlayer._id);
+                Meteor.user = sinon.stub().returns(testPlayer);
+
+                // Add Player user permissions
+                AMx.insert(testControlP);
             });
 
             after(() => {
@@ -234,14 +232,12 @@ if (Meteor.isServer) {
                     }]
                 };
 
-                // Add Coach user permissions
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
-                AMx.insert(testControlC);
+                // Stub Meteor.user as coach user
+                Meteor.userId = sinon.stub().returns(testCoach._id);
+                Meteor.user = sinon.stub().returns(testCoach);
 
-                // Stub Meteor.user as cpach user
-                Meteor.userId.returns(testCoach._id);
-                Meteor.user.returns(testCoach);
+                // Add Coach user permissions
+                AMx.insert(testControlC);
             });
 
             after(() => {
@@ -319,14 +315,12 @@ if (Meteor.isServer) {
                     }]
                 };
 
-                // Add General user permissions
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
-                AMx.insert(testControlG);
-
                 // Stub Meteor.user as general user
-                Meteor.userId.returns(testG._id);
-                Meteor.user.returns(testG);
+                Meteor.userId = sinon.stub().returns(testG._id);
+                Meteor.user = sinon.stub().returns(testG);
+
+                // Add General user permissions
+                AMx.insert(testControlG);
             });
 
             after(() => {
