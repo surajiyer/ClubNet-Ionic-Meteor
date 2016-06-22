@@ -64,6 +64,11 @@ if (Meteor.isServer) {
                     assert.fail();
                 }
             });
+
+            after(() => {
+                Items.remove({});
+            });
+
         });
 
         describe('getFeedItem()', () => {
@@ -74,6 +79,10 @@ if (Meteor.isServer) {
                     assert.fail();
                 } catch (err) {
                 }
+            });
+
+            before(() => {
+                Items.insert(testItem);
             });
 
             it("should get feed item successfully", () => {
@@ -92,13 +101,20 @@ if (Meteor.isServer) {
                     assert.fail();
                 }
             });
+
+            after(() => {
+                Items.remove({});
+            });
         });
 
         describe('updateFeedItem()', () => {
-            it("should fail updating a feed item", () => {
-                // Create updated item with different clubID
+            before(() => {
+                testItem._id = Items.insert(testItem);
                 newTestItem = testItem;
                 newTestItem.clubID = '2';
+            });
+            it("should fail updating a feed item", () => {
+                // Create updated item with different clubID
 
                 // Update item with wrong parameter
                 try {
@@ -131,6 +147,10 @@ if (Meteor.isServer) {
                     console.log('updateFeedItem: ' + err);
                     assert.fail();
                 }
+            });
+
+            after(() => {
+                Items.remove({});
             });
         });
 
@@ -165,6 +185,15 @@ if (Meteor.isServer) {
                 }
             });
 
+            before(() => {
+                testItem._id = Items.insert(testItem);
+            });
+
+            after(() => {
+                Items.remove({});
+                Responses.remove({});
+            });
+
             it("should add response successfully with valid input", () => {
                 // Valid input          
                 try {
@@ -183,6 +212,16 @@ if (Meteor.isServer) {
                     assert.fail();
                 } catch (err) {
                 }
+            });
+
+            before(() => {
+                testItem._id = Items.insert(testItem);
+                Meteor.call('putResponse', testItem._id, testItem.type, '1');
+            });
+
+            after(() => {
+                Items.remove({});
+                Responses.remove({});
             });
 
             it("should get the response successfully", () => {
@@ -217,6 +256,17 @@ if (Meteor.isServer) {
                 }
             });
 
+            before(() => {
+                testItem._id = Items.insert(testItem);
+                Meteor.call('putResponse', testItem._id, testItem.type, '1');
+            });
+
+            after(() => {
+                Items.remove({});
+                Responses.remove({});
+            });
+
+
             it("should get the responses on a feed item", (done) => {
                 // Get responses of item added in the previous test
                 try {
@@ -250,6 +300,17 @@ if (Meteor.isServer) {
                 }
             });
 
+            before(() => {
+                testItem._id = Items.insert(testItem);
+                Meteor.call('putResponse', testItem._id, testItem.type, '1');
+            });
+
+            after(() => {
+                Items.remove({});
+                Responses.remove({});
+            });
+
+
             it("should get 1 response for an item with 1 response", () => {
                 // Get responses of item added in the previous test
                 try {
@@ -281,6 +342,17 @@ if (Meteor.isServer) {
                 }
             });
 
+            before(() => {
+                testItem._id = Items.insert(testItem);
+                Meteor.call('putResponse', testItem._id, testItem.type, '1');
+            });
+
+            after(() => {
+                Items.remove({});
+                Responses.remove({});
+            });
+
+
             it("should get all responses of given item type", () => {
                 // Get responses of item added in the previous test
                 try {
@@ -304,6 +376,17 @@ if (Meteor.isServer) {
                     done();
                 }
             });
+
+            before(() => {
+                testItem._id = Items.insert(testItem);
+                Meteor.call('putResponse', testItem._id, testItem.type, '1');
+            });
+
+            after(() => {
+                Items.remove({});
+                Responses.remove({});
+            });
+
 
             it("should get the voting results", () => {
                 // Get results of item added in the previous test
@@ -346,7 +429,15 @@ if (Meteor.isServer) {
                     assert.fail();
                 } catch (err) {
                 }
+            });
 
+            before(() => {
+                testItem._id = Items.insert(testItem);
+                Meteor.call('putResponse', testItem._id, testItem.type, '1');
+            });
+
+            after(() => {
+                Items.remove({});
             });
 
             it("should delete response", () => {
@@ -367,6 +458,14 @@ if (Meteor.isServer) {
                     assert.fail();
                 } catch (err) {
                 }
+            });
+
+            before(() => {
+                testItem._id = Items.insert(testItem);
+            });
+
+            after(() => {
+                Items.remove({});
             });
 
             it("should delete the feed item", () => {
