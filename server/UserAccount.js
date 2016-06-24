@@ -122,7 +122,6 @@ Meteor.methods({
      */
     addUser: function (newUser) {
         // Validate the information in the newUser.
-
         check(newUser, {
             email: String,
             password: String,
@@ -130,12 +129,12 @@ Meteor.methods({
         });
 
         // Validate if user who is adding another user is a PR user
-        //check(this.userId, Match.Where(utils.isAdmin));
+        check(Meteor.userId(), Match.Where(utils.isAdmin));
+
         // Add the user to the collection
         var userId = Accounts.createUser(newUser);
+        
         // Create an email template
-        var credPassword = newUser.password;
-        var credEmail = newUser.email;
         // AccountsTemplates.configureRoute('enrollAccount', {
         //     path: '/enroll'
         // });
@@ -145,7 +144,6 @@ Meteor.methods({
             return "Welcome to ClubNet, " + newUser.profile.firstName;
         };
         Accounts.emailTemplates.enrollAccount.text = function (newUser, url) {
-            console.log("New account: " + credEmail + " | " + credPassword);
             return "Welcome to ClubNet, " + newUser.profile.firstName + "!\n\n"
                 + "Your club "
                 + "has signed you up for ClubNet. You can use ClubNet on your phone to read messages from your coach and receive updates from the club.\n\n"
@@ -156,6 +154,7 @@ Meteor.methods({
                 + "Kind regards, \n"
                 + "The ClubNet team.\n\n";
         };
+
         // Send the email
         Accounts.sendEnrollmentEmail(userId);
         return userId;

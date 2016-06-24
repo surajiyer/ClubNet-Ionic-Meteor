@@ -1,23 +1,61 @@
 import {assert} from 'meteor/practicalmeteor:chai';
 import {sinon} from 'meteor/practicalmeteor:sinon';
 import {Meteor} from 'meteor/meteor';
+import './UserAccount';
 
-import {isAdmin} from '/imports/common';
-import {userSchema, userProfileSchema} from '/imports/schemas/users';
-import {notesSchema} from '/imports/schemas/misc';
-import './UserAccount.js';
-import * as utils from "../imports/common";
+let testUser;
+let testProfile;
+let testPr;
+userId = '1';
+
 /**
  * @summary Tests for methods in UserAccount.js
  * To run this, call meteor test --full-app --driver-package practicalmeteor:mocha
  */
-
 if (Meteor.isServer) {
-    let testUser;
-    let testProfile;
-    let testPr;
-    userId = '1';
     describe('UserAccount', () => {
+        beforeEach(() => {
+            // Create the test user without a first name
+            testUser = {
+                email: 'test@test.test',
+                password: 'test',
+                profile: {
+                    firstName: 'Test',
+                    lastName: 'Test',
+                    type: 'player',
+                    clubID: 'test',
+                    teamID: 'test',
+                    notifications: {}
+                }
+            };
+
+            testPr = {
+                email: 'pr@pr.pr',
+                password: 'pr',
+                profile: {
+                    firstName: 'Pr',
+                    lastName: 'Pr',
+                    type: 'pr',
+                    clubID: 'test',
+                    notifications: {}
+                }
+            };
+
+            // Create a fake PR user to add other users
+            sinon.stub(Accounts, 'sendEnrollmentEmail').returns(false);
+            var userId = Meteor.call('addUser', testPr);
+            check(userId, String);
+            testPr._id = userId;
+            sinon.stub(global.Meteor, 'userId').returns(testPr._id);
+            sinon.stub(global.Meteor, 'user').returns(testPr);
+        });
+
+        afterEach(() => {
+            sinon.restore(global.Meteor.userId);
+            sinon.restore(global.Meteor.user);
+            sinon.restore(Accounts.sendEnrollmentEmail);
+            Meteor.users.remove({});
+        });
 
         describe('addUser()', () => {
             /**
@@ -26,36 +64,15 @@ if (Meteor.isServer) {
              * It makes a testUser without a firstName and then tries to add it to the users collection.
              * This should throw an error.
              */
-            it("Adding user with incomplete data throws error", (done) => {
-
-                // Add schema to the users collection
-                Meteor.users.attachSchema(userSchema);
-
-                // Create the test user without a first name
-                testUser = {
-                    email: 'test@test.test',
-                    password: 'test',
-                    profile: {lastName: 'Test', type: 'player', clubID: 'test', teamID: 'test', notifications: new Object()}
-                };
-
-                testPr = {
-                    email: 'pr@pr.pr',
-                    password: 'pr',
-                    profile: {firstName: 'Pr', lastName: 'Pr', type: 'pr', clubID: 'test', notifications: new Object()}
-                };
-
-                testPr._id = Meteor.call('addUser', testPr);
-                Meteor.userId = sinon.stub().returns(testPr._id);
-
-                // Adding the item without an required attribute
+            it("should throw error with incomplete profile information", () => {
+                // Adding the item without a required attribute
                 try {
+                    delete testUser.profile.firstName;
                     Meteor.call('addUser', testUser);
                     // It should throw an error, if it does not, the test fails.
                     assert.fail();
                 } catch (err) {
-                    done();
                 }
-
             });
 
             /**
@@ -64,15 +81,10 @@ if (Meteor.isServer) {
              * Then it tries to add this user to the users collection.
              * This should succeed.
              */
-            it("Adding user with complete data succeeds", (done) => {
-                // Add the missing firstName to the testUser
-                testUser.profile.firstName = 'Test';
-
+            it("should succeed with complete information", () => {
                 // Add the testUser to the collection
                 try {
-                    testUser._id = Meteor.call('addUser', testUser);
-                    done();
-                    // Should succeed
+                    Meteor.call('addUser', testUser);
                 } catch (err) {
                     assert.fail();
                 }
@@ -88,7 +100,14 @@ if (Meteor.isServer) {
              */
             it("Update User Profile with incomplete data throws error", () => {
                 // Create a testProfile with a number for lastName
-                testProfile = {firstName: 'Test', lastName: 14, type: 'player', clubID: 'test', teamID: 'test', notifications: new Object()};
+                testProfile = {
+                    firstName: 'Test',
+                    lastName: 14,
+                    type: 'player',
+                    clubID: 'test',
+                    teamID: 'test',
+                    notifications: {}
+                };
                 // Update the profile of the previous created user with the new testProfile
                 try {
                     Meteor.call('updateUserProfile', testUser._id, testProfile);
@@ -162,7 +181,6 @@ if (Meteor.isServer) {
              * This should succeed.
              */
             it("Get user info with existing string id succeeds", (done) => {
-
                 // Get user with correct id
                 try {
                     var gettingUser = Meteor.call('getUserInfo', testUser._id);
@@ -178,7 +196,9 @@ if (Meteor.isServer) {
                     assert.fail();
                 }
             });
-        });describe('getUserInfo()', () => {
+        });
+
+        describe('getUserInfo()', () => {
             /**
              * @summary Getting user info with wrong parameters
              * It tries to get a user with a wrong parameter
@@ -244,7 +264,7 @@ if (Meteor.isServer) {
              * This should throw error.
              */
             it("Get user type with wrong id", () => {
-        
+
                 // Get user with wrong parameter
                 try {
                     Meteor.userId = sinon.stub().returns(1234);
@@ -254,14 +274,14 @@ if (Meteor.isServer) {
                 } catch (err) {
                 }
             });
-        
+
             /**
              * @summary Getting user type
              * It tries to get the type of the currently logged in user.
              * This should succeed.
              */
             it("Get user type", () => {
-        
+
                 // Get user with id that does not exist
                 try {
                     Meteor.userId = sinon.stub().returns(testPr._id);
@@ -273,9 +293,9 @@ if (Meteor.isServer) {
                     assert.fail();
                 }
             });
-        
+
         });
-        
+
         describe('getTeamSize()', () => {
             /**
              * @summary Getting team size of user without a team
@@ -283,7 +303,7 @@ if (Meteor.isServer) {
              * This should throw error.
              */
             it("Get team size of non existing team", () => {
-        
+
                 // Get user with wrong parameter
                 try {
                     Meteor.userId = sinon.stub().returns(testPr._id);
@@ -294,14 +314,14 @@ if (Meteor.isServer) {
                 } catch (err) {
                 }
             });
-        
+
             /**
              * @summary Getting team size of user with a team
              * It tries to get the team size of the currently logged in user
              * This should succeed.
              */
             it("Get team size", () => {
-        
+
                 // Get user with id that does not exist
                 try {
                     Meteor.userId = sinon.stub().returns(testUser._id);
@@ -314,9 +334,9 @@ if (Meteor.isServer) {
                     assert.fail();
                 }
             });
-        
+
         });
-        
+
         // describe('getClubUsers()', () => {
         //     /**
         //      * @summary Getting all the members of the club of the currently logged in player
@@ -366,7 +386,8 @@ if (Meteor.isServer) {
                     Meteor.call('getUserInfo', testUser._id);
                     // It should throw an error, if it does not, the test fails
                     assert.fail();
-                } catch (err) {}
+                } catch (err) {
+                }
 
             });
 

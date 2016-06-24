@@ -2,7 +2,6 @@ import * as utils from '/imports/common';
 import feedItemSchemas from '/imports/schemas/feedItems';
 import responseSchemas from '/imports/schemas/responses';
 import {notesSchema} from '/imports/schemas/misc';
-import {HTTP} from 'meteor/http'
 
 Items = new Mongo.Collection("Items");
 Responses = new Mongo.Collection("FeedResponses");
@@ -172,14 +171,11 @@ if (Meteor.isServer) {
             }
             var id = updatedItem._id;
             delete updatedItem._id;
-            try {
-                Items.update(
-                    {_id: id},
-                    {$set: updatedItem}
-                );
-                return Items.find(id).fetch()[0];
-            } catch (e) {
-            }
+            Items.update(
+                {_id: id},
+                {$set: updatedItem}
+            );
+            return Items.find(id).fetch()[0];
         },
         /**
          * @summary Delete a feed item.
@@ -194,14 +190,11 @@ if (Meteor.isServer) {
             var loggedIn = Match.test(Meteor.userId(), String);
             var allowed = Meteor.call('checkRights', item.type, 'delete');
             var isCreator = item.creatorID == Meteor.userId();
-            if(!(loggedIn && allowed && isCreator)) {
+            if (!(loggedIn && allowed && isCreator)) {
                 throw new Meteor.Error(401, 'Not authorized');
             }
-            try {
-                Items.remove({_id: itemId});
-                return item;
-            } catch (e) {
-            }
+            Items.remove({_id: itemId});
+            return item;
         },
         /**
          * @summary Retrieve all responses of a feed item.
@@ -267,10 +260,17 @@ if (Meteor.isServer) {
             check(itemID, String);
             check(itemType, String);
             check(value, String);
+
+            // Validation checks
+            var item = Items.find(itemID).fetch()[0];
+            if(!item || !item.type) {
+                throw new Meteor.Error(404, 'Item not found');
+            }
+
             var response = {
                 userID: Meteor.userId(),
                 itemID: itemID,
-                itemType: itemType,
+                itemType: item.type,
                 value: value
             };
             check(response, Responses.simpleSchema({itemType: itemType}));
