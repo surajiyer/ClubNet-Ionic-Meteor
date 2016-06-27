@@ -9,9 +9,15 @@ import '../model/feedItems/Voting';
 let testPr;
 let testCoach;
 let testPlayer;
+let testGeneral;
 let testControlC;
 let testControlP;
+let testControlG;
 let testItem;
+
+// var FeedPublish = sinon.spy(Meteor, 'publish');
+//
+// console.log(FeedPublish);
 
 if (Meteor.isServer) {
     describe('Access Control Integration Test', () => {
@@ -22,12 +28,12 @@ if (Meteor.isServer) {
             TypesCollection.remove({});
 
             // Create fake item types
-            let Form = {
+            let Voting = {
                 _id: 'Voting',
                 name: 'Voting form',
                 icon: 'Voting.ClubNet'
             };
-            TypesCollection.insert(Form);
+            TypesCollection.insert(Voting);
 
             // Create a fake PR user
             testPr = {
@@ -55,7 +61,6 @@ if (Meteor.isServer) {
                     notifications: {}
                 }
             };
-
             testCoach._id = Accounts.createUser(testCoach);
 
             testPlayer = {
@@ -70,8 +75,20 @@ if (Meteor.isServer) {
                     notifications: {}
                 }
             };
-
             testPlayer._id = Accounts.createUser(testPlayer);
+
+            testGeneral = {
+                email: 'g@g.gg',
+                password: 'gg',
+                profile: {
+                    firstName: 'g',
+                    lastName: 'g',
+                    type: 'general',
+                    clubID: 'test',
+                    notifications: {}
+                }
+            };
+            testGeneral._id = Accounts.createUser(testGeneral);
 
             // Coach user permissions
             testControlC = {
@@ -88,6 +105,15 @@ if (Meteor.isServer) {
                 items: [{
                     _id: 'Voting',
                     permissions: {create: false, edit: false, view: true, delete: false}
+                }]
+            };
+
+            // General user permissions
+            testControlG = {
+                _id: 'general',
+                items: [{
+                    _id: 'Voting',
+                    permissions: {create: false, edit: false, view: false, delete: false}
                 }]
             };
             
@@ -113,7 +139,7 @@ if (Meteor.isServer) {
             TypesCollection.remove({});
         });
 
-        describe('PR user inserts access control for Voting for a Coach user', () => {
+        describe('PR user inserts access control for all users', () => {
             before(() => {
                 // Stub Meteor.user as PR user
                 Meteor.userId = sinon.stub().returns(testPr._id);
@@ -125,16 +151,17 @@ if (Meteor.isServer) {
                 sinon.restore(Meteor.userId);
             });
 
-            it("Should insert successfully, with create rights", () => {
+            it("Should insert successfully ", () => {
                 // Remove the user from the collection
                 try {
                     AMx.insert(testControlC);
+                    AMx.insert(testControlP);
+                    AMx.insert(testControlG);
                 } catch (err) {
                     console.log(err);
                     assert.fail();
                 }
             });
-            
         });
 
         describe('Coach user wants to create a voting item', () => {
@@ -173,29 +200,6 @@ if (Meteor.isServer) {
             });
         });
 
-        describe('PR user inserts access control for Voting for a Player user', () => {
-            before(() => {
-                // Stub Meteor.user as PR user
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
-            });
-
-            after(() => {
-                sinon.restore(Meteor.user);
-                sinon.restore(Meteor.userId);
-            });
-
-            it("Should insert successfully, with view rights", () => {
-                // Remove the user from the collection
-                try {
-                    AMx.insert(testControlP);
-                } catch (err) {
-                    console.log(err);
-                    assert.fail();
-                }
-            });
-        });
-
         describe('Player user wants to view the voting item', () => {
             before(() => {
                 // Stub Meteor.user as coach user
@@ -223,6 +227,29 @@ if (Meteor.isServer) {
                 try {
                     var result = Meteor.call('getFeedItem', testItem._id);
                     assert.equal(result._id, testItem._id);
+                } catch (err) {
+                    assert.fail();
+                }
+            });
+        });
+
+        describe('General user wants to view the voting item', () => {
+            before(() => {
+                // Stub Meteor.user as coach user
+                Meteor.userId = sinon.stub().returns(testGeneral._id);
+                Meteor.user = sinon.stub().returns(testGeneral);
+            });
+
+            after(() => {
+                sinon.restore(Meteor.user);
+                sinon.restore(Meteor.userId);
+            });
+
+            it("should not be allowed to view a voting item", () => {
+                // Remove the user from the collection
+                try {
+                    var permission = Meteor.call('checkRights', 'Voting', 'view');
+                    assert.equal(permission, false);
                 } catch (err) {
                     assert.fail();
                 }
