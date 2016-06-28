@@ -256,7 +256,7 @@ if (Meteor.isServer) {
             });
         });
 
-        describe('PR user changes access control for a Player user', () => {
+        describe('PR user changes access control for Player and Coach user', () => {
             before(() => {
                 // Stub Meteor.user as PR user
                 Meteor.userId = sinon.stub().returns(testPr._id);
@@ -278,7 +278,17 @@ if (Meteor.isServer) {
                     }]
                 };
 
+                testControlC = {
+                    _id: 'coach',
+                    items: [{
+                        _id: 'Voting',
+                        permissions: {create: false, edit: true, view: true, delete: true}
+                    }]
+                };
+
                 try {
+                    AMx.remove({_id: 'coach'});
+                    AMx.insert(testControlC);
                     AMx.remove({_id: 'player'});
                     AMx.insert(testControlP);
                 } catch (err) {
@@ -304,37 +314,6 @@ if (Meteor.isServer) {
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
                     assert.equal(permission, false);
-                } catch (err) {
-                    assert.fail();
-                }
-            });
-        });
-
-        describe('PR user changes access control for a Coach user', () => {
-            before(() => {
-                // Stub Meteor.user as PR user
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
-            });
-
-            after(() => {
-                sinon.restore(Meteor.user);
-                sinon.restore(Meteor.userId);
-            });
-
-            it("Should insert successfully, without create rights", () => {
-                // Remove the user from the collection
-                testControlC = {
-                    _id: 'coach',
-                    items: [{
-                        _id: 'Voting',
-                        permissions: {create: false, edit: true, view: true, delete: true}
-                    }]
-                };
-                
-                try {
-                    AMx.remove({_id: 'coach'});
-                    AMx.insert(testControlC);
                 } catch (err) {
                     assert.fail();
                 }

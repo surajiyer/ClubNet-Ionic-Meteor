@@ -176,11 +176,49 @@ if (Meteor.isServer) {
                 try {
                     // Add the message to the database
                     var messageId = Messages.insert({chatID: chatId, message: 'Text to player'});
+                    console.log('messageId: ' + messageId);
                     // If added correctly, update last message of chat
                     if (messageId) {
                         Chats.update(chatId, {$set: {lastMessage: messageId}});
                     }
                 } catch (err) {
+                    assert.fail();
+                }
+            });
+        });
+
+        describe('Player user wants to see the chat', () => {
+            before(() => {
+                // Stub Meteor.user as coach user
+                Meteor.userId = sinon.stub().returns(testCoach._id);
+                Meteor.user = sinon.stub().returns(testCoach);
+            });
+
+            after(() => {
+                sinon.restore(Meteor.user);
+                sinon.restore(Meteor.userId);
+            });
+
+            it("should be allowed to view the chat", () => {
+                // Remove the user from the collection
+                try {
+                    var permission = Meteor.call('checkRights', 'Chat', 'view');
+                    assert.equal(permission, true);
+                } catch (err) {
+                    console.log(err);
+                    assert.fail();
+                }
+            });
+
+            it("should be able to see the messages", () => {
+                // Remove the user from the collection
+                try {
+                    console.log('chatID: ' + chatId);
+                    var messages = Messages.find({chatID: chatId}, {sort: {createdAt: 1}});
+                    assert.fail();
+                    console.log(messages);
+                } catch (err) {
+                    console.log(err);
                     assert.fail();
                 }
             });
