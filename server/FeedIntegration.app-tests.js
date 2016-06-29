@@ -15,24 +15,23 @@ let testControlP;
 let testControlG;
 let testItem;
 
-// var FeedPublish = sinon.spy(Meteor, 'publish');
-//
-// console.log(FeedPublish);
-
 if (Meteor.isServer) {
     describe('Access Control Integration Test', () => {
+        // In the before, the database is reset
+        // And the needed accounts and environment details are set up
         before(() => {
             // Reset database
             Meteor.users.remove({});
             AMx.remove({});
             TypesCollection.remove({});
 
-            // Create fake item types
+            // Create fake item type for voting
             let Voting = {
                 _id: 'Voting',
                 name: 'Voting form',
                 icon: 'Voting.ClubNet'
             };
+            // Create it in the database
             TypesCollection.insert(Voting);
 
             // Create a fake PR user
@@ -47,8 +46,10 @@ if (Meteor.isServer) {
                     notifications: {}
                 }
             };
+            // Create it in the database
             testPr._id = Accounts.createUser(testPr);
 
+            // Create a fake coach user
             testCoach = {
                 email: 'c@c.cc',
                 password: 'cc',
@@ -61,8 +62,10 @@ if (Meteor.isServer) {
                     notifications: {}
                 }
             };
+            // Create it in the database
             testCoach._id = Accounts.createUser(testCoach);
 
+            // Create a fake player user
             testPlayer = {
                 email: 'ur@ur.ur',
                 password: 'ur',
@@ -75,8 +78,10 @@ if (Meteor.isServer) {
                     notifications: {}
                 }
             };
+            // Create it in the database
             testPlayer._id = Accounts.createUser(testPlayer);
 
+            // Create a fake general user
             testGeneral = {
                 email: 'g@g.gg',
                 password: 'gg',
@@ -88,6 +93,7 @@ if (Meteor.isServer) {
                     notifications: {}
                 }
             };
+            // Create it in the database
             testGeneral._id = Accounts.createUser(testGeneral);
 
             // Coach user permissions
@@ -116,7 +122,8 @@ if (Meteor.isServer) {
                     permissions: {create: false, edit: false, view: false, delete: false}
                 }]
             };
-            
+
+            // Test item used for the tests
             testItem = {
                 creatorID: testCoach._id,
                 type: 'Voting',
@@ -132,6 +139,7 @@ if (Meteor.isServer) {
             };
         });
 
+        // In the after, the database is again reset
         after(() => {
             // Reset the database
             Meteor.users.remove({});
@@ -141,18 +149,24 @@ if (Meteor.isServer) {
 
         describe('PR user inserts access control for all users', () => {
             before(() => {
-                // Stub Meteor.user as PR user
+                // Stub Meteor.user and Meteor.userId as PR user
                 Meteor.userId = sinon.stub().returns(testPr._id);
                 Meteor.user = sinon.stub().returns(testPr);
             });
 
             after(() => {
+                // Restore the stubs from the before
                 sinon.restore(Meteor.user);
                 sinon.restore(Meteor.userId);
             });
 
+            /**
+             * @summary Inserting access control with complete data succeeds
+             * It uses the access controls created in the before
+             * Then it tries to insert these into the AMx collection
+             * This should succeed.
+             */
             it("Should insert successfully ", () => {
-                // Remove the user from the collection
                 try {
                     AMx.insert(testControlC);
                     AMx.insert(testControlP);
@@ -166,18 +180,24 @@ if (Meteor.isServer) {
 
         describe('Coach user wants to create a voting item', () => {
             before(() => {
-                // Stub Meteor.user as coach user
+                // Stub Meteor.user and Meteor.userId as PR user
                 Meteor.userId = sinon.stub().returns(testCoach._id);
                 Meteor.user = sinon.stub().returns(testCoach);
             });
 
             after(() => {
+                // Restore the stubs from the before
                 sinon.restore(Meteor.user);
                 sinon.restore(Meteor.userId);
             });
 
+            /**
+             * @summary Checking rights in the database should succeed
+             * It calls the database to see whether or not the user is allowed the action
+             * Then it checks whether or not the value is the expected value
+             * This should succeed.
+             */
             it("should be allowed to create a voting item", () => {
-                // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
                     assert.equal(permission, true);
@@ -187,8 +207,14 @@ if (Meteor.isServer) {
                 }
             });
 
+            /**
+             * @summary Creating a feed item in the database should succeed
+             * It uses the testItem created in the before
+             * Then it tries to insert this by means of the addFeedItem method
+             * And it checks whether or not it actually got an id returned
+             * This should succeed.
+             */
             it("should create a voting item", () => {
-                // Remove the user from the collection
                 try {
                     var itemId = Meteor.call('addFeedItem', testItem);
                     check(itemId, String);
@@ -202,18 +228,24 @@ if (Meteor.isServer) {
 
         describe('Player user wants to view the voting item', () => {
             before(() => {
-                // Stub Meteor.user as coach user
+                // Stub Meteor.user and Meteor.userId as PR user
                 Meteor.userId = sinon.stub().returns(testPlayer._id);
                 Meteor.user = sinon.stub().returns(testPlayer);
             });
 
             after(() => {
+                // Restore the stubs from the before
                 sinon.restore(Meteor.user);
                 sinon.restore(Meteor.userId);
             });
 
+            /**
+             * @summary Checking rights in the database should succeed
+             * It calls the database to see whether or not the user is allowed the action
+             * Then it checks whether or not the value is the expected value
+             * This should succeed.
+             */
             it("should be allowed to view a voting item", () => {
-                // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
                     assert.equal(permission, true);
@@ -222,8 +254,14 @@ if (Meteor.isServer) {
                 }
             });
 
+            /**
+             * @summary Getting a feed item in the database should succeed
+             * It uses the id of the testItem created inserted
+             * Then it tries to get this testItem by means of the getFeedItem method
+             * And it checks whether or not this result is the same as the testItem
+             * This should succeed.
+             */
             it("should view the voting item", () => {
-                // Remove the user from the collection
                 try {
                     var result = Meteor.call('getFeedItem', testItem._id);
                     assert.equal(result._id, testItem._id);
@@ -235,18 +273,24 @@ if (Meteor.isServer) {
 
         describe('General user wants to view the voting item', () => {
             before(() => {
-                // Stub Meteor.user as coach user
+                // Stub Meteor.user and Meteor.userId as PR user
                 Meteor.userId = sinon.stub().returns(testGeneral._id);
                 Meteor.user = sinon.stub().returns(testGeneral);
             });
 
             after(() => {
+                // Restore the stubs from the before
                 sinon.restore(Meteor.user);
                 sinon.restore(Meteor.userId);
             });
 
+            /**
+             * @summary Checking rights in the database should succeed
+             * It calls the database to see whether or not the user is allowed the action
+             * Then it checks whether or not the value is the expected value
+             * This should succeed.
+             */
             it("should not be allowed to view a voting item", () => {
-                // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
                     assert.equal(permission, false);
@@ -258,18 +302,24 @@ if (Meteor.isServer) {
 
         describe('PR user changes access control for Player and Coach user', () => {
             before(() => {
-                // Stub Meteor.user as PR user
+                // Stub Meteor.user and Meteor.userId as PR user
                 Meteor.userId = sinon.stub().returns(testPr._id);
                 Meteor.user = sinon.stub().returns(testPr);
             });
 
             after(() => {
+                // Restore the stubs from the before
                 sinon.restore(Meteor.user);
                 sinon.restore(Meteor.userId);
             });
-
+            /**
+             * @summary Inserting access control with complete data succeeds
+             * It creates new access controls with different permissions
+             * Then it tries to insert these into the AMx collection
+             * This should succeed.
+             */
             it("Should insert successfully, without create rights", () => {
-                // Remove the user from the collection
+                // Player user permissions
                 testControlP = {
                     _id: 'player',
                     items: [{
@@ -277,7 +327,7 @@ if (Meteor.isServer) {
                         permissions: {create: false, edit: false, view: false, delete: false}
                     }]
                 };
-
+                // Coach user permissions
                 testControlC = {
                     _id: 'coach',
                     items: [{
@@ -285,11 +335,11 @@ if (Meteor.isServer) {
                         permissions: {create: false, edit: true, view: true, delete: true}
                     }]
                 };
-
+                // First remove the previous permissions, then insert the new ones
                 try {
                     AMx.remove({_id: 'coach'});
-                    AMx.insert(testControlC);
                     AMx.remove({_id: 'player'});
+                    AMx.insert(testControlC);
                     AMx.insert(testControlP);
                 } catch (err) {
                     assert.fail();
@@ -299,18 +349,24 @@ if (Meteor.isServer) {
 
         describe('Player user now wants to view the voting item', () => {
             before(() => {
-                // Stub Meteor.user as coach user
+                // Stub Meteor.user and Meteor.userId as PR user
                 Meteor.userId = sinon.stub().returns(testPlayer._id);
                 Meteor.user = sinon.stub().returns(testPlayer);
             });
 
             after(() => {
+                // Restore the stubs from the before
                 sinon.restore(Meteor.user);
                 sinon.restore(Meteor.userId);
             });
 
+            /**
+             * @summary Checking rights in the database should succeed
+             * It calls the database to see whether or not the user is allowed the action
+             * Then it checks whether or not the value is the expected value
+             * This should succeed.
+             */
             it("should not be allowed to see the voting item", () => {
-                // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'view');
                     assert.equal(permission, false);
@@ -322,18 +378,24 @@ if (Meteor.isServer) {
 
         describe('Coach user now wants to create a voting item', () => {
             before(() => {
-                // Stub Meteor.user as coach user
+                // Stub Meteor.user and Meteor.userId as PR user
                 Meteor.userId = sinon.stub().returns(testCoach._id);
                 Meteor.user = sinon.stub().returns(testCoach);
             });
 
             after(() => {
+                // Restore the stubs from the before
                 sinon.restore(Meteor.user);
                 sinon.restore(Meteor.userId);
             });
 
+            /**
+             * @summary Checking rights in the database should succeed
+             * It calls the database to see whether or not the user is allowed the action
+             * Then it checks whether or not the value is the expected value
+             * This should succeed.
+             */
             it("should not be allowed to create a voting item", () => {
-                // Remove the user from the collection
                 try {
                     var permission = Meteor.call('checkRights', 'Voting', 'create');
                     assert.equal(permission, false);
@@ -342,6 +404,6 @@ if (Meteor.isServer) {
                 }
             });
         });
-        
+
     });
 }
