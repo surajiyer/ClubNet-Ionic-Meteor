@@ -4,7 +4,7 @@ if (Meteor.isServer) {
          * @summary Increase the number of votes of an Exercise voting feed item by one. The Exercise voting feed item
          *  is specified by the id.
          * @param {String} itemID The id of the feed item.
-         * @return {Integer} None.
+         * @return None
          * @throws error if the input parameters do not have the required type. The itemID must be a String object.
          */
         increaseNrVotes: function (itemID, itemType) {
@@ -31,9 +31,15 @@ if (Meteor.isServer) {
             check(itemID, String);
             var votes = Meteor.call('getResponsesOfOneItem', itemID);
             result = [[0, 0, 0]];
+
+            // If responses exists, check if they are of type 'Voting'
+            if(!votes.length || votes[0].itemType != 'Voting') return result;
+
+            // Calculate results tables from each vote
             votes.forEach(function (vote) {
                 result[0][Number(vote.value) - 1]++;
             });
+            
             return result;
         },
         /**
@@ -80,7 +86,7 @@ if (Meteor.isServer) {
          * @summary Function for checking whether the voting is still opened or closed (status) and returns true or false
          *  accordingly. The exercise voting feed item is specified by the itemID. A Exercise voting feed item is closed only
          *   when the deadline has passed or all the members in the team have voted.
-         * @param {String} itemId The Item Id of the item for which the status needs to be checked.
+         * @param {String} itemID The Item Id of the item for which the status needs to be checked.
          * @returns {Boolean} True if the voting is still open. False otherwise.
          */
         checkVotingStatus: function (itemID) {
