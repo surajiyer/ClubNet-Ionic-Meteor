@@ -22,7 +22,10 @@ angular.module('web.userAccountControllers', [])
             }
         };
 
-        // Open the delete modal
+        /**
+         * @summary Open the delete modal and invoke the action lister for closing or confirming the modal.
+         * @param user (Object) User object which we want to delete.
+         */
         $scope.delete = function (user) {
             $scope.selectedUser = user;
             var modalInstance = $modal.open({
@@ -45,7 +48,10 @@ angular.module('web.userAccountControllers', [])
             });
         };
 
-        // Go to the edit screen
+        /**
+         * @summary Function which redirects client to the edit page of a specific user.
+         * @param user (Object) User object which we want to edit.
+         */
         $scope.edit = function (user) {
             $state.go('web.editAccount', {'userID': user._id});
         };
@@ -113,9 +119,8 @@ angular.module('web.userAccountControllers', [])
         $scope.errorVisible = false;
 
         /**
-         * @summary Function to redirect user to forgot password page
+         * @summary Function to redirect user to forgot password page after confirming the pop-up modal.
          */
-        // Open the delete modal
         $scope.forgotPass = function () {
             var modalInstance = $modal.open({
                 animation: true,
@@ -157,6 +162,10 @@ angular.module('web.userAccountControllers', [])
 
         $scope.error = '';
         $scope.errorVisible = false;
+        /**
+         * @summary Function that can be used to generate a difficult password.
+         * @returns {string} The generate password.
+         */
         $scope.generatePassword = function () {
             var length = 8,
                 charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789",
@@ -303,6 +312,9 @@ angular.module('web.userAccountControllers', [])
             confirmNewPassword: ''
         };
 
+        /**
+         * @summary Load user data to the scope.
+         */
         $scope.retrieveUser = function () {
             $scope.user.id = Meteor.user()._id;
             $scope.user.firstName = Meteor.user().profile.firstName;
@@ -318,6 +330,9 @@ angular.module('web.userAccountControllers', [])
         $scope.passwordErrorVisible = false;
         $scope.passwordUpdatedVisible = false;
 
+        /**
+         * @summary Save profile changes to the database using the back-end method.
+         */
         $scope.saveChanges = function () {
             if (!$scope.user.firstName) {
                 $translate('MISSING_FIRST_NAME').then(function (error) {
@@ -354,6 +369,9 @@ angular.module('web.userAccountControllers', [])
             }
         };
 
+        /**
+         * @summary Save password changes to the database after checking if the passwords match and are valid.
+         */
         $scope.savePasswordChanges = function () {
             if (!$scope.user.oldPassword) {
                 $translate('MISSING_CURRENT_PASS').then(function (error) {
@@ -413,6 +431,11 @@ angular.module('web.userAccountControllers', [])
         // Get current language
         $scope.selectedLanguage = $translate.use();
 
+        /**
+         * @summary Function is used to update the preferred language of the app on the client side based on the
+         * passed argument.
+         * @param selectedLanguage {String} User's selected language.
+         */
         $scope.updateLanguage = function (selectedLanguage) {
             $scope.selectedLanguage = selectedLanguage;
             check($scope.selectedLanguage, String);
@@ -438,6 +461,9 @@ angular.module('web.userAccountControllers', [])
             email: ''
         };
 
+        /**
+         * @summary Function to send a forgot password mail to the requesting account.
+         */
         $scope.send = function () {
             var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -500,6 +526,9 @@ angular.module('web.userAccountControllers', [])
         $scope.passwordError = '';
         $scope.passwordErrorVisible = false;
 
+        /**
+         * @summary Function to set a password after getting a code for enrollment.
+         */
         $scope.setPassword = function () {
             if (!$scope.user.newPassword) {
                 $translate('MISSING_NEW_PASS').then(function (error) {
