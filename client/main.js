@@ -38,5 +38,5 @@ if(Meteor.isProduction) {
         angular.element(document).ready(loadWeb);
     }
 } else {
-    angular.element(document).ready(loadApp);
+    angular.element(document).ready(loadWeb);
 }

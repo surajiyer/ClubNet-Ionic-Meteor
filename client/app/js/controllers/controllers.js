@@ -29,7 +29,7 @@ angular.module('app.controllers', [
         });
 
         /**
-         * @summary Function to logout
+         * @summary Function used to logout from the application.
          */
         $scope.logout = function () {
             $meteor.logout(function () {
@@ -53,14 +53,14 @@ angular.module('app.controllers', [
      */
     .controller('feedCtrl', function ($scope, $meteor) {
         /**
-         * @summary Show the plus button if user has rights to add at least any kind of item
+         * Show the plus button if user has rights to add at least any kind of item
          */
         $scope.$on("showAddItem", function () {
             $scope.showAddItem = true;
         });
 
         /**
-         * @summary Function to update the item types
+         * Function to update the item types
          */
         Meteor.call('getItemTypes', function (err, result) {
             if (!err && result) {
@@ -96,7 +96,7 @@ angular.module('app.controllers', [
         });
 
         /**
-         * Function which increases the limit for rendering feed items - infinite scroll
+         * @summary Function which increases the limit for rendering feed items - infinite scroll
          */
         $scope.loadMore = function () {
             if ($scope.limit > $scope.maxItems) return;
@@ -104,7 +104,7 @@ angular.module('app.controllers', [
         };
 
         /**
-         * Function to get current date in ISO format
+         * @summary Function to get the current date in ISO format
          */
         $scope.getCurrentDateISO = function () {
             var date = new Date();
@@ -146,7 +146,9 @@ angular.module('app.controllers', [
             $scope.popover.hide();
         };
 
-        // Cleanup the popover when we're done with it!
+        /**
+         * Cleanup the popover when we're done with it!
+         */
         $scope.$on('$destroy', function () {
             $scope.popover.remove();
         });
@@ -161,7 +163,7 @@ angular.module('app.controllers', [
         $scope.trainings = [];
 
         /**
-         * @summary Function to retrieve trainings
+         * Function to retrieve trainings
          */
         $meteor.call('getTrainings').then(
             function (result) {
@@ -204,18 +206,24 @@ angular.module('app.controllers', [
             $scope.modal = modal;
         });
 
+        /**
+         * Function to open the adding new item modal screen.
+         */
         $scope.openModal = function () {
             $scope.modal.show();
             $scope.postBtn = "Create";
         };
 
         /**
-         * @summary Function to close the voting
+         * Function to close the adding new item modal screen.
          */
         $scope.closeModal = function () {
             $scope.modal.hide();
         };
 
+        /**
+         * @summary Function to get a selected picture from a user's phone gallery.
+         */
         $scope.getPicture = function () {
             var cameraOptions = {
                 quality: 80,
@@ -229,6 +237,9 @@ angular.module('app.controllers', [
             });
         };
 
+        /**
+         * @summary Function to add a new feed item by calling the back-end method.
+         */
         $scope.addItem = function () {
             $scope.newItem.type = $scope.type._id;
             $scope.newItem.image = $scope.image;
@@ -258,7 +269,7 @@ angular.module('app.controllers', [
         });
 
         /**
-         * @summary Function to retrieve trainings
+         * Function to retrieve trainings
          */
         $meteor.call('getTrainings').then(
             function (result) {
@@ -312,17 +323,20 @@ angular.module('app.controllers', [
         $scope.isFull = false;
 
         /**
-         * @summary Function to enlarge the feed item
+         * @summary Function to enlarge or make smaller the feed item
          */
         $scope.showFullItem = function ($event) {
             var elem = angular.element($event.currentTarget);
             if ($scope.isFull) {
+                // Show the white gradient on top of a feed item.
                 elem.parents(".list").css("height", "200px").find(".gradient").show();
                 elem.parents(".list").find(".read-less").hide();
             } else {
+                // Remove the white gradient on top of a feed item.
                 elem.parents(".list").css("height", "100%").find(".gradient").hide();
                 elem.parents(".list").find(".read-less").show();
             }
+            // Change the showing state of feed item
             $scope.isFull = !$scope.isFull;
         };
 
@@ -389,7 +403,7 @@ angular.module('app.controllers', [
         };
 
         /**
-         * @summary Sticky/Unsticky a feed item
+         * @summary Sticky/Unsticky a feed item to the top of the feed.
          */
         $scope.stickyItem = function () {
             var obj = {
@@ -417,6 +431,11 @@ angular.module('app.controllers', [
         // Get current language
         $scope.selectedLanguage = $translate.use();
 
+        /**
+         * @summary Function is used to update the preferred language of the app on the client side based on the
+         * passed argument.
+         * @param selectedLanguage {String} User's selected language.
+         */
         $scope.updateLanguage = function (selectedLanguage) {
             $scope.selectedLanguage = selectedLanguage;
             check($scope.selectedLanguage, String);
@@ -431,6 +450,11 @@ angular.module('app.controllers', [
             }
         };
 
+        /**
+         * @summary Function used to change the user's notification settings for a particular item type.
+         * @param key (String) The item type for which we change notification settings.
+         * @param value (Boolean) The value of the notification settings.
+         */
         $scope.updateNotificationSetting = function (key, value) {
             $meteor.call('updateUserNotificationSetting', key, value);
         };

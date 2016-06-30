@@ -1,7 +1,7 @@
 angular.module('sponsoringControllers', [])
 
     /**
-     *  Hero Controller: provides all functionality for the heroes feed item of the app
+     *  Sponsoring Controller: provides all functionality for the heroes feed item of the app
      *  @param {String} Name of the controller
      *  @param {Function}
      */
@@ -13,10 +13,16 @@ angular.module('sponsoringControllers', [])
             $scope.modal = modal;
         });
 
+        /**
+         * Function to close the sponsoring modal
+         */
         $scope.closeHero = function () {
             $scope.modal.hide();
         };
 
+        /**
+         * Function to open the sponsoring modal
+         */
         $scope.openHero = function () {
             $scope.modal.show();
         };

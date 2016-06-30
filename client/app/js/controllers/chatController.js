@@ -205,7 +205,7 @@ angular.module('chatControllers', [])
         });
 
         /**
-         * Subscribes to messages
+         * @summary Subscribes to messages
          */
         $scope.refresh = function () {
             const totalNrOfMessages = $scope.messagesCount[0].count;
@@ -277,7 +277,7 @@ angular.module('chatControllers', [])
 
         /**
          * Match senderID with Id of currently logged-in user
-         * @param senderId String user Id
+         * @param senderId (String) user Id
          * @returns {boolean} True if logged-in user matched the senderID
          */
         $scope.isMyMessage = function (senderId) {
@@ -302,7 +302,7 @@ angular.module('chatControllers', [])
         };
 
         /**
-         * Close the input keyboard on mobile platforms
+         * @summary Close the input keyboard on mobile platforms
          */
         $scope.closeKeyboard = function () {
             if (Meteor.isCordova) {
