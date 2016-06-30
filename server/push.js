@@ -8,12 +8,12 @@ Push.allow({
 });
 
 /**
- * @summary Send a notification to a given list of users
- * @param {String} type The notification's type.
- * @param {String} title The notification's title.
- * @param {String} text The notification's content type.
- * @param {String} users The notification's target users.
- * @method userNotification
+ * @summary Function for sending a notification to a given list of users. The type, title and text of the notification
+ *  has to be passed to the function. A list of users who will receive the notification should also be passed.
+ * @param {String} type The type of the notification..
+ * @param {String} title The title of the notification.
+ * @param {String} text The content of the notification.
+ * @param {String[]} users The list of user ids who will receive the notification.
  */
 const userNotification = function (type, title, text, users) {
     check(type, String);
@@ -33,7 +33,7 @@ const userNotification = function (type, title, text, users) {
     });
 };
 
-/**
+/*
  * @summary Send a notification to everyone
  * @method sendGlobalNotification
  * @param {String} text The notification's content type.
@@ -56,11 +56,14 @@ const sendGlobalNotification = function (text, title) {
 Meteor.methods({
     /**
      * @summary Send push notifications to all users in the club who subscribed to the notification of the feed item type
-     * when a new feed item of that type is created.
+     * when a new feed item of that type is created. The type, title and text of the notification should be passed to this
+     *  function.
      * @param{String} type The type of the created feed item.
      * @param{String} title The title to be shown in the push notification.
      * @param{String} text .The text to be shown in the push notification.
      * @return None.
+     * @throws error if the logged in user is not authorized to send push notification.
+     * #throws erro if the parameters do not have the required types. The type, title and text must be String objects.
      */
     sendClubNotification: function (type, title, text) {
         check(type, String);
@@ -91,6 +94,7 @@ Meteor.methods({
      * @param{String} title The title to be shown in the push notification.
      * @param{String} text .The text to be shown in the push notification.
      * @return None.
+     * @throws error if the logged in user is not authorized to send push notification.
      */
     sendTeamNotification: function (type, title, text) {
         check(type, String);

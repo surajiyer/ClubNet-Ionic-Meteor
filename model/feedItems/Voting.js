@@ -1,12 +1,11 @@
 if (Meteor.isServer) {
     Meteor.methods({
         /**
-         * @summary Increase the number of votes of an Exercise voting feed item by the specified amount.
+         * @summary Increase the number of votes of an Exercise voting feed item by one. The Exercise voting feed item
+         *  is specified by the id.
          * @param {String} itemID The id of the feed item.
-         * @param {String} itemType The type of the feed item.
-         * @param {Integer} value The number of votes to increase.
          * @return {Integer} None.
-         * @throws error if the input parameters do not have the required type.
+         * @throws error if the input parameters do not have the required type. The itemID must be a String object.
          */
         increaseNrVotes: function (itemID, itemType) {
             check(itemID, String);
@@ -22,10 +21,11 @@ if (Meteor.isServer) {
                 {$set: {nrVotes: newRaisedValue}});
         },
         /**
-         * @summary Retrieve the voting results of an Exercise voting feed item.
-         * @param {String} itemID The id of the feed item
+         * @summary Retrieve the voting results of an Exercise voting feed item. The Exercise voting feed item is specified
+         *  by the id.
+         * @param {String} itemID The id of the feed item.
          * @returns {Integer[]} An array consists of the number of votes of each exercise.
-         * @throws error if the input parameters do not have the required type.
+         * @throws error if the input parameters do not have the required type. The itemID must be a String object.
          */
         getVotingResults: function (itemID) {
             check(itemID, String);
@@ -62,10 +62,11 @@ if (Meteor.isServer) {
             return obj;
         },
         /**
-         * @summary Retrieve all the candidate exercises of a training.
+         * @summary Retrieve all the candidate exercises of a training. The training is specified by the id. 
          * @param {String} trainingID The id of the training.
-         * @return {Object[]} Array consists of all candidate exercises of the specified training.
-         * @throws error if the input parameters do not have the required type.
+         * @return {Object[]} Array consists of all candidate exercises of the specified training. Each element contains
+         *  the name and icon of the exercise.
+         * @throws error if the input parameters do not have the required type. The trainingID must be a String object.
          */
         getExercises: function (trainingID) {
             check(trainingID, String);
@@ -76,9 +77,11 @@ if (Meteor.isServer) {
             return trainings.exercises;
         },
         /**
-         * @summary Function for checking whether the voting is still opened or closed (status).
+         * @summary Function for checking whether the voting is still opened or closed (status) and returns true or false
+         *  accordingly. The exercise voting feed item is specified by the itemID. A Exercise voting feed item is closed only
+         *   when the deadline has passed or all the members in the team have voted.
          * @param {String} itemId The Item Id of the item for which the status needs to be checked.
-         * @returns {Boolean} The status in boolean form
+         * @returns {Boolean} True if the voting is still open. False otherwise.
          */
         checkVotingStatus: function (itemID) {
             check(itemID, String);

@@ -1,7 +1,9 @@
 if(Meteor.isServer) {
     Meteor.methods({
          /**
-         * @summary Recreate a Practicality feed item based on its specified repeat interval.
+         * @summary Recreate a Practicality feed item based on its specified repeat interval. If a Practicalities feed item
+          *  should be repeated after a certain time interval, a new feed item with the same initial settings will be created and
+          *   the current feed item will be closed.
          * @param {Integer} id The id of the feed item.
          * @return None.
          * @after Based on the repeat interval(daily, weekly or monthly), a new Practicality feed item is created with
@@ -148,9 +150,11 @@ if(Meteor.isServer) {
             return true;
         },
         /**
-         * @summary Calculate the raised value of a Practicality feed item.
+         * @summary Calculate the raised value of a Practicality feed item. The raised value equals to the sum of all
+         *  contributions.
          * @param {String} itemID The id of the feed item.
          * @returns {Integer} The raised value.
+         * @throws error if the input parameter does not have the required type. The itemID must be a String object.
          */
         getRaisedValue: function (itemID) {
             check(itemID, String);
@@ -167,7 +171,8 @@ if(Meteor.isServer) {
         },
 
         /**
-         * @summary Find the name of the contributors of a Practicality feed item.
+         * @summary Find the names of the contributors of a Practicality feed item. The feed item is specified by the
+         *  id. A list that contains the names of the contributors will be returned.
          * @param {String} itemID The id of the feed item.
          * @returns {String[]} An array consists of the names of all contributors. Each element is a concatenation of
          * the first and last name of each contributor.
@@ -185,11 +190,16 @@ if(Meteor.isServer) {
         },
 
         /**
-         * @summary Increase the raised value of a Practicality feed item by the specified amount.
+         * @summary Increase the raised value of a Practicality feed item by the specified amount. This function is
+         * called where there is a new contribution to the specified feed item.
          * @param {String} itemID The id of the feed item.
          * @param {String} itemType The type of the feed item ( Practicality ).
          * @param {Integer} value The amount to increase.
          * @return {Integer} None.
+         * @throws error if the input parameters do not have the required types. The itemID, itemType and value must
+         * be String objects.
+         * @after After this function is called, the document in the database that stores the information of the specified
+         *  feed item will be updated.
          */
         increaseValue: function (itemID, itemType, value) {
             check(itemID, String);
@@ -207,10 +217,13 @@ if(Meteor.isServer) {
             } catch (e) {}
         },
         /**
-         * @summary Decrease the raised value of a Practicality feed item by the specified amount.
+         * @summary Decrease the raised value of a Practicality feed item by the specified amount. This function is called
+         *  when there is a contribution to the specified feed item need to be retracted.
          * @param {String} itemID The id of the feed item.
          * @param {String} itemType The type of the feed item ( Practicality ).
          * @param {Integer} value The amount to decrease.
+         * @throws error if the input parameters do not have the required types. The itemID, itemType and value must
+         * be String objects.
          * @return {Integer} None.
          */
         decreaseValue: function (itemID, itemType, value) {
