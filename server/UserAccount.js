@@ -26,7 +26,6 @@ const getUsersFromTeam = function (clubID, teamID, userTypes) {
 /*
  * @summary Rules and Methods for the users collection.
  * On startup it will set the deny and allow rules, publish the user data and attach the userSchema
- * @instancename Meteor.users
  * @param {Function} Function to execute on startup.
  */
 Meteor.startup(function () {
@@ -47,14 +46,20 @@ Meteor.startup(function () {
     // Set allow rules
     // Except admins, nobody is allowed insertion, deletion and removal
     Meteor.users.allow({
-        insert: function (userId) {
-            return utils.isAdmin(userId);
+        insert: function (userId, doc) {
+            var isAdmin = utils.isAdmin(userId);
+            var isOfSameClub = doc.profile.clubID == Meteor.user().profile.type;
+            return isAdmin && isOfSameClub;
         },
-        update: function (userId) {
-            return utils.isAdmin(userId);
+        update: function (userId, doc) {
+            var isAdmin = utils.isAdmin(userId);
+            var isOfSameClub = doc.profile.clubID == Meteor.user().profile.type;
+            return isAdmin && isOfSameClub;
         },
-        remove: function (userId) {
-            return utils.isAdmin(userId);
+        remove: function (userId, doc) {
+            var isAdmin = utils.isAdmin(userId);
+            var isOfSameClub = doc.profile.clubID == Meteor.user().profile.type;
+            return isAdmin && isOfSameClub;
         }
     });
 
@@ -110,8 +115,8 @@ Meteor.startup(function () {
 Meteor.methods({
     sendShareEmail: function (options) {
         Email.send(options);
-    }, 
-    
+    },
+
     /**
      * @summary Add a new user account.
      * @param {Object} newUser A document object that contains all attributes of the user account to be added.
@@ -119,6 +124,7 @@ Meteor.methods({
      * @after After a new user account is added, a confirmation email is sent to the user.
      * @throws error if the 'newUser' does not conform to the database scheme.
      * @throws error if the input parameters do not have the required type.
+     * @throws error if PR user is not from same club as newUser.
      */
     addUser: function (newUser) {
         // Validate the information in the newUser.
@@ -130,10 +136,13 @@ Meteor.methods({
 
         // Validate if user who is adding another user is a PR user
         check(Meteor.userId(), Match.Where(utils.isAdmin));
+        if (Meteor.user().profile.clubID != newUser.profile.clubID) {
+            throw new Meteor.Error(401, 'Not Authorized');
+        }
 
         // Add the user to the collection
         var userId = Accounts.createUser(newUser);
-        
+
         // Create an email template
         // AccountsTemplates.configureRoute('enrollAccount', {
         //     path: '/enroll'
@@ -159,27 +168,33 @@ Meteor.methods({
         Accounts.sendEnrollmentEmail(userId);
         return userId;
     },
-    
+
     /**
      * @summary Update the information of a user.
      * @param {String} userID The id of the user account whose information is to be updated.
      * @param {Object} newInfo A document object that contains all attributes of the updated user.
      * @throws error if the 'newInfo' does not conform to the database scheme.
      * @throws error if the input parameters do not have the required type.
+     * @throws error if the user is not logged in.
+     * @throws error if the logged-in user is not owner of user profile information that is updated
+     * and not a PR user of the same club.
      */
     updateUserProfile: function (userID, newInfo) {
         // TODO: should not check full user profile schema for update
         check(userID, String);
         check(newInfo, userProfileSchema);
-        if (Meteor.userId() != userID) {
-            check(Meteor.userId(), Match.Where(utils.isAdmin));
+        check(Meteor.userId(), String);
+        if (Meteor.userId() != userID
+            && !(Match.test(Meteor.userId(), Match.Where(utils.isAdmin))
+                && Meteor.user().profile.clubID == newInfo.clubID)) {
+            throw new Meteor.Error(401, 'Not Authorized');
         }
         Meteor.users.update(
             {_id: userID},
             {$set: {profile: newInfo}}
         );
     },
-    
+
     /**
      * @summary Get the information of a user account specified by the email address.
      * @param{String} email The email address of the user account.
@@ -191,7 +206,7 @@ Meteor.methods({
         // check(Meteor.userId(), Match.Where(utils.isAdmin));
         return Meteor.users.find({"emails.address": email}).fetch()[0];
     },
-    
+
     /**
      * @summary Retrieve the information of a user account specified by the id.
      * @param{String} userID The id of the user account to be retrieve.
@@ -202,9 +217,13 @@ Meteor.methods({
     getUserInfo: function (userID) {
         check(userID, String);
         check(Meteor.userId(), Match.Where(utils.isAdmin));
-        return Meteor.users.find({_id: userID}).fetch()[0];
+        var user = Meteor.users.find({_id: userID}).fetch()[0];
+        if(user && Meteor.user().profile.clubID != user.profile.clubID) {
+            throw new Meteor.Error(401, 'Not Authorized');
+        }
+        return user;
     },
-    
+
     /**
      * @summary Get the type of the logged in user.
      * @returns {String} Type of the logged in user.
@@ -213,7 +232,7 @@ Meteor.methods({
         check(Meteor.userId(), String);
         return Meteor.user().profile.type;
     },
-    
+
     /**
      * @summary Get the size of the team of the logged in user.
      * @return{Integer} The number of players in the team.
@@ -223,35 +242,7 @@ Meteor.methods({
         var teamID = utils.getUserTeamID(Meteor.userId());
         return Meteor.users.find({'profile.type': 'player', 'profile.teamID': teamID}).count();
     },
-    
-    // /**
-    //  * @summary Retrieve all users in the club of the logged in user.
-    //  * @returns {Object[]} Array of document objects that contains all the user accounts in the club of the logged in user.
-    //  */
-    // getClubUsers: function () {
-    //     var clubID = Meteor.user().profile.clubID;
-    //     var users = Meteor.users.find({"profile.clubID": clubID}).fetch();
-    //     var users_array = [];
-    //     _.each(users, function (user) {
-    //         users_array.push(user._id);
-    //     });
-    //     return users_array;
-    // },
-    //
-    // /**
-    //  * @summary Retrieve all users in the team of the logged in user.
-    //  * @return {Object[]} Array of document objects that contains all the user accounts in the team of the logged in user.
-    //  */
-    // getTeamUsers: function () {
-    //     var teamID = Meteor.user().profile.teamID;
-    //     var users = Meteor.users.find({"profile.teamID": teamID}).fetch();
-    //     var users_array = [];
-    //     _.each(users, function (user) {
-    //         users_array.push(user._id);
-    //     });
-    //     return users_array;
-    // },
-    
+
     /**
      * @summary Update the notification setting of the logged in user.
      * @param {String} itemType The feed item type to which the notification setting is changed.
@@ -260,15 +251,15 @@ Meteor.methods({
      * @throws error if the input parameters do not have the required type.
      */
     updateUserNotificationSetting: function (itemType, value) {
-       check(itemType, Match.Where(function (type) {
-           check(type, String);
-           return utils.isValidType(type);
-       }));
-       check(value, Boolean);
-       var loggedInUser = Meteor.userId();
-       check(loggedInUser, String);
-       var userNotifications = Meteor.users.findOne({"_id": loggedInUser}).profile.notifications;
-       userNotifications[itemType] = value;
-       Meteor.users.update(loggedInUser, {$set: {"profile.notifications": userNotifications}});
-   }
+        check(itemType, Match.Where(function (type) {
+            check(type, String);
+            return utils.isValidType(type);
+        }));
+        check(value, Boolean);
+        var loggedInUser = Meteor.userId();
+        check(loggedInUser, String);
+        var userNotifications = Meteor.users.findOne({"_id": loggedInUser}).profile.notifications;
+        userNotifications[itemType] = value;
+        Meteor.users.update(loggedInUser, {$set: {"profile.notifications": userNotifications}});
+    }
 });

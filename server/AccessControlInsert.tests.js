@@ -78,12 +78,7 @@ if (Meteor.isServer) {
                 _id: 'pr',
                 items: [{
                     _id: 'testType',
-                    permissions: {
-                        create: true,
-                        edit: true,
-                        view: true,
-                        delete: true
-                    }
+                    permissions: {create: true, edit: true, view: true, delete: true}
                 }]
             };
         });
@@ -95,13 +90,13 @@ if (Meteor.isServer) {
         });
 
         afterEach(() => {
-            sinon.restore(Meteor.user);
-            sinon.restore(Meteor.userId);
+            sinon.restore(global.Meteor.user);
+            sinon.restore(global.Meteor.userId);
         });
 
         it("should allow a PR user to set permissions", () => {
-            Meteor.userId = sinon.stub().returns(testPr._id);
-            Meteor.user = sinon.stub().returns(testPr);
+            sinon.stub(global.Meteor, 'userId').returns(testPr._id);
+            sinon.stub(global.Meteor, 'user').returns(testPr);
 
             try {
                 Meteor.call('setPermissions', testPermissions);
@@ -111,39 +106,39 @@ if (Meteor.isServer) {
         });
 
         it("should not allow a Player user to set permissions", (done) => {
-            Meteor.userId = sinon.stub().returns(testPlayer._id);
-            Meteor.user = sinon.stub().returns(testPlayer);
+            sinon.stub(global.Meteor, 'userId').returns(testPlayer._id);
+            sinon.stub(global.Meteor, 'user').returns(testPlayer);
 
             try {
                 Meteor.call('setPermissions', testPermissions);
-                assert.fail();
             } catch (err) {
                 done();
             }
+            assert.fail();
         });
 
         it("should not allow a Coach user to set permissions", (done) => {
-            Meteor.userId = sinon.stub().returns(testCoach._id);
-            Meteor.user = sinon.stub().returns(testCoach);
+            sinon.stub(global.Meteor, 'userId').returns(testCoach._id);
+            sinon.stub(global.Meteor, 'user').returns(testCoach);
 
             try {
                 Meteor.call('setPermissions', testPermissions);
-                assert.fail();
             } catch (err) {
                 done();
             }
+            assert.fail();
         });
 
         it("should not allow a General user to set permissions", (done) => {
-            Meteor.userId = sinon.stub().returns(testG._id);
-            Meteor.user = sinon.stub().returns(testG);
+            sinon.stub(global.Meteor, 'userId').returns(testG._id);
+            sinon.stub(global.Meteor, 'user').returns(testG);
 
             try {
                 Meteor.call('setPermissions', testPermissions);
-                assert.fail();
             } catch (err) {
                 done();
             }
+            assert.fail();
         });
     });
 }

@@ -31,9 +31,15 @@ if (Meteor.isServer) {
             check(itemID, String);
             var votes = Meteor.call('getResponsesOfOneItem', itemID);
             result = [[0, 0, 0]];
+
+            // If responses exists, check if they are of type 'Voting'
+            if(!votes.length || votes[0].itemType != 'Voting') return result;
+
+            // Calculate results tables from each vote
             votes.forEach(function (vote) {
                 result[0][Number(vote.value) - 1]++;
             });
+            
             return result;
         },
         /**
@@ -77,7 +83,7 @@ if (Meteor.isServer) {
         },
         /**
          * @summary Function for checking whether the voting is still opened or closed (status).
-         * @param {String} itemId The Item Id of the item for which the status needs to be checked.
+         * @param {String} itemID The Item Id of the item for which the status needs to be checked.
          * @returns {Boolean} The status in boolean form
          */
         checkVotingStatus: function (itemID) {

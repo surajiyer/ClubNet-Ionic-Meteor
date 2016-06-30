@@ -15,6 +15,7 @@ if (Meteor.isServer) {
     testItem = {
         creatorID: userId,
         sticky: false,
+        type: 'Voting',
         clubID: '1',
         createdAt: new Date,
         modifiedAt: new Date,
@@ -34,7 +35,7 @@ if (Meteor.isServer) {
             // Monkey patch Meteor.call method to only certain calls
             Meteor.__call = Meteor.call;
             Meteor.call = function (name) {
-                if(name == 'sendTeamNotification'
+                if (name == 'sendTeamNotification'
                     || name == 'sendClubNotification'
                     || name == 'checkRepeatInterval'
                     || name == 'checkRights') return true;
@@ -53,26 +54,26 @@ if (Meteor.isServer) {
                 Items.remove({});
             });
 
-            it("should fail adding a feed item without item type (invalid parameter)", () => {
+            it("should fail adding a feed item without item type (invalid parameter)", (done) => {
                 // Adding the item without type
                 try {
-                    Meteor.call('addFeedItem', testItem);
-                    assert.fail();
+                    var item = JSON.parse(JSON.stringify(testItem));
+                    delete item.type;
+                    Meteor.call('addFeedItem', item);
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
             });
 
             it("should succeed adding a feed item", () => {
-                // Add type to item
-                testItem.type = 'Voting';
-
                 // Add the item with type
                 try {
                     var itemId = Meteor.call('addFeedItem', testItem);
                     check(itemId, String);
                     testItem._id = itemId;
                 } catch (err) {
-                    console.log('addfeeditem error: ' + err);
+                    console.log(err);
                     assert.fail();
                 }
             });
@@ -89,13 +90,14 @@ if (Meteor.isServer) {
                 Items.remove({});
             });
 
-            it("should fail getting feed item", () => {
+            it("should fail getting feed item with non-String input", (done) => {
                 // Get item with wrong parameter
                 try {
                     Meteor.call('getFeedItem', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
             });
 
             it("should get feed item successfully", () => {
@@ -103,7 +105,6 @@ if (Meteor.isServer) {
                 try {
                     var result = Meteor.call('getFeedItem', testItem._id);
                     assert(result._id == testItem._id);
-                    testItem = result;
                 } catch (err) {
                     console.log(err);
                     assert.fail();
@@ -122,37 +123,65 @@ if (Meteor.isServer) {
                 Items.remove({});
             });
 
-            it("should fail updating a feed item", () => {
+            it("should fail updating a feed item with non-Object input", (done) => {
                 // Update item with wrong parameter
                 try {
                     Meteor.call('updateFeedItem', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+
+                assert.fail();
             });
 
-            it("should fail if logged in user is not item creator", () => {
+            it("should fail if logged in user is not item creator", (done) => {
                 // Update item with wrong parameter
+                global.Meteor.userId.returns(userId + 1);
+                var newTestItem = {
+                    _id: testItem._id,
+                    type: testItem.type,
+                    sticky: !testItem.sticky
+                };
+
                 try {
-                    var newTestItem = JSON.parse(JSON.stringify(testItem));
-                    newTestItem.clubID = newTestItem.clubID + 1;
-                    newTestItem.creatorID = Meteor.userId() + 1;
                     Meteor.call('updateFeedItem', newTestItem);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+
+                assert.fail();
+            });
+
+            it("should fail updating clubID/creatorID/type/createdAt", (done) => {
+                // Update item with wrong parameter
+                var newTestItem = {
+                    _id: testItem._id,
+                    type: testItem.type,
+                    clubID: testItem.clubID + 1
+                };
+                try {
+                    var result = Meteor.call('updateFeedItem', newTestItem);
+                    console.log(testItem.clubID);
+                    console.log(result.clubID, newTestItem.clubID);
+                } catch (err) {
+                    console.log(err);
+                    done();
+                }
+                assert.fail();
             });
 
             it("should succeed updating a feed item", () => {
                 // Update testItem to newTestItem
                 try {
-                    var newTestItem = JSON.parse(JSON.stringify(testItem));
-                    newTestItem.clubID = newTestItem.clubID + 1;
+                    var newTestItem = {
+                        _id: testItem._id,
+                        type: testItem.type,
+                        sticky: !testItem.sticky
+                    };
                     var result = Meteor.call('updateFeedItem', newTestItem);
-                    assert(newTestItem.clubID == result.clubID);
+                    assert(result.sticky == newTestItem.sticky);
                     testItem = result;
                 } catch (err) {
-                    console.log('updateFeedItem: ' + err);
                     assert.fail();
                 }
             });
@@ -164,7 +193,7 @@ if (Meteor.isServer) {
                 var itemId = Meteor.call('addFeedItem', testItem);
                 check(itemId, String);
                 testItem._id = itemId;
-                
+
                 // Add schema to Responses
                 Responses.attachSchema(baseResponseSchema, {selector: {itemType: testItem.type}});
             });
@@ -174,31 +203,37 @@ if (Meteor.isServer) {
                 Responses.remove({});
             });
 
-            it("should throw error with invalid id", () => {
+            it("should throw error with non-String id", (done) => {
                 // Invalid id
                 try {
                     Meteor.call('putResponse', false, testItem.type, '1');
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+
+                assert.fail();
             });
 
-            it("should throw error with invalid id and type", () => {
+            it("should throw error with non-String type", (done) => {
                 // Invalid id type
                 try {
                     Meteor.call('putResponse', testItem._id, false, '1');
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+
+                assert.fail();
             });
 
-            it("should throw error with invalid response value", () => {
+            it("should throw error with non-String response value", (done) => {
                 // Invalid value
                 try {
                     Meteor.call('putResponse', testItem._id, testItem.type, false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+
+                assert.fail();
             });
 
             it("should add response successfully with valid input", () => {
@@ -206,8 +241,7 @@ if (Meteor.isServer) {
                 try {
                     Meteor.call('putResponse', testItem._id, testItem.type, '1');
                 } catch (err) {
-                    console.log(err);
-                    assert.fail();
+                    assert.fail(err.message);
                 }
             });
         });
@@ -218,7 +252,7 @@ if (Meteor.isServer) {
                 var itemId = Meteor.call('addFeedItem', testItem);
                 check(itemId, String);
                 testItem._id = itemId;
-                
+
                 Meteor.call('putResponse', testItem._id, testItem.type, '1');
             });
 
@@ -227,23 +261,26 @@ if (Meteor.isServer) {
                 Responses.remove({});
             });
 
-            it("should throw error with wrong parameters", () => {
+            it("should throw error with non-String item ID", (done) => {
                 // Get item with wrong parameter
                 try {
                     Meteor.call('getResponse', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+
+                assert.fail();
             });
 
             it("should get the response successfully", () => {
                 // Get response added in the previous test
                 try {
                     result = Meteor.call('getResponse', testItem._id);
-                    assert.equal(result.itemID, testItem._id);
                 } catch (err) {
                     assert.fail();
                 }
+
+                assert.equal(result.itemID, testItem._id);
             });
         });
 
@@ -253,7 +290,7 @@ if (Meteor.isServer) {
                 var itemId = Meteor.call('addFeedItem', testItem);
                 check(itemId, String);
                 testItem._id = itemId;
-                
+
                 Meteor.call('putResponse', testItem._id, testItem.type, '1');
             });
 
@@ -262,36 +299,37 @@ if (Meteor.isServer) {
                 Responses.remove({});
             });
 
-            it("should throw error with wrong parameter", () => {
+            it("should throw error with non-String item ID", (done) => {
                 // Get responses with wrong parameter
                 try {
                     Meteor.call('getResponsesOfOneItem', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
             });
 
-            it("should get an empty array of responses for item without responses", (done) => {
+            it("should get an empty array of responses for item without responses", () => {
                 // Get responses of item without responses
                 try {
                     result = Meteor.call('getResponsesOfOneItem', 'otherItem');
-                    assert.equal(result.length, 0);
-                    done();
                 } catch (err) {
                     assert.fail();
                 }
+
+                assert.equal(result.length, 0);
             });
 
-            it("should get the responses on a feed item", (done) => {
+            it("should get the responses on a feed item", () => {
                 // Get responses of item added in the previous test
                 try {
                     result = Meteor.call('getResponsesOfOneItem', testItem._id);
-                    assert.equal(result.length, 1);
-                    assert.equal(result[0].itemID, testItem._id);
                 } catch (err) {
                     assert.fail();
                 }
-                done();
+
+                assert.equal(result.length, 1);
+                assert.equal(result[0].itemID, testItem._id);
             });
         });
 
@@ -301,7 +339,7 @@ if (Meteor.isServer) {
                 var itemId = Meteor.call('addFeedItem', testItem);
                 check(itemId, String);
                 testItem._id = itemId;
-                
+
                 Meteor.call('putResponse', testItem._id, testItem.type, '1');
             });
 
@@ -310,33 +348,34 @@ if (Meteor.isServer) {
                 Responses.remove({});
             });
 
-            it("should throw error with wrong parameters ", () => {
+            it("should throw error with wrong parameters ", (done) => {
                 // Get responses with wrong parameter
                 try {
                     Meteor.call('getNumberResponsesOfOneItem', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
             });
 
             it("should get 0 responses for item without responses ", () => {
                 // Get responses of item without responses
                 try {
                     result = Meteor.call('getNumberResponsesOfOneItem', 'otherItem');
-                    assert.equal(result, 0);
                 } catch (err) {
                     assert.fail();
                 }
+                assert.equal(result, 0);
             });
 
             it("should get 1 response for an item with 1 response", () => {
                 // Get responses of item added in the previous test
                 try {
                     result = Meteor.call('getNumberResponsesOfOneItem', testItem._id);
-                    assert.equal(result, 1);
                 } catch (err) {
                     assert.fail();
                 }
+                assert.equal(result, 1);
             });
         });
 
@@ -346,7 +385,7 @@ if (Meteor.isServer) {
                 var itemId = Meteor.call('addFeedItem', testItem);
                 check(itemId, String);
                 testItem._id = itemId;
-                
+
                 Meteor.call('putResponse', testItem._id, testItem.type, '1');
             });
 
@@ -355,34 +394,35 @@ if (Meteor.isServer) {
                 Responses.remove({});
             });
 
-            it("should throw error with invalid parameters", () => {
+            it("should throw error with invalid parameters", (done) => {
                 // Get responses with wrong parameter
                 try {
                     Meteor.call('getResponsesOfItemType', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
             });
 
             it("should get an empty array for an item type that does not have responses", () => {
                 // Get responses of item without responses
                 try {
                     result = Meteor.call('getResponsesOfItemType', 'otherItemType');
-                    assert.equal(result.length, 0);
                 } catch (err) {
                     assert.fail();
                 }
+                assert.equal(result.length, 0);
             });
 
             it("should get all responses of given item type", () => {
                 // Get responses of item added in the previous test
                 try {
                     var result = Meteor.call('getResponsesOfItemType', testItem.type);
-                    assert(result.length == 1);
                 } catch (err) {
                     console.log(err);
                     assert.fail();
                 }
+                assert(result.length == 1);
             });
         });
 
@@ -392,7 +432,7 @@ if (Meteor.isServer) {
                 var itemId = Meteor.call('addFeedItem', testItem);
                 check(itemId, String);
                 testItem._id = itemId;
-                
+
                 Meteor.call('putResponse', testItem._id, testItem.type, '1');
             });
 
@@ -405,23 +445,22 @@ if (Meteor.isServer) {
                 // Get results with wrong parameter
                 try {
                     Meteor.call('getVotingResults', false);
-                    assert.fail();
                 } catch (err) {
                     done();
                 }
+                assert.fail();
             });
 
             it("should get the voting results", () => {
                 // Get results of item added in the previous test
                 try {
-                    var result = Meteor.call('getVotingResults', testItem._id);
+                    result = Meteor.call('getVotingResults', testItem._id);
                     assert.equal(result[0].length, 3);
                     assert.equal(result[0][0], 1);
                     assert.equal(result[0][1], 0);
                     assert.equal(result[0][2], 0);
                 } catch (err) {
-                    console.log(err);
-                    assert.fail();
+                    assert.fail(err.message);
                 }
             });
 
@@ -435,10 +474,8 @@ if (Meteor.isServer) {
                     assert.equal(result[0][0], 2);
                     assert.equal(result[0][1], 1);
                     assert.equal(result[0][2], 0);
-
-                    Meteor.call('deleteResponse', testItem._id);
                 } catch (err) {
-                    assert.fail();
+                    assert.fail(err.message);
                 }
             });
         });
@@ -449,7 +486,7 @@ if (Meteor.isServer) {
                 var itemId = Meteor.call('addFeedItem', testItem);
                 check(itemId, String);
                 testItem._id = itemId;
-                
+
                 Meteor.call('putResponse', testItem._id, testItem.type, '1');
             });
 
@@ -457,17 +494,17 @@ if (Meteor.isServer) {
                 Items.remove({});
             });
 
-            it("should throw error with invalid parameter", () => {
+            it("should throw error with invalid parameter", (done) => {
                 // Delete response with wrong parameter
                 try {
                     Meteor.call('deleteResponse', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
             });
 
             it("should delete response", () => {
-                // Delete response added in the addResponse test case
                 try {
                     Meteor.call('deleteResponse', testItem._id);
                 } catch (err) {
@@ -488,30 +525,22 @@ if (Meteor.isServer) {
                 Items.remove({});
             });
 
-            it("should throw error with invalid parameter", () => {
+            it("should throw error with invalid parameter", (done) => {
                 // Delete item with wrong parameter
                 try {
                     Meteor.call('deleteFeedItem', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
             });
 
             it("should delete the feed item", () => {
                 // Delete item added in the addFeedItem test case
                 try {
-                    var deleteFeedItemStub = sinon.stub(Meteor, 'call');
-                    deleteFeedItemStub
-                        .withArgs('updateFeedItem', testItem._id)
-                        .returns(Items.remove({_id: testItem._id}));
                     Meteor.call('deleteFeedItem', testItem._id);
-                    sinon.restore(Meteor.call);
-                    try {
-                        var result = Items.find(testItem._id).fetch()[0];
-                        assert.equal(result, undefined);
-                    } catch (err) {
-                        console.log(err);
-                    }
+                    var result = Items.find(testItem._id).count();
+                    assert.equal(result, 0);
                 } catch (err) {
                     assert.fail();
                 }
@@ -522,19 +551,41 @@ if (Meteor.isServer) {
             it("should get trainings", () => {
                 // Try to get some trainings
                 try {
-                    Meteor.call('getTrainings');
+                    result = Meteor.call('getTrainings');
+
+                    // Check training ID's to validate the result
+                    _.each(result, function (training) {
+                        check(training.trId, String);
+                    });
                 } catch (err) {
                     assert.fail();
                 }
             });
 
-            it("should throw error with invalid parameters", () => {
+            it("should throw error with invalid parameters", (done) => {
                 // Get exercises for invalid type parameter.
                 try {
                     Meteor.call('getExercises', false);
-                    assert.fail();
                 } catch (err) {
+                    done();
                 }
+                assert.fail();
+            });
+
+            it("should retrieve exercise successfully", (done) => {
+                var trainings = Meteor.call('getTrainings');
+                if (trainings.length <= 0) done();
+                try {
+                    result = Meteor.call('getExercises', trainings[0].trId);
+                } catch (err) {
+                    assert.fail();
+                }
+
+                // Check exercise ID's to validate the result
+                _.each(result, function (exercise) {
+                    check(exercise.exId, String)
+                });
+                done();
             });
         });
     });
