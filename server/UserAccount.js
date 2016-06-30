@@ -185,8 +185,8 @@ Meteor.methods({
     
     /**
      * @summary Get the information of a user account specified by the email address.
-     * @param{String} email The email address of the user account.
-     * @return{Object} A document object that contains all the attributes of the user account specified by the email address.
+     * @param {String} email The email address of the user account.
+     * @return {Object} A document object that contains all the attributes of the user account specified by the email address.
      * @throws error if the input parameters do not have the required type.
      */
     getUserInfoByEmail: function (email) {
@@ -197,8 +197,8 @@ Meteor.methods({
     
     /**
      * @summary Retrieve the information of a user account specified by the id.
-     * @param{String} userID The id of the user account to be retrieve.
-     * @return{Object} A document object that contains all the attributes of the user account specified by the id.
+     * @param {String} userID The id of the user account to be retrieved.
+     * @return {Object} A document object that contains all the attributes of the user account specified by the id.
      * @throws error if the logged in user is not allowed to retrieve user accounts information.
      * @throws error if the input parameters do not have the required type.
      */

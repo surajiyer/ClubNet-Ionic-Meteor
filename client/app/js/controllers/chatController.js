@@ -46,6 +46,7 @@ angular.module('chatControllers', [])
          * @type {Array}
          */
         $scope.chatNotifications = {};
+
         $scope.autorun(function () {
             var chatNotifications = $scope.getReactively('chatNotifications', true);
             console.log('chatNotifications', chatNotifications);
@@ -70,22 +71,27 @@ angular.module('chatControllers', [])
                 });
 
                 /**
-                 * Open the Create New Chat modal.
+                 * @summary Open the Create New Chat modal. This function will be called when the logged in user creates
+                 *  a new chat session.
+                 * @returns None.
                  */
                 $scope.addChat = function () {
                     $scope.chatModal.show();
                 };
 
                 /**
-                 * Close the Create New Chat modal.
+                 * @summary Close the Create New Chat modal. This function will be called when the logged in user closes
+                 *  an existing chat session.
+                 * @returns None.
                  */
                 $scope.closeModal = function () {
                     $scope.chatModal.hide();
                 };
 
                 /**
-                 * Start a new chat with the given userId.
-                 * @param userId
+                 * @summary Start a new chat with the given userId. This function will be called when the logged in user
+                 *  selects a user to start a new chat session.
+                 * @param {String} userId The id of the user with whom the logged in user wants to chat.
                  */
                 $scope.startChat = function (userId) {
                     if (!$scope.canCreateChat) return;
@@ -133,10 +139,18 @@ angular.module('chatControllers', [])
         $scope.showChatNotification = false;
 
         $scope.helpers({
-            // Load chat info
+            /**
+             * @summary Loading the information of a chat session. All information of a chat session that is stored in
+             *  the database will be returned.
+             * @returns {Object} A document object that stores all information of a chat session.
+             */
             chat: function () {
                 return Chat.getOneChat(chat._id);
             },
+            /**
+             * @summary Getting the last message of a chat session.
+             * @returns {Object} A MongoDB cursor of the last message in the chat session.
+             */
             lastMessage: function () {
                 return Messages.find({chatID: chat._id}, {sort: {createdAt: -1}});
             }
@@ -254,9 +268,10 @@ angular.module('chatControllers', [])
         });
 
         /**
-         * Function to read unread messages.
-         * @param id String chat ID
-         * @param counts message counts object
+         * Function to read the unread messages of a chat session. The chat session is specified by the id. This function
+         *  will be called when the user opens a chat session in which there are unread messages.
+         * @param {String} id The id of the chat session.
+         * @returns None.
          */
         var readUnreadMessages = function (id, counts) {
             // If there are unread messages,
@@ -276,16 +291,18 @@ angular.module('chatControllers', [])
         });
 
         /**
-         * Match senderID with Id of currently logged-in user
-         * @param senderId String user Id
-         * @returns {boolean} True if logged-in user matched the senderID
+         * @summary Match the id of the sender with id of the currently logged-in user. When the messages are being loaded,
+         * this function will be called per message to check whether this message is sent by the logged in user.
+         * @param {String} senderId The id of the sender.
+         * @returns {Boolean} True if the logged-in user matched the senderID. Otherwise false.
          */
         $scope.isMyMessage = function (senderId) {
             return senderId == Meteor.userId();
         };
 
         /**
-         * @summary Function to send a message
+         * @summary Function to send a message. This function will be called when the logged in user sends a new message.
+         * @returns None.
          */
         $scope.sendMessage = function () {
             // If message is empty, don't send
@@ -302,7 +319,9 @@ angular.module('chatControllers', [])
         };
 
         /**
-         * Close the input keyboard on mobile platforms
+         * @summary Close the input keyboard on mobile platforms. This function will be called when the keyboard for
+         * chat should be closed.
+         * @returns None.
          */
         $scope.closeKeyboard = function () {
             if (Meteor.isCordova) {
@@ -311,8 +330,9 @@ angular.module('chatControllers', [])
         };
 
         /**
-         * Scroll to the bottom of the chat
-         * @param animate Boolean option to apply scroll animation
+         * @summary Scroll to the bottom of the chat.
+         * @param {Boolean} animate Option to apply scroll animation. True if an animation is desired. Otherwise false.
+         * @returns None.
          */
         $scope.scrollBottom = function (animate) {
             $timeout(() => {
@@ -321,7 +341,9 @@ angular.module('chatControllers', [])
         };
 
         /**
-         * Set keyboard height and scroll to the bottom when chat input is opened
+         * @summary Set keyboard height and scroll to the bottom when chat input is opened. This function sets the height
+         *  of the keyboard and automatically place the chat history to the last message of the chat session.
+         * @returns None.
          */
         $scope.inputUp = function () {
             if (isIOS) {
@@ -341,7 +363,9 @@ angular.module('chatControllers', [])
         };
 
         /**
-         * Function to animate chat scrolling to the bottom
+         * @summary Function to animate chat scrolling to the bottom. This function will be called when the chat needs
+         *  to be scrolled to the bottom.
+         * @returns None.
          */
         $scope.autoScroll = function () {
             let recentMessagesNum = $scope.messages.length;
