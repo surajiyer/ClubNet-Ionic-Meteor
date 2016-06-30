@@ -183,6 +183,7 @@ angular.module('userAccountControllers', [])
 
     /**
      *  Profile Controller: provides all functionality for the Profile screen of the app
+     *  This includes changing the password with its coherent logical operations.
      */
     .controller('profileCtrl', function ($scope, $meteor, $state, CommonServices, $translate) {
         /**

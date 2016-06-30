@@ -230,7 +230,13 @@ angular.module('app.controllers', [
                 correctOrientation: true,
                 sourceType: Camera.PictureSourceType.PHOTOLIBRARY
             };
-
+            /**
+            *  Function from 3th party package. It uses the data provided in
+            *  var camparaOptions. The quality, correctionOrientation and sourcetype
+            *  (photolibrary, not the camera) are defined in here.
+            *  In the callback function, the image field in the scope
+            *  is set to the callback result parameter which contains the image in base64 format.
+            */
             MeteorCamera.getPicture(cameraOptions, function (error, localData) {
                 $scope.image = localData;
                 $scope.$apply();
