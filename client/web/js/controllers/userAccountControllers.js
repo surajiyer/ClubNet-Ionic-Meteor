@@ -11,7 +11,11 @@ angular.module('web.userAccountControllers', [])
                 return Meteor.users.find({}, {sort: {'profile.lastName': 1}});
             }
         });
-
+        /**
+         * @summary Function to delete a user account. The id of the user account needs to be passed as parameter. The
+         * user account will then permanently deleted from the database.
+         * @param user
+         */
         $scope.deleteAccount = function (user) {
             if (user.type !== 'pr') {
                 Meteor.users.remove(user._id);
@@ -162,7 +166,11 @@ angular.module('web.userAccountControllers', [])
             }
             return retVal;
         };
-
+        /**
+         * @summary Function to add a new user account. The information of the new user account will need to be first filled in.
+         * This function then takes the information in order to create a new user account.
+         * @returns None.
+         */
         $scope.addAccount = function () {
             var mailRegularExpression = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
@@ -238,7 +246,10 @@ angular.module('web.userAccountControllers', [])
 
         $scope.error = '';
         $scope.errorVisible = false;
-
+        /**
+         * @summary Function to edit a user account. The updated information of the user account will need to be first
+         * filled in. This function then takes the information in order to update the information of the user account.
+         */
         $scope.saveChanges = function () {
             if (!$scope.user.firstName) {
                 $translate('MISSING_FIRST_NAME').then(function (error) {
