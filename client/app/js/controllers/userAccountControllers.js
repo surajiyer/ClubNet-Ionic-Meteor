@@ -117,6 +117,7 @@ angular.module('userAccountControllers', [])
                 return;
             }
 
+            //Call meteor function that handles the forgotPassword flow
             Accounts.forgotPassword({email: $scope.user.email}, function (err) {
                 if(!err) {
                     $translate(['SUCCESS', 'PWD_RECOVERY_EMAIL_SENT']).then(function (translations) {
@@ -124,7 +125,7 @@ angular.module('userAccountControllers', [])
                         var content = translations.PWD_RECOVERY_EMAIL_SENT;
                         CommonServices.showAlert(head, content);
                     });
-
+                    //Change state to login, so the user will be routed to the loginpage
                     $state.go('login');
                 } else {
                     $translate(['ERROR', 'MISSING_VALID_EMAIL']).then(function (translations) {
