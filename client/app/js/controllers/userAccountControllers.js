@@ -1,46 +1,5 @@
 angular.module('userAccountControllers', [])
 
-
-/******
- *  Register Controller: provides all functionality for the register screen of the app
-    This code is commented out as it was not a requested functionality by our client.
- */
-// .controller('registerCtrl', function ($scope, $meteor, $state) {
-//     /**
-//      * Credentials of the user
-//      */
-//     $scope.user = {
-//         email: '',
-//         password: ''
-//     };
-//     /**
-//      * @summary Function to register a new user
-//      */
-//     $scope.register = function () {
-//         if (!$scope.user.email)
-//             throw new Meteor.Error('Account registration error: e-mail is not valid');
-//         var newUser = {
-//             email: $scope.user.email,
-//             password: $scope.user.password,
-//             profile: {
-//                 firstName: "p",
-//                 lastName: "1",
-//                 type: "player",
-//                 clubID: "club",
-//                 teamID: "team1"
-//             }
-//         };
-//         Meteor.call('addUser', newUser, function (err, result) {
-//             if (err || !Match.test(result, String))
-//                 throw new Meteor.Error('Account registration error: ' + err.reason);
-//             Meteor.loginWithPassword($scope.user.email, $scope.user.password, function (error) {
-//                 if (error) throw new Meteor.Error(error.reason);
-//                 $state.go('menu.feed'); // Redirect user if registration succeeds
-//             });
-//         });
-//     };
-// })
-
     /**
      *  Login Controller: provides all functionality for the login screen of the app
      */
@@ -63,6 +22,10 @@ angular.module('userAccountControllers', [])
 
         var ERROR = 'Error';
 
+        /**
+         * @summary Function used to login to the application which checks the user credentials and gives a meaningful
+         * response.
+         */
         $scope.login = function () {
 
             //Check that determines wheter an email is present.
@@ -142,7 +105,7 @@ angular.module('userAccountControllers', [])
         };
 
         /**
-         * @summary Function to send email to user to reset password
+         * @summary Function to send email to user to reset password.
          */
         $scope.forgotPassword = function () {
             if (!SimpleSchema.RegEx.Email.test($scope.user.email)) {
@@ -154,6 +117,7 @@ angular.module('userAccountControllers', [])
                 return;
             }
 
+            //Call meteor function that handles the forgotPassword flow
             Accounts.forgotPassword({email: $scope.user.email}, function (err) {
                 if(!err) {
                     $translate(['SUCCESS', 'PWD_RECOVERY_EMAIL_SENT']).then(function (translations) {
@@ -161,7 +125,7 @@ angular.module('userAccountControllers', [])
                         var content = translations.PWD_RECOVERY_EMAIL_SENT;
                         CommonServices.showAlert(head, content);
                     });
-
+                    //Change state to login, so the user will be routed to the loginpage
                     $state.go('login');
                 } else {
                     $translate(['ERROR', 'MISSING_VALID_EMAIL']).then(function (translations) {
@@ -191,7 +155,7 @@ angular.module('userAccountControllers', [])
         var ERROR = 'Error';
 
         /**
-         * @summary Function to reset the users password
+         * @summary Function to reset the user's password.
          */
         $scope.resetPassword = function () {
             if (!$scope.user.newPassword) {
@@ -219,6 +183,7 @@ angular.module('userAccountControllers', [])
 
     /**
      *  Profile Controller: provides all functionality for the Profile screen of the app
+     *  This includes changing the password with its coherent logical operations.
      */
     .controller('profileCtrl', function ($scope, $meteor, $state, CommonServices, $translate) {
         /**
@@ -240,7 +205,8 @@ angular.module('userAccountControllers', [])
         };
 
         /**
-         * @summary Function to change the password
+         * @summary Function to change the user's password. First it checks if passwords match and then call the back-end
+         * to change the password.
          */
         $scope.changePassword = function () {
             //Check wheteter the password and the password confirmation are equal.

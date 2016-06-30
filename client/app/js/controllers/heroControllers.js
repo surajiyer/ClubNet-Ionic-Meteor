@@ -12,10 +12,16 @@ angular.module('heroControllers', [])
             $scope.modal = modal;
         });
 
+        /**
+         * Function to close the hero modal
+         */
         $scope.closeHero = function () {
             $scope.modal.hide();
         };
 
+        /**
+         * Function to close the hero modal
+         */
         $scope.openHero = function () {
             $scope.modal.show();
         };

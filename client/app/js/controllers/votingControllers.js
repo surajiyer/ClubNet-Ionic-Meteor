@@ -14,7 +14,7 @@ angular.module('votingControllers', [])
         });
 
         /**
-         * @summary Function to retrieve and update the voting results
+         * @summary Function to retrieve and update the voting results.
          */
         $scope.updateChartValues = function () {
             if (!$scope.item) return;
@@ -78,6 +78,11 @@ angular.module('votingControllers', [])
         $scope.chartLabels = ["", "", ""];
         $scope.updateChartValues();
 
+        /**
+         * @summary Selects the voting value which the user clicks on.
+         * @param $event (Object) Element object of the select voting item.
+         * @param index (Integer) Index of the value which user has just selected.
+         */
         $scope.select = function ($event, index) {
             // Let's try
             var elem = angular.element($event.currentTarget);
@@ -95,6 +100,7 @@ angular.module('votingControllers', [])
 
         /**
          * @summary Function to post a vote
+         * @param value (Integer) Value which user is voting for.
          */
         $scope.vote = function (value) {
             if (!value) return;

@@ -14,8 +14,8 @@ if(Meteor.isServer) {
          * @summary Check whether the logged in user is allowed to perform an operation. The operation could be creating,
          * viewing, deleting or responding to a feed item of a specific type. If specified permission is not defined, an
          *  error is thrown.
-         * @param{String} itemType The item for which the permission is being requested.
-         * @param{String} permission The type of permission being requested for the item: could be create, view, edit or delete.
+         * @param {String} itemType The item for which the permission is being requested.
+         * @param {String} permission The type of permission being requested for the item: could be create, view, edit or delete.
          * @return True if the logged in user is allowed to perform the specified operation. Otherwise false.
          * @throws error if the input parameters do not have the required type.
          * @throws error if the specified permission is not defined.

@@ -39,8 +39,6 @@ angular.module('formControllers', [])
             });
         };
 
-
-
         /**
          * @summary (Re)loads various session variables
          * @method reloadResponses
@@ -59,9 +57,6 @@ angular.module('formControllers', [])
                 Meteor.call('getFeedItem', $scope.item._id, function (err, result) {
                     if (err) throw new Meteor.Error(err.message);
                     directRaisedValue = result.raisedValue;
-
-                    //console.log("calculatedRaisedValue: " + calculatedRaisedValue);
-                    //console.log("directRaisedValue: " + directRaisedValue);
 
                     // There should be a check here that determines wheter the raisedValue from
                     // the database is the same as the one that is calculated from all responses.
@@ -91,7 +86,7 @@ angular.module('formControllers', [])
 
             $scope.$emit("hasEnded", $scope.item.targetValue <= $scope.item.raisedValue);
 
-            //convinient logging that can be used to directly see the performance of this reload functionality
+            //convenient logging that can be used to directly see the performance of this reload functionality
             //which is invoked by observeChange when the increaseValue was incremented for the corresponding item.
             
         };
@@ -99,7 +94,7 @@ angular.module('formControllers', [])
         $scope.reloadResponses();
 
         /**
-         * @summary Handles the response of a user to the form
+         * @summary Handles the response of a user to the practicality form and signs him up for a particular activity.
          * @method signUp
          * @param {String} Value of the user's contribution field
          * @after A new entry is made in the FeedResponses collection. The local value hasContributed is set to the function's parameter
@@ -133,11 +128,7 @@ angular.module('formControllers', [])
         };
 
         /**
-         * @summary Function to withdraw contribution
-         */
-
-        /**
-         * @summary Function to withdraw contribution
+         * @summary Function to withdraw a contribution
          * @method withdrawContribution
          * @after The to the item's and user's corresponding FeedResponse collection is deleted. hasContributed and myContribution are reset to its initial value.
          */       
