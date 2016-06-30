@@ -31,7 +31,7 @@ if(Meteor.isServer) {
             );
 
             if (!doc.items) {
-                throw new Meteor.Error('No such permission defined');
+                throw new Meteor.Error(404, 'No such permission defined');
             }
             
             return doc.items[0].permissions[permission];

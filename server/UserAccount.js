@@ -222,9 +222,17 @@ Meteor.methods({
         check(userID, String);
         check(Meteor.userId(), Match.Where(utils.isAdmin));
         var user = Meteor.users.find({_id: userID}).fetch()[0];
+
+        // Check if requesting user belongs to the same club as requested user
         if(user && Meteor.user().profile.clubID != user.profile.clubID) {
             throw new Meteor.Error(401, 'Not Authorized');
         }
+
+        // Clean unnecessary information
+        if(user && user.services) {
+            delete user.services;
+        }
+
         return user;
     },
 

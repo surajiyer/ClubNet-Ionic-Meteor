@@ -420,7 +420,7 @@ angular.module('app.controllers', [
             };
             Meteor.call("updateFeedItem", obj, function (err, result) {
                 if (err) {
-                    return CommonServices.showAlert('Error', err.reason);
+                    return CommonServices.showAlert('Error', err.message);
                 }
                 if (!result) {
                     return CommonServices.showAlert('Error',

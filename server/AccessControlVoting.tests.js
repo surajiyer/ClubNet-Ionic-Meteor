@@ -43,7 +43,6 @@ if (Meteor.isServer) {
                     }
                 };
                 testPr._id = Accounts.createUser(testPr);
-                // console.log("pr added: "+testPr._id);
 
                 // Create fake Access control
                 let testControlPr = {
@@ -310,7 +309,6 @@ if (Meteor.isServer) {
                 };
 
                 testG._id = Accounts.createUser(testG);
-                // console.log("g added: " + testG._id);
 
                 // General member permissions
                 let testControlG = {

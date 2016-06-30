@@ -94,7 +94,6 @@ angular.module('web.controllers', [
         console.log($scope.redirectURL);
 
         $window.close()
-
     })
 
     /**

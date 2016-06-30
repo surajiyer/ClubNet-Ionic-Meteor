@@ -39,7 +39,7 @@ angular.module('votingControllers', [])
                     $scope.item.training_date = result.date;
                 },
                 function (err) {
-                    throw new Meteor.Error(err.reason);
+                    throw new Meteor.Error(err.message);
                 }
             );
         };
