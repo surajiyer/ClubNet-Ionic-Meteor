@@ -30,7 +30,7 @@ Meteor.startup(function () {
     if (Meteor.isServer) {
         Meteor.publish('clubs', function () {
             var clubID = Meteor.users.find({_id: this.userId}).fetch()[0].profile.clubID;
-            return Clubs.find({});
+            return Clubs.find(clubID);
         });
     }
 
@@ -55,8 +55,7 @@ if (Meteor.isServer) {
                 {_id: clubID},
                 {$set: updatedItem}
             );
-
-            return updatedItem;
+            return Clubs.find(clubID).fetch()[0];
         },
         /**
          * @summary Retrieve the information of the club of the logged in user. All the information of the club stored in
@@ -65,7 +64,7 @@ if (Meteor.isServer) {
          */
         getClub: function () {
             var clubID = Meteor.user().profile.clubID;
-            return Clubs.find({_id: clubID}).fetch()[0];
+            return Clubs.find(clubID).fetch()[0];
         }
     })
 }

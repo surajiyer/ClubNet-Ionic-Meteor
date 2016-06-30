@@ -89,6 +89,16 @@ if (Meteor.isServer) {
                 var userId = Accounts.createUser(testUser);
                 check(userId, String);
                 testUser._id = userId;
+
+                // Create a testProfile with a number for lastName
+                testProfile = {
+                    firstName: 'Test',
+                    lastName: 'newTest',
+                    type: 'player',
+                    clubID: 'test',
+                    teamID: 'test',
+                    notifications: {}
+                };
             });
 
             /**
@@ -99,14 +109,7 @@ if (Meteor.isServer) {
              */
             it("should throws error with incomplete data", (done) => {
                 // Create a testProfile with a number for lastName
-                testProfile = {
-                    firstName: 'Test',
-                    lastName: 14,
-                    type: 'player',
-                    clubID: 'test',
-                    teamID: 'test',
-                    notifications: {}
-                };
+                testProfile.lastName = 14;
 
                 // Update the profile of the previous created user with the new testProfile
                 try {
@@ -119,16 +122,37 @@ if (Meteor.isServer) {
                 assert.fail();
             });
 
-            it("should throws error with incomplete data", (done) => {
-                // Create a testProfile with a number for lastName
-                testProfile = {
-                    firstName: 'Test',
-                    lastName: 14,
-                    type: 'player',
-                    clubID: 'test',
-                    teamID: 'test',
-                    notifications: {}
+            it("should throws error with unauthorized logged-in user", (done) => {
+                // Login as non-PR unauthorized user
+                global.Meteor.userId.returns(testUser._id+1);
+
+                // Update the profile of the previous created user with the new testProfile
+                try {
+                    Meteor.call('updateUserProfile', testUser._id, testProfile);
+                } catch (err) {
+                    done();
+                }
+
+                // It should throw an error, if it does not, the test fails
+                assert.fail();
+            });
+
+            it("should throws error with unauthorized PR user from different club", (done) => {
+                // Login as unauthorized PR user
+                var testPR1 = {
+                    email: 'pr1@pr.pr',
+                    password: 'pr',
+                    profile: {
+                        firstName: 'Pr',
+                        lastName: 'Pr',
+                        type: 'pr',
+                        clubID: 'someOtherClub',
+                        notifications: {}
+                    }
                 };
+                var userId = Accounts.createUser(testPR1);
+                global.Meteor.userId.returns(userId);
+                global.Meteor.user.returns(testPR1);
 
                 // Update the profile of the previous created user with the new testProfile
                 try {
@@ -171,13 +195,14 @@ if (Meteor.isServer) {
              * It tries to get a user with a wrong parameter
              * This should throw error.
              */
-            it("should throws error with non-String id", (done) => {
+            it("should throws error with non-String user ID", (done) => {
                 // Get user with wrong parameter
                 try {
                     Meteor.call('getUserInfo', 1234);
                 } catch (err) {
                     done();
                 }
+
                 assert.fail();
             });
 
@@ -190,71 +215,42 @@ if (Meteor.isServer) {
                 // Get user with id that does not exist
                 try {
                     var result = Meteor.call('getUserInfo', 'test');
-                    assert.isUndefined(result);
                 } catch (err) {
                     assert(false, err.message);
                 }
+
+                assert.isUndefined(result);
             });
 
             /**
-             * @summary Getting user info with existing id.
-             * It tries to get the user we previously created in the database
-             * Then a couple of asserts to check whether this user is indeed the same
-             * This should succeed.
+             * @summary Getting user info with a PR user of a different club than the
+             * requested user. This should throw error.
              */
-            it("should succeed with existing string id", () => {
-                // Get user with correct id
-                try {
-                    var gettingUser = Meteor.call('getUserInfo', testUser._id);
-                    // Checks to see whether the user is the same or not.
-                    assert.equal(gettingUser.emails[0].address, testUser.email);
-                    assert.equal(gettingUser.profile.firstName, testUser.profile.firstName);
-                    assert.equal(gettingUser.profile.lastName, testUser.profile.lastName);
-                    assert.equal(gettingUser.profile.type, testUser.profile.type);
-                    assert.equal(gettingUser.profile.clubID, testUser.profile.clubID);
-                } catch (err) {
-                    assert(false, err.message);
-                }
-            });
-        });
+            it("should throws error with unauthorized PR user of different club", (done) => {
+                // Login as unauthorized PR user
+                var testPR1 = {
+                    email: 'pr1@pr.pr',
+                    password: 'pr',
+                    profile: {
+                        firstName: 'Pr',
+                        lastName: 'Pr',
+                        type: 'pr',
+                        clubID: 'someOtherClub',
+                        notifications: {}
+                    }
+                };
+                var userId = Accounts.createUser(testPR1);
+                global.Meteor.userId.returns(userId);
+                global.Meteor.user.returns(testPR1);
 
-        describe('getUserInfo()', () => {
-            beforeEach(() => {
-                var userId = Accounts.createUser(testUser);
-                check(userId, String);
-                testUser._id = userId;
-            });
-
-            /**
-             * @summary Getting user info with wrong parameters
-             * It tries to get a user with a wrong parameter
-             * This should throw error.
-             */
-            it("should throw error with non string id", (done) => {
-                // Get user with wrong parameter
+                // Get user with testUser's userId.
                 try {
-                    Meteor.call('getUserInfo', 1234);
+                    Meteor.call('getUserInfo', testUser._id);
                 } catch (err) {
                     done();
                 }
 
-                // It should throw an error, if it does not, the test fails
                 assert.fail();
-            });
-
-            /**
-             * @summary Getting user info with non existing id
-             * It tries to get a user that does not exist
-             * This should throw error.
-             */
-            it("should throw error with non existing string id", () => {
-                // Get user with id that does not exist
-                try {
-                    var user = Meteor.call('getUserInfo', 'test');
-                    assert.isUndefined(user);
-                } catch (err) {
-                    assert(false, err.message);
-                }
             });
 
             /**
@@ -312,7 +308,6 @@ if (Meteor.isServer) {
                 }
                 assert.equal(test, 'pr');
             });
-
         });
 
         describe('getTeamSize()', () => {
@@ -331,7 +326,7 @@ if (Meteor.isServer) {
                 try {
                     result = Meteor.call('getTeamSize');
                 } catch (err) {
-                    assert.fail(err.message);
+                    assert(false, err.message);
                 }
 
                 // Result must be 0 for users without teamID

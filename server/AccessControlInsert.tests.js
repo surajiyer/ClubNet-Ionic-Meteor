@@ -101,7 +101,7 @@ if (Meteor.isServer) {
             try {
                 Meteor.call('setPermissions', testPermissions);
             } catch (err) {
-                assert.fail();
+                assert(false, err.message);
             }
         });
 

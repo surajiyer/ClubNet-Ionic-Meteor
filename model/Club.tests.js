@@ -29,7 +29,7 @@ if (Meteor.isServer) {
             sinon.restore(global.Meteor.user);
         });
 
-        it("should throw error while getting non-existing club info", (done) => {
+        it("should throw error while getting non-existing club info", () => {
             // Mock user to include the clubID of the test club we just added
             global.Meteor.user.returns({
                 profile : { clubID : 'test'}
@@ -38,34 +38,21 @@ if (Meteor.isServer) {
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');
-                assert.fail();
             } catch (err) {
-                done();
+                assert(false, err.message);
             }
+            assert(result == undefined);
         });
 
         it("should get club info", () => {
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');
-                assert.equal(result._id, testClub._id);
             } catch (err) {
-                assert.fail();
+                assert(false, err.message);
             }
-        });
 
-        it("should update club name", () => {
-            // Changing the test club
-            testClub.name = 'Name2';
-
-            // Updating the club
-            try {
-                Meteor.call('updateClub', testClub);
-                result = Meteor.call('getClub');
-                assert.equal(result.name, 'Name2');
-            } catch (err) {
-                assert.fail();
-            }
+            assert.equal(result._id, testClub._id);
         });
 
         it("should throw error when updating club with invalid parameters", (done) => {
@@ -77,6 +64,20 @@ if (Meteor.isServer) {
             }
 
             assert.fail();
+        });
+
+        it("should update club name", () => {
+            // Changing the test club
+            testClub.name = 'Name2';
+
+            // Updating the club
+            try {
+                result = Meteor.call('updateClub', testClub);
+            } catch (err) {
+                assert(false, err.message);
+            }
+
+            assert.equal(result.name, 'Name2');
         });
     });
 }

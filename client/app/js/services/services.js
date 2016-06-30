@@ -34,7 +34,7 @@ angular.module('app.services', [])
          */
         this.getPermission = function (itemType, permission, callback) {
             Meteor.call('checkRights', itemType, permission, function (err, result) {
-                if (err) throw new Meteor.Error(err.reason);
+                if (err) throw new Meteor.Error(err.message);
                 if (typeof result !== 'boolean')
                     throw new Meteor.Error('Unexpected result type');
                 callback(result);

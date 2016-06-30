@@ -1,5 +1,7 @@
 angular.module('app.directives', [])
-
+    /**
+     * Directive for practicality forms
+     */
     .directive('scrolly', function () {
         return {
             restrict: 'A',
@@ -16,6 +18,9 @@ angular.module('app.directives', [])
         };
     })
 
+    /**
+     * Directive for practicality forms
+     */
     .directive('formdir', function () {
         return {
             restrict: 'E',
@@ -27,6 +32,9 @@ angular.module('app.directives', [])
         }
     })
 
+    /**
+     * Directive for Heroes item
+     */
     .directive('hero', function () {
         return {
             restrict: 'E',
@@ -38,6 +46,9 @@ angular.module('app.directives', [])
         }
     })
 
+    /**
+     * Directive for Sponsoring item
+     */
     .directive('sponsoring', function () {
         return {
             restrict: 'E',
@@ -49,6 +60,9 @@ angular.module('app.directives', [])
         }
     })
 
+    /**
+     * Directive for voting items
+     */
     .directive('voting', function () {
         return {
             restrict: 'E',
@@ -60,6 +74,10 @@ angular.module('app.directives', [])
         }
     })
 
+    /**
+     * Directive for chat information. Multiples instances of this chat will be
+     * loaded on the Chats page for each chat in the user's chat history.
+     */
     .directive('chatInfo', function () {
         return {
             restrict: 'E',
@@ -71,6 +89,9 @@ angular.module('app.directives', [])
         }
     })
 
+    /**
+     * Directive for ionic horizontal line dividers in vertical ionic lists.
+     */
     .directive('ionItemDivider', function () {
         return {
             restrict: 'E',
@@ -80,6 +101,9 @@ angular.module('app.directives', [])
         }
     })
 
+    /**
+     * Directive for handling special chat messaging input feedback.
+     */
     .directive('input', function ($timeout) {
         return {
             restrict: 'E',

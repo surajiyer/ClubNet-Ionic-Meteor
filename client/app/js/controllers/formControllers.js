@@ -53,11 +53,11 @@ angular.module('formControllers', [])
 
             // Did someone already repond?
             Meteor.call('getRaisedValue', $scope.item._id, function (err, result) {
-                if (err) throw new Meteor.Error(err.reason);
+                if (err) throw new Meteor.Error(err.message);
                 calculatedRaisedValue = result;
 
                 Meteor.call('getFeedItem', $scope.item._id, function (err, result) {
-                    if (err) throw new Meteor.Error(err.reason);
+                    if (err) throw new Meteor.Error(err.message);
                     directRaisedValue = result.raisedValue;
 
                     //console.log("calculatedRaisedValue: " + calculatedRaisedValue);
@@ -75,7 +75,7 @@ angular.module('formControllers', [])
             });
             //Did the user respond?
             Meteor.call('getResponse', $scope.item._id, function (err, result) {
-                if (err) throw new Meteor.Error(err.reason);
+                if (err) throw new Meteor.Error(err.message);
                 //if there is no response from the logged in user found, set variables that indicate this.
                 if (!result) {
                     $scope.item.myContribution = 0;
