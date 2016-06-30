@@ -174,10 +174,12 @@ Meteor.startup(function () {
     if (Meteor.isServer) {
         Meteor.methods({
             /**
-             * @summary Update the status of the messages in a chat session to read.
-             * @param {String} chatId The id of the chat session.
+             * @summary Update the status of the messages in a chat session to read. When a user opens the dialog of
+             * a chat session in which there are unread messages, this function should be called. The status of all the messages in
+             * that chat session are then updated to read.
+             * @param {String} chatId The id of the chat session of which the the status of the messages need to be updated to read.
              * @return None.
-             * @throws error if the input parameters do not have the required type.
+             * @throws error if the input parameters do not have the required type. The chatId must be a String object.
              * @after The attribute 'read' of all messages in the specified chat session are set to true.
              */
             readMessages: function (chatId) {
@@ -200,7 +202,9 @@ Meteor.startup(function () {
                 }, {$set: {read: true}}, {multi: true});
             },
             /**
-             * @summary Delete a chat session.
+             * @summary Delete a chat session that belongs to the logged in user. When a user clicks the delete button
+             * of a chat session, this function should be called. This chat session along with all the associated history
+             * messages will be deleted.
              * @param {String} chatId The id of the chat session to be deleted.
              * @return None.
              * @throws error if the input parameters do not have the required type.

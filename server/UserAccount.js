@@ -118,13 +118,16 @@ Meteor.methods({
     },
 
     /**
-     * @summary Add a new user account.
+     * @summary Add a new user account. A document that contains all information of a user must be passed to this function.
+     * The built-in Meteor package account-password will be used to directly add the new user account.
      * @param {Object} newUser A document object that contains all attributes of the user account to be added.
      * @return {String} The id of the newly added user.
      * @after After a new user account is added, a confirmation email is sent to the user.
      * @throws error if the 'newUser' does not conform to the database scheme.
      * @throws error if the input parameters do not have the required type.
      * @throws error if PR user is not from same club as newUser.
+     * @after After this function is called, an email is sent to the email address that is specified in the in the user
+     *  information. The email informs the user about the creation of his user account.
      */
     addUser: function (newUser) {
         // Validate the information in the newUser.
@@ -170,7 +173,8 @@ Meteor.methods({
     },
 
     /**
-     * @summary Update the information of a user.
+     * @summary Update the information of a user. A document that contains all the attributes with updated information
+     * must be passed to this function.
      * @param {String} userID The id of the user account whose information is to be updated.
      * @param {Object} newInfo A document object that contains all attributes of the updated user.
      * @throws error if the 'newInfo' does not conform to the database scheme.
@@ -234,7 +238,8 @@ Meteor.methods({
     },
 
     /**
-     * @summary Get the size of the team of the logged in user.
+     * @summary Get the size of the team of the logged in user. The size equals to the number of players in
+     *  the team.
      * @return{Integer} The number of players in the team.
      */
     getTeamSize: function () {
@@ -244,11 +249,13 @@ Meteor.methods({
     },
 
     /**
-     * @summary Update the notification setting of the logged in user.
+     * @summary Update the notification setting of the logged in user. This function is called when the user subscribe
+     *  or unsubscribe feed items of a specific type.
      * @param {String} itemType The feed item type to which the notification setting is changed.
      * @param {Boolean} value A boolean that indicates whether to subscribe to the specified feed item type.
      * @return None.
-     * @throws error if the input parameters do not have the required type.
+     * @throws error if the input parameters do not have the required type. Parameter itemType must be a String object.
+     *  Parameter value must be a Boolean object.
      */
     updateUserNotificationSetting: function (itemType, value) {
         check(itemType, Match.Where(function (type) {

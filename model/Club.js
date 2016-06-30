@@ -41,10 +41,12 @@ Meteor.startup(function () {
 if (Meteor.isServer) {
     Meteor.methods({
         /**
-         * @summary Update the information of a club.
+         * @summary Update the information of the club of the logged in user. This function should be called when the PR user
+         * updated the club information on the web interface. 
          * @param {Object} updatedItem A document object that contains all attributes of the club with updated information.
-         * @return {Object} The document of the updated club.
+         * @return None.
          * @throws error if the 'updatedItem' does not conform to the database scheme.
+         * @after The document of the club of the logged in user is updated with the information specified in updatedItem. 
          */
         updateClub: function (updatedItem) {
             check(updatedItem, Object);
@@ -57,8 +59,9 @@ if (Meteor.isServer) {
             return updatedItem;
         },
         /**
-         * @summary Retrieve the information of the club of the logged in user..
-         * @return {Object} The document of the club of the logged in user.
+         * @summary Retrieve the information of the club of the logged in user. All the information of the club stored in
+         * the database will be retrieved. The ID of the club will be retrieved automatically from the user information.
+         * @return {Object} The document containing all the information of the club of the logged in user. 
          */
         getClub: function () {
             var clubID = Meteor.user().profile.clubID;
