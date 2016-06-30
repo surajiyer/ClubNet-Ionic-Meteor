@@ -43,7 +43,6 @@ if (Meteor.isServer) {
                     }
                 };
                 testPr._id = Accounts.createUser(testPr);
-                // console.log("pr added: "+testPr._id);
 
                 // Create fake Access control
                 let testControlPr = {
@@ -55,16 +54,16 @@ if (Meteor.isServer) {
                 };
 
                 // Stub Meteor.user as PR user
-                Meteor.userId = sinon.stub().returns(testPr._id);
-                Meteor.user = sinon.stub().returns(testPr);
+                sinon.stub(global.Meteor, 'userId').returns(testPr._id);
+                sinon.stub(global.Meteor, 'user').returns(testPr);
 
                 // Add PR user permissions
                 AMx.insert(testControlPr);
             });
 
             after(() => {
-                sinon.restore(Meteor.user);
-                sinon.restore(Meteor.userId);
+                sinon.restore(global.Meteor.user);
+                sinon.restore(global.Meteor.userId);
             });
 
             it("should not be able to create a Form item", () => {
@@ -137,8 +136,8 @@ if (Meteor.isServer) {
                 };
 
                 // Stub Meteor.user as player user
-                Meteor.userId = sinon.stub().returns(testPlayer._id);
-                Meteor.user = sinon.stub().returns(testPlayer);
+                sinon.stub(global.Meteor, 'userId').returns(testPlayer._id);
+                sinon.stub(global.Meteor, 'user').returns(testPlayer);
 
                 // Add Player user permissions
                 AMx.insert(testControlP);
@@ -218,8 +217,8 @@ if (Meteor.isServer) {
                 };
 
                 // Stub Meteor.user as coach user
-                Meteor.userId = sinon.stub().returns(testCoach._id);
-                Meteor.user = sinon.stub().returns(testCoach);
+                sinon.stub(global.Meteor, 'userId').returns(testCoach._id);
+                sinon.stub(global.Meteor, 'user').returns(testCoach);
 
                 // Add Coach user permissions
                 AMx.insert(testControlC);
@@ -298,8 +297,8 @@ if (Meteor.isServer) {
                 };
 
                 // Stub Meteor.user as general user
-                Meteor.userId = sinon.stub().returns(testG._id);
-                Meteor.user = sinon.stub().returns(testG);
+                sinon.stub(global.Meteor, 'userId').returns(testG._id);
+                sinon.stub(global.Meteor, 'user').returns(testG);
 
                 // Add General user permissions
                 AMx.insert(testControlG);

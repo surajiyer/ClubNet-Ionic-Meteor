@@ -36,7 +36,6 @@ describe('ItemTypes', () => {
     });
 
     it("Get ItemTypes", () => {
-        // Get item added in the previous test
         try {
             var result = utils.getAllItemTypes();
             assert(result[0]._id == testType._id);
@@ -50,10 +49,10 @@ describe('ItemTypes', () => {
         // Get item added in the previous test
         try {
             Meteor.call('getItemType', false);
-            assert.fail();
         } catch (err) {
             done();
         }
+        assert.fail();
     });
 
     it("Get ItemType with correct parameter", () => {

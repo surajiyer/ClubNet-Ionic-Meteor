@@ -44,18 +44,17 @@ if (Meteor.isServer) {
             }
         });
 
-        it("should get club info", (done) => {
+        it("should get club info", () => {
             // Retrieving the club
             try {
                 result = Meteor.call('getClub');
                 assert.equal(result._id, testClub._id);
-                done();
             } catch (err) {
                 assert.fail();
             }
         });
 
-        it("should update club name", (done) => {
+        it("should update club name", () => {
             // Changing the test club
             testClub.name = 'Name2';
 
@@ -64,7 +63,6 @@ if (Meteor.isServer) {
                 Meteor.call('updateClub', testClub);
                 result = Meteor.call('getClub');
                 assert.equal(result.name, 'Name2');
-                done();
             } catch (err) {
                 assert.fail();
             }
@@ -74,10 +72,11 @@ if (Meteor.isServer) {
             // Retrieving the club
             try {
                 Meteor.call('updateClub', false);
-                assert.fail();
             } catch (err) {
                 done();
             }
+
+            assert.fail();
         });
     });
 }

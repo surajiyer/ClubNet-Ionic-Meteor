@@ -108,9 +108,8 @@ if (Meteor.isServer) {
          * @throws error if the new feed item does not conform to the corresponding scheme.
          * @throws error if the logged in user is not allowed to create the feed item of the specified type.
          * @after After a new feed item is created, a push notification will be sent to the users who subscribed to the
-         * specified feed item type.*/
-
-
+         * specified feed item type.
+         */
         addFeedItem: function (newItem) {
             check(newItem, Object);
             var loggedIn = Match.test(Meteor.userId(), String);
@@ -177,13 +176,13 @@ if (Meteor.isServer) {
          */
         updateFeedItem: function (updatedItem) {
             check(updatedItem, Object);
+            var id = updatedItem._id;
             var loggedIn = Match.test(Meteor.userId(), String);
             var allowed = Meteor.call('checkRights', updatedItem.type, 'edit');
-            var isCreator = updatedItem.creatorID == Meteor.userId();
+            var isCreator = Items.find(id).fetch()[0].creatorID == Meteor.userId();
             if (!(loggedIn && allowed && isCreator)) {
                 throw new Meteor.Error(401, 'Not authorized');
             }
-            var id = updatedItem._id;
             delete updatedItem._id;
             Items.update(
                 {_id: id},
@@ -257,7 +256,6 @@ if (Meteor.isServer) {
             check(Meteor.userId(), String);
             Responses.remove({itemID: itemID, userID: Meteor.userId()});
         },
-
         getResponsesOfItemType: function (itemType) {
             check(itemType, String);
             return Responses.find({itemType: itemType}).fetch();
@@ -276,6 +274,11 @@ if (Meteor.isServer) {
             check(itemID, String);
             check(itemType, String);
             check(value, String);
+
+            var loggedIn = Match.test(Meteor.userId(), String);
+            if (!loggedIn) {
+                throw new Meteor.Error(401, 'Not authorized');
+            }
 
             // Validation checks
             var item = Items.find(itemID).fetch()[0];

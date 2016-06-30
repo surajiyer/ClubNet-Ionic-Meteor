@@ -20,7 +20,7 @@ if (Meteor.isClient) {
                 chatRightsStub
                     .withArgs('checkRights', 'Chat', 'create')
                     .returns(true);
-                global.Meteor.userId = sinon.stub().returns('1');
+                sinon.stub(global.Meteor, 'userId').returns('1');
             });
 
             after(function () {
@@ -107,7 +107,7 @@ if (Meteor.isClient) {
                 chatRightsStub
                     .withArgs('checkRights', 'Chat', 'edit')
                     .returns(true);
-                global.Meteor.userId = sinon.stub().returns('1');
+                sinon.stub(global.Meteor, 'userId').returns('1');
             });
 
             after(function () {
@@ -193,7 +193,7 @@ if (Meteor.isClient) {
                 chatRightsStub
                     .withArgs('checkRights', 'Chat', 'edit')
                     .returns(true);
-                global.Meteor.userId = sinon.stub().returns('1');
+                sinon.stub(global.Meteor, 'userId').returns('1');
             });
 
             after(function () {
